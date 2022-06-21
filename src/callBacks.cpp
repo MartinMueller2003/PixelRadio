@@ -1135,7 +1135,7 @@ void rfPowerCallback(Control *sender, int type)
 // ************************************************************************************************
 void saveSettingsCallback(Control *sender, int type)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     bool   saveSuccessFlg = true;
     char   logBuff[60];
@@ -1156,11 +1156,11 @@ void saveSettingsCallback(Control *sender, int type)
         (sender->id == radioSaveID) ||
         (sender->id == rdsSaveID)  ||
         (sender->id == wifiSaveID)) {
-        DEBUG_V();
+        // DEBUG_V();
         switch (type) {
           case B_DOWN:
               Log.infoln("Saving Settings to File System ...");
-              DEBUG_V();
+              // DEBUG_V();
               // SAVE SETTINGS HERE
               sprintf(fileName, "%s", BACKUP_FILE_NAME);
               saveSuccessFlg = saveConfiguration(LITTLEFS_MODE, fileName);
@@ -1199,7 +1199,7 @@ void saveSettingsCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************
