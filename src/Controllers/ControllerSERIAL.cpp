@@ -508,7 +508,7 @@ void c_ControllerSERIAL::AddControls(uint16_t ctrlTab)
 // *********************************************************************************************
 void c_ControllerSERIAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
 
@@ -518,7 +518,7 @@ void c_ControllerSERIAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
       SetBaudrate(BaudRateStr);
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 // *********************************************************************************************
