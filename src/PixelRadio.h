@@ -17,7 +17,9 @@
 
 // *********************************************************************************************
 #pragma once
+#include <Arduino.h>
 #include <WiFi.h>
+#include "Controllers/ControllerMgr.h"
 #include "config.h"
 #include "credentials.h"
 #include "ESPUI.h"
@@ -96,9 +98,6 @@ const uint8_t CMD_TIME_MAX_SZ = 4;  // Time Command Arg length is 3 (5-900). Add
 // Controller Flags
 const bool AP_FALLBACK_DEF_FLG = true;
 const bool CTRL_DHCP_DEF_FLG   = true;
-const bool CTRL_LOCAL_DEF_FLG  = true;
-const bool CTRL_HTTP_DEF_FLG   = true;
-const bool CTRL_MQTT_DEF_FLG   = true;
 
 // const bool CTRL_SERIAL_DEF_FLG = true;
 const bool RADIO_MUTE_DEF_FLG  = false;
@@ -107,13 +106,6 @@ const bool RF_AUTO_OFF_DEF_FLG = false;
 const bool RF_CARRIER_DEF_FLG  = true;
 const bool STEREO_ENB_DEF_FLG  = true;
 const bool WIFI_REBOOT_DEF_FLG = false;
-
-// Controller States
-const uint8_t NO_CNTRL     = 0;
-const uint8_t SERIAL_CNTRL = 1;
-const uint8_t MQTT_CNTRL   = 2;
-const uint8_t HTTP_CNTRL   = 3;
-const uint8_t LOCAL_CNTRL  = 4;
 
 // EEPROM: (Currently Not Used in PixelRadio)
 const uint16_t EEPROM_SZ = 32;            // E2Prom Size, must be large enough to hold all values below.
@@ -175,20 +167,20 @@ const uint32_t FREE_MEM_UPD_TIME = 1750; // Update time for Free Memory (on diag
 
 // GPIO Pins:
 // Note: GPIOs 34-39 do not support internal pullups or pulldowns.
-const int GPIO19_PIN = 19;
-const int GPIO23_PIN = 23;
-const int GPIO33_PIN = 33;
-const int MISO_PIN   = 2;  // SD Card D0, requires INPUT_PULLUP During SD Card Use.
-const int MOSI_PIN   = 15; // SD Card CMD.
-const int ON_AIR_PIN = 12;
-const int SCL_PIN    = 22; // I2C Clock Pin, Output.
-const int SDA_PIN    = 18; // I2C Data Pin, I/O.
-const int SD_CLK_PIN = 14; // SD Card CLK.
-const int SD_CS_PIN  = 13; // SD Card CS.
-const int SER1_RXD   = 34; // Serial1 RxD Input, Optional 3.3V TTL, 5V tolerant.
-const int SER1_TXD   = 32; // Serial1 TxD Output, 3.3V TTL.
-const int MUX_PIN    = 21; // Audio Signal MUX Control, Output.
-const int TONE_PIN   = 25; // PWM Test Tone Pin, Output.
+const gpio_num_t GPIO19_PIN   = gpio_num_t::GPIO_NUM_19;
+const gpio_num_t GPIO23_PIN   = gpio_num_t::GPIO_NUM_23;
+const gpio_num_t GPIO33_PIN   = gpio_num_t::GPIO_NUM_33;
+const gpio_num_t MISO_PIN     = gpio_num_t::GPIO_NUM_2;  // SD Card D0, requires INPUT_PULLUP During SD Card Use.
+const gpio_num_t MOSI_PIN     = gpio_num_t::GPIO_NUM_15; // SD Card CMD.
+const gpio_num_t ON_AIR_PIN   = gpio_num_t::GPIO_NUM_12;
+const gpio_num_t SCL_PIN      = gpio_num_t::GPIO_NUM_22; // I2C Clock Pin, Output.
+const gpio_num_t SDA_PIN      = gpio_num_t::GPIO_NUM_18; // I2C Data Pin, I/O.
+const gpio_num_t SD_CLK_PIN   = gpio_num_t::GPIO_NUM_14; // SD Card CLK.
+const gpio_num_t SD_CS_PIN    = gpio_num_t::GPIO_NUM_13; // SD Card CS.
+const gpio_num_t SER1_RXD     = gpio_num_t::GPIO_NUM_34; // Serial1 RxD Input, Optional 3.3V TTL, 5V tolerant.
+const gpio_num_t SER1_TXD     = gpio_num_t::GPIO_NUM_32; // Serial1 TxD Output, 3.3V TTL.
+const gpio_num_t MUX_PIN      = gpio_num_t::GPIO_NUM_21; // Audio Signal MUX Control, Output.
+const gpio_num_t TONE_PIN     = gpio_num_t::GPIO_NUM_25; // PWM Test Tone Pin, Output.
 
 // GPIO Pin States
 const int SIGN_OFF = 0;
@@ -215,31 +207,6 @@ const int32_t MEAS_TIME = 50;                     // Measurement Refresh Time, i
 
 // MDNS & OTA
 #define MDNS_NAME_DEF_STR "PixelRadio"            // Default MDNS and OTA WiFi Name.
-
-// MQTT:
-const uint8_t  MQTT_FAIL_CNT       = 10;          // Maximum failed MQTT reconnects before disabling MQTT.
-const uint16_t MQTT_KEEP_ALIVE     = 90;          // MQTT Keep Alive Time, in Secs.
-const int32_t  MQTT_MSG_TIME       = 30000;       // MQTT Periodic Message Broadcast Time, in mS.
-const uint8_t  MQTT_NAME_MAX_SZ    = 18;
-const uint8_t  MQTT_PAYLD_MAX_SZ   = 100;         // Must be larger than RDS_TEXT_MAX_SZ.
-const uint8_t  MQTT_PW_MAX_SZ      = 48;
-const int32_t  MQTT_RECONNECT_TIME = 30000;       // MQTT Reconnect Delay Time, in mS;
-const uint8_t  MQTT_RETRY_CNT      = 6;           // MQTT Reconnection Count (max attempts).
-const uint8_t  MQTT_TOPIC_MAX_SZ   = 45;
-const uint8_t  MQTT_USER_MAX_SZ    = 48;
-#define MQTT_NAME_DEF_STR "pixelradio"            // Default MQTT Topic / Subscription Name.
-
-// MQTT Command
-#define MQTT_CMD_STR       "/cmd/"                // Publish topic preamble, Client MQTT Command Preampble.
-
-// MQTT Subscriptions
-#define MQTT_CMD_SUB_STR   "/cmd/#"               // MQTT wildcard Subscription, receive all /cmd messages.
-
-// MQTT Publish Topics
-#define MQTT_CONNECT_STR "/connect"               // Publish topic, Client MQTT Subscription.
-#define MQTT_GPIO_STR    "/gpio"                  // Publish topic, Client MQTT Subscription.
-#define MQTT_INFORM_STR  "/info"                  // Publish topic, Client MQTT Subscription.
-#define MQTT_VOLTS_STR   "/volts"                 // Publish topic, Client MQTT Subscription.
 
 // Radio
 const uint16_t AUDIO_LEVEL_MAX = 675;             // Maxium Audio Level (peak mV) Measurement by QN8027.
@@ -349,40 +316,39 @@ const IPAddress SUBNET_MASK_DEF = { 255u, 255u, 255u, 0u };
 
 // Controller Command Prototypes
 bool    audioModeCmd(String  payloadStr,
-                     uint8_t controller);
+                     c_ControllerMgr::ControllerTypeId_t controller);
 bool    frequencyCmd(String  payloadStr,
-                     uint8_t controller);
+                     c_ControllerMgr::ControllerTypeId_t controller);
 bool    infoCmd(String  payloadStr,
-                uint8_t controller);
+                c_ControllerMgr::ControllerTypeId_t controller);
 int16_t getCommandArg(String& requestStr,
                       uint8_t maxSize);
-String  getControllerName(uint8_t controller);
 uint8_t getControllerStatus(void);
 bool    gpioCmd(String  payloadStr,
-                uint8_t controller,
+                c_ControllerMgr::ControllerTypeId_t controller,
                 uint8_t pin);
 bool    logCmd(String  payloadStr,
-               uint8_t controller);
+               c_ControllerMgr::ControllerTypeId_t controller);
 bool    muteCmd(String  payloadStr,
-                uint8_t controller);
+                c_ControllerMgr::ControllerTypeId_t controller);
 bool    piCodeCmd(String  payloadStr,
-                  uint8_t controller);
+                  c_ControllerMgr::ControllerTypeId_t controller);
 bool    ptyCodeCmd(String  payloadStr,
-                   uint8_t controller);
+                  c_ControllerMgr::ControllerTypeId_t controller);
 bool    programServiceNameCmd(String  payloadStr,
-                              uint8_t Controller);
+                              c_ControllerMgr::ControllerTypeId_t controller);
 bool    radioTextCmd(String  payloadStr,
-                     uint8_t controller);
+                     c_ControllerMgr::ControllerTypeId_t controller);
 bool    rdsTimePeriodCmd(String  payloadStr,
-                         uint8_t controller);
+                         c_ControllerMgr::ControllerTypeId_t controller);
 bool    rebootCmd(String  payloadStr,
-                  uint8_t controller);
+                  c_ControllerMgr::ControllerTypeId_t controller);
 bool    rfCarrierCmd(String  payloadStr,
-                     uint8_t controller);
+                  c_ControllerMgr::ControllerTypeId_t controller);
 bool    startCmd(String  payloadStr,
-                 uint8_t controller);
+                 c_ControllerMgr::ControllerTypeId_t controller);
 bool    stopCmd(String  payloadStr,
-                uint8_t controller);
+                c_ControllerMgr::ControllerTypeId_t controller);
 
 // ESPUI (WebGUI) Prototypes
 void   buildGUI(void);
@@ -398,10 +364,8 @@ void   updateUiAudioMute(void);
 void   updateUiFreeMemory(void);
 void   updateUiFrequency(void);
 bool   updateUiGpioMsg(uint8_t pin,
-                       uint8_t controller);
+                c_ControllerMgr::ControllerTypeId_t controller);
 void   updateUiIpaddress(String ipStr);
-void   updateUiLocalMsgTime(void);
-void   updateUiLocalPiCode(void);
 void   updateUiLocalPtyCode(void);
 void   updateUiRdsText(String textStr);
 void   updateUiRDSTmr(uint32_t rdsMillis);
@@ -456,19 +420,8 @@ void   rfPowerCallback(Control *sender,
                        int      type);
 void   saveSettingsCallback(Control *sender,
                             int      type);
-void   serialCallback(Control *sender,
-                      int      type);
 void   setLoginCallback(Control *sender,
                         int      type);
-void   setMqttAuthenticationCallback(Control *sender,
-                                     int      type);
-#ifdef MQTT_ENB
-void   setMqttIpAddrCallback(Control *sender,
-                             int      type);
-void   setMqttNameCallback(Control *sender,
-                           int      type);
-#endif // ifdef MQTT_ENB
-
 void setPiCodeCallback(Control *sender,
                        int      type);
 void setPtyCodeCallback(Control *sender,
@@ -526,13 +479,6 @@ void         toneOff(uint8_t pin,
 void         updateGpioBootPins(void);
 void         updateTestTones(bool resetTimerFlg);
 
-// MQTT Prototypes
-void         mqttInit(void);
-void         mqttReconnect(bool resetFlg);
-void         mqttSendMessages(void);
-void         mqttService(void);
-void         processMQTT(void);
-void         updateUiMqttMsg(String msgStr);
 const String returnClientCode(int code);
 
 // OTA Prototypes
@@ -559,7 +505,7 @@ void         waitForIdle(uint16_t waitMs);
 
 // RDS Prototypes
 bool         checkActiveTextAvail(void);
-bool         checkControllerIsAvailable(uint8_t controller);
+bool         checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controller);
 bool         checkLocalControllerAvail(void);
 bool         checkLocalRdsAvail(void);
 bool         checkControllerRdsAvail(void);
@@ -567,11 +513,6 @@ bool         checkRemoteRdsAvail(void);
 bool         checkRemoteTextAvail(void);
 void         processRDS(void);
 void         resetControllerRdsValues(void);
-
-// Serial Controller
-bool         ctrlSerialFlg(void);
-void         initSerialControl(void);
-void         serialCommands(void);
 
 // Serial Log
 uint8_t      getLogLevel(void);

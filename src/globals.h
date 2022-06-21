@@ -18,15 +18,7 @@
 
 // *********************************************************************************************
 
-extern bool activeTextHttpFlg;
-extern bool activeTextLocalFlg;
-extern bool activeTextMqttFlg;
-extern bool activeTextSerialFlg;
 extern bool apFallBackFlg;
-extern bool ctrlLocalFlg;
-extern bool ctrlHttpFlg;
-extern bool ctrlMqttFlg;
-//extern bool ctrlSerialFlg;
 extern bool newVgaGainFlg;
 extern bool newAutoRfFlg;
 extern bool newCarrierFlg;
@@ -41,7 +33,6 @@ extern bool newMuteFlg;
 extern bool newPreEmphFlg;
 extern bool newRfPowerFlg;
 extern bool muteFlg;
-extern bool mqttOnlineFlg;
 extern bool rdsText1EnbFlg;
 extern bool rdsText2EnbFlg;
 extern bool rdsText3EnbFlg;
@@ -49,13 +40,7 @@ extern bool rebootFlg;
 extern bool rfAutoFlg;
 extern bool rfCarrierFlg;
 extern bool stereoEnbFlg;
-extern bool stopHttpFlg;
-extern bool stopMqttFlg;
-extern bool stopSerialFlg;
 extern bool testModeFlg;
-extern bool textHttpFlg;
-extern bool textMqttFlg;
-extern bool textSerialFlg;
 extern bool wifiDhcpFlg;
 extern bool WiFiRebootFlg;
 
@@ -65,21 +50,12 @@ extern uint8_t usbVol;
 
 extern uint16_t mqttPort;
 
-extern uint16_t rdsHttpPiCode;
-extern uint16_t rdsLocalPiCode;
-extern uint16_t rdsMqttPiCode;
-extern uint16_t rdsSerialPiCode;
-
-extern uint8_t  rdsHttpPtyCode;
-extern uint8_t  rdsLocalPtyCode;
-extern uint8_t  rdsMqttPtyCode;
-extern uint8_t  rdsSerialPtyCode;
+// extern uint8_t  rdsHttpPtyCode;
+// extern uint8_t  rdsLocalPtyCode;
+// extern uint8_t  rdsMqttPtyCode;
+// extern uint8_t  rdsSerialPtyCode;
 
 extern uint32_t baudRate;
-extern uint32_t rdsHttpMsgTime;
-extern uint32_t rdsLocalMsgTime;
-extern uint32_t rdsMqttMsgTime;
-extern uint32_t rdsSerialMsgTime;
 extern uint32_t rdsMsgTime;
 
 extern uint16_t fmFreqX10;
@@ -90,14 +66,12 @@ extern float paVolts;
 extern IPAddress hotSpotIP;
 extern IPAddress subNet;
 extern IPAddress staticIP;
-extern IPAddress mqttIP;
 extern IPAddress wifiDNS;
 extern IPAddress wifiGateway;
 
 // GUI Strings
 extern String apNameStr;
 extern String apIpAddrStr;
-extern String ctrlSerialStr;
 extern String preEmphasisStr;
 extern String digitalGainStr;
 extern String gpio19BootStr;
@@ -110,21 +84,10 @@ extern String inpImpedStr;
 extern String ipAddrStr;
 extern String logLevelStr;
 extern String mdnsNameStr;
-extern String mqttIpStr;
-extern String mqttNameStr;
-extern String mqttPwStr;
-extern String mqttUserStr;
-extern String rdsHttpPsnStr;
-extern String rdsMqttPsnStr;
-extern String rdsSerialPsnStr;
-extern String rdsHttpTextStr;
-extern String rdsMqttTextStr;
-extern String rdsSerialTextStr;
 extern String rdsTextMsgStr;
 extern String rdsTextMsg1Str;
 extern String rdsTextMsg2Str;
 extern String rdsTextMsg3Str;
-extern String rdsLocalPsnStr;
 extern String rfPowerStr;
 extern String staNameStr;
 extern String staticIpStr;

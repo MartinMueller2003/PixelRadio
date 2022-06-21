@@ -18,6 +18,7 @@
 
 // ************************************************************************************************
 #pragma once
+#include <Arduino.h>
 #include "config.h"
 
 // ************************************************************************************************
@@ -233,13 +234,6 @@
 #define SAVE_SETTINGS_MSG_STR  "[ Settings Changed, Save Required ]"
 #define SAVE_BACKUP_STR        "BACKUP SETTINGS TO SD CARD"
 
-#define SERIAL_OFF_STR  "OFF"
-#define SERIAL_096_STR  "9600 Baud"
-#define SERIAL_192_STR  "19.2K Baud"
-#define SERIAL_576_STR  "57.6K Baud"
-#define SERIAL_115_STR  "115.2K Baud"
-#define SERIAL_DEF_STR  SERIAL_115_STR;
-
 #define UNITS_DBM_STR  " dBm"
 #define UNITS_MHZ_STR  " MHz"
 
@@ -281,3 +275,17 @@
 #else // ifdef OTA_ENB
 # define WIFI_MDNS_NAME_STR  "MDNS NAME"
 #endif // ifdef OTA_ENB
+
+extern const PROGMEM char N_controllers[];
+extern const PROGMEM char N_default[];
+extern const PROGMEM char N_DisplayFseqName[];
+extern const PROGMEM char N_durationSec[];
+extern const PROGMEM char N_enabled[];
+extern const PROGMEM char N_EnableDisplayFseqName[];
+extern const PROGMEM char N_list[];
+extern const PROGMEM char N_MaxIdleSec[];
+extern const PROGMEM char N_message[];
+extern const PROGMEM char N_messages[];
+extern const PROGMEM char N_Messages[];
+extern const PROGMEM char N_name[];
+extern const PROGMEM char N_sequences[];

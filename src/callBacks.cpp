@@ -19,6 +19,11 @@
 #include "globals.h"
 #include "language.h"
 #include "webGUI.h"
+#include "Controllers/ControllerSERIAL.h"
+
+#if __has_include("memdebug.h")
+#include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // ************************************************************************************************
 void adjFmFreqCallback(Control *sender, int type) {
@@ -284,55 +289,15 @@ void controllerCallback(Control *sender, int type)
 
     if (sender->id == ctrlLocalID) {
         if (type == S_ACTIVE) {
-            ctrlLocalFlg = true;
+            // ControllerMgr.SetControlEnabledFlag(LocalControllerId, true);
         }
         else if (type == S_INACTIVE) {
-            ctrlLocalFlg = false;
+            // ControllerMgr.SetControlFlag(LocalControllerId, false);
         }
         displaySaveWarning();
         tempStr  = "Local Controller Set to: ";
-        tempStr += ctrlLocalFlg ? "On" : "Off";
+        tempStr += ControllerMgr.GetControllerEnabledFlag(LocalControllerId) ? "On" : "Off";
     }
-    else if (sender->id == ctrlHttpID) {
-        if (type == S_ACTIVE) {
-            ctrlHttpFlg = true;
-        }
-        else if (type == S_INACTIVE) {
-            ctrlHttpFlg = false;
-        }
-        displaySaveWarning();
-        tempStr  = "HTTP Controller Set to: ";
-        tempStr += ctrlHttpFlg ? "On" : "Off";
-    }
-
-    // ------------- START OF OPTIONAL MQTT CONTROLLER ------------------------
-    #ifdef MQTT_ENB
-    else if (sender->id == ctrlMqttID) {
-        if (type == S_ACTIVE) {
-            if ((!mqttIpStr.length()) || (!mqttNameStr.length()) ||
-                (!mqttUserStr.length()) || (!mqttPwStr.length())) { // Missing MQTT Entries
-                ctrlMqttFlg = false;
-                updateUiMqttMsg(MQTT_MISSING_STR);
-                ESPUI.print(ctrlMqttID, "0");                       // Turn off MQTT Controller Switcher.
-                Log.warningln("Missing MQTT Controller Settings, Disabled MQTT.");
-            }
-            else {
-                updateUiMqttMsg("");
-                mqttReconnect(true); // Reset MQTT Reconnect values while ctrlMqttFlg is false.
-                ctrlMqttFlg = true;  // Must set flag AFTER mqqtReconnect!
-            }
-        }
-        else if (type == S_INACTIVE) {
-            ctrlMqttFlg = false; // Must set flag BEFORE mqqtReconnect!
-            mqttReconnect(true); // Reset MQTT Reconnect values when ctrlMqttFlg is false.
-            mqttOnlineFlg ? updateUiMqttMsg(MQTT_DISCONNECT_STR) : updateUiMqttMsg("");
-        }
-        displaySaveWarning();
-        tempStr  = "MQTT Controller Set to: ";
-        tempStr += ctrlMqttFlg ? "On" : "Off";
-    }
-    #endif // ifdef MQTT_ENB
-    // ------------- END OF OPTIONAL MQTT CONTROLLER ------------------------
     else {
         tempStr  = "controllerCallback: ";
         tempStr += BAD_SENDER_STR;
@@ -469,6 +434,7 @@ void diagLogCallback(Control *sender, int type)
             Log.errorln(logBuff);
         }
         initSerialLog(false); // Set new log level.
+        uint16_t ctrlSerialMsgID = static_cast<c_ControllerSERIAL *>(ControllerMgr.GetControllerById(SerialControllerId))->GetMsgId();
         ESPUI.print(ctrlSerialMsgID, serialMsg);
         displaySaveWarning();
         sprintf(logBuff, "Serial Log Set to: %s.", tempStr.c_str());
@@ -817,7 +783,7 @@ void rdsDisplayTimeCallback(Control *sender, int type)
     }
     displaySaveWarning();
     Log.infoln("Local RDS Message Time Set to: %u.", timerVal);
-    rdsLocalMsgTime = ((uint32_t)(timerVal)) * 1000; // Convert Secs to mSecs.
+    ControllerMgr.SetRdsMsgTime(LocalControllerId, uint32_t(timerVal) * 1000); // Convert Secs to mSecs.
 }
 
 // ************************************************************************************************
@@ -929,24 +895,20 @@ void rdsRstCallback(Control *sender, int type)
         ESPUI.print(rdsText3ID,    rdsTextMsg3Str);
         ESPUI.print(rdsText3MsgID, "");
 
-        rdsLocalPsnStr = RDS_PSN_DEF_STR; // Program Service Name.
-        ESPUI.print(rdsProgNameID, rdsLocalPsnStr);
+        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, RDS_PSN_DEF_STR); // Program Service Name.
+        ESPUI.print(rdsProgNameID, ControllerMgr.GetRdsProgramServiceName(LocalControllerId));
 
         ESPUI.print(rdsEnbID,      "1");
         ESPUI.print(rdsEnb1ID,     "1");
         ESPUI.print(rdsEnb2ID,     "1");
         ESPUI.print(rdsEnb3ID,     "1");
 
-        rdsLocalMsgTime = RDS_DSP_TM_DEF;
-        rdsLocalPiCode  = RDS_PI_CODE_DEF;
-        rdsLocalPtyCode = RDS_PTY_CODE_DEF;
-        updateUiLocalMsgTime();
-        updateUiLocalPiCode();
+        ControllerMgr.SetPtyCode(LocalControllerId, RDS_PTY_CODE_DEF);
         updateUiLocalPtyCode();
 
         tempStr = String(RDS_DSP_TM_DEF / 1000);
-        ESPUI.print(rdsDspTmID, tempStr);
-        ESPUI.print(rdsRstID,   "RESET!");
+        ESPUI.print(rdsDspTmID,    tempStr);
+        ESPUI.print(rdsRstID,      "RESET!");
         displaySaveWarning();
 
         Log.infoln("RDS Settings Have Been Reset to Default Values.");
@@ -1021,12 +983,13 @@ void rdsTextCallback(Control *sender, int type)
         }
     }
     else if (sender->id == rdsProgNameID) {
-        rdsLocalPsnStr = sender->value;
+        String rdsLocalPsnStr = sender->value;
         rdsLocalPsnStr.trim();
 
         if (rdsLocalPsnStr.length() > RDS_PSN_MAX_SZ) {
             rdsLocalPsnStr = rdsLocalPsnStr.substring(0, RDS_PSN_MAX_SZ);
         }
+        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, rdsLocalPsnStr); // Program Service Name.
         ESPUI.print(rdsProgNameID, rdsLocalPsnStr);
         displaySaveWarning();
         sprintf(logBuff, "RDS Program Identification Set to: %s.", rdsLocalPsnStr.c_str());
@@ -1172,6 +1135,8 @@ void rfPowerCallback(Control *sender, int type)
 // ************************************************************************************************
 void saveSettingsCallback(Control *sender, int type)
 {
+    DEBUG_START;
+
     bool   saveSuccessFlg = true;
     char   logBuff[60];
     char   fileName[sizeof(BACKUP_FILE_NAME) + 1];
@@ -1191,10 +1156,11 @@ void saveSettingsCallback(Control *sender, int type)
         (sender->id == radioSaveID) ||
         (sender->id == rdsSaveID)  ||
         (sender->id == wifiSaveID)) {
+        DEBUG_V();
         switch (type) {
           case B_DOWN:
               Log.infoln("Saving Settings to File System ...");
-
+              DEBUG_V();
               // SAVE SETTINGS HERE
               sprintf(fileName, "%s", BACKUP_FILE_NAME);
               saveSuccessFlg = saveConfiguration(LITTLEFS_MODE, fileName);
@@ -1232,80 +1198,8 @@ void saveSettingsCallback(Control *sender, int type)
         sprintf(logBuff, "saveSettingsCallback: %s.", BAD_SENDER_STR);
         Log.errorln(logBuff);
     }
-}
 
-// ************************************************************************************************
-// serialCallback(): Set the Baud Rate for the Serial Controller. The "Off" setting disables the controller.
-void serialCallback(Control *sender, int type)
-{
-    char   logBuff[60];
-    String serialMsgStr;
-
-    // sprintf(logBuff, "serialCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == ctrlSerialID) {
-        if (sender->value == SERIAL_OFF_STR) {
-            // ctrlSerialFlg = false;
-            serialMsgStr  = ""; // Erase warning msg on Diagnostic Serial Log panel.
-            tempStr       = SERIAL_OFF_STR;
-            ctrlSerialStr = sender->value;
-            baudRate      = ESP_BAUD_DEF;
-        }
-        else if (sender->value == SERIAL_096_STR) {
-            // ctrlSerialFlg = true;
-            serialMsgStr  = DIAG_LOG_MSG_STR; // Warning msg on Diagnostic Serial Log panel.
-            tempStr       = SERIAL_096_STR;
-            ctrlSerialStr = sender->value;
-            baudRate      = 9600;
-        }
-        else if (sender->value == SERIAL_192_STR) {
-            // ctrlSerialFlg = true;
-            serialMsgStr  = DIAG_LOG_MSG_STR;
-            tempStr       = SERIAL_192_STR;
-            ctrlSerialStr = sender->value;
-            baudRate      = 19200;
-        }
-        else if (sender->value == SERIAL_576_STR) {
-            // ctrlSerialFlg = true;
-            serialMsgStr  = DIAG_LOG_MSG_STR;
-            tempStr       = SERIAL_576_STR;
-            ctrlSerialStr = sender->value;
-            baudRate      = 57600;
-        }
-        else if (sender->value == SERIAL_115_STR) {
-            // ctrlSerialFlg = true;
-            serialMsgStr  = DIAG_LOG_MSG_STR;
-            tempStr       = SERIAL_115_STR;
-            ctrlSerialStr = sender->value;
-            baudRate      = 115200;
-        }
-        else {
-            tempStr      = BAD_VALUE_STR;
-            serialMsgStr = ERROR_MSG_STR;
-            sprintf(logBuff, "serialCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-
-        ESPUI.print(diagLogMsgID, serialMsgStr); // Post warning message on Diagnostic Serial Log Panel.
-
-        if (baudRate != 0) {
-            Serial.end();                        // Flush all characters in queue.
-            Serial.begin(baudRate);
-
-            while (!Serial && !Serial.available()) {} // Wait for Serial Port to be available.
-            Serial.println(); // Push out any corrupted data due to baud change.
-        }
-    }
-    else {
-        tempStr = BAD_SENDER_STR;
-        sprintf(logBuff, "serialCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-    displaySaveWarning();
-    sprintf(logBuff, "Serial Controller Set to: %s.", tempStr.c_str());
-    Log.infoln(logBuff);
-    displayRdsText(); // Update RDS RadioText.
+    DEBUG_END;
 }
 
 // ************************************************************************************************
@@ -1339,137 +1233,6 @@ void setLoginCallback(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// setMqttAuthenticationCallback(): Update MQTT Broker Credentials (User Name & Password).
-void setMqttAuthenticationCallback(Control *sender, int type)
-{
-    char   logBuff[MQTT_USER_MAX_SZ + 40];
-    String shortHideStr = MQTT_PASS_HIDE_STR;
-
-    // sprintf(logBuff, "setMqttAuthenticationCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == ctrlMqttUserID) {
-        mqttUserStr = sender->value;
-        mqttUserStr = mqttUserStr.substring(0, MQTT_USER_MAX_SZ);
-        ESPUI.print(ctrlMqttUserID, mqttUserStr);
-        displaySaveWarning();
-        sprintf(logBuff, "MQTT Broker Username Set to: \"%s\"", mqttUserStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else if (sender->id == ctrlMqttPwID) {
-        tempStr      = sender->value;
-        tempStr      = tempStr.substring(0, MQTT_PW_MAX_SZ);
-        shortHideStr = shortHideStr.substring(0, 6); // Get first 5 chars of the "PW Hidden" text.
-
-        if (tempStr.indexOf(shortHideStr) >= 0) {    // User has accidentally deleted part of PW Hidden msg.
-            ESPUI.print(ctrlMqttPwID, MQTT_PASS_HIDE_STR);
-
-            // sprintf(logBuff, "MQTT Broker Password Unchanged: \"%s\"", mqttPwStr.c_str()); // Show Password in log.
-            sprintf(logBuff, "MQTT Broker Password Unchanged: %s", WIFI_PASS_HIDE_STR); // Hide Password in Log.
-        }
-        else {
-            mqttPwStr = tempStr;
-            ESPUI.print(ctrlMqttPwID, mqttPwStr);
-            displaySaveWarning();
-            sprintf(logBuff, "MQTT Broker Password Set to: \"%s\"", mqttPwStr.c_str());
-        }
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "setMqttAuthenticationCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-
-    if (ctrlMqttFlg && ((!mqttIpStr.length()) || (!mqttNameStr.length()) ||
-                        (!mqttUserStr.length()) || (!mqttPwStr.length()))) { // Missing MQTT Entries.
-        ctrlMqttFlg = false;
-        updateUiMqttMsg(MQTT_MISSING_STR);
-        ESPUI.print(ctrlMqttID, "0");                                        // Turn off MQTT Controller Switcher.
-        Log.errorln("setMqttAuthenticationCallback: Incomplete MQTT Settings, Disabled MQTT Broker");
-    }
-    else {
-        updateUiMqttMsg(""); // Erase Warning Message.
-    }
-}
-
-// ************************************************************************************************
-// setMqttIpAddrCallback(): Update MQTT Broker IP Address.
-#ifdef MQTT_ENB
-void setMqttIpAddrCallback(Control *sender, int type)
-{
-    IPAddress tempAddr;
-    char logBuff[60];
-
-    // sprintf(logBuff, "setMqttIpAddrCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == ctrlMqttIpID) {
-        tempStr = sender->value;
-
-        if ((tempStr.length() == 0)) {
-            ctrlMqttFlg = false;
-            mqttIpStr   = "";
-            ESPUI.print(ctrlMqttID, "0"); // Missing IP Addreess, Turn Off MQTT Controller.
-            Log.errorln("setMqttIpAddrCallback: Broker IP Address Erased. Disabled MQTT Controller.");
-        }
-        else {
-            tempAddr = convertIpString(tempStr); // Convert to IP Class Array.
-
-            if ((tempAddr[0] == 0) && (tempAddr[1] == 0) && (tempAddr[2] == 0) && (tempAddr[3] == 0)) {
-                ESPUI.print(ctrlMqttIpID, mqttIpStr);
-                Log.errorln("setMqttIpAddrCallback: Broker IP Invalid, Ignored.");
-            }
-            else {
-                mqttIpStr = tempStr;                    // Copy, IP is valid.
-                mqttIP    = convertIpString(mqttIpStr); // Convert IP to String.
-                mqttIpStr = IpAddressToString(mqttIP);  // Convert the IP String back to IPAddress (reformat it).
-                ESPUI.print(ctrlMqttIpID, mqttIpStr);
-                displaySaveWarning();
-                sprintf(logBuff, "MQTT Broker IP Set to: %s", mqttIpStr.c_str());
-                Log.infoln(logBuff);
-            }
-        }
-    }
-    else {
-        sprintf(logBuff, "setMqttIpAddrCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-#endif // ifdef MQTT_ENB
-
-// ************************************************************************************************
-// setMqttNameCallback(): Update MQTT Device Name.
-#ifdef MQTT_ENB
-void setMqttNameCallback(Control *sender, int type)
-{
-    char logBuff[MQTT_NAME_MAX_SZ + 50];
-
-    // sprintf(logBuff, "setMqttNameCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == ctrlMqttNameID) {
-        mqttNameStr = sender->value;
-        mqttNameStr = mqttNameStr.substring(0, MQTT_NAME_MAX_SZ);
-
-        if (mqttNameStr.length() == 0) {
-            mqttNameStr = MQTT_NAME_DEF_STR;
-        }
-        ESPUI.print(ctrlMqttNameID, mqttNameStr);
-        displaySaveWarning();
-        sprintf(logBuff, "MQTT Device Name Set to: \"%s\"", mqttNameStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "setMqttNameCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-#endif // ifdef MQTT_ENB
-
-// ************************************************************************************************
-
 void setPiCodeCallback(Control *sender, int type)
 {
     char logBuff[50];
@@ -1490,18 +1253,18 @@ void setPiCodeCallback(Control *sender, int type)
             tempPiCode = RDS_PI_CODE_DEF;          // Use default PI Code.
         }
         else if (piStr.length() > CMD_PI_MAX_SZ) { // Improperly Formatted Entry.
-            tempPiCode = rdsLocalPiCode;           // Bad value, re-use old PI Code.
+            tempPiCode = ControllerMgr.GetPiCode(LocalControllerId); // Bad value, re-use old PI Code.
         }
         else {
             tempPiCode = strtol(piStr.c_str(), NULL, HEX);
         }
 
         if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX)) { // Value Out of Range.
-            tempPiCode = rdsLocalPiCode;                                        // Bad value, re-use old PI Code.
+            tempPiCode = ControllerMgr.GetPiCode(LocalControllerId); // Bad value, re-use old PI Code.
         }
 
-        rdsLocalPiCode = tempPiCode;
-        sprintf(piBuff, "0x%04X", rdsLocalPiCode);
+        ControllerMgr.SetPiCode(LocalControllerId, tempPiCode);
+        sprintf(piBuff, "0x%04X", tempPiCode);
         ESPUI.print(rdsPiID, piBuff);
         displaySaveWarning();
 
@@ -1536,18 +1299,18 @@ void setPtyCodeCallback(Control *sender, int type)
         if ((tempPtyCode < RDS_PTY_CODE_MIN) ||
             (tempPtyCode > RDS_PTY_CODE_MAX) ||
             (ptyStr.length() == 0)) {
-            tempPtyCode = rdsLocalPtyCode; // Error, Use old value.
-            sprintf(ptyBuff, "%0u", rdsLocalPtyCode);
+            tempPtyCode = ControllerMgr.GetPtyCode(LocalControllerId); // Error, Use old value.
+            sprintf(ptyBuff, "%0u", tempPtyCode);
             ESPUI.print(rdsPtyID, ptyBuff);
             sprintf(logBuff, "setPtyCodeCallback: %s.", BAD_VALUE_STR);
             Log.errorln(logBuff);
             return;
         }
 
-        rdsLocalPtyCode = tempPtyCode;
+        ControllerMgr.SetPtyCode(LocalControllerId, tempPtyCode);
         displaySaveWarning();
 
-        sprintf(logBuff, "RDS PTY Code Set to: %u", rdsLocalPtyCode);
+        sprintf(logBuff, "RDS PTY Code Set to: %u", tempPtyCode);
         Log.infoln(logBuff);
     }
     else {

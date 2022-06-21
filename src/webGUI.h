@@ -52,17 +52,7 @@ extern uint16_t backupSaveMsgID;
 extern uint16_t backupSaveSetID;
 extern uint16_t backupSaveSetMsgID;
 
-extern uint16_t ctrlHttpID;
 extern uint16_t ctrlLocalID;
-extern uint16_t ctrlMqttID;
-extern uint16_t ctrlMqttIpID;
-extern uint16_t ctrlMqttMsgID;
-extern uint16_t ctrlMqttNameID;
-extern uint16_t ctrlMqttPortID;
-extern uint16_t ctrlMqttUserID;
-extern uint16_t ctrlMqttPwID;
-extern uint16_t ctrlSerialID;
-extern uint16_t ctrlSerialMsgID;
 extern uint16_t ctrlSaveID;
 extern uint16_t ctrlSaveMsgID;
 

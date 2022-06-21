@@ -190,7 +190,7 @@ void gpioHttpControl(WiFiClient client, String requestStr, uint8_t pin)
     sprintf(charBuff, "-> HTTP Controller: Received GPIO Pin-%d Command", pin);
     Log.infoln(charBuff);
 
-    successFlg = gpioCmd(requestStr, HTTP_CNTRL, pin);
+    successFlg = gpioCmd(requestStr, HttpControllerId, pin);
 
     client.print(HTML_HEADER_STR);
     client.print(HTML_DOCTYPE_STR);
@@ -326,7 +326,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: Audio Mode Missing Value (abort).");
                             }
                             else {
-                                if (audioModeCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (audioModeCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -388,7 +388,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: Info Missing Value (abort).");
                             }
                             else {
-                                if (infoCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (infoCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -421,7 +421,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: Frequency Missing Value (abort).");
                             }
                             else {
-                                if (frequencyCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (frequencyCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -446,7 +446,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: Mute Missing Value (abort).");
                             }
                             else {
-                                if (muteCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (muteCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -471,7 +471,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: PI Code Missing Value (abort).");
                             }
                             else {
-                                if (piCodeCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (piCodeCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -496,7 +496,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: PTY Code Missing Value (abort).");
                             }
                             else {
-                                if (ptyCodeCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (ptyCodeCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -521,7 +521,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: PSN Missing Value, (abort).");
                             }
                             else {
-                                if (programServiceNameCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (programServiceNameCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -547,7 +547,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: RTM, Missing RadioText Message, Ignored.");
                             }
                             else {
-                                if (radioTextCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (radioTextCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -572,7 +572,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: RFC, Missing Value (abort).");
                             }
                             else {
-                                if (rfCarrierCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (rfCarrierCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -597,7 +597,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: REBOOT, Missing Value (abort).");
                             }
                             else {
-                                if (rebootCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (rebootCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -624,7 +624,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: START, Missing Value (abort).");
                             }
                             else {
-                                if (startCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (startCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -651,7 +651,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: STOP, Missing Value (abort).");
                             }
                             else {
-                                if (stopCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (stopCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -678,7 +678,7 @@ void processWebClient(void)
                                 Log.errorln("-> HTTP CMD: RTPER, Missing Value (abort).");
                             }
                             else {
-                                if (rdsTimePeriodCmd(requestStr, HTTP_CNTRL) == false) {
+                                if (rdsTimePeriodCmd(requestStr, HttpControllerId) == false) {
                                     successFlg = false;
                                 }
                             }
@@ -803,9 +803,6 @@ void wifiReconnect(void)
         if ((WiFi.status() != WL_CONNECTED) && (apCount == 0)) {
             Log.infoln("Attempting to Reconnect WiFi.");
             wifiConnect();
-            #ifdef MQTT_ENB
-            mqttReconnect(false);
-            #endif // ifdef MQTT_ENB
         }
         else {
             sprintf(charBuff, "WiFi Status: %s.", getWifiModeStr().c_str());

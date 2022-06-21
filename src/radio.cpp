@@ -320,8 +320,8 @@ uint8_t initRadioChip(void) {
     sprintf(logBuff, "-> Radio Status: %02X", (radio.getStatus() & 0x07));
     Log.infoln(logBuff);
 
-    radio.setPiCode(rdsLocalPiCode);
-    radio.setPtyCode(rdsLocalPtyCode);
+    radio.setPiCode(ControllerMgr.GetPiCode(LocalControllerId));
+    radio.setPtyCode(ControllerMgr.GetPtyCode(LocalControllerId));
 
     if (successFlg) {
         Log.infoln("-> QN8027 Initialization Complete.");

@@ -45,15 +45,15 @@ uint8_t getControllerStatus(void)
 {
     uint8_t status = 0;
 
-    if (ctrlSerialFlg()) {
+    if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId)) {
         status = status | 0x80; // Set Bit D7.
     }
 
-    if (ctrlMqttFlg) {
+    if (ControllerMgr.GetControllerEnabledFlag(MqttControllerId)) {
         status = status | 0x40; // Set Bit D6.
     }
 
-    if (ctrlHttpFlg) {
+    if (ControllerMgr.GetControllerEnabledFlag(HttpControllerId)) {
         status = status | 0x20; // Set Bit D5.
     }
 
@@ -61,19 +61,19 @@ uint8_t getControllerStatus(void)
         status = status | 0x10; // Set Bit D4.
     }
 
-    if (activeTextSerialFlg) {
+    if (ControllerMgr.GetActiveTextFlag(SerialControllerId)) {
         status = status | 0x08; // Set Bit D3.
     }
 
-    if (activeTextMqttFlg) {
+    if (ControllerMgr.GetActiveTextFlag(MqttControllerId)) {
         status = status | 0x04; // Set Bit D2.
     }
 
-    if (activeTextHttpFlg) {
+    if (ControllerMgr.GetActiveTextFlag(HttpControllerId)) {
         status = status | 0x02; // Set Bit D1.
     }
 
-    if (activeTextLocalFlg) {
+    if (ControllerMgr.GetActiveTextFlag(LocalControllerId)) {
         status = status | 0x01; // Set Bit D0.
     }
 
@@ -82,13 +82,13 @@ uint8_t getControllerStatus(void)
 
 // *************************************************************************************************************************
 // AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
-bool audioModeCmd(String payloadStr, uint8_t controller)
+bool audioModeCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_AUD_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> audioModeCmd: Undefined Controller!");
@@ -126,14 +126,14 @@ bool audioModeCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool frequencyCmd(String payloadStr, uint8_t controller)
+bool frequencyCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_FREQ_MAX_SZ;
     int16_t freq;
     String  controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> frequencyCmd: Undefined Controller!");
@@ -164,33 +164,8 @@ bool frequencyCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-// getControllerName(): Return the Controller's Name. If controller type is invalid then return empty String.
-String getControllerName(uint8_t controller)
-{
-    String controllerStr;
-
-    if (controller == SERIAL_CNTRL) {
-        controllerStr = "Serial";
-    }
-    else if (controller == MQTT_CNTRL) {
-        controllerStr = "MQTT";
-    }
-    else if (controller == HTTP_CNTRL) {
-        controllerStr = "HTTP";
-    }
-    else if (controller == LOCAL_CNTRL) {
-        controllerStr = "Local";
-    }
-    else {
-        controllerStr = ""; // Return empty String if invalid controller type.
-    }
-
-    return controllerStr;
-}
-
-// *************************************************************************************************************************
 // gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
-bool gpioCmd(String payloadStr, uint8_t controller, uint8_t pin)
+bool gpioCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller, uint8_t pin)
 {
     char logBuff[110];
     const  uint8_t maxSize = CMD_GPIO_MAX_SZ;
@@ -200,7 +175,7 @@ bool gpioCmd(String payloadStr, uint8_t controller, uint8_t pin)
     payloadStr.trim();
     payloadStr.toLowerCase();
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> gpioCmd: Undefined Controller!");
@@ -320,13 +295,13 @@ bool gpioCmd(String payloadStr, uint8_t controller, uint8_t pin)
 }
 
 // *************************************************************************************************************************
-bool infoCmd(String payloadStr, uint8_t controller)
+bool infoCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_SYS_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> infoCmd: Undefined Controller!");
@@ -355,13 +330,13 @@ bool infoCmd(String payloadStr, uint8_t controller)
 // *************************************************************************************************************************
 // logCmd(): Set the Serial Log Level to Silent or reset back to system (Web UI) setting.
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
-bool logCmd(String payloadStr, uint8_t controller)
+bool logCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_LOG_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> logCmd: Undefined Controller!");
@@ -400,13 +375,13 @@ bool logCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool muteCmd(String payloadStr, uint8_t controller)
+bool muteCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_MUTE_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> muteCmd: Undefined Controller!");
@@ -443,14 +418,14 @@ bool muteCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool piCodeCmd(String payloadStr, uint8_t controller)
+bool piCodeCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_PI_MAX_SZ;
     uint32_t tempPiCode;
     String   controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> piCodeCmd: Undefined Controller!");
@@ -472,18 +447,8 @@ bool piCodeCmd(String payloadStr, uint8_t controller)
     }
     else {
         if (radio.getPiCode() != (uint16_t)(tempPiCode)) { // New PI Code.
-            if (controller == SERIAL_CNTRL) {
-                rdsSerialPiCode = tempPiCode;
-                textSerialFlg   = true;                    // Reload Serial RDS values
-            }
-            else if (controller == MQTT_CNTRL) {
-                rdsMqttPiCode = tempPiCode;
-                textMqttFlg   = true; // Reload MQTT RDS values
-            }
-            else if (controller == HTTP_CNTRL) {
-                rdsHttpPiCode = tempPiCode;
-                textHttpFlg   = true; // Reload HTTP RDS values
-            }
+            ControllerMgr.SetPiCode(controller, tempPiCode);
+            ControllerMgr.SetTextFlag(controller, true);
 
             displaySaveWarning();
             sprintf(logBuff, "-> %s Controller: PI Code Set to 0x%04X.", controllerStr.c_str(), tempPiCode);
@@ -497,16 +462,16 @@ bool piCodeCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool ptyCodeCmd(String payloadStr, uint8_t controller)
+bool ptyCodeCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_PTY_MAX_SZ;
     int16_t tempPtyCode;
     String  controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
-    if (controllerStr.length() == 0) {
+    if (controllerStr.isEmpty()) {
         Log.errorln("-> ptyCodeCmd: Undefined Controller!");
         return false;
     }
@@ -527,18 +492,8 @@ bool ptyCodeCmd(String payloadStr, uint8_t controller)
     }
     else {
         if (radio.getPTYCode() != (uint8_t)(tempPtyCode)) { // New PTY Code.
-            if (controller == SERIAL_CNTRL) {
-                rdsSerialPtyCode = (uint8_t)(tempPtyCode);
-                textSerialFlg    = true;                    // Reload Serial RDS values
-            }
-            else if (controller == MQTT_CNTRL) {
-                rdsMqttPtyCode = (uint8_t)(tempPtyCode);
-                textMqttFlg    = true; // Reload MQTT RDS values
-            }
-            else if (controller == HTTP_CNTRL) {
-                rdsHttpPtyCode = (uint8_t)(tempPtyCode);
-                textHttpFlg    = true; // Reload HTTP RDS values
-            }
+            ControllerMgr.SetPiCode(controller, tempPtyCode);
+            ControllerMgr.SetTextFlag(controller, true);
 
             displaySaveWarning();
             sprintf(logBuff, "-> %s Controller: PTY Code Set to %d.", controllerStr.c_str(), tempPtyCode);
@@ -552,13 +507,13 @@ bool ptyCodeCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool programServiceNameCmd(String payloadStr, uint8_t controller)
+bool programServiceNameCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_PSN_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> programServiceNameCmd: Undefined Controller!");
@@ -571,32 +526,21 @@ bool programServiceNameCmd(String payloadStr, uint8_t controller)
         payloadStr = payloadStr.substring(0, maxSize);
     }
 
-    if (controller == SERIAL_CNTRL) {
-        rdsSerialPsnStr = payloadStr;
-        textSerialFlg   = true; // Reload Serial RDS values
-    }
-    else if (controller == MQTT_CNTRL) {
-        rdsMqttPsnStr = payloadStr;
-        textMqttFlg   = true; // Reload MQTT RDS values
-    }
-    else if (controller == HTTP_CNTRL) {
-        rdsHttpPsnStr = payloadStr;
-        textHttpFlg   = true; // Reload HTTP RDS values
-    }
-
+    ControllerMgr.SetRdsProgramServiceName(controller, payloadStr);
+    ControllerMgr.SetTextFlag(controller, true);
     sprintf(logBuff, "-> %s Controller: RDS PSN Set to %s", controllerStr.c_str(), payloadStr.c_str());
     Log.verboseln(logBuff);
     return true;
 }
 
 // *************************************************************************************************************************
-bool radioTextCmd(String payloadStr, uint8_t controller)
+bool radioTextCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100 + CMD_RT_MAX_SZ];
     const  uint8_t maxSize = CMD_RT_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> radioTextCmd: Undefined Controller!");
@@ -609,18 +553,8 @@ bool radioTextCmd(String payloadStr, uint8_t controller)
         payloadStr = payloadStr.substring(0, maxSize);
     }
 
-    if (controller == SERIAL_CNTRL) {
-        textSerialFlg    = true; // Reload Serial RDS values
-        rdsSerialTextStr = payloadStr;
-    }
-    else if (controller == MQTT_CNTRL) {
-        textMqttFlg    = true; // Reload MQTT RDS values
-        rdsMqttTextStr = payloadStr;
-    }
-    else if (controller == HTTP_CNTRL) {
-        textHttpFlg    = true; // Reload HTTP RDS values
-        rdsHttpTextStr = payloadStr;
-    }
+    ControllerMgr.SetPayloadText(controller, payloadStr);
+    ControllerMgr.SetTextFlag(controller, true);
 
     sprintf(logBuff, "-> %s Controller: RadioText Changed to %s", controllerStr.c_str(), payloadStr.c_str());
     Log.verboseln(logBuff);
@@ -629,14 +563,14 @@ bool radioTextCmd(String payloadStr, uint8_t controller)
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
-bool rdsTimePeriodCmd(String payloadStr, uint8_t controller)
+bool rdsTimePeriodCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     bool capFlg = false;
     char logBuff[100];
     int32_t rtTime = 0;
     String  controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> rdsTimePeriodCmd: Undefined Controller!");
@@ -659,18 +593,9 @@ bool rdsTimePeriodCmd(String payloadStr, uint8_t controller)
         rtTime = RDS_DSP_TM_MIN;
     }
 
-    if (controller == SERIAL_CNTRL) {
-        textSerialFlg    = true; // Restart Serial Controller's RDS.
-        rdsSerialMsgTime = rtTime * 1000;
-    }
-    else if (controller == MQTT_CNTRL) {
-        textMqttFlg    = true; // Restart MQTT Controller's RDS.
-        rdsMqttMsgTime = rtTime * 1000;
-    }
-    else if (controller == HTTP_CNTRL) {
-        textHttpFlg    = true; // Restart HTTP Controller's RDS.
-        rdsHttpMsgTime = rtTime * 1000;
-    }
+    ControllerMgr.SetPayloadText(controller, payloadStr);
+    ControllerMgr.SetTextFlag(controller, true);
+    ControllerMgr.SetRdsMsgTime(controller, rtTime * 1000);
 
     if (capFlg) {
         sprintf(logBuff, "-> %s Controller: RDS Time Period Value out-of-range, set to %d secs.", controllerStr.c_str(), rtTime);
@@ -684,13 +609,13 @@ bool rdsTimePeriodCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool rebootCmd(String payloadStr, uint8_t controller)
+bool rebootCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_SYS_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> rebootCmd: Undefined Controller!");
@@ -718,13 +643,13 @@ bool rebootCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool rfCarrierCmd(String payloadStr, uint8_t controller)
+bool rfCarrierCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_RF_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> rfCarrierCmd: Undefined Controller!");
@@ -762,15 +687,16 @@ bool rfCarrierCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool startCmd(String payloadStr, uint8_t controller)
+bool startCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
-    const  uint8_t maxSize = CMD_RDS_MAX_SZ;
+    const uint8_t maxSize = CMD_RDS_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
-    if (controllerStr.length() == 0) {
+    if (controllerStr.isEmpty())
+    {
         Log.errorln("-> startCmd: Undefined Controller!");
         return false;
     }
@@ -778,25 +704,19 @@ bool startCmd(String payloadStr, uint8_t controller)
     payloadStr.trim();
     payloadStr.toLowerCase();
 
-    if (payloadStr.length() > maxSize) {
+    if (payloadStr.length() > maxSize)
+    {
         payloadStr = payloadStr.substring(0, maxSize);
     }
 
-    if (payloadStr == CMD_RDS_CODE_STR) {
+    if (payloadStr == CMD_RDS_CODE_STR)
+    {
         sprintf(logBuff, "-> %s Controller: Start RDS.", controllerStr.c_str());
         Log.verboseln(logBuff);
-
-        if (controller == SERIAL_CNTRL) {
-            textSerialFlg = true; // Restart Serial Controller's RadioText.
-        }
-        else if (controller == MQTT_CNTRL) {
-            textMqttFlg = true;   // Restart MQTT Controller's RadioText.
-        }
-        else if (controller == HTTP_CNTRL) {
-            textHttpFlg = true;   // Restart HTTP Controller's RadioText.
-        }
+        ControllerMgr.SetTextFlag(controller, true);
     }
-    else {
+    else
+    {
         sprintf(logBuff, "-> %s Controller: Invalid START Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
         Log.errorln(logBuff);
         return false;
@@ -805,13 +725,13 @@ bool startCmd(String payloadStr, uint8_t controller)
 }
 
 // *************************************************************************************************************************
-bool stopCmd(String payloadStr, uint8_t controller)
+bool stopCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
 {
     char logBuff[100];
     const  uint8_t maxSize = CMD_RDS_MAX_SZ;
     String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
 
     if (controllerStr.length() == 0) {
         Log.errorln("-> stopCmd: Undefined Controller!");
@@ -829,15 +749,7 @@ bool stopCmd(String payloadStr, uint8_t controller)
         sprintf(logBuff, "-> %s Controller: Stop RDS.", controllerStr.c_str());
         Log.verboseln(logBuff);
 
-        if (controller == SERIAL_CNTRL) {
-            stopSerialFlg = true; // Restart Serial Controller's RadioText.
-        }
-        else if (controller == MQTT_CNTRL) {
-            stopMqttFlg = true;   // Restart MQTT Controller's RadioText.
-        }
-        else if (controller == HTTP_CNTRL) {
-            stopHttpFlg = true;   // Restart HTTP Controller's RadioText.
-        }
+        ControllerMgr.SetStopFlag(controller, true);
     }
     else {
         sprintf(logBuff, "-> %s Controller: Invalid STOP Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());

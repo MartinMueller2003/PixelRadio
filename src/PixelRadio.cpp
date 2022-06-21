@@ -64,6 +64,7 @@
 #include "PixelRadio.h"
 #include "language.h"
 #include "QN8027Radio.h"
+#include "Controllers/ControllerMgr.h"
 
 // ************************************************************************************************
 // Global Section
@@ -71,12 +72,7 @@
 QN8027Radio radio = QN8027Radio();           // FM Transmitter Module (QN8027 radio)
 
 // Global System Vars
-bool activeTextHttpFlg   = false;            // HTTP Controller Is Sending RadioText if true.
-bool activeTextLocalFlg  = false;            // Local Controller Is Sending RadioText if true.
-bool activeTextMqttFlg   = false;            // MQTT Controller Is Sending RadioText if true.
-bool activeTextSerialFlg = false;            // Serial Controller Is Sending RadioText if true.
 
-bool mqttOnlineFlg   = false;                // MQTT is online if true.
 bool newAutoRfFlg    = false;                // new RF Auto Off Setting Avail Semaphore.
 bool newCarrierFlg   = false;                // New Carrier Settings Avail Semaphore.
 bool newDigGainFlg   = false;                // New Digital Audio Gain Setting Avail Semaphore.
@@ -95,28 +91,11 @@ bool stopHttpFlg     = false;                // HTTP Controller Stop Command was
 bool stopMqttFlg     = false;                // MQTT Controller Stop Command was sent if true.
 bool stopSerialFlg   = false;                // Serial Controller Stop Command was sent if true.
 bool testModeFlg     = false;                // Audio Test Tone Mode if true. Do NOT save in config file.
-bool textSerialFlg   = false;                // Serial supplied RDS Text Avail, #1 Priority.
-bool textHttpFlg     = false;                // HTTP supplied RDS Text Avail,   #2 Priority.
-bool textMqttFlg     = false;                // MQTT supplied RDS Text Avail,   #3 Priority.
 
 uint8_t fmRadioTestCode = FM_TEST_OK;        // FM Radio Module Test Result Code.
 
-uint16_t mqttPort = MQTT_PORT_DEF;           // mqttPort is a Fixed Value. Does not change.
 
-uint16_t rdsHttpPiCode   = RDS_PI_CODE_DEF;  // HTTP Controller PI Code, can be changed by HTTP Command.
-uint16_t rdsMqttPiCode   = RDS_PI_CODE_DEF;  // MQTT Controller PI Code, can be changed by MQTT Command.
-uint16_t rdsSerialPiCode = RDS_PI_CODE_DEF;  // Serial Controller PI Code, can be changed by Serial Command.
-
-uint8_t rdsHttpPtyCode   = RDS_PTY_CODE_DEF; // HTTP Controller PTY Code, can be changed by HTTP Command.
-uint8_t rdsMqttPtyCode   = RDS_PTY_CODE_DEF; // MQTT Controller PTY Code, can be changed by MQTT Command.
-uint8_t rdsSerialPtyCode = RDS_PTY_CODE_DEF; // Serial Controller PTY Code, can be changed by Serial Command.
-
-uint32_t rdsHttpMsgTime   = RDS_DSP_TM_DEF;  // HTTP Controller's Message Time Can be Changed by HTTP Command.
-uint32_t rdsLocalMsgTime  = RDS_DSP_TM_DEF;  // Local Controller's Message Time Can be Changed by Web UI.
 uint32_t rdsMsgTime       = RDS_DSP_TM_DEF;  // Global (Master) RDS Message Time. Set by RDS Controllers.
-uint32_t rdsMqttMsgTime   = RDS_DSP_TM_DEF;  // MQTT Controller's Message Time Can be Changed by MQTT Command.
-uint32_t rdsSerialMsgTime = RDS_DSP_TM_DEF;  // Serial Controller's Message Time Can be Changed by Serial Command.
-
 float vbatVolts = 0.0f;                      // ESP32's Onboard "VBAT" Voltage. Typically 5V.
 float paVolts   = 0.0f;                      // RF Power Amp's Power Supply Voltage. Typically 9V.
 
@@ -124,12 +103,6 @@ String gpio19CtrlStr    = "";                // GPIO-19 State if Changed by Seri
 String gpio23CtrlStr    = "";                // GPIO-23 State if Changed by Serial/MQTT/HTTP Controller.
 String gpio33CtrlStr    = "";                // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
 String ipAddrStr        = "";                // DHCP IP Address;
-String rdsHttpPsnStr    = RDS_PSN_DEF_STR;   // HTTP Supplied Program Service Name.
-String rdsMqttPsnStr    = RDS_PSN_DEF_STR;   // MQTT Supplied Program Service Name.
-String rdsSerialPsnStr  = RDS_PSN_DEF_STR;   // Serial Supplied Program Service Name.
-String rdsSerialTextStr = "";                // RDS RadioText for Serial Controller.
-String rdsHttpTextStr   = "";                // RDS RadioText for HTTP Controller.
-String rdsMqttTextStr   = "";                // RDS RadioText for MQTT Controller.
 String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
 
 IPAddress hotSpotIP   = HOTSPOT_IP_DEF;
@@ -143,10 +116,6 @@ IPAddress wifiGateway = WIFI_ADDR_DEF;
 // Configuration Vars (Can be saved to LittleFS and SD Card)
 
 bool apFallBackFlg = AP_FALLBACK_DEF_FLG;                  // Control, Switch to AP mode if STA fails.
-bool ctrlLocalFlg  = CTRL_LOCAL_DEF_FLG;                   // Control, Permit Local Control if true.
-bool ctrlHttpFlg   = CTRL_HTTP_DEF_FLG;                    // Control, Permit HTTP Control if true.
-bool ctrlMqttFlg   = CTRL_MQTT_DEF_FLG;                    // Control, Permit MQTT if true.
-// bool ctrlSerialFlg  = CTRL_SERIAL_DEF_FLG;              // Replaced by ctrlSerialFlg() function.
 bool muteFlg        = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
 bool rfAutoFlg      = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
 bool rdsText1EnbFlg = RDS_TEXTX_DEF_FLG;                   // Control, Disable local RDS Text Msg #1 if false.
@@ -169,7 +138,6 @@ uint16_t fmFreqX10 = FM_FREQ_DEF_X10;                      // Control. FM MHz Fr
 
 String apNameStr      = AP_NAME_DEF_STR;                   // Control.
 String apIpAddrStr    = IpAddressToString(HOTSPOT_IP_DEF); // Control.
-String ctrlSerialStr  = SERIAL_DEF_STR;                    // Control.
 String preEmphasisStr = PRE_EMPH_DEF_STR;                  // Control.
 String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
 String gpio19BootStr  = GPIO_DEF_STR;                      // Control.
@@ -178,10 +146,6 @@ String gpio33BootStr  = GPIO_DEF_STR;                      // Control.
 String inpImpedStr    = INP_IMP_DEF_STR;                   // Control.
 String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
 String mdnsNameStr    = MDNS_NAME_DEF_STR;                 // Control.
-String mqttIpStr      = IpAddressToString(MQTT_IP_DEF);    // Control.
-String mqttNameStr    = MQTT_NAME_DEF_STR;                 // Control.
-String mqttPwStr      = MQTT_PW_STR;                       // Control.
-String mqttUserStr    = MQTT_ID_STR;                       // Control.
 String rdsTextMsg1Str = RDS_TEXT1_DEF_STR;                 // Control.
 String rdsTextMsg2Str = RDS_TEXT2_DEF_STR;                 // Control.
 String rdsTextMsg3Str = RDS_TEXT3_DEF_STR;                 // Control.
@@ -259,6 +223,8 @@ void setup()
     littlefsInit();
     instalLogoImageFile();
 
+    ControllerMgr.begin();
+
     // Restore System Settings from File System.
     restoreConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME);
     resetControllerRdsValues();                             // Must be called after restoreConfiguration().
@@ -274,15 +240,9 @@ void setup()
         #ifdef OTA_ENB
         otaInit();                                          // Init OTA services.
         #endif // ifdef OTA_ENB
-        #ifdef MQTT_ENB
-        mqttInit();                                         // Init MQTT services.
-        #endif // ifdef MQTT_ENB
     }
 
     digitalWrite(MUX_PIN, TONE_OFF); // Turn on Music (Mux) LED, restore Line-In to external audio.
-
-    // Startup the Serial Controller (serial parsing engine).
-    initSerialControl();
 
     // Startup the I2C Devices).
     i2cScanner();                      // Scan the i2c bus and report all devices.
@@ -311,8 +271,11 @@ void setup()
 // Main Loop.
 void loop()
 {
+    Log.setLevel(LOG_LEVEL_SILENT);
+
     // Background tasks
-    serialCommands();       // Process USB Serial Controller Commands.
+    ControllerMgr.poll();
+
     processDnsServer();     // AP ESPUI DNS Server
     processRDS();           // Send any available RadioText.
     processMeasurements();  // Measure the two system voltages.
@@ -330,11 +293,6 @@ void loop()
 
     wifiReconnect();        // Reconnect to WiFi if not connected to router.
     rebootSystem();         // Check to see if Reboot has been requested.
-
-    #ifdef MQTT_ENB
-    mqttReconnect(false);
-    processMQTT();
-    #endif // ifdef MQTT_ENB
 
     #ifdef HTTP_ENB
     processWebClient();     // Process Any Available HTTP RDS commands.

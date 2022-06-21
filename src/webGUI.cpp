@@ -89,6 +89,7 @@
 #include "globals.h"
 #include "language.h"
 #include "ESPUI.h"
+#include "Controllers/ControllerMgr.h"
 
 
 // ************************************************************************************************
@@ -126,17 +127,7 @@ uint16_t backupSaveMsgID    = 0;
 uint16_t backupSaveSetID    = 0;
 uint16_t backupSaveSetMsgID = 0;
 
-uint16_t ctrlHttpID      = 0;
 uint16_t ctrlLocalID     = 0;
-uint16_t ctrlMqttID      = 0;
-uint16_t ctrlMqttIpID    = 0;
-uint16_t ctrlMqttMsgID   = 0;
-uint16_t ctrlMqttNameID  = 0;
-uint16_t ctrlMqttPortID  = 0;
-uint16_t ctrlMqttUserID  = 0;
-uint16_t ctrlMqttPwID    = 0;
-uint16_t ctrlSerialID    = 0;
-uint16_t ctrlSerialMsgID = 0;
 uint16_t ctrlSaveID      = 0;
 uint16_t ctrlSaveMsgID   = 0;
 
@@ -238,7 +229,7 @@ void initCustomCss(void)
 
     ESPUI.setPanelStyle(adjFmDispID,    "font-size: 3.0em;");
 
-    ESPUI.setPanelStyle(ctrlMqttPortID, "font-size: 1.25em;");
+    // ESPUI.setPanelStyle(ctrlMqttPortID, "font-size: 1.25em;");
 
     ESPUI.setPanelStyle(diagBootID,     "color: black;");
     ESPUI.setPanelStyle(diagLogID,      "color: black;");
@@ -286,10 +277,10 @@ void initCustomCss(void)
     ESPUI.setElementStyle(backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
     ESPUI.setElementStyle(backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
-    //  ESPUI.setElementStyle(ctrlSerialID,   "max-width: 40%;"); // Does Not Work.
-    ESPUI.setElementStyle(ctrlMqttPortID,     "max-width: 40%;");
-    ESPUI.setElementStyle(ctrlMqttMsgID,      CSS_LABEL_STYLE_BLACK);
-    ESPUI.setElementStyle(ctrlSerialMsgID,    CSS_LABEL_STYLE_BLACK);
+    // ESPUI.setElementStyle(ctrlSerialID,   "max-width: 40%;"); // Does Not Work.
+    // ESPUI.setElementStyle(ctrlMqttPortID,     "max-width: 40%;");
+    // ESPUI.setElementStyle(ctrlMqttMsgID,      CSS_LABEL_STYLE_BLACK);
+    // ESPUI.setElementStyle(ctrlSerialMsgID,    CSS_LABEL_STYLE_BLACK);
     ESPUI.setElementStyle(ctrlSaveMsgID,      CSS_LABEL_STYLE_RED);
 
     ESPUI.setElementStyle(diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
@@ -407,30 +398,6 @@ int8_t getAudioGain(void)
     audioGain = ((vgaGain + 1) * 3) - (impedance * 3);
 
     return audioGain;
-}
-
-// ************************************************************************************************
-// displayActiveController(): Display the currently active RadioText Controller.
-void displayActiveController(uint8_t controller)
-{
-    if (controller == SERIAL_CNTRL) {
-        ESPUI.print(homeTextMsgID, "Source: Serial Controller");
-    }
-    else if (controller == MQTT_CNTRL) {
-        ESPUI.print(homeTextMsgID, "Source: MQTT Controller");
-    }
-    else if (controller == HTTP_CNTRL) {
-        ESPUI.print(homeTextMsgID, "Source: HTTP Controller");
-    }
-    else if (controller == LOCAL_CNTRL) {
-        ESPUI.print(homeTextMsgID, "Source: Local Controller");
-    }
-    else if (controller == NO_CNTRL) {
-        ESPUI.print(homeTextMsgID, " ");
-    }
-    else {
-        ESPUI.print(homeTextMsgID, " ");
-    }
 }
 
 // ************************************************************************************************
@@ -566,13 +533,13 @@ void updateUiAudioMute(void)
 
 // ************************************************************************************************
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
-bool updateUiGpioMsg(uint8_t pin, uint8_t controller) {
+bool updateUiGpioMsg(uint8_t pin, c_ControllerMgr::ControllerTypeId_t controller) {
     char gpioBuff[50];
     char setBuff[30];
     uint16_t msgID;
-    String   controllerStr;
+    String controllerStr;
 
-    controllerStr = getControllerName(controller);
+    controllerStr = ControllerMgr.GetName(controller);
     controllerStr.toUpperCase();
 
     if (controllerStr.length() == 0) {
@@ -673,13 +640,6 @@ void updateUiFrequency(void)
 }
 
 // ************************************************************************************************
-// updateUiMqttMsg(): Update the MQTT CONTROL panel's status message on the ctrlTab.
-void updateUiMqttMsg(String msgStr)
-{
-    ESPUI.print(ctrlMqttMsgID, msgStr);
-}
-
-// ************************************************************************************************
 // updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
 //                    This is a companion function to displayRdsText(). May be used standalone too.
 void updateUiRdsText(String textStr)
@@ -718,7 +678,7 @@ void updateUiRDSTmr(uint32_t rdsMillis)
     if (testModeFlg) {
         ESPUI.print(homeRdsTmrID, " ");
     }
-    else if (rfCarrierFlg && checkControllerRdsAvail() && (checkLocalRdsAvail() || checkActiveTextAvail())) {
+    else if (rfCarrierFlg && checkControllerRdsAvail() && (checkLocalRdsAvail() || ControllerMgr.IsControllerActive())) {
         timeCnt =  millis() - rdsMillis; // Get Elasped time.
         timeCnt = rdsMsgTime - timeCnt;  // Now we have Countdown time.
         timeCnt = timeCnt / 1000;        // Coverted to Secs.
@@ -793,22 +753,12 @@ void updateUiRSSI(void)
 }
 
 // ************************************************************************************************
-// updateUiLocalMsgTime() Update the RadioText Message Time on the Local RDSTab.
-void updateUiLocalMsgTime(void)
-{
-    char dispBuff[10];
-
-    sprintf(dispBuff, "%d", rdsLocalMsgTime / 1000);
-    ESPUI.print(rdsDspTmID, dispBuff);
-}
-
-// ************************************************************************************************
 // updateUiLocalPiCode() Update the PI Code on the Local RDS Tab.
 void updateUiLocalPiCode(void)
 {
     char piBuff[15];
 
-    sprintf(piBuff, "0x%04X", rdsLocalPiCode);
+    sprintf(piBuff, "0x%04X", ControllerMgr.GetPiCode(LocalControllerId));
     ESPUI.print(rdsPiID, piBuff);
 }
 
@@ -818,7 +768,7 @@ void updateUiLocalPtyCode(void)
 {
     char ptyBuff[10];
 
-    sprintf(ptyBuff, "%u", rdsLocalPtyCode);
+    sprintf(ptyBuff, "%u", ControllerMgr.GetPtyCode(LocalControllerId));
     ESPUI.print(rdsPtyID, ptyBuff);
 }
 
@@ -1188,22 +1138,22 @@ void buildGUI(void)
 
     ESPUI.addControl(ControlType::Separator, RDS_GENERAL_SET_STR, "", ControlColor::None, rdsTab);
 
-    tempStr    = String(rdsLocalMsgTime / 1000);
+    tempStr    = String(ControllerMgr.GetRdsMsgTime(LocalControllerId) / 1000);
     rdsDspTmID =
         ESPUI.addControl(ControlType::Number, RDS_DISPLAY_TIME_STR, tempStr, ControlColor::Alizarin, rdsTab, &rdsDisplayTimeCallback);
     ESPUI.addControl(ControlType::Min, "MIN", String(RDS_DSP_TM_MIN), ControlColor::None, rdsDspTmID);
     ESPUI.addControl(ControlType::Max, "MAX", String(RDS_DSP_TM_MAX), ControlColor::None, rdsDspTmID);
 
     rdsProgNameID =
-        ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, rdsLocalPsnStr, ControlColor::Alizarin, rdsTab,
+        ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, ControllerMgr.GetRdsProgramServiceName(LocalControllerId), ControlColor::Alizarin, rdsTab,
                          &rdsTextCallback);
 
-    sprintf(charBuff, "0x%04X", rdsLocalPiCode);
+    sprintf(charBuff, "0x%04X", ControllerMgr.GetPiCode(LocalControllerId));
     rdsPiID =
         ESPUI.addControl(ControlType::Text, RDS_PI_CODE_STR, charBuff, ControlColor::Alizarin, rdsTab,
                          &setPiCodeCallback);
 
-    sprintf(charBuff, "%u", rdsLocalPtyCode);
+    sprintf(charBuff, "%u", ControllerMgr.GetPtyCode(LocalControllerId));
     rdsPtyID =
         ESPUI.addControl(ControlType::Number, RDS_PTY_CODE_STR, charBuff, ControlColor::Alizarin, rdsTab,
                          &setPtyCodeCallback);
@@ -1377,72 +1327,15 @@ void buildGUI(void)
     //
     // *************
     //  Controller Tab
-
+    ControllerMgr.AddControls(ctrlTab);
     ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, "", ControlColor::None, ctrlTab);
 
-    ctrlSerialID =
-        ESPUI.addControl(ControlType::Select, CTRL_SERIAL_STR, ctrlSerialStr, ControlColor::Turquoise, ctrlTab, &serialCallback);
-    ESPUI.addControl(ControlType::Option, SERIAL_OFF_STR, SERIAL_OFF_STR, ControlColor::None, ctrlSerialID);
-    ESPUI.addControl(ControlType::Option, SERIAL_096_STR, SERIAL_096_STR, ControlColor::None, ctrlSerialID);
-    ESPUI.addControl(ControlType::Option, SERIAL_192_STR, SERIAL_192_STR, ControlColor::None, ctrlSerialID);
-    ESPUI.addControl(ControlType::Option, SERIAL_576_STR, SERIAL_576_STR, ControlColor::None, ctrlSerialID);
-    ESPUI.addControl(ControlType::Option, SERIAL_115_STR, SERIAL_115_STR, ControlColor::None, ctrlSerialID);
-
-    tempStr         = logLevelStr != DIAG_LOG_SILENT_STR ? CTLR_SERIAL_MSG_STR : "";
-    ctrlSerialMsgID = ESPUI.addControl(ControlType::Label, "SERIAL_MSG", tempStr, ControlColor::Turquoise, ctrlSerialID);
-
-    // ------------- START OF OPTIONAL MQTT CONTROLLER ------------------------
-    #ifdef MQTT_ENB
-    ESPUI.addControl(ControlType::Separator, CTRL_MQTT_SEP_STR, "", ControlColor::None, ctrlTab);
-    ctrlMqttID =
-        ESPUI.addControl(ControlType::Switcher, CTRL_MQTT_STR, ctrlMqttFlg ? "1" : "0", ControlColor::Turquoise, ctrlTab,
-                         &controllerCallback);
-
-    if ((ctrlMqttFlg == true) && ((!mqttIpStr.length()) || (!mqttNameStr.length()) ||
-                                  (!mqttUserStr.length()) || (!mqttPwStr.length()))) {
-        tempStr     = MQTT_MISSING_STR;
-        ctrlMqttFlg = false; // Force DHCP mode.
-    }
-    else if (getWifiMode() == WIFI_AP) {
-        tempStr = MQTT_NOT_AVAIL_STR;
-    }
-    else {
-        tempStr = "";
-    }
-    ctrlMqttMsgID  = ESPUI.addControl(ControlType::Label, "MSG_AREA", tempStr, ControlColor::Turquoise, ctrlMqttID);
-    ctrlMqttNameID =
-        ESPUI.addControl(ControlType::Text, MQTT_SUBSCR_NM_STR, mqttNameStr, ControlColor::Turquoise, ctrlTab, &setMqttNameCallback);
-    ctrlMqttIpID =
-        ESPUI.addControl(ControlType::Text, CTRL_MQTT_IP_STR, mqttIpStr, ControlColor::Turquoise, ctrlTab,
-                         &setMqttIpAddrCallback);
-    ctrlMqttPortID =
-        ESPUI.addControl(ControlType::Label, CTRL_MQTT_PORT_STR, String(mqttPort), ControlColor::Turquoise, ctrlTab);
-    ctrlMqttUserID =
-        ESPUI.addControl(ControlType::Text, CTRL_MQTT_USER_STR, mqttUserStr, ControlColor::Turquoise, ctrlTab,
-                         &setMqttAuthenticationCallback);
-    ctrlMqttPwID =
-        ESPUI.addControl(ControlType::Text, CTRL_MQTT_PW_STR, MQTT_PASS_HIDE_STR, ControlColor::Turquoise, ctrlTab,
-                         &setMqttAuthenticationCallback);
-    #endif // ifdef MQTT_ENB
-
-    // ------------- END OF OPTIONAL MQTT CONTROLLER ------------------------
-
-
-    // ------------- START OF OPTIONAL HTTP CONTROLLER ------------------------
-    #ifdef HTTP_ENB
-    ESPUI.addControl(ControlType::Separator, CTRL_HTPP_SET_STR, "", ControlColor::None, ctrlTab);
-    ctrlHttpID =
-        ESPUI.addControl(ControlType::Switcher, CTRL_HTTP_STR, ctrlHttpFlg ? "1" : "0", ControlColor::Turquoise, ctrlTab,
-                         &controllerCallback);
-    #endif // ifdef HTTP_ENB
-
-    // ------------- END OF OPTIONAL HTTP CONTROLLER ------------------------
 
     ESPUI.addControl(ControlType::Separator, CTRL_LOCAL_SEP_STR, "", ControlColor::None, ctrlTab);
     ctrlLocalID =
         ESPUI.addControl(ControlType::Switcher,
                          "LOCAL CONTROL",
-                         ctrlLocalFlg ? "1" : "0",
+                         ControllerMgr.GetControllerEnabledFlag(LocalControllerId) ? "1" : "0",
                          ControlColor::Turquoise,
                          ctrlTab,
                          &controllerCallback);
@@ -1585,7 +1478,7 @@ void buildGUI(void)
                      ControlColor::None,
                      diagLogID);
 
-    tempStr      = ctrlSerialStr == SERIAL_OFF_STR ? "" : DIAG_LOG_MSG_STR;
+    tempStr      = ControllerMgr.GetControllerEnabledFlag(SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
     diagLogMsgID = ESPUI.addControl(ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
 
     ESPUI.addControl(ControlType::Separator, DIAG_SYSTEM_SEP_STR, "", ControlColor::None, diagTab);

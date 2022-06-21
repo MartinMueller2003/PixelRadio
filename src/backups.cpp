@@ -35,7 +35,7 @@
 
 
 // *************************************************************************************************************************
-const uint16_t JSON_CFG_SZ    = 2500;
+const uint16_t JSON_CFG_SZ    = 6500;
 const uint16_t JSON_CRED_SIZE = 300;
 
 const char* sdTypeStr[] = {"Not Installed", "V1", "V2", "SDHC", "Unknown"};
@@ -72,7 +72,7 @@ bool checkEmergencyCredentials(const char *fileName)
     Log.infoln("-> SD Card Type: %s", SD.cardType() < SD_TYPE_CNT ? sdTypeStr[SD.cardType()] : "Error");
     file = SD.open(fileName, FILE_READ);
 
-    StaticJsonDocument<JSON_CRED_SIZE> doc;
+    DynamicJsonDocument doc(JSON_CRED_SIZE);
     DeserializationError error = deserializeJson(doc, file);
 
     file.close();
@@ -168,8 +168,7 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     // Allocate a temporary JsonDocument
     // MUST set the capacity to match your requirements.
     // Use https://arduinojson.org/assistant to compute the capacity.
-    StaticJsonDocument<JSON_CFG_SZ> doc;
-
+    DynamicJsonDocument doc(JSON_CFG_SZ);
     // *****************************************************************
 
     doc["USER_NAME_STR"] = userNameStr;
@@ -181,10 +180,8 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     doc["AP_IP_ADDR_STR"]   = apIpAddrStr;
     doc["AP_FALLBACK_FLAG"] = apFallBackFlg;
 
-    doc["MQTT_NAME_STR"] = mqttNameStr;
-    doc["MQTT_PW_STR"]   = mqttPwStr;
-    doc["MQTT_USER_STR"] = mqttUserStr;
-    doc["MQTT_IP_STR"]   = mqttIpStr;
+    JsonObject root = doc.as<JsonObject>();
+    ControllerMgr.SaveConfiguration(root);
 
     doc["WIFI_SSID_STR"]    = wifiSSIDStr;
     doc["WIFI_WPA_KEY_STR"] = wifiWpaKeyStr;
@@ -195,10 +192,10 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     doc["WIFI_DHCP_FLAG"]   = wifiDhcpFlg;
     doc["WIFI_REBOOT_FLAG"] = WiFiRebootFlg;
 
-    doc["RDS_PI_CODE"]        = rdsLocalPiCode; // Use radio.setPiCode() when restoring this hex value.
-    doc["RDS_PTY_CODE"]       = rdsLocalPtyCode;
-    doc["RDS_LOCAL_MSG_TIME"] = rdsLocalMsgTime;
-    doc["RDS_PROG_SERV_STR"]  = rdsLocalPsnStr;
+    doc["RDS_PI_CODE"]        = ControllerMgr.GetPiCode(LocalControllerId); // Use radio.setPiCode() when restoring this hex value.
+    doc["RDS_PTY_CODE"]       = ControllerMgr.GetPtyCode(LocalControllerId);
+    doc["RDS_LOCAL_MSG_TIME"] = ControllerMgr.GetRdsMsgTime(LocalControllerId);
+    doc["RDS_PROG_SERV_STR"]  = ControllerMgr.GetRdsProgramServiceName(LocalControllerId);
     doc["RDS_TEXT1_ENB_FLAG"] = rdsText1EnbFlg;
     doc["RDS_TEXT2_ENB_FLAG"] = rdsText2EnbFlg;
     doc["RDS_TEXT3_ENB_FLAG"] = rdsText3EnbFlg;
@@ -222,21 +219,22 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     doc["DIGITAL_GAIN_STR"] = digitalGainStr;   // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
     doc["INPUT_IMPED_STR"]  = inpImpedStr;      // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
 
-    doc["CTRL_LOCAL_FLAG"]  = ctrlLocalFlg;
-    doc["CTRL_MQTT_FLAG"]   = ctrlMqttFlg;
-    doc["CTRL_HTTP_FLAG"]   = ctrlHttpFlg;
-    //doc["CTRL_SERIAL_FLAG"] = ctrlSerialFlg;
-    doc["CTRL_SERIAL_STR"]  = ctrlSerialStr;
+	// ControllerMgr.GetRdsMsgTime(LocalControllerId);
+	// doc["CTRL_LOCAL_FLAG"] = ControllerMgr.GetControlFlag(LocalControllerId);
+	// doc["CTRL_MQTT_FLAG"]  = ControllerMgr.GetControlFlag(MqttControllerId);
+	// doc["CTRL_HTTP_FLAG"]  = ControllerMgr.GetControlFlag(HttpControllerId);
+	// doc["CTRL_SERIAL_FLAG"] = ControllerMgr.GetControlFlag(SerialControllerId);
+	// doc["CTRL_SERIAL_STR"] = ControllerMgr.GetControlStr(SerialControllerId);
 
-    doc["GPIO19_STR"]    = gpio19BootStr;
-    doc["GPIO23_STR"]    = gpio23BootStr;
-    doc["GPIO33_STR"]    = gpio33BootStr;
+	doc["GPIO19_STR"] = gpio19BootStr;
+	doc["GPIO23_STR"] = gpio23BootStr;
+	doc["GPIO33_STR"] = gpio33BootStr;
 
-    doc["LOG_LEVEL_STR"]    = logLevelStr;
+	doc["LOG_LEVEL_STR"] = logLevelStr;
 
-    // Serialize JSON to file
-    if (serializeJson(doc, file) == 0) {
-        Log.errorln("-> Failed to Save Configuration.");
+	// Serialize JSON to file
+	if (serializeJson(doc, file) == 0) {
+    	Log.errorln("-> Failed to Save Configuration.");
     }
     else {
         successFlg = true;
@@ -311,9 +309,9 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
         Log.verboseln("-> Located Configuration File (%s)", fileName);
     }
 
-    StaticJsonDocument<JSON_CFG_SZ> doc;
+    DynamicJsonDocument raw_doc(JSON_CFG_SZ);
 
-    DeserializationError error = deserializeJson(doc, file);
+    DeserializationError error = deserializeJson(raw_doc, file);
 
     // serializeJsonPretty(doc, Serial); // Debug Output
 
@@ -327,6 +325,8 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
         Log.errorln("restoreConfiguration: Configure Deserialization Failed, Error:%s.", error.c_str());
         return false;
     }
+    JsonObject doc = raw_doc.as <JsonObject>();
+    ControllerMgr.RestoreConfiguration(doc);
 
     if ((const char *)doc["USER_NAME_STR"] != NULL) {
         userNameStr = (const char *)doc["USER_NAME_STR"];
@@ -350,22 +350,6 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
 
     if ((const char *)doc["AP_IP_ADDR_STR"] != NULL) {
         apIpAddrStr = (const char *)doc["AP_IP_ADDR_STR"];
-    }
-
-    if ((const char *)doc["MQTT_NAME_STR"] != NULL) {
-        mqttNameStr = (const char *)doc["MQTT_NAME_STR"];
-    }
-
-    if ((const char *)doc["MQTT_PW_STR"] != NULL) {
-        mqttPwStr = (const char *)doc["MQTT_PW_STR"];
-    }
-
-    if ((const char *)doc["MQTT_USER_STR"] != NULL) {
-        mqttUserStr = (const char *)doc["MQTT_USER_STR"];
-    }
-
-    if ((const char *)doc["MQTT_IP_STR"] != NULL) {
-        mqttIpStr = (const char *)doc["MQTT_IP_STR"];
     }
 
     if ((const char *)doc["WIFI_SSID_STR"] != NULL) {
@@ -392,16 +376,16 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
         wifiDnsStr = (const char *)doc["WIFI_DNS_STR"];
     }
 
-    if ((const char *)doc["RDS_PROG_SERV_STR"] != NULL) {
-        rdsLocalPsnStr = (const char *)doc["RDS_PROG_SERV_STR"];
-    }
+//    if ((const char *)doc["RDS_PROG_SERV_STR"] != NULL) {
+//        String Temp = doc["RDS_PROG_SERV_STR"];
+//        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, Temp);
+//    }
 
-    hotSpotIP   = convertIpString(apIpAddrStr);
-    mqttIP      = convertIpString(mqttIpStr);
-    staticIP    = convertIpString(staticIpStr);
-    subNet      = convertIpString(subNetStr);
-    wifiDNS     = convertIpString(wifiDnsStr);
-    wifiGateway = convertIpString(wifiGatewayStr);
+    hotSpotIP.fromString(apIpAddrStr);
+    staticIP.fromString(staticIpStr);
+    subNet.fromString(subNetStr);
+    wifiDNS.fromString(wifiDnsStr);
+    wifiGateway.fromString(wifiGatewayStr);
 
 
     if (doc.containsKey("AP_FALLBACK_FLAG")) {
@@ -417,15 +401,15 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
     }
 
     if (doc.containsKey("RDS_PI_CODE")) {
-        rdsLocalPiCode = doc["RDS_PI_CODE"]; // Use radio.setPiCode() when restoring this hex value.
+        ControllerMgr.SetPiCode(LocalControllerId, doc["RDS_PI_CODE"]); // Use radio.setPiCode() when restoring this hex value.
     }
 
     if (doc.containsKey("RDS_PTY_CODE")) {
-        rdsLocalPtyCode = doc["RDS_PTY_CODE"];
+        ControllerMgr.SetPtyCode(LocalControllerId, doc["RDS_PTY_CODE"]);
     }
 
     if (doc.containsKey("RDS_LOCAL_MSG_TIME")) {
-        rdsLocalMsgTime = doc["RDS_LOCAL_MSG_TIME"];
+        ControllerMgr.SetRdsMsgTime(LocalControllerId, doc["RDS_LOCAL_MSG_TIME"]);
     }
 
     if (doc.containsKey("RDS_TEXT1_ENB_FLAG")) {
@@ -498,26 +482,6 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
 
     if ((const char *)doc["INPUT_IMPED_STR"] != NULL) {
         inpImpedStr = (const char *)doc["INPUT_IMPED_STR"]; // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
-    }
-
-    if (doc.containsKey("CTRL_LOCAL_FLAG")) {
-        ctrlLocalFlg = doc["CTRL_LOCAL_FLAG"];
-    }
-
-    if (doc.containsKey("CTRL_MQTT_FLAG")) {
-        ctrlMqttFlg = doc["CTRL_MQTT_FLAG"];
-    }
-
-    if (doc.containsKey("CTRL_HTTP_FLAG")) {
-        ctrlHttpFlg = doc["CTRL_HTTP_FLAG"];
-    }
-
-//    if (doc.containsKey("CTRL_SERIAL_FLAG")) {
-//        ctrlSerialFlg = doc["CTRL_SERIAL_FLAG"];
-//    }
-
-    if ((const char *)doc["CTRL_SERIAL_STR"] != NULL) {
-        ctrlSerialStr = (const char *)doc["CTRL_SERIAL_STR"];
     }
 
     if ((const char *)doc["GPIO19_STR"] != NULL) {

@@ -32,8 +32,12 @@ extern QN8027Radio radio;
 // RadioText.
 bool checkActiveTextAvail(void) {
     bool availFlg = false;
+    bool activeTextSerialFlg = ControllerMgr.GetActiveTextFlag(SerialControllerId);
+    bool activeTextHttpFlg   = ControllerMgr.GetActiveTextFlag(HttpControllerId);
+    bool activeTextMqttFlg   = ControllerMgr.GetActiveTextFlag(MqttControllerId);
 
-    if (activeTextSerialFlg || activeTextHttpFlg || activeTextMqttFlg) {
+    if (activeTextSerialFlg || activeTextHttpFlg || activeTextMqttFlg)
+    {
         availFlg = true;
     }
     return availFlg;
@@ -44,19 +48,21 @@ bool checkActiveTextAvail(void) {
 // controllers are in operation. If none are present, then the supplied controller ID won't be
 // blocked and is available to use.
 // true = Controller is ready, false = higher priority controller is active.
-bool checkControllerIsAvailable(uint8_t controller) {
+bool checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controller) {
     bool availFlg = true;
 
-    if (controller == SERIAL_CNTRL) {                   // Priority #1, can never be blocked. Always available.
+    if (controller == SerialControllerId) {                   // Priority #1, can never be blocked. Always available.
         return true;
     }
-    else if (controller == MQTT_CNTRL) {                // Priority #2. Only Serial Controller can block it.
-        if (activeTextSerialFlg) {                      // Higher Priority Controller Active;
+    else if (controller == MqttControllerId) {                // Priority #2. Only Serial Controller can block it.
+        if (ControllerMgr.GetActiveTextFlag(SerialControllerId)) {                      // Higher Priority Controller Active;
             availFlg = false;                           // This controller is unavailable.
         }
     }
-    else if (controller == HTTP_CNTRL) {                // Priority #2. Serial and MQTT Controllers can block it.
-        if (activeTextSerialFlg || activeTextMqttFlg) { // Higher Priority Controllers Active;
+    else if (controller == HttpControllerId) {                // Priority #2. Serial and MQTT Controllers can block it.
+        if (ControllerMgr.GetActiveTextFlag(SerialControllerId) ||
+            ControllerMgr.GetActiveTextFlag(MqttControllerId) )
+        {                                               // Higher Priority Controllers Active;
             availFlg = false;                           // This controller is unavailable.
         }
     }
@@ -69,7 +75,7 @@ bool checkControllerIsAvailable(uint8_t controller) {
 bool checkLocalControllerAvail(void) {
     bool availFlg = false;
 
-    if (ctrlLocalFlg) {
+    if (ControllerMgr.GetControllerEnabledFlag(LocalControllerId)) {
         availFlg = true;
     }
     return availFlg;
@@ -80,7 +86,7 @@ bool checkLocalControllerAvail(void) {
 bool checkLocalRdsAvail(void) {
     bool availFlg = false;
 
-    if (ctrlLocalFlg && (rdsText1EnbFlg || rdsText2EnbFlg || rdsText3EnbFlg)) {
+    if (ControllerMgr.GetControllerEnabledFlag(LocalControllerId) && (rdsText1EnbFlg || rdsText2EnbFlg || rdsText3EnbFlg)) {
         availFlg = true;
     }
     return availFlg;
@@ -91,7 +97,10 @@ bool checkLocalRdsAvail(void) {
 bool checkRemoteRdsAvail(void) {
     bool availFlg = false;
 
-    if (ctrlSerialFlg() || ctrlMqttFlg || ctrlHttpFlg) {
+    if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId) ||
+        ControllerMgr.GetControllerEnabledFlag(MqttControllerId) ||
+        ControllerMgr.GetControllerEnabledFlag(LocalControllerId))
+    {
         availFlg = true;
     }
     return availFlg;
@@ -103,7 +112,10 @@ bool checkRemoteRdsAvail(void) {
 bool checkRemoteTextAvail(void) {
     bool availFlg = false;
 
-    if (textSerialFlg || textHttpFlg || textMqttFlg) {
+    if (ControllerMgr.GetTextFlag(SerialControllerId) ||
+        ControllerMgr.GetTextFlag(HttpControllerId) ||
+        ControllerMgr.GetTextFlag(MqttControllerId))
+    {
         availFlg = true;
     }
     return availFlg;
@@ -114,7 +126,11 @@ bool checkRemoteTextAvail(void) {
 bool checkControllerRdsAvail(void) {
     bool availFlg = false;
 
-    if (ctrlSerialFlg() || ctrlMqttFlg || ctrlHttpFlg || ctrlLocalFlg) {
+    if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId) ||
+        ControllerMgr.GetControllerEnabledFlag(MqttControllerId) ||
+        ControllerMgr.GetControllerEnabledFlag(HttpControllerId) ||
+        ControllerMgr.GetControllerEnabledFlag(LocalControllerId))
+    {
         availFlg = true;
     }
     return availFlg;
@@ -163,42 +179,53 @@ void processRDS(void) {
             rdsMillis = currentMillis - rdsMsgTime + 500; // Schedule next RadioText in 0.5Sec.
             return;
         }
-        else if (activeTextSerialFlg && stopSerialFlg) {
-            stopSerialFlg       = false;
-            activeTextSerialFlg = false;
+        else if (ControllerMgr.GetActiveTextFlag(SerialControllerId) && 
+                 ControllerMgr.GetStopFlag(SerialControllerId))
+        {
+            ControllerMgr.SetStopFlag(SerialControllerId, false);
+            ControllerMgr.SetActiveTextFlag(SerialControllerId, false);
             rdsMillis           = millis() - rdsMsgTime; // Force Countdown Timeout.
             Log.infoln("Serial Controller's RadioText has Been Stopped.");
         }
-        else if (activeTextMqttFlg && stopMqttFlg) {
-            stopMqttFlg       = false;
-            activeTextMqttFlg = false;
+        else if (ControllerMgr.GetActiveTextFlag(MqttControllerId) &&
+                 ControllerMgr.GetStopFlag(MqttControllerId))
+        {
+            ControllerMgr.SetStopFlag(MqttControllerId, false);
+            ControllerMgr.SetActiveTextFlag(MqttControllerId, false);
             rdsMillis         = millis() - rdsMsgTime; // Force Countdown Timeout.
             Log.infoln("MQTT Controller's RadioText has Been Stopped.");
         }
-        else if (activeTextHttpFlg && stopHttpFlg) {
-            stopHttpFlg       = false;
-            activeTextHttpFlg = false;
+        else if (ControllerMgr.GetActiveTextFlag(HttpControllerId) &&
+                 ControllerMgr.GetStopFlag(HttpControllerId))
+        {
+            ControllerMgr.SetStopFlag(HttpControllerId, false);
+            ControllerMgr.SetActiveTextFlag(HttpControllerId, false);
             rdsMillis         = millis() - rdsMsgTime; // Force Countdown Timeout.
             Log.infoln("MQTT Controller's RadioText has Been Stopped.");
         }
-        else if (ctrlSerialFlg() && textSerialFlg) {   // Priority #1, New Serial RadioText.
-            textSerialFlg = false;
-            stopSerialFlg = false;
+        else if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId) &&
+                 ControllerMgr.GetControllerEnabledFlag(SerialControllerId))
+        { // Priority #1, New Serial RadioText.
+            ControllerMgr.SetTextFlag(SerialControllerId, false);
+            ControllerMgr.SetStopFlag(SerialControllerId, false);
 
-            activeTextSerialFlg = true;
-            activeTextMqttFlg   = false;          // Clear lower priority Controller.
-            activeTextHttpFlg   = false;          // Clear lower priority Controller.
-            activeTextLocalFlg  = false;          // Clear lower priority Controller.
+            ControllerMgr.SetActiveTextFlag(SerialControllerId, true);
+            ControllerMgr.SetActiveTextFlag(MqttControllerId,   false);
+            ControllerMgr.SetActiveTextFlag(HttpControllerId,   false);
+            ControllerMgr.SetActiveTextFlag(LocalControllerId,  false);
 
-            rdsRefreshPsnStr  =  rdsSerialPsnStr; // Program Service Name.
-            rdsRefreshTextStr = rdsSerialTextStr; // RadioText Message.
-            rdsMsgTime        = rdsSerialMsgTime;
+            rdsRefreshPsnStr  = ControllerMgr.GetRdsProgramServiceName(SerialControllerId);
+            rdsRefreshTextStr = ControllerMgr.GetPayloadText(SerialControllerId);
+            rdsMsgTime        = ControllerMgr.GetRdsMsgTime(SerialControllerId);
             rdsMillis         = currentMillis;
 
-            sprintf(logBuff, "Serial Controller RDS Will Use: PI=0x%04X, PTY=%u.", rdsSerialPiCode, rdsSerialPtyCode);
+            sprintf(logBuff,
+                    "Serial Controller RDS Will Use: PI=0x%04X, PTY=%u.",
+                    ControllerMgr.GetPiCode(SerialControllerId),
+                    ControllerMgr.GetPtyCode(SerialControllerId));
             Log.infoln(logBuff);
-            radio.setPiCode(rdsSerialPiCode);   // Set Serial Controller's Pi Code.
-            radio.setPtyCode(rdsSerialPtyCode); // Set Serial Controller's PTY Code.
+            radio.setPiCode(ControllerMgr.GetPiCode(SerialControllerId)); // Set Serial Controller's Pi Code.
+            radio.setPtyCode(ControllerMgr.GetPtyCode(SerialControllerId)); // Set Serial Controller's PTY Code.
 
             sprintf(logBuff, "Serial Controller Sending RDS Program Service Name (%s)", rdsRefreshPsnStr.c_str());
             Log.infoln(logBuff);
@@ -207,25 +234,31 @@ void processRDS(void) {
             Log.infoln(logBuff);
             radio.sendRadioText(rdsRefreshTextStr);
             updateUiRdsText(rdsRefreshTextStr);
-            displayActiveController(SERIAL_CNTRL);
+            ControllerMgr.Display(SerialControllerId);
         }
-        else if (ctrlMqttFlg && textMqttFlg && !activeTextSerialFlg) { // Priority #2, New MQTT RadioText
-            textMqttFlg = false;
-            stopMqttFlg = false;
+        else if (ControllerMgr.GetControllerEnabledFlag(MqttControllerId) &&
+                 ControllerMgr.GetTextFlag(MqttControllerId) &&
+                 !ControllerMgr.GetActiveTextFlag(SerialControllerId))
+        { // Priority #2, New MQTT RadioText
+            ControllerMgr.SetTextFlag(MqttControllerId, false);
+            ControllerMgr.SetStopFlag(MqttControllerId, false);
 
-            activeTextMqttFlg  = true;
-            activeTextHttpFlg  = false;         // Clear lower priority Controller.
-            activeTextLocalFlg = false;         // Clear lower priority Controller.
+            ControllerMgr.SetActiveTextFlag(MqttControllerId, true);
+            ControllerMgr.SetActiveTextFlag(HttpControllerId, false);
+            ControllerMgr.SetActiveTextFlag(LocalControllerId, false);
 
-            rdsRefreshPsnStr  = rdsMqttPsnStr;  // Program Service Name.
-            rdsRefreshTextStr = rdsMqttTextStr; // RadioText Message.
-            rdsMsgTime        = rdsMqttMsgTime;
+            rdsRefreshPsnStr  = ControllerMgr.GetRdsProgramServiceName(MqttControllerId);
+            rdsRefreshTextStr = ControllerMgr.GetPayloadText(MqttControllerId);
+            rdsMsgTime        = ControllerMgr.GetRdsMsgTime(MqttControllerId);
             rdsMillis         = currentMillis;
 
-            sprintf(logBuff, "MQTT Controller RDS Will Use: PI=0x%04X, PTY=%u.", rdsMqttPiCode, rdsMqttPtyCode);
+            sprintf(logBuff,
+                    "MQTT Controller RDS Will Use: PI=0x%04X, PTY=%u.",
+                    ControllerMgr.GetPiCode(MqttControllerId),
+                    ControllerMgr.GetPtyCode(MqttControllerId));
             Log.infoln(logBuff);
-            radio.setPiCode(rdsMqttPiCode);   // Set MQTT Controller's Pi Code.
-            radio.setPtyCode(rdsMqttPtyCode); // Set MQTT Controller's PTY Code.
+            radio.setPiCode(ControllerMgr.GetPiCode(MqttControllerId)); // Set MQQT Controller's Pi Code.
+            radio.setPtyCode(ControllerMgr.GetPtyCode(MqttControllerId)); // Set MQTT Controller's PTY Code.
 
             sprintf(logBuff, "MQTT Controller Sending RDS Program Service Name (%s)", rdsRefreshPsnStr.c_str());
             Log.infoln(logBuff);
@@ -234,23 +267,30 @@ void processRDS(void) {
             Log.infoln(logBuff);
             radio.sendRadioText(rdsRefreshTextStr);
             updateUiRdsText(rdsRefreshTextStr);
-            displayActiveController(MQTT_CNTRL);
+            ControllerMgr.Display(MqttControllerId);
         }
-        else if (ctrlHttpFlg && textHttpFlg && !activeTextSerialFlg && !activeTextMqttFlg) { // Priority #3, New HTTP RadioText
-            textHttpFlg        = false;
-            stopHttpFlg        = false;
-            activeTextHttpFlg  = true;
-            activeTextLocalFlg = false;         // Clear lower priority Controller.
+        else if (ControllerMgr.GetControllerEnabledFlag(HttpControllerId) &&
+                 ControllerMgr.GetTextFlag(HttpControllerId) &&
+                 !ControllerMgr.GetActiveTextFlag(SerialControllerId) &&
+                 !ControllerMgr.GetActiveTextFlag(MqttControllerId))
+        { // Priority #3, New HTTP RadioText
+            ControllerMgr.SetTextFlag(HttpControllerId, false);
+            ControllerMgr.SetStopFlag(HttpControllerId, false);
+            ControllerMgr.SetActiveTextFlag(HttpControllerId, true);
+            ControllerMgr.SetActiveTextFlag(LocalControllerId, false);
 
-            rdsRefreshPsnStr  = rdsHttpPsnStr;  // Program Service Name.
-            rdsRefreshTextStr = rdsHttpTextStr; // RadioText Message.
-            rdsMsgTime        = rdsHttpMsgTime;
+            rdsRefreshPsnStr  = ControllerMgr.GetRdsProgramServiceName(HttpControllerId);
+            rdsRefreshTextStr = ControllerMgr.GetPayloadText(HttpControllerId);
+            rdsMsgTime        = ControllerMgr.GetRdsMsgTime(HttpControllerId);
             rdsMillis         = currentMillis;
 
-            sprintf(logBuff, "HTTP Controller RDS Will Use: PI=0x%04X, PTY=%u.", rdsHttpPiCode, rdsHttpPtyCode);
+            sprintf(logBuff,
+                    "HTTP Controller RDS Will Use: PI=0x%04X, PTY=%u.",
+                    ControllerMgr.GetPiCode(HttpControllerId),
+                    ControllerMgr.GetPtyCode(HttpControllerId));
             Log.infoln(logBuff);
-            radio.setPiCode(rdsHttpPiCode);   // Set HTTP Controller's Pi Code.
-            radio.setPtyCode(rdsHttpPtyCode); // Set HTTP Controller's PTY Code.
+            radio.setPiCode(ControllerMgr.GetPiCode(HttpControllerId)); // Set HTTP Controller's Pi Code.
+            radio.setPtyCode(ControllerMgr.GetPtyCode(HttpControllerId)); // Set HTTP Controller's PTY Code.
 
             sprintf(logBuff, "HTTP Controller Sending RDS Program Service Name (%s)", rdsRefreshPsnStr.c_str());
             Log.infoln(logBuff);
@@ -259,9 +299,9 @@ void processRDS(void) {
             Log.infoln(logBuff);
             radio.sendRadioText(rdsRefreshTextStr);
             updateUiRdsText(rdsRefreshTextStr);
-            displayActiveController(HTTP_CNTRL);
+            ControllerMgr.Display(HttpControllerId);
         }
-        else if (!checkLocalRdsAvail()  && checkControllerRdsAvail() && !checkActiveTextAvail()) {
+        else if (!checkLocalRdsAvail()  && checkControllerRdsAvail() && !ControllerMgr.IsControllerActive()) {
             updateUiRDSTmr(0);                             // Clear Displayed Elapsed Timer.
             displayRdsText();
             rdsMillis = currentMillis - rdsMsgTime + 500;  // Schedule next RadioText in 0.5Sec.
@@ -300,31 +340,34 @@ void processRDS(void) {
     updateUiRDSTmr(rdsMillis); // Show "Expired" on GUI homeTab's RadioText Timer.
 
     /* Let's Check to see who supplied the RadioText and terminate it. */
-    if (activeTextSerialFlg) { // USB Serial RDS Controller is #1 Priority.
-        activeTextSerialFlg = false;
+    if (ControllerMgr.GetActiveTextFlag(SerialControllerId)) { // USB Serial RDS Controller is #1 Priority.
+        ControllerMgr.SetActiveTextFlag(SerialControllerId, false);
         Log.infoln("Serial Controller's RDS Time has Ended.");
     }
-    else if (activeTextMqttFlg) { // MQTT RDS Controller is #2 Priority.
-        activeTextMqttFlg = false;
+    else if (ControllerMgr.GetActiveTextFlag(MqttControllerId)) { // MQTT RDS Controller is #2 Priority.
+        ControllerMgr.SetActiveTextFlag(MqttControllerId, false);
         Log.infoln("MQTT Controller's RDS Time has Ended.");
     }
-    else if (activeTextHttpFlg) { // HTTP RDS Controller is #3 Priority.
-        activeTextHttpFlg = false;
+    else if (ControllerMgr.GetActiveTextFlag(HttpControllerId)) { // HTTP RDS Controller is #3 Priority.
+        ControllerMgr.SetActiveTextFlag(HttpControllerId, false);
         Log.infoln("HTTP Controller's RDS Time has Ended.");
     }
     else if (checkLocalRdsAvail()) { // Local RDS is Lowest Priority.
-        activeTextLocalFlg = true;
-        rdsMsgTime         = rdsLocalMsgTime;
-        rdsRefreshPsnStr   = rdsLocalPsnStr;
+        ControllerMgr.SetActiveTextFlag(LocalControllerId, true);
+        rdsMsgTime = ControllerMgr.GetRdsMsgTime(LocalControllerId);
+        rdsRefreshPsnStr = ControllerMgr.GetRdsProgramServiceName(LocalControllerId);
 
-        sprintf(logBuff, "Local Controller RDS Will Use: PI=0x%04X, PTY=%u.", rdsLocalPiCode, rdsLocalPtyCode);
+        sprintf(logBuff,
+                "Local Controller RDS Will Use: PI=0x%04X, PTY=%u.",
+                ControllerMgr.GetPiCode(LocalControllerId),
+                ControllerMgr.GetPtyCode(LocalControllerId));
         Log.infoln(logBuff);
-        radio.setPiCode(rdsLocalPiCode);   // Set Local Controller's PI Code.
-        radio.setPtyCode(rdsLocalPtyCode); // Set Local Controller's PTY Code.
+        radio.setPiCode(ControllerMgr.GetPiCode(LocalControllerId)); // Set Local Controller's Pi Code.
+        radio.setPtyCode(ControllerMgr.GetPtyCode(LocalControllerId)); // Set Local Controller's PTY Code.
 
-        sprintf(logBuff, "Local Controller Sending RDS Station Name (%s).", rdsLocalPsnStr.c_str());
+        sprintf(logBuff, "Local Controller Sending RDS Station Name (%s).", ControllerMgr.GetRdsProgramServiceName(LocalControllerId).c_str());
         Log.infoln(logBuff);
-        radio.sendStationName(rdsLocalPsnStr);
+        radio.sendStationName(ControllerMgr.GetRdsProgramServiceName(LocalControllerId));
 
         sprintf(logBuff, "Local Controller Sending RDS RadioText Message");
         Log.infoln(logBuff);
@@ -354,7 +397,7 @@ void processRDS(void) {
                 rdsRefreshTextStr = rdsTextMsgStr;
                 radio.sendRadioText(rdsTextMsgStr);
                 updateUiRdsText(rdsTextMsgStr);
-                displayActiveController(LOCAL_CNTRL);
+                ControllerMgr.Display(LocalControllerId);
                 rdsMillis = millis();
             }
         }
@@ -364,7 +407,7 @@ void processRDS(void) {
                 rdsRefreshTextStr = rdsTextMsgStr;
                 radio.sendRadioText(rdsTextMsgStr);
                 updateUiRdsText(rdsTextMsgStr);
-                displayActiveController(LOCAL_CNTRL);
+                ControllerMgr.Display(LocalControllerId);
                 rdsMillis = millis();
             }
         }
@@ -374,7 +417,7 @@ void processRDS(void) {
                 rdsRefreshTextStr = rdsTextMsgStr;
                 radio.sendRadioText(rdsTextMsgStr);
                 updateUiRdsText(rdsTextMsgStr);
-                displayActiveController(LOCAL_CNTRL);
+                ControllerMgr.Display(LocalControllerId);
                 rdsMillis = millis();
             }
         }
@@ -390,16 +433,16 @@ void processRDS(void) {
         }
     }
     else { // No available RadioText message.
-        activeTextSerialFlg = false;
-        activeTextMqttFlg   = false;
-        activeTextHttpFlg   = false;
-        activeTextLocalFlg  = false;
+        ControllerMgr.SetActiveTextFlag(SerialControllerId, false);
+        ControllerMgr.SetActiveTextFlag(MqttControllerId, false);
+        ControllerMgr.SetActiveTextFlag(HttpControllerId, false);
+        ControllerMgr.SetActiveTextFlag(LocalControllerId, false);
 
         loop              = 0;                            // Reset Local RadioText to first message.
         rdsRefreshTextStr = "";                           // Erase RadioText Refresh message.
         rdsMillis         = millis() - rdsMsgTime + 1000; // Schedule next RadioText in 1Sec.
         Log.warningln("-> No RDS RadioText Available, Nothing Sent.");
-        displayActiveController(NO_CNTRL);
+        ControllerMgr.Display(NullControllerId);
     }
 
     updateUiRDSTmr(rdsMillis); // Refresh Countdown time on GUI homeTab.
@@ -412,29 +455,29 @@ void processRDS(void) {
 void resetControllerRdsValues(void)
 {
     // Local RDS Controller
-    radio.setPiCode(rdsLocalPiCode);    // Default RDS PI Code.
-    radio.setPtyCode(rdsLocalPtyCode);  // Default RDS PTY Code.
+    radio.setPiCode(ControllerMgr.GetPiCode(LocalControllerId)); // Local RDS PI Code is Fixed Value.
+    radio.setPtyCode(ControllerMgr.GetPtyCode(LocalControllerId)); // Default RDS PTY Code.
 
     // USB Serial RDS Controller. All values can be changed during runtime by Serial Commands.
-    rdsSerialPsnStr  = rdsLocalPsnStr;  // Default Program Service Name (Mimic Local Controller).
-    rdsSerialTextStr = "";              // Clear Controller's RadioText Message.
-    rdsSerialPiCode  = rdsLocalPiCode;  // Default PI Code (Mimic Local Controller).
-    rdsSerialPtyCode = rdsLocalPtyCode; // Default PTY Code (Mimic Local Controller).
-    rdsSerialMsgTime = rdsLocalMsgTime; // Default RDS Message Time (Mimic Local Controller),
+    ControllerMgr.SetRdsProgramServiceName(SerialControllerId, ControllerMgr.GetRdsProgramServiceName(LocalControllerId)); 	// Default Program Service Name (Mimic Local Controller).
+    ControllerMgr.SetPayloadText(SerialControllerId, ""); 																	// Clear Controller's RadioText Message.
+    ControllerMgr.SetPiCode(SerialControllerId, ControllerMgr.GetPiCode(LocalControllerId)); 								// Default PI Code (Mimic Local Controller).
+    ControllerMgr.SetPtyCode(SerialControllerId, ControllerMgr.GetPiCode(LocalControllerId));                               // Default PTY Code (Mimic Local Controller).
+    ControllerMgr.SetRdsMsgTime(SerialControllerId, ControllerMgr.GetRdsMsgTime(LocalControllerId)); 						// Default RDS Message Time (Mimic Local Controller),
 
     // MQTT RDS Controller. All values can be changed during runtime by MQTT Commands.
-    rdsMqttPsnStr  = rdsLocalPsnStr;    // Default Program Service Name (Mimic Local Controller).
-    rdsMqttTextStr = "";                // Clear Controller's RadioText Message.
-    rdsMqttPiCode  = rdsLocalPiCode;    // Default PI Code (Mimic Local Controller).
-    rdsMqttPtyCode = rdsLocalPtyCode;   // Default PTY Code (Mimic Local Controller).
-    rdsMqttMsgTime = rdsLocalMsgTime;   // Default RDS Message Time (Mimic Local Controller),
+    ControllerMgr.SetRdsProgramServiceName(MqttControllerId, ControllerMgr.GetRdsProgramServiceName(LocalControllerId)); 	// Default Program Service Name (Mimic Local Controller).
+    ControllerMgr.SetPayloadText(MqttControllerId, ""); 																	// Clear Controller's RadioText Message.
+    ControllerMgr.SetPiCode(MqttControllerId, ControllerMgr.GetPiCode(LocalControllerId)); 									// Default PI Code (Mimic Local Controller).
+    ControllerMgr.SetPtyCode(MqttControllerId, ControllerMgr.GetPiCode(LocalControllerId));                                 // Default PTY Code (Mimic Local Controller).
+	ControllerMgr.SetRdsMsgTime(MqttControllerId, ControllerMgr.GetRdsMsgTime(LocalControllerId)); 							// Default RDS Message Time (Mimic Local Controller),
 
     // HTTP RDS Controller. All values can be changed during runtime by HTTP Commands.
-    rdsHttpPsnStr  = rdsLocalPsnStr;    // Default Program Service Name (Mimic Local Controller).
-    rdsHttpTextStr = "";                // Clear Controller's RadioText Message.
-    rdsHttpPiCode  = rdsLocalPiCode;    // Default PI Code (Mimic Local Controller).
-    rdsHttpPtyCode = rdsLocalPtyCode;   // Default PTY Code (Mimic Local Controller).
-    rdsHttpMsgTime = rdsLocalMsgTime;   // Default RDS Message Time (Mimic Local Controller),
+    ControllerMgr.SetRdsProgramServiceName(HttpControllerId, ControllerMgr.GetRdsProgramServiceName(LocalControllerId)); 	// Default Program Service Name (Mimic Local Controller).
+    ControllerMgr.SetPayloadText(HttpControllerId, ""); 																	// Clear Controller's RadioText Message.
+    ControllerMgr.SetPiCode(HttpControllerId, ControllerMgr.GetPiCode(LocalControllerId)); 									// Default PI Code (Mimic Local Controller).
+    ControllerMgr.SetPtyCode(HttpControllerId, ControllerMgr.GetPiCode(LocalControllerId));                                 // Default PTY Code (Mimic Local Controller).
+    ControllerMgr.SetRdsMsgTime(HttpControllerId, ControllerMgr.GetRdsMsgTime(LocalControllerId)); 							// Default RDS Message Time (Mimic Local Controller),
 }
 
 // ************************************************************************************************
