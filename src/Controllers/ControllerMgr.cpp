@@ -312,7 +312,7 @@ void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
 // *********************************************************************************************
 void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    do // once
    {
@@ -334,7 +334,7 @@ void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
 
    // serializeJsonPretty(config, Serial);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 c_ControllerMgr ControllerMgr;

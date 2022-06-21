@@ -38,11 +38,11 @@ c_ControllerNONE::~c_ControllerNONE() {}
 // *********************************************************************************************
 void c_ControllerNONE::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 // *********************************************************************************************

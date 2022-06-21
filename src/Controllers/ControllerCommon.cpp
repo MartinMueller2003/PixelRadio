@@ -40,7 +40,7 @@ c_ControllerCommon::~c_ControllerCommon(){}
 // *********************************************************************************************
 void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    if (true == config.containsKey(N_ControllerEnabled))
    {
@@ -67,7 +67,7 @@ void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
       PayloadTest = (const char *)config[N_PayloadTest];
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 // *********************************************************************************************

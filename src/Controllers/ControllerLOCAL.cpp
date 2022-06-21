@@ -38,11 +38,11 @@ c_ControllerLOCAL::~c_ControllerLOCAL() {}
 // *********************************************************************************************
 void c_ControllerLOCAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 // *********************************************************************************************

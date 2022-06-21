@@ -38,7 +38,7 @@ c_ControllerFPPD::~c_ControllerFPPD(){}
 // ************************************************************************************************
 void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    ESPUI.addControl(
        ControlType::Separator,
@@ -81,7 +81,7 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
 
    Sequences.AddControls(ctrlTab);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // AddControls
 
@@ -133,7 +133,7 @@ void c_ControllerFPPD::ControllerEnabledCb(Control *sender, int type)
 // *********************************************************************************************
 void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
 
@@ -153,7 +153,7 @@ void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
    // DEBUG_V("Final");
    // serializeJsonPretty(config, Serial);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 // *********************************************************************************************

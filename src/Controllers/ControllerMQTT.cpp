@@ -760,7 +760,7 @@ void c_ControllerMQTT::setMqttNameCallback (Control *sender, int type)
 // *********************************************************************************************
 void c_ControllerMQTT::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
 
@@ -789,7 +789,7 @@ void c_ControllerMQTT::RestoreConfiguration(ArduinoJson::JsonObject &config)
       RemoteIp.fromString(Temp);
    }
    
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfiguration
 
 // *********************************************************************************************
