@@ -71,7 +71,7 @@ void c_ControllerHTTP::ControllerEnabledCb(Control *sender, int type)
 // ************************************************************************************************
 void c_ControllerHTTP::AddControls(uint16_t ctrlTab)
 {
-   // DEBUG_START;
+   DEBUG_START;
    
    ESPUI.addControl(
       ControlType::Separator, 
@@ -91,24 +91,29 @@ void c_ControllerHTTP::AddControls(uint16_t ctrlTab)
          reinterpret_cast<c_ControllerHTTP*>(param)->ControllerEnabledCb(sender, type);
       },
       this);
-   // DEBUG_END;
+      
+   DEBUG_END;
 } // AddControls
 
 // *********************************************************************************************
-void c_ControllerHTTP::RestoreControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerHTTP::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   // DEBUG_END;
-} // RestoreControllerConfiguration
+   c_ControllerCommon::RestoreConfiguration(config);
+
+   DEBUG_END;
+} // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerHTTP::SaveControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerHTTP::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
+   c_ControllerCommon::SaveConfiguration(config);
+
    // DEBUG_END;
-} // SaveControllerConfiguration
+} // SaveConfiguration
 
 // *********************************************************************************************
 // EOF

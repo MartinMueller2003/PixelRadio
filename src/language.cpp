@@ -22,6 +22,8 @@
 // ************************************************************************************************
 #include "Language.h"
 
+const PROGMEM char N_Baudrate                [] = "Baudrate";
+const PROGMEM char N_ControllerEnabled       [] = "ControllerEnabled";
 const PROGMEM char N_controllers             [] = "controllers";
 const PROGMEM char N_default                 [] = "default";
 const PROGMEM char N_DisplayFseqName         [] = "DisplayFseqName";
@@ -33,5 +35,15 @@ const PROGMEM char N_MaxIdleSec              [] = "MaxIdleSex";
 const PROGMEM char N_message                 [] = "message";
 const PROGMEM char N_messages                [] = "messages";
 const PROGMEM char N_Messages                [] = "Messages";
+const PROGMEM char N_MQTT_IP_STR             [] = "MQTT_IP_STR";
+const PROGMEM char N_MQTT_NAME_STR           [] = "MQTT_NAME_STR";
+const PROGMEM char N_MQTT_PW_STR             [] = "MQTT_PW_STR";
+const PROGMEM char N_MQTT_USER_STR           [] = "MQTT_USER_STR";
 const PROGMEM char N_name                    [] = "name";
+const PROGMEM char N_PayloadTest             [] = "PayloadTest";
+const PROGMEM char N_PiCode                  [] = "PiCode";
+const PROGMEM char N_ProgramServiceName      [] = "ProgramServiceName";
+const PROGMEM char N_PtyCode                 [] = "PtyCode";
 const PROGMEM char N_sequences               [] = "sequences";
+
+

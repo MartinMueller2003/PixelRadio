@@ -30,37 +30,39 @@
 class c_ControllerCommon
 {
 private:
-   virtual void SaveControllerConfiguration(ArduinoJson::JsonObject &config) {}
-   virtual void RestoreControllerConfiguration(ArduinoJson::JsonObject &config) {}
 
 protected:
-   String      Name; // Name of this controller
-   CtypeId     TypeId                           = NullControllerId;
+   // values stored in configuration file
+   bool        ControllerEnabled                = false;
    uint32_t    PiCode                           = 0;
    uint32_t    PtyCode                          = 0;
    String      ProgramServiceName;
    String      PayloadTest;
+   uint32_t    RdsMsgTime                       = 0;
+
+   // operational data
+   String      Name; // Name of this controller
+   CtypeId     TypeId                           = NullControllerId;
    bool        TextFlag                         = false;
    bool        StopFlag                         = false;
-   int32_t     RdsMsgTime                       = 0;
    bool        activeTextFlag                   = false;
-   bool        ControllerEnabled                = false;
-   // String      ControlStr;
-   uint16_t    EspuiParentElementId             = 0;
-   uint16_t    ControlerEnabledElementId        = 0;
-   uint16_t    EspuiMsgId                       = 0;
-   IPAddress   RemoteIp                         = INADDR_NONE;
    bool        OnlineFlag                       = false;
+
+   // ESPUI control IDs
+   uint16_t    EspuiParentElementId             = Control::noParent;
+   uint16_t    ControlerEnabledElementId        = Control::noParent;
+   uint16_t    EspuiMsgId                       = Control::noParent;
+
 public:
                      c_ControllerCommon(String MyName, c_ControllerMgr::ControllerTypeId_t MyId);
    virtual           ~c_ControllerCommon();
    virtual void      begin() {}
    virtual void      poll() {}
    virtual void      AddControls(uint16_t ctrlTab) {}
-           void      SaveConfiguration(ArduinoJson::JsonObject &config);
-           void      RestoreConfiguration(ArduinoJson::JsonObject &config);
+   virtual void      RestoreConfiguration(ArduinoJson::JsonObject &config);
+   virtual void      SaveConfiguration(ArduinoJson::JsonObject &config);
 
-   String            GetName() { return Name; }
+   String &          GetName() { return Name; }
 
    virtual void      Display(uint16_t msgId) { ESPUI.print(msgId, String(F("Source: ")) + Name + String(F(" Controller"))); }
    
@@ -82,8 +84,8 @@ public:
    virtual void      SetPayloadText(String &value) { PayloadTest = value; }
    virtual String    GetPayloadText() { return PayloadTest; }
 
-   virtual void      SetRdsMsgTime(int32_t value) { RdsMsgTime = value; }
-   virtual int32_t   GetRdsMsgTime() { return RdsMsgTime; }
+   virtual void      SetRdsMsgTime(uint32_t value) { RdsMsgTime = value; }
+   virtual uint32_t  GetRdsMsgTime() { return RdsMsgTime; }
 
    virtual void      SetActiveTextFlag(bool value) { activeTextFlag = value; }
    virtual bool      GetActiveTextFlag() { return activeTextFlag; }

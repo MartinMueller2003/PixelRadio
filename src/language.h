@@ -276,6 +276,8 @@
 # define WIFI_MDNS_NAME_STR  "MDNS NAME"
 #endif // ifdef OTA_ENB
 
+extern const PROGMEM char N_Baudrate[];
+extern const PROGMEM char N_ControllerEnabled[];
 extern const PROGMEM char N_controllers[];
 extern const PROGMEM char N_default[];
 extern const PROGMEM char N_DisplayFseqName[];
@@ -287,5 +289,13 @@ extern const PROGMEM char N_MaxIdleSec[];
 extern const PROGMEM char N_message[];
 extern const PROGMEM char N_messages[];
 extern const PROGMEM char N_Messages[];
+extern const PROGMEM char N_MQTT_IP_STR[];
+extern const PROGMEM char N_MQTT_NAME_STR[];
+extern const PROGMEM char N_MQTT_PW_STR[];
+extern const PROGMEM char N_MQTT_USER_STR[];
 extern const PROGMEM char N_name[];
+extern const PROGMEM char N_PayloadTest[];
+extern const PROGMEM char N_PiCode[];
+extern const PROGMEM char N_ProgramServiceName[];
+extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];

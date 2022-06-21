@@ -38,7 +38,7 @@ c_ControllerFPPD::~c_ControllerFPPD(){}
 // ************************************************************************************************
 void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
    ESPUI.addControl(
        ControlType::Separator,
@@ -81,7 +81,7 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
 
    Sequences.AddControls(ctrlTab);
 
-   // DEBUG_END;
+   DEBUG_END;
 
 } // AddControls
 
@@ -131,9 +131,11 @@ void c_ControllerFPPD::ControllerEnabledCb(Control *sender, int type)
 } // controllerCallback
 
 // *********************************************************************************************
-void c_ControllerFPPD::RestoreControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+   DEBUG_START;
+
+   c_ControllerCommon::RestoreConfiguration(config);
 
    if (config.containsKey(N_MaxIdleSec))
    {
@@ -151,13 +153,15 @@ void c_ControllerFPPD::RestoreControllerConfiguration(ArduinoJson::JsonObject &c
    // DEBUG_V("Final");
    // serializeJsonPretty(config, Serial);
 
-   // DEBUG_END;
-} // RestoreControllerConfiguration
+   DEBUG_END;
+} // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerFPPD::SaveControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
+
+   c_ControllerCommon::SaveConfiguration(config);
 
    config[N_MaxIdleSec] = MaxIdleTimeSec;
 
@@ -173,7 +177,7 @@ void c_ControllerFPPD::SaveControllerConfiguration(ArduinoJson::JsonObject &conf
    // serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
-} // SaveControllerConfiguration
+} // SaveConfiguration
 
 // ************************************************************************************************
 void c_ControllerFPPD::SequenceLearningEnabledCb(Control *sender, int type)

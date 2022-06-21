@@ -506,28 +506,32 @@ void c_ControllerSERIAL::AddControls(uint16_t ctrlTab)
 } // AddControls
 
 // *********************************************************************************************
-void c_ControllerSERIAL::RestoreControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerSERIAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   if(config.containsKey(F("Baudrate")))
+   c_ControllerCommon::RestoreConfiguration(config);
+
+   if(config.containsKey(N_Baudrate))
    {
-      BaudRateStr = (const char *)config[F("Baudrate")];
+      BaudRateStr = (const char *)config[N_Baudrate];
       SetBaudrate(BaudRateStr);
    }
 
-   // DEBUG_END;
-} // RestoreControllerConfiguration
+   DEBUG_END;
+} // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerSERIAL::SaveControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerSERIAL::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   config[F("Baudrate")] = BaudRateStr;
+   c_ControllerCommon::SaveConfiguration(config);
+
+   config[N_Baudrate] = BaudRateStr;
 
    // DEBUG_END;
-} // SaveControllerConfiguration
+} // SaveConfiguration
 
 // *********************************************************************************************
 // EOF

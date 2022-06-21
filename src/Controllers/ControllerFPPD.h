@@ -28,8 +28,8 @@ public:
    virtual  ~c_ControllerFPPD();
 
    void     AddControls(uint16_t ctrlTab);
-   void     RestoreControllerConfiguration(ArduinoJson::JsonObject & config);
-   void     SaveControllerConfiguration(ArduinoJson::JsonObject & config);
+   void     RestoreConfiguration(ArduinoJson::JsonObject & config);
+   void     SaveConfiguration(ArduinoJson::JsonObject & config);
    void     ControllerEnabledCb(Control *sender, int type);
    void     SequenceLearningEnabledCb(Control *sender, int type);
 
@@ -42,8 +42,9 @@ private:
    uint16_t SequenceLearningEnabledElementId       = Control::noParent;
    uint16_t SequenceLearningLabelEnabledElementId  = Control::noParent;
    uint16_t EspuiSequencesElementId                = Control::noParent;
-   uint16_t MaxIdleTimeSec                         = 10;
    bool     SequenceLearningEnabled                = true;
+   uint16_t MaxIdleTimeSec                         = 10;
+
    c_ControllerFPPDSequences Sequences;
 
 }; // c_ControllerFPPD

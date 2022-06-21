@@ -18,13 +18,14 @@
 
 // *********************************************************************************************
 #include "ControllerCommon.h"
+#include "../Language.h"
 
 #if __has_include("../memdebug.h")
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
 // *********************************************************************************************
-// class c_ControllerCommon : public c_ControllerCommon
+// class c_ControllerCommon
                          
 // *********************************************************************************************
 c_ControllerCommon::c_ControllerCommon(String _Name, c_ControllerMgr::ControllerTypeId_t _Id)
@@ -37,57 +38,51 @@ c_ControllerCommon::c_ControllerCommon(String _Name, c_ControllerMgr::Controller
 c_ControllerCommon::~c_ControllerCommon(){}
 
 // *********************************************************************************************
+void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
+{
+   DEBUG_START;
+
+   if (true == config.containsKey(N_ControllerEnabled))
+   {
+      ControllerEnabled = config[N_ControllerEnabled];
+   }
+
+   if (true == config.containsKey(N_PiCode))
+   {
+      PiCode = config[N_PiCode];
+   }
+
+   if (true == config.containsKey(N_PtyCode))
+   {
+      PtyCode = config[N_PtyCode];
+   }
+
+   if (true == config.containsKey(N_ProgramServiceName))
+   {
+      ProgramServiceName = (const char *)config[N_ProgramServiceName];
+   }
+
+   if (true == config.containsKey(N_ProgramServiceName))
+   {
+      PayloadTest = (const char *)config[N_PayloadTest];
+   }
+
+   DEBUG_END;
+} // RestoreConfiguration
+
+// *********************************************************************************************
 void c_ControllerCommon::SaveConfiguration(ArduinoJson::JsonObject & config)
 {
    // DEBUG_START;
 
-   do // once
-   {
-      if (false == config.containsKey(Name))
-      {
-         // DEBUG_V();
-         config.createNestedObject(Name);
-      }
-      // DEBUG_V();
-
-      JsonObject ControllerConfig = config[Name];
-
-      ControllerConfig[F("ControllerEnabled")] = ControllerEnabled;
-
-      SaveControllerConfiguration(ControllerConfig);
-
-   } while (false);
+   config[N_ControllerEnabled]   = ControllerEnabled;
+   config[N_PiCode]              = PiCode;
+   config[N_PtyCode]             = PtyCode;
+   config[N_ProgramServiceName]  = ProgramServiceName;
+   config[N_PayloadTest]         = PayloadTest;
 
    // DEBUG_END;
 } // SaveConfiguration
-
-// *********************************************************************************************
-void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
-{
-   // DEBUG_START;
-
-   do // once
-   {
-      if (false == config.containsKey(Name))
-      {
-         // DEBUG_V(String("No Config Found for: ") + Name);
-         break;
-      }
-      // DEBUG_V();
-
-      JsonObject ControllerConfig = config[Name];
-
-      if (true == ControllerConfig.containsKey(F("ControllerEnabled")))
-      {
-         ControllerEnabled = ControllerConfig[F("ControllerEnabled")];
-      }
-
-      RestoreControllerConfiguration(ControllerConfig);
-
-   } while (false);
-
-   // DEBUG_END;
-} // RestoreConfiguration
 
 // *********************************************************************************************
 // EOF

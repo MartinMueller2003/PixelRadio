@@ -31,24 +31,29 @@ c_ControllerLOCAL::c_ControllerLOCAL() : c_ControllerCommon("LOCAL", c_Controlle
 {
 
 } // c_ControllerLOCAL
+
 // *********************************************************************************************
 c_ControllerLOCAL::~c_ControllerLOCAL() {}
 
 // *********************************************************************************************
-void c_ControllerLOCAL::RestoreControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   // DEBUG_END;
-} // RestoreControllerConfiguration
+   c_ControllerCommon::RestoreConfiguration(config);
+
+   DEBUG_END;
+} // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerLOCAL::SaveControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
+   c_ControllerCommon::SaveConfiguration(config);
+
    // DEBUG_END;
-} // SaveControllerConfiguration
+} // SaveConfiguration
 
 // *********************************************************************************************
 // EOF

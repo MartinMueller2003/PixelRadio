@@ -106,7 +106,6 @@ String ipAddrStr        = "";                // DHCP IP Address;
 String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
 
 IPAddress hotSpotIP   = HOTSPOT_IP_DEF;
-IPAddress mqttIP      = MQTT_IP_DEF;
 IPAddress staticIP    = IP_ADDR_DEF;
 IPAddress subNet      = SUBNET_MASK_DEF;
 IPAddress wifiDNS     = WIFI_ADDR_DEF;

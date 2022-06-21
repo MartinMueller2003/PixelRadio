@@ -23,8 +23,11 @@
 class c_ControllerNONE : public c_ControllerCommon
 {
 public:
-   c_ControllerNONE();
-   virtual ~c_ControllerNONE();
+            c_ControllerNONE();
+   virtual  ~c_ControllerNONE();
+   void     SaveConfiguration(ArduinoJson::JsonObject &config);
+   void     RestoreConfiguration(ArduinoJson::JsonObject &config);
+   
 }; // c_ControllerNONE
 
 // *********************************************************************************************

@@ -32,8 +32,8 @@ public:
    virtual  ~c_ControllerSERIAL();
    void     begin() { initSerialControl(); }
    void     poll() { serialCommands(); }
-   void     SaveControllerConfiguration(ArduinoJson::JsonObject &config);
-   void     RestoreControllerConfiguration(ArduinoJson::JsonObject &config);
+   void     SaveConfiguration(ArduinoJson::JsonObject &config);
+   void     RestoreConfiguration(ArduinoJson::JsonObject &config);
    bool     GetControlFlag() { return ctrlSerialFlg(); }
 
    void     gpioSerialControl(String paramStr, uint8_t pin); // Serial handler for GPIO Commands.

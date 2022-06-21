@@ -39,11 +39,6 @@
 /* Uncomment MQTT_ENB define statement to enable the MQTT Controller. Approx 17KB used. */
 #define MQTT_ENB
 
-/* If you have an MQTT Broker then configure it here. */
-const IPAddress MQTT_IP_DEF = { 0u, 0u, 0u, 0u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
-//const IPAddress MQTT_IP_DEF = { 192u, 168u, 1u, 202u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
-const uint32_t MQTT_PORT_DEF = 1883;                // 1883 is Default MQTT Port. Change it here if differnt port is needed.
-
 /* Uncomment HTTP_ENB define statement to enable the HTTP Controller. Approx 13KB used. */
 #define HTTP_ENB
 

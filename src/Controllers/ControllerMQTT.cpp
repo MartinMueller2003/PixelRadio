@@ -34,8 +34,6 @@ static String EmptyString = "";
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT() : c_ControllerCommon("MQTT", c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
 {
-   mqttPort = MQTT_PORT_DEF;
-   RemoteIp = MQTT_IP_DEF;
 } // c_ControllerMQTT
 
 // *********************************************************************************************
@@ -741,7 +739,7 @@ void c_ControllerMQTT::setMqttNameCallback (Control *sender, int type)
       mqttNameStr = sender->value;
       mqttNameStr = mqttNameStr.substring (0, MQTT_NAME_MAX_SZ);
 
-      if (mqttNameStr.length () == 0)
+      if (mqttNameStr.isEmpty())
       {
          // DEBUG_V();
          mqttNameStr = MQTT_NAME_DEF_STR;
@@ -760,48 +758,54 @@ void c_ControllerMQTT::setMqttNameCallback (Control *sender, int type)
 } // setMqttNameCallback
 
 // *********************************************************************************************
-void c_ControllerMQTT::RestoreControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerMQTT::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
-   if (true == config.containsKey(F("MQTT_NAME_STR")))
+   DEBUG_START;
+
+   c_ControllerCommon::RestoreConfiguration(config);
+
+   if (true == config.containsKey(F(N_MQTT_NAME_STR)))
    {
       // DEBUG_V();
-      mqttNameStr = (const char *)config[F("MQTT_NAME_STR")];
+      mqttNameStr = (const char *)config[F(N_MQTT_NAME_STR)];
    }
 
-   if (true == config.containsKey(F("MQTT_PW_STR")))
+   if (true == config.containsKey(F(N_MQTT_PW_STR)))
    {
       // DEBUG_V();
-      mqttPwStr = (const char *)config[F("MQTT_PW_STR")];
+      mqttPwStr = (const char *)config[F(N_MQTT_PW_STR)];
    }
 
-   if (true == config.containsKey(F("MQTT_USER_STR")))
+   if (true == config.containsKey(F(N_MQTT_USER_STR)))
    {
       // DEBUG_V();
-      mqttUserStr = (const char *)config[F("MQTT_USER_STR")];
+      mqttUserStr = (const char *)config[F(N_MQTT_USER_STR)];
    }
 
-   if (true == config.containsKey(F("MQTT_IP_STR")))
+   if (true == config.containsKey(F(N_MQTT_IP_STR)))
    {
       // DEBUG_V();
-      String Temp = (const char *)config[F("MQTT_IP_STR")];
+      String Temp = (const char *)config[F(N_MQTT_IP_STR)];
       RemoteIp.fromString(Temp);
    }
-   // DEBUG_END;
-} // RestoreControllerConfiguration
+   
+   DEBUG_END;
+} // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerMQTT::SaveControllerConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerMQTT::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   config["MQTT_NAME_STR"] = mqttNameStr;
-   config["MQTT_PW_STR"]   = mqttPwStr;
-   config["MQTT_USER_STR"] = mqttUserStr;
-   config["MQTT_IP_STR"]   = RemoteIp.toString();
+   c_ControllerCommon::SaveConfiguration(config);
+
+   config[N_MQTT_NAME_STR] = mqttNameStr;
+   config[N_MQTT_PW_STR]   = mqttPwStr;
+   config[N_MQTT_USER_STR] = mqttUserStr;
+   config[N_MQTT_IP_STR]   = RemoteIp.toString();
 
    // DEBUG_END;
-} // SaveControllerConfiguration
+} // SaveConfiguration
 
 // *************************************************************************************************************************
 // gpioMqttControl (): MQTT handler for GPIO Commands. This is a companion to mqttCallback ().

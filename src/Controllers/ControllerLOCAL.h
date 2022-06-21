@@ -26,8 +26,8 @@ public:
    c_ControllerLOCAL();
    virtual ~c_ControllerLOCAL();
 
-   void SaveControllerConfiguration(ArduinoJson::JsonObject &config);
-   void RestoreControllerConfiguration(ArduinoJson::JsonObject &config);
+   void SaveConfiguration(ArduinoJson::JsonObject &config);
+   void RestoreConfiguration(ArduinoJson::JsonObject &config);
 
 }; // c_ControllerLOCAL
 

@@ -25,54 +25,52 @@
 class c_ControllerMQTT : public c_ControllerCommon
 {
 public:
-                  c_ControllerMQTT(void);
-   virtual        ~c_ControllerMQTT(void);
-   void           Begin(void);
-   void           poll(void);
-   void           SaveControllerConfiguration(ArduinoJson::JsonObject &config);
-   void           RestoreControllerConfiguration(ArduinoJson::JsonObject &config);
+            c_ControllerMQTT(void);
+   virtual  ~c_ControllerMQTT(void);
+   void     Begin(void);
+   void     poll(void);
+   void     SaveConfiguration(ArduinoJson::JsonObject &config);
+   void     RestoreConfiguration(ArduinoJson::JsonObject &config);
 
-   void           AddControls(uint16_t ctrlTab);
-   void           setMqttAuthenticationCallback(Control *sender, int type);
-   void           setMqttNameCallback(Control *sender, int type);
-   void           setRemoteIpAddrCallback(Control *sender, int type);
-   void           ControllerEnabledCb(Control *sender, int type);
-   void           mqttClientCallback(const char *topic, byte *payload, unsigned int length);
+   void     AddControls(uint16_t ctrlTab);
+   void     setMqttAuthenticationCallback(Control *sender, int type);
+   void     setMqttNameCallback(Control *sender, int type);
+   void     setRemoteIpAddrCallback(Control *sender, int type);
+   void     ControllerEnabledCb(Control *sender, int type);
+   void     mqttClientCallback(const char *topic, byte *payload, unsigned int length);
 
 private:
-   void           Init(void);
-   void           mqttReconnect(bool resetFlg);
-   void           mqttSendMessages(void);
-   void           updateUiMqttMsg(String msgStr);
-   String         makeMqttCmdStr(String cmdStr);
-   void           gpioMqttControl(String payloadStr, gpio_num_t pin);
-   String         returnClientCode(int code);
-   void           TestParameters();
+   void     Init(void);
+   void     mqttReconnect(bool resetFlg);
+   void     mqttSendMessages(void);
+   void     updateUiMqttMsg(String msgStr);
+   String   makeMqttCmdStr(String cmdStr);
+   void     gpioMqttControl(String payloadStr, gpio_num_t pin);
+   String   returnClientCode(int code);
+   void     TestParameters();
 
    WiFiClient     wifiClient;
    PubSubClient   mqttClient;
 
 #define MQTT_NAME_DEF_STR F("pixelradio") // Default MQTT Topic / Subscription Name.
+/* If you have an MQTT Broker then configure it here. */
+const IPAddress MQTT_IP_DEF = { 0u, 0u, 0u, 0u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
+//const IPAddress MQTT_IP_DEF = { 192u, 168u, 1u, 202u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
+const uint32_t MQTT_PORT_DEF = 1883;                // 1883 is Default MQTT Port. Change it here if differnt port is needed.
 
-   /*
-      uint16_t ctrlMqttIpID = 0;
-      uint16_t ctrlMqttMsgID = 0;
-      uint16_t ctrlMqttNameID = 0;
-      uint16_t ctrlMqttPortID = 0;
-      uint16_t ctrlMqttUserID = 0;
-      uint16_t ctrlMqttPwID = 0;
-   */
-   uint16_t    EspuiMessageAreaId   = 0;
-   uint16_t    EspuiNameID          = 0;
-   uint16_t    EspuiIpID            = 0;
-   uint16_t    EspuiPortID          = 0;
-   uint16_t    EspuiUserID          = 0;
-   uint16_t    EspuiPwID            = 0;
-   uint16_t    mqttPort             = 0;
+   uint16_t    EspuiMessageAreaId   = Control::noParent;
+   uint16_t    EspuiNameID          = Control::noParent;
+   uint16_t    EspuiIpID            = Control::noParent;
+   uint16_t    EspuiPortID          = Control::noParent;
+   uint16_t    EspuiUserID          = Control::noParent;
+   uint16_t    EspuiPwID            = Control::noParent;
+   
+   uint16_t    mqttPort             = MQTT_PORT_DEF;
    String      mqttNameStr          = MQTT_NAME_DEF_STR;                // Control.
    String      mqttPwStr            = MQTT_PW_STR;                      // Control.
    String      mqttUserStr          = MQTT_ID_STR;                      // Control.
    String      MessageStr           = "";
+   IPAddress   RemoteIp             = MQTT_IP_DEF;
    
 const uint8_t  MQTT_FAIL_CNT       = 10;          // Maximum failed MQTT reconnects before disabling MQTT.
 const uint16_t MQTT_KEEP_ALIVE     = 90;          // MQTT Keep Alive Time, in Secs.
