@@ -99,7 +99,7 @@ void c_ControllerFPPDSequence::AddControls(uint16_t ctrlTab, uint16_t ParentElem
 
    // DEBUG_V(String("EspuiElementId: ") + String(EspuiElementId));
 
-   Messages.SetEnableDisplayFseqName(true);
+   Messages.SetShowFseqNameSelection(true);
    Messages.AddControls(EspuiRootElementId);
 
    // DEBUG_END;
@@ -125,9 +125,11 @@ void c_ControllerFPPDSequence::RestoreConfig(ArduinoJson::JsonObject & config)
       // DEBUG_V("Create missing messages section");
       config.createNestedObject(N_messages);
    }
-
    JsonObject MessagesConfig = config[N_messages];
-   MessagesConfig[N_EnableDisplayFseqName] = true;
+
+   // tell the messages module to allow the user to see the FSEQ name selection
+   Messages.SetShowFseqNameSelection(true);
+
    MessagesConfig[N_name] = String(Name + " " + N_Messages);
    Messages.RestoreConfig(MessagesConfig);
 

@@ -379,8 +379,8 @@ void c_ControllerSERIAL::serialCallback(Control *sender, int type)
    // DEBUG_V();
 
    displaySaveWarning();
-   Log.infoln((String(F("Serial Controller Set to: ")) + BaudRateStr).c_str());
    displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("Serial Controller Set to: ")) + BaudRateStr).c_str());
 
    // DEBUG_END;
 } // serialCallback
@@ -500,8 +500,8 @@ void c_ControllerSERIAL::AddControls(uint16_t ctrlTab)
       logLevelStr != DIAG_LOG_SILENT_STR ? CTLR_SERIAL_MSG_STR : "", 
       ControlColor::Turquoise, 
       ControlerEnabledElementId);
-
    ESPUI.setElementStyle(EspuiMsgId, CSS_LABEL_STYLE_BLACK);
+
    // DEBUG_END;
 } // AddControls
 

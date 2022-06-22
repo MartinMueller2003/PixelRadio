@@ -43,26 +43,11 @@ void c_ControllerHTTP::ControllerEnabledCb(Control *sender, int type)
 {
    // DEBUG_START;
 
-   String OnOffStr;
-   if (sender->id == EspuiControlID)
-   {
-      // DEBUG_V();
-      if (type == S_ACTIVE)
-      {
-         // DEBUG_V();
-         ControllerEnabled = true;
-         OnOffStr = F("On");
-      }
-      else if (type == S_INACTIVE)
-      {
-         // DEBUG_V();
-         ControllerEnabled = false;
-         OnOffStr = F("Off");
-      }
-      // DEBUG_V();
-      displaySaveWarning();
-      Log.infoln((String(F("TTP Controller Set to: ")) + OnOffStr).c_str());
-   }
+   ControllerEnabled = (type == S_ACTIVE);
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("HTTP Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;
 

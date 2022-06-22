@@ -299,12 +299,19 @@ void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
 
       for (auto &currentController : ListOfControllers)
       {
-         currentController.pController->SaveConfiguration(ControllerConfigs);
+         String ControlerName = currentController.pController->GetName();
+         if (!ControllerConfigs.containsKey(ControlerName))
+         {
+            ControllerConfigs.createNestedObject(ControlerName);
+         }
+         JsonObject ControllerConfig = ControllerConfigs[ControlerName];
+
+         currentController.pController->SaveConfiguration(ControllerConfig);
       }
 
    } while (false);
 
-   // serializeJsonPretty(config, Serial);
+   serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
 } // SaveConfiguration
@@ -313,6 +320,8 @@ void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
 void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
+
+   // serializeJsonPretty(config, Serial);
 
    do // once
    {
@@ -327,12 +336,16 @@ void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
 
       for (auto &currentController : ListOfControllers)
       {
-         currentController.pController->RestoreConfiguration(ControllerConfigs);
+         String ControlerName = currentController.pController->GetName();
+         if (!ControllerConfigs.containsKey(ControlerName))
+         {
+            ControllerConfigs.createNestedObject(ControlerName);
+         }
+         JsonObject ControllerConfig = ControllerConfigs[ControlerName];
+         currentController.pController->RestoreConfiguration(ControllerConfig);
       }
 
    } while (false);
-
-   // serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
 } // RestoreConfiguration

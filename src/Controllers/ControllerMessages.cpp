@@ -248,7 +248,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
       ESPUI.setElementStyle(ControllerMessagesUiControls.EspuiStatusMsgElementId, 
                             CSS_LABEL_STYLE_BLACK);
 
-      if (EnableDisplayFseqName)
+      if (ShowFseqNameSelection)
       {
          // DEBUG_V(String("Add Label 2"));
          ControllerMessagesUiControls.EspuiDisplayFseqNameLabelElementId = ESPUI.addControl(
@@ -261,6 +261,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
                                CSS_LABEL_STYLE_BLACK);
 
          // DEBUG_V(String("Add Display fseq name Switcher"));
+         // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
          ControllerMessagesUiControls.EspuiDisplayFseqNameElementId = ESPUI.addControl(
              ControlType::Switcher,
              EmptyString.c_str(),
@@ -483,6 +484,10 @@ void c_ControllerMessages::ChoiceListCb(Control *sender, int type)
       }
    }
 
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("FPPD Changed to: ")) + CurrentSeletedMessageName).c_str());
+
    TextChangeCb(nullptr, 0);
 
    // DEBUG_END;
@@ -493,12 +498,13 @@ void c_ControllerMessages::ChoiceListCb(Control *sender, int type)
 void c_ControllerMessages::DisplayFseqNameCb(Control *sender, int type)
 {
    // DEBUG_START;
-   // DEBUG_V(String("Title: '") + Title + "'");
-   // DEBUG_V(String(" Type: '") + type + "'");
-   // DEBUG_V(String("value: '") + sender->value + "'");
 
    DisplayFseqName = (S_ACTIVE == type);
    // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName))
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("FPPD Display fseq Name Set to: ")) + String(DisplayFseqName ? "On" : "Off")).c_str());
 
    // DEBUG_END;
 
@@ -552,14 +558,14 @@ void c_ControllerMessages::RestoreConfig(ArduinoJson::JsonObject &config)
    // DEBUG_START;
 
    // serializeJsonPretty(config, Serial);
-   if (config.containsKey(N_EnableDisplayFseqName))
-   {
-      EnableDisplayFseqName = config[N_EnableDisplayFseqName];
-   }
 
-   if (config.containsKey(N_DisplayFseqName))
+   if (ShowFseqNameSelection)
    {
-      DisplayFseqName = config[N_DisplayFseqName];
+      if (config.containsKey(N_DisplayFseqName))
+      {
+         DisplayFseqName = config[N_DisplayFseqName];
+         // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
+      }
    }
 
    if (config.containsKey(N_name))
@@ -600,8 +606,12 @@ void c_ControllerMessages::SaveConfig(ArduinoJson::JsonObject &config)
    // DEBUG_START;
 
    config[N_name] = Title;
-   config[N_EnableDisplayFseqName] = EnableDisplayFseqName;
-   config[N_DisplayFseqName] = DisplayFseqName;
+
+   if (ShowFseqNameSelection)
+   {
+      config[N_DisplayFseqName] = DisplayFseqName;
+      // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
+   }
 
    if (!config.containsKey(N_list))
    {
@@ -629,12 +639,6 @@ void c_ControllerMessages::SaveConfig(ArduinoJson::JsonObject &config)
 
    // DEBUG_END;
 } // SaveConfig
-
-// *********************************************************************************************
-void c_ControllerMessages::SetEnableDisplayFseqName(bool value)
-{
-   EnableDisplayFseqName = value;
-} // SetEnableDisplayFseqName
 
 // *********************************************************************************************
 void c_ControllerMessages::SetTitle(String &value)

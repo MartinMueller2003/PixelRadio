@@ -97,34 +97,13 @@ void c_ControllerFPPD::begin()
 void c_ControllerFPPD::ControllerEnabledCb(Control *sender, int type)
 {
    // DEBUG_START;
-   String tempStr;
-   if (sender->id == ControlerEnabledElementId)
-   {
-      // DEBUG_V();
-      if (type == S_ACTIVE)
-      {
-         // DEBUG_V(S_ACTIVE);
-         ControllerEnabled = true;
-      }
-      else if (type == S_INACTIVE)
-      {
-         // DEBUG_V(S_INACTIVE);
-         ControllerEnabled = false; // Must set flag BEFORE mqqtReconnect!
-      }
-      displaySaveWarning();
-      tempStr = F("FPPD Controller Set to: ");
-      tempStr += ControllerEnabled ? "On" : "Off";
-      // DEBUG_V();
-   }
-   else
-   {
-      tempStr = String("controllerCallback: ") + BAD_SENDER_STR;
-      // DEBUG_V();
-   }
+
+   ControllerEnabled = (type == S_ACTIVE);
 
    // DEBUG_V();
+   displaySaveWarning();
    displayRdsText(); // Update RDS RadioText.
-   Log.infoln(tempStr.c_str());
+   Log.infoln((String(F("FPPD Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;
 
@@ -136,6 +115,11 @@ void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
    // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
+
+   if (config.containsKey(N_SequenceLearningEnabled))
+   {
+      SequenceLearningEnabled = config[N_SequenceLearningEnabled];
+   }
 
    if (config.containsKey(N_MaxIdleSec))
    {
@@ -159,11 +143,12 @@ void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
 // *********************************************************************************************
 void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
    c_ControllerCommon::SaveConfiguration(config);
 
    config[N_MaxIdleSec] = MaxIdleTimeSec;
+   config[N_SequenceLearningEnabled] = SequenceLearningEnabled;
 
    if (!config.containsKey(N_sequences))
    {
@@ -176,7 +161,7 @@ void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
    // DEBUG_V("Final");
    // serializeJsonPretty(config, Serial);
 
-   // DEBUG_END;
+   DEBUG_END;
 } // SaveConfiguration
 
 // ************************************************************************************************
@@ -185,6 +170,10 @@ void c_ControllerFPPD::SequenceLearningEnabledCb(Control *sender, int type)
    // DEBUG_START;
 
    SequenceLearningEnabled = (S_ACTIVE == type);
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("FPPD Controller Sequence Learning Set to: ")) + String(SequenceLearningEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;
 

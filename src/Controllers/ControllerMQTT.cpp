@@ -215,6 +215,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
                                   ctrlTab);
    ESPUI.setPanelStyle(EspuiPortID, String(F("font-size: 1.25em;")));
    ESPUI.setElementStyle(EspuiPortID, "max-width: 40%;");
+
    // DEBUG_V();
 
    EspuiUserID = ESPUI.addControl (ControlType::Text,
@@ -550,36 +551,24 @@ void c_ControllerMQTT::mqttReconnect(bool resetFlg)
 void c_ControllerMQTT::ControllerEnabledCb (Control *sender, int type)
 {
    // DEBUG_START;
-   String tempStr;
-   if (sender->id == ControlerEnabledElementId)
+
+   if (type == S_ACTIVE)
    {
       // DEBUG_V();
-      if (type == S_ACTIVE)
-      {
-         // DEBUG_V();
-         TestParameters();
-      }
-      else if (type == S_INACTIVE)
-      {
-         // DEBUG_V();
-         ControllerEnabled = false; // Must set flag BEFORE mqqtReconnect!
-         mqttReconnect (true);                                   // Reset MQTT Reconnect values when ctrlMqttFlg is false.
-         OnlineFlag ? updateUiMqttMsg (MQTT_DISCONNECT_STR) : updateUiMqttMsg (EmptyString);
-      }
-      displaySaveWarning ();
-      tempStr = "MQTT Controller Set to: ";
-      tempStr += ControllerEnabled  ? "On" : "Off";
-      // DEBUG_V();
+      TestParameters();
    }
    else
    {
-      tempStr = String ("controllerCallback: ") + BAD_SENDER_STR;
       // DEBUG_V();
+      ControllerEnabled = false; // Must set flag BEFORE mqqtReconnect!
+      mqttReconnect (true);                                   // Reset MQTT Reconnect values when ctrlMqttFlg is false.
+      OnlineFlag ? updateUiMqttMsg (MQTT_DISCONNECT_STR) : updateUiMqttMsg (EmptyString);
    }
-
    // DEBUG_V();
-   displayRdsText (); // Update RDS RadioText.
-   Log.infoln (tempStr.c_str ());
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("MQTT Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;
 

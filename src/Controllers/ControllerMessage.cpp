@@ -163,10 +163,12 @@ void c_ControllerMessage::AddControls(uint16_t ctrlTab, uint16_t ParentElementId
 void c_ControllerMessage::DurationCb(Control *sender, int type)
 {
    // DEBUG_START;
-   // DEBUG_V(String("Message: ") + Message);
-   // DEBUG_V(String("Value: ") + sender->value);
 
    DurationSec = atoi(sender->value.c_str());
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(DurationSec)).c_str());
 
    // DEBUG_END;
 } // EnabledCb
@@ -175,11 +177,13 @@ void c_ControllerMessage::DurationCb(Control *sender, int type)
 void c_ControllerMessage::EnabledCb(Control *sender, int type)
 {
    // DEBUG_START;
-   // DEBUG_V(String("Message: ") + Message);
-   // DEBUG_V(String("Value: ") + sender->value);
 
    Enabled = sender->value == "1";
    // DEBUG_V(String("Enabled: ") + String(Enabled));
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(Enabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;
 } // EnabledCb

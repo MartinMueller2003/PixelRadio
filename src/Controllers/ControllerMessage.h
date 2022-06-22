@@ -19,6 +19,7 @@
 // *********************************************************************************************
 #pragma once
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <ESPUI.h>
 

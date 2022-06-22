@@ -19,6 +19,7 @@
 // *********************************************************************************************
 #pragma once
 #include <Arduino.h>
+#include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <list>
 #include <ESPUI.h>
@@ -62,7 +63,7 @@ public:
    void     clear() { Messages.clear(); }
    void     SetTitle(String & value);
    void     Activate(bool value);
-   void     SetEnableDisplayFseqName(bool value);
+   void     SetShowFseqNameSelection(bool value) { ShowFseqNameSelection = value; }
 
 private:
    void HomeControl(uint16_t ControlId);
@@ -70,8 +71,8 @@ private:
    c_ControllerMessage *FindMessageByText(String & text);
 
    String   Title                   = F("Messages");
-   bool     EnableDisplayFseqName   = false;
-   bool     DisplayFseqName         = true;
+   bool     ShowFseqNameSelection   = false;
+   bool     DisplayFseqName         = false;
 
    std::list<c_ControllerMessage> Messages;
 
