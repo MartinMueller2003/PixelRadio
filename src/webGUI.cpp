@@ -277,10 +277,6 @@ void initCustomCss(void)
     ESPUI.setElementStyle(backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
     ESPUI.setElementStyle(backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
-    // ESPUI.setElementStyle(ctrlSerialID,   "max-width: 40%;"); // Does Not Work.
-    // ESPUI.setElementStyle(ctrlMqttPortID,     "max-width: 40%;");
-    // ESPUI.setElementStyle(ctrlMqttMsgID,      CSS_LABEL_STYLE_BLACK);
-    // ESPUI.setElementStyle(ctrlSerialMsgID,    CSS_LABEL_STYLE_BLACK);
     ESPUI.setElementStyle(ctrlSaveMsgID,      CSS_LABEL_STYLE_RED);
 
     ESPUI.setElementStyle(diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
