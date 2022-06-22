@@ -29,9 +29,8 @@ const PROGMEM char N_default                 [] = "default";
 const PROGMEM char N_DisplayFseqName         [] = "DisplayFseqName";
 const PROGMEM char N_durationSec             [] = "durationSec";
 const PROGMEM char N_enabled                 [] = "enabled";
-const PROGMEM char N_EnableDisplayFseqName   [] = "EnableDisplayFseqName";
 const PROGMEM char N_list                    [] = "list";
-const PROGMEM char N_MaxIdleSec              [] = "MaxIdleSex";
+const PROGMEM char N_MaxIdleSec              [] = "MaxIdleSec";
 const PROGMEM char N_message                 [] = "message";
 const PROGMEM char N_messages                [] = "messages";
 const PROGMEM char N_Messages                [] = "Messages";
@@ -45,5 +44,4 @@ const PROGMEM char N_PiCode                  [] = "PiCode";
 const PROGMEM char N_ProgramServiceName      [] = "ProgramServiceName";
 const PROGMEM char N_PtyCode                 [] = "PtyCode";
 const PROGMEM char N_sequences               [] = "sequences";
-
-
+const PROGMEM char N_SequenceLearningEnabled [] = "SequenceLearningEnabled";
