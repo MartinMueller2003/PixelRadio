@@ -25,9 +25,21 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
-static c_ControllerMessagesUiControls ControllerMessagesUiControls;
-static const String EmptyString = "";
+static uint16_t EspuiParentElementId                = Control::noParent;
+static uint16_t EspuiActiveChoiceListElementId      = Control::noParent;
+static uint16_t EspuiHiddenChoiceListElementId      = Control::noParent;
+static uint16_t EspuiStatusMsgElementId             = Control::noParent;
+static uint16_t EspuiTextEntryElementId             = Control::noParent;
+static uint16_t EspuiDisplayFseqNameElementId       = Control::noParent;
+static uint16_t EspuiDisplayFseqNameLabelElementId  = Control::noParent;
+static uint16_t EspuiButtonCreateElementId          = Control::noParent;
+static uint16_t EspuiButtonDeleteElementId          = Control::noParent;
+static uint16_t EspuiButtonUpdateElementId          = Control::noParent;
+
 static const String DefaultTextFieldValue = F("Type New Message Here");
+static const String DefaultTextWarningMsg = F("WARN: Instruction text cannot be in the message");
+static const String EmptyMsgWarning       = F("WARN: Empty message is not allowed");
+
 static c_ControllerMessage EmptyControlMessage;
 
 // *********************************************************************************************
@@ -46,21 +58,6 @@ c_ControllerMessages::~c_ControllerMessages()
    // cause the messages to delete themselves
    Messages.clear();
 
-   // Delete the controls
-/*
-   if (Control::noParent != ControllerMessagesUiControls.EspuiChoiceListElementId)
-   {
-      // DEBUG_V("Remove Messages Elements");
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiChoiceListElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiStatusMsgElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiTextEntryElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiButtonCreateElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiButtonDeleteElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiButtonUpdateElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiDisplayFseqNameElementId);
-      ESPUI.removeControl(ControllerMessagesUiControls.EspuiDisplayFseqNameLabelElementId);
-   }
-*/
    // DEBUG_END;
 } // c_ControllerMessages
 
@@ -73,7 +70,7 @@ void c_ControllerMessages::Activate(bool value)
 
    do // once
    {
-      if (Control::noParent == ControllerMessagesUiControls.EspuiChoiceListElementId)
+      if (Control::noParent == EspuiActiveChoiceListElementId)
       {
          // DEBUG_V("No Element IDs available. Not setting the messages");
          break;
@@ -94,20 +91,19 @@ void c_ControllerMessages::Activate(bool value)
       }
       // DEBUG_V("Activating.");
 
-      HomeControl(ControllerMessagesUiControls.EspuiParentElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiChoiceListElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiStatusMsgElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiTextEntryElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiDisplayFseqNameElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiDisplayFseqNameLabelElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiButtonCreateElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiButtonDeleteElementId);
-      HomeControl(ControllerMessagesUiControls.EspuiButtonUpdateElementId);
+      HomeControl(EspuiActiveChoiceListElementId);
+      HomeControl(EspuiStatusMsgElementId);
+      HomeControl(EspuiTextEntryElementId);
+      HomeControl(EspuiDisplayFseqNameElementId);
+      HomeControl(EspuiDisplayFseqNameLabelElementId);
+      HomeControl(EspuiButtonCreateElementId);
+      HomeControl(EspuiButtonDeleteElementId);
+      HomeControl(EspuiButtonUpdateElementId);
 
-      Control *ChoiceListControl = ESPUI.getControl(ControllerMessagesUiControls.EspuiChoiceListElementId);
+      Control *ChoiceListControl = ESPUI.getControl(EspuiActiveChoiceListElementId);
       if (nullptr == ChoiceListControl)
       {
-         // DEBUG_V("Cannot locate the message control");
+         // DEBUG_V("Cannot locate the control");
          break;
       }
 
@@ -118,24 +114,21 @@ void c_ControllerMessages::Activate(bool value)
          // DEBUG_V(String("Update the choice list to: '") + Messages.front().GetMessage() + "'");
          ChoiceListControl->value = Messages.front().GetMessage();
          Messages.front().SelectMessage(true);
-         ESPUI.updateText(ControllerMessagesUiControls.EspuiTextEntryElementId,
-                          ChoiceListControl->value);
+         ESPUI.updateText(EspuiTextEntryElementId, ChoiceListControl->value);
          EmptyControlMessage.HideMenu(false);
       }
       else
       {
          // DEBUG_V("No Messages to update");
-         ChoiceListControl->value = EmptyString;
-         ESPUI.updateText(ControllerMessagesUiControls.EspuiStatusMsgElementId,
-                          EmptyString);
-         ESPUI.updateText(ControllerMessagesUiControls.EspuiTextEntryElementId,
-                          DefaultTextFieldValue);
+         ChoiceListControl->value = emptyString;
+         ESPUI.print(EspuiStatusMsgElementId, emptyString);
+         ESPUI.updateText(EspuiTextEntryElementId, DefaultTextFieldValue);
          EmptyControlMessage.HideMenu(true);
       }
 
       // DEBUG_V("Update Choice list control");
-      ESPUI.updateControl(ChoiceListControl->id);
-      TextChangeCb(nullptr, 0);
+      ESPUI.updateControl(ChoiceListControl);
+      CbTextChange(nullptr, 0);
 
       // DEBUG_V();
    } while (false);
@@ -149,35 +142,43 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
 {
    // DEBUG_START;
 
-   ControllerMessagesUiControls.EspuiParentElementId = ctrlTab;
+   EspuiParentElementId = ctrlTab;
 
-   if (Control::noParent == ControllerMessagesUiControls.EspuiChoiceListElementId)
+   if (Control::noParent == EspuiActiveChoiceListElementId)
    {
       // DEBUG_V(String("Add Select"));
-      ControllerMessagesUiControls.EspuiChoiceListElementId = ESPUI.addControl(
+      EspuiHiddenChoiceListElementId = ESPUI.addControl(
+          ControlType::Select,
+          emptyString.c_str(),
+          emptyString,
+          ControlColor::Turquoise,
+          ctrlTab);
+
+      // DEBUG_V(String("Add Select"));
+      EspuiActiveChoiceListElementId = ESPUI.addControl(
           ControlType::Select,
           Title.c_str(),
-          EmptyString,
+          emptyString,
           ControlColor::Turquoise,
           ctrlTab,
           [](Control *sender, int type, void *parm)
           {
-             reinterpret_cast<c_ControllerMessages *>(parm)->ChoiceListCb(sender, type);
+             reinterpret_cast<c_ControllerMessages *>(parm)->CbChoiceList(sender, type);
           },
           this);
 
       // DEBUG_V(String("Add Text"));
-      ControllerMessagesUiControls.EspuiTextEntryElementId = ESPUI.addControl(
+      EspuiTextEntryElementId = ESPUI.addControl(
           ControlType::Text,
-          EmptyString.c_str(),
+          emptyString.c_str(),
           DefaultTextFieldValue,
           ControlColor::None,
-          ControllerMessagesUiControls.EspuiChoiceListElementId,
+          EspuiActiveChoiceListElementId,
           [](Control *sender, int type, void *parm)
           {
              if (nullptr != parm)
              {
-                reinterpret_cast<c_ControllerMessages *>(parm)->TextChangeCb(sender, type);
+                reinterpret_cast<c_ControllerMessages *>(parm)->CbTextChange(sender, type);
              }
           },
           nullptr);
@@ -185,94 +186,93 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
       // DEBUG_V(String("Add Size"));
       ESPUI.addControl(
          ControlType::Max, 
-         EmptyString.c_str(), 
+         emptyString.c_str(), 
          "64", 
          ControlColor::None, 
-         ControllerMessagesUiControls.EspuiTextEntryElementId);
+         EspuiTextEntryElementId);
 
       // DEBUG_V(String("Add Create"));
-      ControllerMessagesUiControls.EspuiButtonCreateElementId = ESPUI.addControl(
+      EspuiButtonCreateElementId = ESPUI.addControl(
           ControlType::Button,
-          EmptyString.c_str(),
+          emptyString.c_str(),
           " Create ",
           ControlColor::None,
-          ControllerMessagesUiControls.EspuiChoiceListElementId,
+          EspuiActiveChoiceListElementId,
           [](Control *sender, int type, void *parm)
           {
              if (nullptr != parm)
              {
-                reinterpret_cast<c_ControllerMessages *>(parm)->ButtonCreateCb(sender, type);
+                reinterpret_cast<c_ControllerMessages *>(parm)->CbButtonCreate(sender, type);
              }
           },
           nullptr);
 
       // DEBUG_V(String("Add Delete"));
-      ControllerMessagesUiControls.EspuiButtonDeleteElementId = ESPUI.addControl(
+      EspuiButtonDeleteElementId = ESPUI.addControl(
           ControlType::Button,
-          EmptyString.c_str(),
+          emptyString.c_str(),
           " Delete ",
           ControlColor::None,
-          ControllerMessagesUiControls.EspuiChoiceListElementId,
+          EspuiActiveChoiceListElementId,
           [](Control *sender, int type, void *parm)
           {
              if (nullptr != parm)
              {
-                reinterpret_cast<c_ControllerMessages *>(parm)->ButtonDeleteCb(sender, type);
+                reinterpret_cast<c_ControllerMessages *>(parm)->CbButtonDelete(sender, type);
              }
           },
           nullptr);
 
       // DEBUG_V(String("Add Update"));
-      ControllerMessagesUiControls.EspuiButtonUpdateElementId = ESPUI.addControl(
+      EspuiButtonUpdateElementId = ESPUI.addControl(
           ControlType::Button,
-          EmptyString.c_str(),
+          emptyString.c_str(),
           " Update ",
           ControlColor::None,
-          ControllerMessagesUiControls.EspuiChoiceListElementId,
+          EspuiActiveChoiceListElementId,
           [](Control *sender, int type, void *parm)
           {
              if (nullptr != parm)
              {
-                reinterpret_cast<c_ControllerMessages *>(parm)->ButtonUpdateCb(sender, type);
+                reinterpret_cast<c_ControllerMessages *>(parm)->CbButtonUpdate(sender, type);
              }
           },
           nullptr);
 
       // DEBUG_V(String("Add Label 1"));
-      ControllerMessagesUiControls.EspuiStatusMsgElementId = ESPUI.addControl(
+      EspuiStatusMsgElementId = ESPUI.addControl(
           ControlType::Label,
-          EmptyString.c_str(),
-          EmptyString,
+          emptyString.c_str(),
+          emptyString,
           ControlColor::Carrot,
-          ControllerMessagesUiControls.EspuiChoiceListElementId);
-      ESPUI.setElementStyle(ControllerMessagesUiControls.EspuiStatusMsgElementId, 
-                            CSS_LABEL_STYLE_BLACK);
+          EspuiActiveChoiceListElementId);
+      ESPUI.setElementStyle(EspuiStatusMsgElementId, CSS_LABEL_STYLE_BLACK);
 
       if (ShowFseqNameSelection)
       {
          // DEBUG_V(String("Add Label 2"));
-         ControllerMessagesUiControls.EspuiDisplayFseqNameLabelElementId = ESPUI.addControl(
+         EspuiDisplayFseqNameLabelElementId = ESPUI.addControl(
              ControlType::Label,
-             EmptyString.c_str(),
+             emptyString.c_str(),
              "Display FSEQ File Name",
              ControlColor::Turquoise,
-             ControllerMessagesUiControls.EspuiChoiceListElementId);
-         ESPUI.setElementStyle(ControllerMessagesUiControls.EspuiDisplayFseqNameLabelElementId,
+             EspuiActiveChoiceListElementId);
+         ESPUI.setElementStyle(EspuiDisplayFseqNameLabelElementId,
                                CSS_LABEL_STYLE_BLACK);
 
          // DEBUG_V(String("Add Display fseq name Switcher"));
          // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
-         ControllerMessagesUiControls.EspuiDisplayFseqNameElementId = ESPUI.addControl(
+         EspuiDisplayFseqNameElementId = ESPUI.addControl(
              ControlType::Switcher,
-             EmptyString.c_str(),
+             emptyString.c_str(),
              DisplayFseqName ? "1" : "0",
              ControlColor::None,
-             ControllerMessagesUiControls.EspuiChoiceListElementId,
+             EspuiActiveChoiceListElementId,
              [](Control *sender, int type, void *parm)
              {
                 if (nullptr != parm)
                 {
-                   reinterpret_cast<c_ControllerMessages *>(parm)->DisplayFseqNameCb(sender, type);
+                   reinterpret_cast<c_ControllerMessages *>(parm)->CbSwitchDisplayFseqName(sender, type);
                 }
              },
              nullptr);
@@ -295,7 +295,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
    for (auto &CurrentMessage : Messages)
    {
       // DEBUG_V();
-      CurrentMessage.AddControls(ctrlTab, ControllerMessagesUiControls.EspuiChoiceListElementId);
+      CurrentMessage.AddControls(ctrlTab, EspuiActiveChoiceListElementId, EspuiHiddenChoiceListElementId);
    }
    // DEBUG_V();
 
@@ -303,21 +303,21 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
    {
       // DEBUG_V();
 
-      ESPUI.updateSelect(ControllerMessagesUiControls.EspuiChoiceListElementId, Messages.front().GetMessage());
+      ESPUI.updateSelect(EspuiActiveChoiceListElementId, Messages.front().GetMessage());
    }
    // DEBUG_V();
-   TextChangeCb(nullptr, 0);
+   CbTextChange(nullptr, 0);
 
    // DEBUG_END;
 
 } // AddControls
 
 // ************************************************************************************************
-void c_ControllerMessages::ButtonCreateCb(Control *sender, int type)
+void c_ControllerMessages::CbButtonCreate(Control *sender, int type)
 {
    // DEBUG_START;
 
-   Control *TextControl = ESPUI.getControl(ControllerMessagesUiControls.EspuiTextEntryElementId);
+   Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
 
    do // once
    {
@@ -327,19 +327,20 @@ void c_ControllerMessages::ButtonCreateCb(Control *sender, int type)
          break;
       }
 
-      // DEBUG_V("Create a Message");
+      // DEBUG_V("Create a new message");
 
       Messages.push_back(EmptyControlMessage);
       Messages.back().SetMessage(TextControl->value);
-      Messages.back().AddControls(ControllerMessagesUiControls.EspuiParentElementId,
-                                  ControllerMessagesUiControls.EspuiChoiceListElementId);
-      Messages.back().Activate(true);
+      Messages.back().AddControls(EspuiParentElementId,
+                                  EspuiActiveChoiceListElementId,
+                                  EspuiHiddenChoiceListElementId);
       Messages.back().SelectMessage(true);
       Messages.back().HideMenu(false);
-      ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, TextControl->value);
-      ESPUI.updateSelect(ControllerMessagesUiControls.EspuiChoiceListElementId, TextControl->value);
-      TextChangeCb(nullptr, 0);
-      ESPUI.jsonReload();
+      ESPUI.print(EspuiStatusMsgElementId, emptyString);
+      ESPUI.updateSelect(EspuiActiveChoiceListElementId, TextControl->value);
+      CbTextChange(nullptr, 0);
+      displaySaveWarning();
+      ESPUI.jsonDom(0);
 
    } while (false);
 
@@ -348,12 +349,12 @@ void c_ControllerMessages::ButtonCreateCb(Control *sender, int type)
 } // ButtonCreateCb
 
 // ************************************************************************************************
-void c_ControllerMessages::ButtonDeleteCb(Control *sender, int type)
+void c_ControllerMessages::CbButtonDelete(Control *sender, int type)
 {
    // DEBUG_START;
    // DEBUG_V(String("       Title: '") + Title + "'");
 
-   Control *ChoiceControl = ESPUI.getControl(ControllerMessagesUiControls.EspuiChoiceListElementId);
+   Control *ChoiceControl = ESPUI.getControl(EspuiActiveChoiceListElementId);
    // DEBUG_V(String("Choice value: '") + ChoiceControl->value + "'");
 
    do // once
@@ -382,31 +383,37 @@ void c_ControllerMessages::ButtonDeleteCb(Control *sender, int type)
 
             // DEBUG_V(String("count: ") + Messages.size());
             Messages.erase(CurrentMessageIterator);
+            CurrentMessageIterator = Messages.end();
             // DEBUG_V(String("count: ") + Messages.size());
 
             if (!Messages.empty())
             {
                // DEBUG_V("Set up for the next message");
-               ESPUI.updateSelect(ControllerMessagesUiControls.EspuiChoiceListElementId, Messages.front().GetMessage());
-               ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiTextEntryElementId, Messages.front().GetMessage());
+               ESPUI.updateSelect(EspuiActiveChoiceListElementId, Messages.front().GetMessage());
+               ESPUI.updateText(EspuiTextEntryElementId, Messages.front().GetMessage());
                Messages.front().Activate(true);
                Messages.front().SelectMessage(true);
             }
             else
             {
                // DEBUG_V("Deleted last message");
-               ESPUI.updateSelect(ControllerMessagesUiControls.EspuiChoiceListElementId, EmptyString);
-               ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiTextEntryElementId, DefaultTextFieldValue);
+               ESPUI.updateSelect(EspuiActiveChoiceListElementId, emptyString);
+               ESPUI.updateText(EspuiTextEntryElementId, DefaultTextFieldValue);
                EmptyControlMessage.HideMenu(true);
             }
-            ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, EmptyString);
+            // DEBUG_V();
+            ESPUI.print(EspuiStatusMsgElementId, emptyString);
+            // DEBUG_V();
             break;
          }
       } // for each message
       // DEBUG_V();
 
-      TextChangeCb(nullptr, 0);
-      ESPUI.jsonReload();
+      CbTextChange(nullptr, 0);
+      // DEBUG_V();
+      displaySaveWarning();
+      // DEBUG_V();
+      ESPUI.jsonDom(0);
 
    } while (false);
 
@@ -414,16 +421,16 @@ void c_ControllerMessages::ButtonDeleteCb(Control *sender, int type)
 } // ButtonDeleteCb
 
 // ************************************************************************************************
-void c_ControllerMessages::ButtonUpdateCb(Control *sender, int type)
+void c_ControllerMessages::CbButtonUpdate(Control *sender, int type)
 {
    // DEBUG_START;
 
    // DEBUG_V(String("       Title: '") + Title + "'");
 
-   Control *TextControl = ESPUI.getControl(ControllerMessagesUiControls.EspuiTextEntryElementId);
+   Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
    // DEBUG_V(String("  Text value: '") + TextControl->value + "'");
 
-   Control *ChoiceControl = ESPUI.getControl(ControllerMessagesUiControls.EspuiChoiceListElementId);
+   Control *ChoiceControl = ESPUI.getControl(EspuiActiveChoiceListElementId);
    // DEBUG_V(String("Choice value: '") + ChoiceControl->value + "'");
 
    do // once
@@ -434,7 +441,7 @@ void c_ControllerMessages::ButtonUpdateCb(Control *sender, int type)
          break;
       }
 
-      // DEBUG_V("Set the new value");
+      // DEBUG_V("Find the old message");
       c_ControllerMessage *Message = FindMessageByText(ChoiceControl->value);
       if (nullptr == Message)
       {
@@ -444,10 +451,11 @@ void c_ControllerMessages::ButtonUpdateCb(Control *sender, int type)
 
       // DEBUG_V("Set the new value");
       Message->SetMessage(TextControl->value);
-      // DEBUG_V();
-      ESPUI.updateSelect(ControllerMessagesUiControls.EspuiChoiceListElementId, TextControl->value);
-      TextChangeCb(nullptr, 0);
-      ESPUI.jsonReload();
+      // DEBUG_V("Update Select control");
+      ESPUI.updateSelect(EspuiActiveChoiceListElementId, TextControl->value);
+      CbTextChange(nullptr, 0);
+      displaySaveWarning();
+      ESPUI.jsonDom(0);
 
    } while (false);
 
@@ -455,7 +463,7 @@ void c_ControllerMessages::ButtonUpdateCb(Control *sender, int type)
 } // ButtonUpdateCb
 
 // ************************************************************************************************
-void c_ControllerMessages::ChoiceListCb(Control *sender, int type)
+void c_ControllerMessages::CbChoiceList(Control *sender, int type)
 {
    // DEBUG_START;
    // DEBUG_V(String("       Title: '") + Title + "'");
@@ -463,13 +471,13 @@ void c_ControllerMessages::ChoiceListCb(Control *sender, int type)
    String CurrentSeletedMessageName = sender->value;
    // DEBUG_V(String("Selected: '") + CurrentSeletedMessageName + "'");
 
-   if (CurrentSeletedMessageName.equals(EmptyString))
+   if (CurrentSeletedMessageName.equals(emptyString))
    {
-      ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiTextEntryElementId, DefaultTextFieldValue);
+      ESPUI.updateText(EspuiTextEntryElementId, DefaultTextFieldValue);
    }
    else
    {
-      ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiTextEntryElementId, sender->value);
+      ESPUI.updateText(EspuiTextEntryElementId, sender->value);
 
       for(auto& CurrentMessage : Messages)
       {
@@ -488,14 +496,15 @@ void c_ControllerMessages::ChoiceListCb(Control *sender, int type)
    displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Changed to: ")) + CurrentSeletedMessageName).c_str());
 
-   TextChangeCb(nullptr, 0);
+   // Update the warning and text fields
+   CbTextChange(nullptr, 0);
 
    // DEBUG_END;
 
 } // CustomMessageCb
 
 // ************************************************************************************************
-void c_ControllerMessages::DisplayFseqNameCb(Control *sender, int type)
+void c_ControllerMessages::CbSwitchDisplayFseqName(Control *sender, int type)
 {
    // DEBUG_START;
 
@@ -509,6 +518,82 @@ void c_ControllerMessages::DisplayFseqNameCb(Control *sender, int type)
    // DEBUG_END;
 
 } // DisplayFseqNameCb
+
+// ************************************************************************************************
+void c_ControllerMessages::CbTextChange(Control *, int)
+{
+   // DEBUG_START;
+   // DEBUG_V(String("       Title: '") + Title + "'");
+
+   Control *ChoiceList  = ESPUI.getControl(EspuiActiveChoiceListElementId);
+   Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
+
+   // DEBUG_V(String("  Text value: '") + TextControl->value + "'");
+   // DEBUG_V(String("Choice value: '") + ChoiceList->value + "'");
+
+   bool EnableCreate = true;
+   bool EnableDelete = true;
+   bool EnableUpdate = true;
+
+   do // once
+   {
+      if (ChoiceList->value.equals(emptyString) || Messages.empty())
+      {
+         // DEBUG_V("Disable delete/update buttons");
+         EnableDelete = false;
+         EnableUpdate = false;
+      }
+
+      if (TextControl->value.equals(DefaultTextFieldValue))
+      {
+         // DEBUG_V("User did not remove the default text");
+         EnableCreate = false;
+         EnableUpdate = false;
+         ESPUI.print(EspuiStatusMsgElementId, emptyString);
+         break;
+      }
+
+      if (-1 != TextControl->value.indexOf(DefaultTextFieldValue))
+      {
+         // DEBUG_V("User did not remove the default text");
+         EnableCreate = false;
+         EnableUpdate = false;
+         ESPUI.print(EspuiStatusMsgElementId, DefaultTextWarningMsg);
+         break;
+      }
+
+      if (TextControl->value.equals(emptyString) && Messages.empty())
+      {
+         // DEBUG_V("Cant update an entry without a message");
+         EnableCreate = false;
+         EnableUpdate = false;
+         ESPUI.updateText(EspuiTextEntryElementId, DefaultTextFieldValue);
+         ESPUI.print(EspuiStatusMsgElementId, EmptyMsgWarning);
+         break;
+      }
+
+      if (TextControl->value.equals(ChoiceList->value))
+      {
+         // DEBUG_V("No Change In Text");
+         EnableCreate = false;
+         EnableUpdate = false;
+         ESPUI.print(EspuiStatusMsgElementId, emptyString);
+         break;
+      }
+
+      // DEBUG_V("valid text that could be used for the existing Message");
+      ESPUI.print(EspuiStatusMsgElementId, emptyString);
+
+   } while (false);
+
+   // DEBUG_V("Update Buttons");
+   ESPUI.setEnabled(EspuiButtonCreateElementId, EnableCreate);
+   ESPUI.setEnabled(EspuiButtonDeleteElementId, EnableDelete);
+   ESPUI.setEnabled(EspuiButtonUpdateElementId, EnableUpdate);
+
+   // DEBUG_END;
+
+} // TextChangeCb
 
 // ************************************************************************************************
 c_ControllerMessage *c_ControllerMessages::FindMessageByText(String &text)
@@ -650,86 +735,6 @@ void c_ControllerMessages::SetTitle(String &value)
 
    // DEBUG_END;
 } // SetTitle
-
-// ************************************************************************************************
-void c_ControllerMessages::TextChangeCb(Control *, int)
-{
-   // DEBUG_START;
-   // DEBUG_V(String("       Title: '") + Title + "'");
-
-   Control *ChoiceList  = ESPUI.getControl(ControllerMessagesUiControls.EspuiChoiceListElementId);
-   Control *TextControl = ESPUI.getControl(ControllerMessagesUiControls.EspuiTextEntryElementId);
-
-   // DEBUG_V(String("  Text value: '") + TextControl->value + "'");
-   // DEBUG_V(String("Choice value: '") + ChoiceList->value + "'");
-
-   bool EnableCreate = true;
-   bool EnableDelete = true;
-   bool EnableUpdate = true;
-
-   do // once
-   {
-      if (ChoiceList->value.equals(EmptyString) || Messages.empty())
-      {
-         // DEBUG_V("Disable delete/update buttons");
-         EnableDelete = false;
-         EnableUpdate = false;
-      }
-
-      if (TextControl->value.equals(DefaultTextFieldValue))
-      {
-         // DEBUG_V("User did not remove the default text");
-         EnableCreate = false;
-         EnableUpdate = false;
-         ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, EmptyString);
-         break;
-      }
-
-      if (-1 != TextControl->value.indexOf(DefaultTextFieldValue))
-      {
-         // DEBUG_V("User did not remove the default text");
-         EnableCreate = false;
-         EnableUpdate = false;
-         ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, F("WARN: Instruction text cannot be in the message"));
-         break;
-      }
-
-      if (TextControl->value.equals(EmptyString) && Messages.empty())
-      {
-         // DEBUG_V("Cant update an entry without a message");
-         EnableCreate = false;
-         EnableUpdate = false;
-         ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiTextEntryElementId, DefaultTextFieldValue);
-         ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, F("WARN: Empty message is not allowed"));
-         break;
-      }
-
-      if (TextControl->value.equals(ChoiceList->value))
-      {
-         // DEBUG_V("No Change In Text");
-         EnableCreate = false;
-         EnableUpdate = false;
-         ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, EmptyString);
-         break;
-      }
-
-      // DEBUG_V("valid text that could be used for the existing Message");
-      ESPUI.updateControlValue(ControllerMessagesUiControls.EspuiStatusMsgElementId, EmptyString);
-
-   } while (false);
-
-   // DEBUG_V("Update Buttons");
-   ESPUI.getControl(ControllerMessagesUiControls.EspuiButtonCreateElementId)->enabled = EnableCreate;
-   ESPUI.getControl(ControllerMessagesUiControls.EspuiButtonDeleteElementId)->enabled = EnableDelete;
-   ESPUI.getControl(ControllerMessagesUiControls.EspuiButtonUpdateElementId)->enabled = EnableUpdate;
-
-   ESPUI.updateControl(ControllerMessagesUiControls.EspuiButtonCreateElementId);
-   ESPUI.updateControl(ControllerMessagesUiControls.EspuiButtonDeleteElementId);
-   ESPUI.updateControl(ControllerMessagesUiControls.EspuiButtonUpdateElementId);
-
-   // DEBUG_END;
-
-} // TextChangeCb
 
 // *********************************************************************************************
 // EOF

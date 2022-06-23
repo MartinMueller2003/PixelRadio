@@ -26,21 +26,12 @@
 #include "ControllerMessage.h"
 #include "../PixelRadio.h"
 
-class c_ControllerMessagesUiControls
+class c_ControllerMessagesUiControlIds
 {
 public:
-            c_ControllerMessagesUiControls() {}
-   virtual  ~c_ControllerMessagesUiControls() {}
+            c_ControllerMessagesUiControlIds() {}
+   virtual  ~c_ControllerMessagesUiControlIds() {}
 
-   uint16_t EspuiParentElementId                = Control::noParent;
-   uint16_t EspuiChoiceListElementId            = Control::noParent;
-   uint16_t EspuiStatusMsgElementId             = Control::noParent;
-   uint16_t EspuiTextEntryElementId             = Control::noParent;
-   uint16_t EspuiDisplayFseqNameElementId       = Control::noParent;
-   uint16_t EspuiDisplayFseqNameLabelElementId  = Control::noParent;
-   uint16_t EspuiButtonCreateElementId          = Control::noParent;
-   uint16_t EspuiButtonDeleteElementId          = Control::noParent;
-   uint16_t EspuiButtonUpdateElementId          = Control::noParent;
 
 private:
 }; // c_ControllerMessagesUiControls
@@ -54,12 +45,14 @@ public:
    void     SaveConfig(ArduinoJson::JsonObject & config);
 
    void     AddControls(uint16_t ctrlTab);
-   void     ChoiceListCb(Control *sender, int type);
-   void     TextChangeCb(Control *sender, int type);
-   void     DisplayFseqNameCb(Control *sender, int type);
-   void     ButtonCreateCb(Control *sender, int type);
-   void     ButtonDeleteCb(Control *sender, int type);
-   void     ButtonUpdateCb(Control *sender, int type);
+
+   void     CbButtonCreate(Control *sender, int type);
+   void     CbButtonDelete(Control *sender, int type);
+   void     CbButtonUpdate(Control *sender, int type);
+   void     CbChoiceList(Control *sender, int type);
+   void     CbSwitchDisplayFseqName(Control *sender, int type);
+   void     CbTextChange(Control *sender, int type);
+
    void     clear() { Messages.clear(); }
    void     SetTitle(String & value);
    void     Activate(bool value);

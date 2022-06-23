@@ -34,11 +34,11 @@ public:
    void     SaveConfig(ArduinoJson::JsonObject & config);
 
    void     AddControls(uint16_t ctrlTab);
-   void     ChoiceListCb(Control *sender, int type);
-   void     TextChangeCb(Control *sender, int type);
-   void     ButtonCreateCb(Control *sender, int type);
-   void     ButtonDeleteCb(Control *sender, int type);
-   void     ButtonUpdateCb(Control *sender, int type);
+   void     CbButtonCreate(Control *sender, int type);
+   void     CbButtonDelete(Control *sender, int type);
+   void     CbButtonUpdate(Control *sender, int type);
+   void     CbChoiceList(Control *sender, int type);
+   void     CbTextChange(Control *sender, int type);
 
 private:
    void     AddTestObjects(ArduinoJson::JsonObject &config);

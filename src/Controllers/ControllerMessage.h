@@ -29,9 +29,9 @@ public:
             c_ControllerMessage();
    virtual  ~c_ControllerMessage();
    void     Activate(bool value);
-   void     AddControls(uint16_t ctrlTab, uint16_t ParentElementId);
-   void     DurationCb(Control* sender, int type);
-   void     EnabledCb(Control* sender, int type);
+   void     AddControls(uint16_t ctrlTab, uint16_t ParentElementId, uint16_t HiddenParentElementId = Control::noParent);
+   void     CbDuration(Control* sender, int type);
+   void     CbEnabled(Control* sender, int type);
    uint16_t GetElementId() { return EspuiMessageElementId; }
    String & GetMessage() { return Message; }
    void     HideMenu(bool value);
@@ -42,10 +42,11 @@ public:
 
 private:
 
-   uint16_t    EspuiMessageElementId   = Control::noParent;
+   uint16_t    EspuiMessageElementId      = Control::noParent;
+
    String      Message;
-   uint32_t    DurationSec             = 5;
-   bool        Enabled                 = false;
+   uint32_t    DurationSec                = 5;
+   bool        Enabled                    = false;
 
 }; // c_ControllerMessage
 
