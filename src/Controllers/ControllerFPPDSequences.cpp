@@ -326,7 +326,7 @@ void c_ControllerFPPDSequences::CbChoiceList(Control *sender, int type)
    Activate();
 
    CbTextChange(nullptr, 0);
-   ESPUI.jsonDom(0);
+   ESPUI.jsonReload();
 
    // DEBUG_END;
 
