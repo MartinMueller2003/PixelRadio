@@ -28,7 +28,7 @@ public:
    void     SaveConfiguration(ArduinoJson::JsonObject &config);
    void     RestoreConfiguration(ArduinoJson::JsonObject &config);
    void     AddControls(uint16_t ctrlTab);
-   void     ControllerEnabledCb(Control *sender, int type);
+   void     CbControllerEnabled(Control *sender, int type);
 
 private: 
    uint16_t EspuiControlID = 0;

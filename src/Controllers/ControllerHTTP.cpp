@@ -25,8 +25,6 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
-static String EmptyString = "";
-
 // *********************************************************************************************
 // class c_ControllerHTTP : public c_ControllerCommon
 
@@ -39,7 +37,7 @@ c_ControllerHTTP::c_ControllerHTTP() : c_ControllerCommon("HTTP", c_ControllerMg
 c_ControllerHTTP::~c_ControllerHTTP() {}
 
 // *********************************************************************************************
-void c_ControllerHTTP::ControllerEnabledCb(Control *sender, int type)
+void c_ControllerHTTP::CbControllerEnabled(Control *sender, int type)
 {
    // DEBUG_START;
 
@@ -61,7 +59,7 @@ void c_ControllerHTTP::AddControls(uint16_t ctrlTab)
    ESPUI.addControl(
       ControlType::Separator, 
       CTRL_HTPP_SET_STR,
-      EmptyString, 
+      emptyString, 
       ControlColor::None, 
       ctrlTab);
    
@@ -73,7 +71,7 @@ void c_ControllerHTTP::AddControls(uint16_t ctrlTab)
       ctrlTab,
       [](Control *sender, int type, void* param)
       {
-         reinterpret_cast<c_ControllerHTTP*>(param)->ControllerEnabledCb(sender, type);
+         reinterpret_cast<c_ControllerHTTP*>(param)->CbControllerEnabled(sender, type);
       },
       this);
       
