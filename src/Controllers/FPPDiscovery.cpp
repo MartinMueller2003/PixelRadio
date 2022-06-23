@@ -28,8 +28,8 @@
 #define FPP_VARIANT_NAME (String(F("PixelRadio")))
 
 #define FPP_DISCOVERY_PORT 32320
-    static const String ulrCommand = "command";
-static const String ulrPath = "path";
+static const String ulrCommand = F("command");
+static const String ulrPath = F("path");
 
 //-----------------------------------------------------------------------------
 c_FPPDiscovery::c_FPPDiscovery()
@@ -283,7 +283,7 @@ void c_FPPDiscovery::ProcessSyncPacket(uint8_t action, String FileName, float Se
             // DEBUG_V ("Sync::Stop");
             // DEBUG_V (String ("      FileName: ") + FileName);
             // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
-            CurrentFileName = "";
+            CurrentFileName = emptyString;
             MultiSyncStats.pktSyncSeqStop++;
             break;
         }
@@ -509,11 +509,11 @@ void c_FPPDiscovery::ProcessGET(AsyncWebServerRequest *request)
         if (!request->hasParam(ulrPath))
         {
             request->send(404);
-            // DEBUG_V ("");
+            // DEBUG_V ();
             break;
         }
 
-        // DEBUG_V ("");
+        // DEBUG_V ();
 
         String path = request->getParam(ulrPath)->value();
 
@@ -521,16 +521,16 @@ void c_FPPDiscovery::ProcessGET(AsyncWebServerRequest *request)
 
         if (path.startsWith(F("/api/sequence/")))
         {
-            // DEBUG_V ("");
+            // DEBUG_V ();
 
             String seq = path.substring(14);
             if (seq.endsWith(F("/meta")))
             {
-                // DEBUG_V ("");
+                // DEBUG_V ();
 
                 seq = seq.substring(0, seq.length() - 5);
 
-                String resp = "";
+                String resp = emptyString;
                 BuildFseqResponse(seq, resp);
                 request->send(200, F("application/json"), resp);
                 break;
@@ -550,7 +550,7 @@ void c_FPPDiscovery::GetSysInfoJSON(JsonObject &jsonResponse)
     // DEBUG_START;
 
     jsonResponse[F("HostName")] = WiFi.getHostname();
-    jsonResponse[F("HostDescription")] = "";
+    jsonResponse[F("HostDescription")] = emptyString;
     jsonResponse[F("Platform")] = F("PixelRadio");
     jsonResponse[F("Variant")] = FPP_VARIANT_NAME;
     jsonResponse[F("Mode")] = F("remote");
@@ -609,25 +609,25 @@ void c_FPPDiscovery::ProcessFPPJson(AsyncWebServerRequest *request)
 
             JsonObject JsonDataCurrentPlaylist = JsonData.createNestedObject(F("current_playlist"));
 
-            JsonDataCurrentPlaylist[F("count")] = "0";
-            JsonDataCurrentPlaylist[F("description")] = "";
-            JsonDataCurrentPlaylist[F("index")] = "0";
-            JsonDataCurrentPlaylist[F("playlist")] = "";
-            JsonDataCurrentPlaylist[F("type")] = "";
+            JsonDataCurrentPlaylist[F("count")] = F("0");
+            JsonDataCurrentPlaylist[F("description")] = emptyString;
+            JsonDataCurrentPlaylist[F("index")] = F("0");
+            JsonDataCurrentPlaylist[F("playlist")] = emptyString;
+            JsonDataCurrentPlaylist[F("type")] = emptyString;
 
             JsonData[F("volume")] = 70;
-            JsonData[F("media_filename")] = "";
+            JsonData[F("media_filename")] = emptyString;
             JsonData[F("fppd")] = F("running");
-            JsonData[F("current_song")] = "";
+            JsonData[F("current_song")] = emptyString;
 
-            JsonData[F("current_sequence")] = "";
-            JsonData[F("playlist")] = "";
+            JsonData[F("current_sequence")] = emptyString;
+            JsonData[F("playlist")] = emptyString;
             JsonData[F("seconds_elapsed")] = String(0);
             JsonData[F("seconds_played")] = String(0);
             JsonData[F("seconds_remaining")] = String(0);
-            JsonData[F("sequence_filename")] = "";
-            JsonData[F("time_elapsed")] = String("00:00");
-            JsonData[F("time_remaining")] = String("00:00");
+            JsonData[F("sequence_filename")] = emptyString;
+            JsonData[F("time_elapsed")] = String(F("00:00"));
+            JsonData[F("time_remaining")] = String(F("00:00"));
 
             JsonData[F("status")] = 0;
             JsonData[F("status_name")] = F("idle");
@@ -647,7 +647,7 @@ void c_FPPDiscovery::ProcessFPPJson(AsyncWebServerRequest *request)
         {
             GetSysInfoJSON(JsonData);
 
-            String resp = "";
+            String resp = emptyString;
             serializeJson(JsonData, resp);
             // DEBUG_V (String ("JsonDoc: ") + resp);
             request->send(200, F("application/json"), resp);
@@ -658,7 +658,7 @@ void c_FPPDiscovery::ProcessFPPJson(AsyncWebServerRequest *request)
         if (command == F("getHostNameInfo"))
         {
             JsonData[F("HostName")] = WiFi.getHostname();
-            JsonData[F("HostDescription")] = "Pixel Radio";
+            JsonData[F("HostDescription")] = F("Pixel Radio");
 
             String resp;
             serializeJson(JsonData, resp);
