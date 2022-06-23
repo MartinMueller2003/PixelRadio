@@ -73,7 +73,7 @@ void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
 // *********************************************************************************************
 void c_ControllerCommon::SaveConfiguration(ArduinoJson::JsonObject & config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    config[N_ControllerEnabled]   = ControllerEnabled;
    config[N_PiCode]              = PiCode;
@@ -81,7 +81,7 @@ void c_ControllerCommon::SaveConfiguration(ArduinoJson::JsonObject & config)
    config[N_ProgramServiceName]  = ProgramServiceName;
    config[N_PayloadTest]         = PayloadTest;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // SaveConfiguration
 
 // *********************************************************************************************

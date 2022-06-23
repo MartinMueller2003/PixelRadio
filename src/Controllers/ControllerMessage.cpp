@@ -61,20 +61,20 @@ c_ControllerMessage::~c_ControllerMessage()
 // ************************************************************************************************
 void c_ControllerMessage::Activate(bool value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("Message: ") + Message);
-   DEBUG_V(String("  value: ") + value);
+   // DEBUG_V(String("Message: ") + Message);
+   // DEBUG_V(String("  value: ") + value);
 
    Control *MsgControl = ESPUI.getControl(EspuiMessageElementId);
    if (MsgControl)
    {
-      DEBUG_V("Update Parent Value");
+      // DEBUG_V("Update Parent Value");
       MsgControl->parentControl = (value) ? EspuiActiveParentElementId : EspuiHiddenParentElementId;
       ESPUI.updateControl(MsgControl);
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // Activate
 
@@ -193,12 +193,12 @@ void c_ControllerMessage::CbEnabled(Control *sender, int type)
 // *********************************************************************************************
 void c_ControllerMessage::HideMenu(bool value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("value: ") + String(value));
+   // DEBUG_V(String("value: ") + String(value));
    ESPUI.updateVisibility(EspuiTitleMsgElementId, !value);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // HideMenu
 
 // *********************************************************************************************
@@ -246,10 +246,10 @@ void c_ControllerMessage::SaveConfig(ArduinoJson::JsonObject config)
 // ************************************************************************************************
 void c_ControllerMessage::SelectMessage(bool value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("Message: ") + Message);
-   DEBUG_V(String("  value: ") + value);
+   // DEBUG_V(String("Message: ") + Message);
+   // DEBUG_V(String("  value: ") + value);
 
    do // once
    {
@@ -257,14 +257,14 @@ void c_ControllerMessage::SelectMessage(bool value)
 
       if (!value)
       {
-         DEBUG_V("Nothing else to do");
+         // DEBUG_V("Nothing else to do");
          break;
       }
 
       Control* control = ESPUI.getControl(EspuiTitleMsgElementId);
       if(control)
       {
-         DEBUG_V("Set up Title");
+         // DEBUG_V("Set up Title");
          LabelTitle = Message;
          control->label = LabelTitle.c_str();
          ESPUI.updateControl(control);
@@ -273,7 +273,7 @@ void c_ControllerMessage::SelectMessage(bool value)
       control = ESPUI.getControl(EspuiDisplayDurationElementId);
       if (control)
       {
-         DEBUG_V("Set up Duration");
+         // DEBUG_V("Set up Duration");
          control->value = String(DurationSec);
          control->user = this;
          ESPUI.updateControl(EspuiDisplayDurationElementId);
@@ -282,45 +282,45 @@ void c_ControllerMessage::SelectMessage(bool value)
       control = ESPUI.getControl(EspuiEnabledElementId);
       if (control)
       {
-         DEBUG_V("Set up enabled CB");
+         // DEBUG_V("Set up enabled CB");
          control->value = String(Enabled ? "1" : "0");
          control->user = this;
          ESPUI.updateControl(EspuiEnabledElementId);
       }
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // SelectControl
 
 // *********************************************************************************************
 void c_ControllerMessage::SetMessage(String &value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("Message: ") + Message);
-   DEBUG_V(String("  value: ") + value);
+   // DEBUG_V(String("Message: ") + Message);
+   // DEBUG_V(String("  value: ") + value);
 
    String OldValue = Message;
    Message = value;
 
    if (Control::noParent != EspuiMessageElementId)
    {
-      DEBUG_V("Update message string in choice list")
+      // DEBUG_V("Update message string in choice list")
       if(LabelTitle.equals(OldValue))
       {
-         DEBUG_V("this is the active message");
+         // DEBUG_V("this is the active message");
          LabelTitle = Message;
          SelectMessage(true);
       }
       else
       {
-         DEBUG_V("this is NOT the active message");
+         // DEBUG_V("this is NOT the active message");
          SelectMessage(false);
       }
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // SetMessage
 
 // *********************************************************************************************

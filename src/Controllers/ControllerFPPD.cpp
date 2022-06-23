@@ -156,7 +156,7 @@ void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
 // *********************************************************************************************
 void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    c_ControllerCommon::SaveConfiguration(config);
 
@@ -174,7 +174,7 @@ void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
    // DEBUG_V("Final");
    // serializeJsonPretty(config, Serial);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // SaveConfiguration
 
 // *********************************************************************************************
