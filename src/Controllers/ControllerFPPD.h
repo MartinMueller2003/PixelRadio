@@ -30,8 +30,8 @@ public:
    void     AddControls(uint16_t ctrlTab);
    void     RestoreConfiguration(ArduinoJson::JsonObject & config);
    void     SaveConfiguration(ArduinoJson::JsonObject & config);
-   void     ControllerEnabledCb(Control *sender, int type);
-   void     SequenceLearningEnabledCb(Control *sender, int type);
+   void     CbControllerEnabled(Control *sender, int type);
+   void     CbSequenceLearningEnabled(Control *sender, int type);
 
    void     begin();
 

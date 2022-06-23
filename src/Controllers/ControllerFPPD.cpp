@@ -25,8 +25,6 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
-static String EmptyString = "";
-
 // *********************************************************************************************
 c_ControllerFPPD::c_ControllerFPPD() : c_ControllerCommon("FPPD", c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
 {
@@ -43,7 +41,7 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
    ESPUI.addControl(
        ControlType::Separator,
        "FPPD CONTROL SETTINGS",
-       EmptyString,
+       emptyString,
        ControlColor::None,
        ctrlTab);
 
@@ -55,7 +53,7 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
       ctrlTab,
       [](Control *sender, int type, void *param)
       {
-         reinterpret_cast<c_ControllerFPPD*>(param)->ControllerEnabledCb(sender, type);
+         reinterpret_cast<c_ControllerFPPD*>(param)->CbControllerEnabled(sender, type);
       },
       this);
 
@@ -75,7 +73,7 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
       ControlerEnabledElementId,
       [](Control *sender, int type, void *param)
       {
-         reinterpret_cast<c_ControllerFPPD*>(param)->SequenceLearningEnabledCb(sender, type);
+         reinterpret_cast<c_ControllerFPPD*>(param)->CbSequenceLearningEnabled(sender, type);
       },
       this);
 
@@ -94,7 +92,7 @@ void c_ControllerFPPD::begin()
 } // begin
 
 // ************************************************************************************************
-void c_ControllerFPPD::ControllerEnabledCb(Control *sender, int type)
+void c_ControllerFPPD::CbControllerEnabled(Control *sender, int type)
 {
    // DEBUG_START;
 
@@ -108,6 +106,21 @@ void c_ControllerFPPD::ControllerEnabledCb(Control *sender, int type)
    // DEBUG_END;
 
 } // controllerCallback
+
+// ************************************************************************************************
+void c_ControllerFPPD::CbSequenceLearningEnabled(Control *sender, int type)
+{
+   // DEBUG_START;
+
+   SequenceLearningEnabled = (S_ACTIVE == type);
+
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("FPPD Controller Sequence Learning Set to: ")) + String(SequenceLearningEnabled ? "On" : "Off")).c_str());
+
+   // DEBUG_END;
+
+} // SequenceLearningEnabledCb
 
 // *********************************************************************************************
 void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
@@ -163,21 +176,6 @@ void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
 
    DEBUG_END;
 } // SaveConfiguration
-
-// ************************************************************************************************
-void c_ControllerFPPD::SequenceLearningEnabledCb(Control *sender, int type)
-{
-   // DEBUG_START;
-
-   SequenceLearningEnabled = (S_ACTIVE == type);
-
-   displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
-   Log.infoln((String(F("FPPD Controller Sequence Learning Set to: ")) + String(SequenceLearningEnabled ? "On" : "Off")).c_str());
-
-   // DEBUG_END;
-
-} // SequenceLearningEnabledCb
 
 // *********************************************************************************************
 // EOF
