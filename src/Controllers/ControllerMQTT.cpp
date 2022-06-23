@@ -26,8 +26,6 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
-static String EmptyString = "";
-
 // *********************************************************************************************
 // class c_ControllerMQTT : public c_ControllerCommon
 
@@ -142,7 +140,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
    ESPUI.addControl(
       ControlType::Separator,
       CTRL_MQTT_SEP_STR, 
-      EmptyString,
+      emptyString,
       ControlColor::None,
       ctrlTab);
 
@@ -154,7 +152,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
       ctrlTab,
       [](Control *sender, int type, void* param)
       {
-         reinterpret_cast<c_ControllerMQTT*>(param)->ControllerEnabledCb(sender, type);
+         reinterpret_cast<c_ControllerMQTT*>(param)->CbControllerEnabled(sender, type);
       },
       this);
 
@@ -174,7 +172,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
    else
    {
       // DEBUG_V();
-      MessageStr = EmptyString;
+      MessageStr = emptyString;
    }
 
    EspuiMessageAreaId = ESPUI.addControl(ControlType::Label,
@@ -548,7 +546,7 @@ void c_ControllerMQTT::mqttReconnect(bool resetFlg)
 } // mqttReconnect
 
 // ************************************************************************************************
-void c_ControllerMQTT::ControllerEnabledCb (Control *sender, int type)
+void c_ControllerMQTT::CbControllerEnabled (Control *sender, int type)
 {
    // DEBUG_START;
 
@@ -562,7 +560,7 @@ void c_ControllerMQTT::ControllerEnabledCb (Control *sender, int type)
       // DEBUG_V();
       ControllerEnabled = false; // Must set flag BEFORE mqqtReconnect!
       mqttReconnect (true);                                   // Reset MQTT Reconnect values when ctrlMqttFlg is false.
-      OnlineFlag ? updateUiMqttMsg (MQTT_DISCONNECT_STR) : updateUiMqttMsg (EmptyString);
+      OnlineFlag ? updateUiMqttMsg (MQTT_DISCONNECT_STR) : updateUiMqttMsg (emptyString);
    }
    // DEBUG_V();
 
@@ -594,7 +592,7 @@ void c_ControllerMQTT::TestParameters()
    {
       // DEBUG_V();
       ControllerEnabled = false;
-      updateUiMqttMsg(EmptyString);
+      updateUiMqttMsg(emptyString);
       mqttReconnect(true); // Reset MQTT Reconnect values while ctrlMqttFlg is false.
       ControllerEnabled = true;  // Must set flag AFTER mqqtReconnect!
    }
@@ -674,7 +672,7 @@ void c_ControllerMQTT::setRemoteIpAddrCallback (Control *sender, int type)
       {
          // DEBUG_V();
          ControllerEnabled = false;
-         // RemoteIpStr = EmptyString;
+         // RemoteIpStr = emptyString;
          ESPUI.print(ControlerEnabledElementId, "0"); // Missing IP Addreess, Turn Off MQTT Controller.
          Log.errorln(F("setRemoteIpAddrCallback: Broker IP Address Erased. Disabled MQTT Controller."));
       }

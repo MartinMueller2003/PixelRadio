@@ -36,7 +36,7 @@ public:
    void     setMqttAuthenticationCallback(Control *sender, int type);
    void     setMqttNameCallback(Control *sender, int type);
    void     setRemoteIpAddrCallback(Control *sender, int type);
-   void     ControllerEnabledCb(Control *sender, int type);
+   void     CbControllerEnabled(Control *sender, int type);
    void     mqttClientCallback(const char *topic, byte *payload, unsigned int length);
 
 private:
