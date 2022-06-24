@@ -53,7 +53,10 @@ void c_ControllerSERIAL::AddControls(uint16_t ctrlTab)
        ctrlTab,
        [](Control *sender, int type, void *param)
        {
-          reinterpret_cast<c_ControllerSERIAL *>(param)->CbBaudrateControl(sender, type);
+         if(param)
+         {
+            reinterpret_cast<c_ControllerSERIAL *>(param)->CbBaudrateControl(sender, type);
+         }
        },
        this);
 

@@ -152,7 +152,10 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
       ctrlTab,
       [](Control *sender, int type, void* param)
       {
-         reinterpret_cast<c_ControllerMQTT*>(param)->CbControllerEnabled(sender, type);
+         if(param)
+         {
+            reinterpret_cast<c_ControllerMQTT*>(param)->CbControllerEnabled(sender, type);
+         }
       },
       this);
 
@@ -190,7 +193,10 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
                                  ctrlTab,
                                  [](Control *sender, int type, void* param)
                                  {
-                                    reinterpret_cast<c_ControllerMQTT*>(param)->setMqttNameCallback(sender, type);
+                                    if(param)
+                                    {
+                                       reinterpret_cast<c_ControllerMQTT*>(param)->setMqttNameCallback(sender, type);
+                                    }
                                  },
                                  this);
 
@@ -201,7 +207,10 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
                                 ctrlTab,
                                  [](Control *sender, int type, void* param)
                                  {
-                                    reinterpret_cast<c_ControllerMQTT*>(param)->setRemoteIpAddrCallback(sender, type);
+                                    if(param)
+                                    {
+                                       reinterpret_cast<c_ControllerMQTT*>(param)->setRemoteIpAddrCallback(sender, type);
+                                    }
                                  },
                                  this);
    // DEBUG_V();
@@ -223,7 +232,10 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
                                   ctrlTab,
                                  [](Control *sender, int type, void* param)
                                  {
-                                    reinterpret_cast<c_ControllerMQTT*>(param)->setMqttAuthenticationCallback(sender, type);
+                                    if(param)
+                                    {
+                                       reinterpret_cast<c_ControllerMQTT*>(param)->setMqttAuthenticationCallback(sender, type);
+                                    }
                                  },
                                  this);
    // DEBUG_V();
@@ -235,7 +247,10 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
                                 ctrlTab,
                                  [](Control *sender, int type, void* param)
                                  {
-                                    reinterpret_cast<c_ControllerMQTT*>(param)->setMqttAuthenticationCallback(sender, type);
+                                    if(param)
+                                    {
+                                       reinterpret_cast<c_ControllerMQTT*>(param)->setMqttAuthenticationCallback(sender, type);
+                                    }
                                  },
                                  this);
    // DEBUG_END;

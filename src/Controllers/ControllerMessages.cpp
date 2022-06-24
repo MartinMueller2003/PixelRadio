@@ -164,7 +164,10 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           ctrlTab,
           [](Control *sender, int type, void *parm)
           {
-             reinterpret_cast<c_ControllerMessages *>(parm)->CbChoiceList(sender, type);
+            if(parm)
+            {
+               reinterpret_cast<c_ControllerMessages *>(parm)->CbChoiceList(sender, type);
+            }
           },
           this);
 

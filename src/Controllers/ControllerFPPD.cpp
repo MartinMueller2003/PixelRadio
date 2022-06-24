@@ -53,7 +53,10 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
       ctrlTab,
       [](Control *sender, int type, void *param)
       {
-         reinterpret_cast<c_ControllerFPPD*>(param)->CbControllerEnabled(sender, type);
+         if(param)
+         {
+            reinterpret_cast<c_ControllerFPPD*>(param)->CbControllerEnabled(sender, type);
+         }
       },
       this);
 
@@ -73,7 +76,10 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
       ControlerEnabledElementId,
       [](Control *sender, int type, void *param)
       {
-         reinterpret_cast<c_ControllerFPPD*>(param)->CbSequenceLearningEnabled(sender, type);
+         if(param)
+         {
+            reinterpret_cast<c_ControllerFPPD*>(param)->CbSequenceLearningEnabled(sender, type);
+         }
       },
       this);
 

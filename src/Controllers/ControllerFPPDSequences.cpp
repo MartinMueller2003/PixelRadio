@@ -87,7 +87,10 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          EspuiParentElementId,
          [](Control *sender, int type, void* param)
          {
-            reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbChoiceList(sender, type);
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbChoiceList(sender, type);
+            }
          },
          this);
 
@@ -100,7 +103,10 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          EspuiChoiceListElementId,
          [](Control *sender, int type, void* param)
          {
-            reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbTextChange(sender, type);
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbTextChange(sender, type);
+            }
          },
          this);
 
@@ -116,7 +122,10 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          EspuiChoiceListElementId,
          [](Control *sender, int type, void* param)
          {
-            reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonCreate(sender, type);
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonCreate(sender, type);
+            }
          },
          this);
 
@@ -129,7 +138,10 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          EspuiChoiceListElementId,
          [](Control *sender, int type, void* param)
          {
-            reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonDelete(sender, type);
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonDelete(sender, type);
+            }
          },
          this);
 
@@ -142,7 +154,10 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          EspuiChoiceListElementId,
          [](Control *sender, int type, void* param)
          {
-            reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonUpdate(sender, type);
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonUpdate(sender, type);
+            }
          },
          this);
 
