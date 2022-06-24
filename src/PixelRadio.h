@@ -76,25 +76,6 @@ const uint8_t CMD_TIME_MAX_SZ = 4;  // Time Command Arg length is 3 (5-900). Add
 
 #define CMD_SYS_CODE_STR  "system"
 
-// Controller Command Keywords
-#define  CMD_AUDMODE_STR     "aud"    // Radio Stereo / Mono Audio Mode.
-#define  CMD_FREQ_STR        "freq"   // FM Transmit Frequency, value is MHz x10.
-#define  CMD_GPIO_STR        "gpio"   // GPIO Control.
-#define  CMD_GPIO19_STR      "gpio19" // GPIO Pin-19 Control.
-#define  CMD_GPIO23_STR      "gpio23" // GPIO Pin-23 Control.
-#define  CMD_GPIO33_STR      "gpio33" // GPIO Pin-33 Control.
-#define  CMD_INFO_STR        "info"   // System Info.
-#define  CMD_MUTE_STR        "mute"   // Radio Audio Mute, On/Off.
-#define  CMD_PERIOD_STR      "rtper"  // RadioText Display Time Period, in seconds.
-#define  CMD_PICODE_STR      "pic"    // RDS Program Information Code.
-#define  CMD_PTYCODE_STR     "pty"    // RDS PTY Code.
-#define  CMD_PSN_STR         "psn"    // RadioText Program Service Name, 8 chars max.
-#define  CMD_REBOOT_STR      "reboot" // Reboot System.
-#define  CMD_RF_CARRIER_STR  "rfc"    // RF Carrier, On/Off.
-#define  CMD_RADIOTEXT_STR   "rtm"    // RadioText Message, 64 chars max.
-#define  CMD_START_STR       "start"  // Start RDS using existing HTTP settings.
-#define  CMD_STOP_STR        "stop"   // Stop HTTP Controller's RDS Transmission.
-
 // Controller Flags
 const bool AP_FALLBACK_DEF_FLG = true;
 const bool CTRL_DHCP_DEF_FLG   = true;
