@@ -196,28 +196,28 @@ void c_ControllerSERIAL::serialCommands(void)
       cmdStr = serial_manager.getCmd();
       cmdStr.trim();
       cmdStr.toLowerCase();
-      serial_manager.println((String("Raw CMD Parameter: '") + cmdStr + "'").c_str());
+      serial_manager.println((String(F("Raw CMD Parameter: '")) + cmdStr + "'").c_str());
 
       paramStr = serial_manager.getParam();
       paramStr.trim();
-      serial_manager.println((String("Raw CLI Parameter: '") + paramStr + "'").c_str());
+      serial_manager.println((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
 
       if ((cmdStr == "?") || (cmdStr == "h") || (cmdStr == "help")) {
-         serial_manager.println(                                         "");
-         serial_manager.println("=========================================");
-         serial_manager.println("**  SERIAL CONTROLLER COMMAND SUMMARY  **");
-         serial_manager.println("=========================================");
-         serial_manager.println(     " AUDIO MODE      : aud=mono : stereo");
+         serial_manager.println(emptyString);
+         serial_manager.println(F("========================================="));
+         serial_manager.println(F("**  SERIAL CONTROLLER COMMAND SUMMARY  **"));
+         serial_manager.println(F("========================================="));
+         serial_manager.println(F(" AUDIO MODE      : aud=mono : stereo"));
 
          sprintf(printBuff, " FREQUENCY X10   : freq=%d <-> %d", FM_FREQ_MIN_X10, FM_FREQ_MAX_X10);
-         serial_manager.println(                                          printBuff);
+         serial_manager.println(printBuff);
 
-         serial_manager.println(" GPIO-19 CONTROL : gpio19=read : outhigh : outlow");
-         serial_manager.println(" GPIO-23 CONTROL : gpio23=read : outhigh : outlow");
-         serial_manager.println(" GPIO-33 CONTROL : gpio33=read : outhigh : outlow");
+         serial_manager.println(F(" GPIO-19 CONTROL : gpio19=read : outhigh : outlow"));
+         serial_manager.println(F(" GPIO-23 CONTROL : gpio23=read : outhigh : outlow"));
+         serial_manager.println(F(" GPIO-33 CONTROL : gpio33=read : outhigh : outlow"));
 
-         serial_manager.println(                   " INFORMATION     : info=system");
-         serial_manager.println(                 " MUTE AUDIO      : mute=on : off");
+         serial_manager.println(F(" INFORMATION     : info=system"));
+         serial_manager.println(F(" MUTE AUDIO      : mute=on : off"));
 
          sprintf(printBuff, " PROG ID CODE    : pic=0x%04X <-> 0x%04X", RDS_PI_CODE_MIN, RDS_PI_CODE_MAX);
          serial_manager.println(printBuff);
@@ -229,14 +229,14 @@ void c_ControllerSERIAL::serialCommands(void)
          serial_manager.println(printBuff);
 
          sprintf(printBuff, " RADIOTXT PERIOD : rtper=5 <-> %d secs", RDS_DSP_TM_MAX);
-         serial_manager.println(                                  printBuff);
+         serial_manager.println(printBuff);
 
-         serial_manager.println(         " REBOOT SYSTEM   : reboot=system");
-         serial_manager.println(             " START RDS       : start=rds");
-         serial_manager.println(              " STOP RDS        : stop=rds");
-         serial_manager.println(  " LOG CONTROL     : log=silent : restore");
-         serial_manager.println("=========================================");
-         serial_manager.println(                                         "");
+         serial_manager.println(F(" REBOOT SYSTEM   : reboot=system"));
+         serial_manager.println(F(" START RDS       : start=rds"));
+         serial_manager.println(F(" STOP RDS        : stop=rds"));
+         serial_manager.println(F(" LOG CONTROL     : log=silent : restore"));
+         serial_manager.println(F("========================================="));
+         serial_manager.println(emptyString);
       }
       else if (cmdStr == CMD_AUDMODE_STR) {
          if (audioModeCmd(paramStr, TypeId)) {
