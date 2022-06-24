@@ -299,3 +299,23 @@ extern const PROGMEM char N_ProgramServiceName[];
 extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];
 extern const PROGMEM char N_SequenceLearningEnabled[];
+
+
+   // Controller Command Keywords
+extern const PROGMEM char  CMD_AUDMODE_STR[];
+extern const PROGMEM char  CMD_FREQ_STR[];
+extern const PROGMEM char  CMD_GPIO_STR[];
+extern const PROGMEM char  CMD_GPIO19_STR[];
+extern const PROGMEM char  CMD_GPIO23_STR[];
+extern const PROGMEM char  CMD_GPIO33_STR[];
+extern const PROGMEM char  CMD_INFO_STR[];
+extern const PROGMEM char  CMD_MUTE_STR[];
+extern const PROGMEM char  CMD_PERIOD_STR[];
+extern const PROGMEM char  CMD_PICODE_STR[];
+extern const PROGMEM char  CMD_PTYCODE_STR[];
+extern const PROGMEM char  CMD_PSN_STR[];
+extern const PROGMEM char  CMD_REBOOT_STR[];
+extern const PROGMEM char  CMD_RF_CARRIER_STR[];
+extern const PROGMEM char  CMD_RADIOTEXT_STR[];
+extern const PROGMEM char  CMD_START_STR[];
+extern const PROGMEM char  CMD_STOP_STR[];
