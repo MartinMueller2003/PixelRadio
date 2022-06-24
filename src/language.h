@@ -53,7 +53,7 @@
 #define INP_IMP40K_STR   "40K Ohms"
 #define INP_IMP_DEF_STR  INP_IMP20K_STR;
 
-#define APP_NAME_STR  "PixelRadio"
+#define APP_NAME_STR  N_PixelRadio
 
 #define BACKUP_TAB_STR       "Backup"
 #define BACKUP_SAVE_STR      "SAVE"
@@ -279,6 +279,7 @@
 extern const PROGMEM char N_Baudrate[];
 extern const PROGMEM char N_ControllerEnabled[];
 extern const PROGMEM char N_controllers[];
+extern const PROGMEM char N_command[];
 extern const PROGMEM char N_default[];
 extern const PROGMEM char N_DisplayFseqName[];
 extern const PROGMEM char N_durationSec[];
@@ -293,8 +294,10 @@ extern const PROGMEM char N_MQTT_NAME_STR[];
 extern const PROGMEM char N_MQTT_PW_STR[];
 extern const PROGMEM char N_MQTT_USER_STR[];
 extern const PROGMEM char N_name[];
+extern const PROGMEM char N_path[];
 extern const PROGMEM char N_PayloadTest[];
 extern const PROGMEM char N_PiCode[];
+extern const PROGMEM char N_PixelRadio[];
 extern const PROGMEM char N_ProgramServiceName[];
 extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];
