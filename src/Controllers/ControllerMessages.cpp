@@ -153,7 +153,8 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           emptyString,
           ControlColor::Turquoise,
           ctrlTab);
-
+      ESPUI.updateVisibility(EspuiHiddenChoiceListElementId, false);
+      
       // DEBUG_V(String("Add Select"));
       EspuiActiveChoiceListElementId = ESPUI.addControl(
           ControlType::Select,
