@@ -41,11 +41,12 @@ public:
    uint16_t GetMsgId() { return EspuiMsgId; }
 
 private:
-   bool ctrlSerialFlg(void); // Return true if Serial Controller is Enabled, else false;
-   void initSerialControl(void);
-   void serialCommands(void);
-   void serialCallback(Control *sender, int type);
-   bool SetBaudrate(String NewRate);
+   bool     ctrlSerialFlg(void); // Return true if Serial Controller is Enabled, else false;
+   void     initSerialControl(void);
+   void     CbBaudrateControl(Control *sender, int type);
+   void     serialCommands(void);
+   bool     SetBaudrate(String NewRate);
+
    RBD::SerialManager serial_manager;
 
    String   cmdStr;   // Serial Port Commands from user (CLI).
