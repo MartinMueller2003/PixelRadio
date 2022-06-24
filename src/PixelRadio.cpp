@@ -246,12 +246,12 @@ void setup()
     // Startup the I2C Devices).
     i2cScanner();                      // Scan the i2c bus and report all devices.
     fmRadioTestCode = initRadioChip(); // If QN8027 fails we will warn user on UI homeTab.
-    Log.infoln("FM Radio RDS/RBDS Started.");
+    Log.infoln(F("FM Radio RDS/RBDS Started."));
 
     // Startup the Web GUI. DO THIS LAST!
-    Log.infoln("Initializing Web UI ...");
+    Log.infoln(F("Initializing Web UI ..."));
     startGUI();
-    Log.infoln("-> Web UI Loaded.");
+    Log.infoln(F("-> Web UI Loaded."));
 
     // End of System Initialization. Report pass/fail message to Serial Log.
     if (successFlg && (fmRadioTestCode == FM_TEST_OK)) {
