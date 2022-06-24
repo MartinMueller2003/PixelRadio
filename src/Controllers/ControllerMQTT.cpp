@@ -261,7 +261,7 @@ void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, uns
    if (length > MQTT_PAYLD_MAX_SZ)
    {
       // DEBUG_V();
-      Log.warningln ("MQTT Message Length (%u bytes) too long! Truncated to %u bytes.", length, MQTT_PAYLD_MAX_SZ);
+      Log.warningln (F("MQTT Message Length (%u bytes) too long! Truncated to %u bytes."), length, MQTT_PAYLD_MAX_SZ);
       length = MQTT_PAYLD_MAX_SZ;
    }
 
@@ -300,31 +300,31 @@ void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, uns
    if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_AUDMODE_STR))
    {
       // DEBUG_V();
-      Log.infoln ("MQTT: Received Audio Mode Command");
+      Log.infoln (F("MQTT: Received Audio Mode Command"));
       audioModeCmd (payloadStr, MqttControllerId);
    }
    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_FREQ_STR))
    {
       // DEBUG_V();
-      Log.infoln ("MQTT: Received Radio Frequency Command");
+      Log.infoln (F("MQTT: Received Radio Frequency Command"));
       frequencyCmd (payloadStr, MqttControllerId);
    }
    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO19_STR))
    {
       // DEBUG_V();
-      Log.infoln ("MQTT: Received GPIO19 Command");
+      Log.infoln (F("MQTT: Received GPIO19 Command"));
       gpioMqttControl (payloadStr, GPIO19_PIN);
    }
    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO23_STR))
    {
       // DEBUG_V();
-      Log.infoln ("MQTT: Received GPIO23 Command");
+      Log.infoln (F("MQTT: Received GPIO23 Command"));
       gpioMqttControl (payloadStr, GPIO23_PIN);
    }
    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO33_STR))
    {
       // DEBUG_V();
-      Log.infoln ("MQTT: Received GPIO33 Command");
+      Log.infoln (F("MQTT: Received GPIO33 Command"));
       gpioMqttControl (payloadStr, GPIO33_PIN);
    }
    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_INFO_STR))
@@ -559,7 +559,7 @@ void c_ControllerMQTT::CbControllerEnabled (Control *sender, int type)
    {
       // DEBUG_V();
       ControllerEnabled = false; // Must set flag BEFORE mqqtReconnect!
-      mqttReconnect (true);                                   // Reset MQTT Reconnect values when ctrlMqttFlg is false.
+      mqttReconnect (true); // Reset MQTT Reconnect values when ControllerEnabled is false.
       OnlineFlag ? updateUiMqttMsg (MQTT_DISCONNECT_STR) : updateUiMqttMsg (emptyString);
    }
    // DEBUG_V();
@@ -578,9 +578,9 @@ void c_ControllerMQTT::TestParameters()
    // DEBUG_START;
 
    if ((INADDR_NONE == RemoteIp  ) || 
-       (0 == mqttNameStr.length()) ||
-       (0 == mqttUserStr.length()) || 
-       (0 == mqttPwStr.length()  ))
+       (mqttNameStr.isEmpty()) ||
+       (mqttUserStr.isEmpty()) || 
+       (mqttPwStr.isEmpty()  ))
    { // Missing MQTT Entries
       // DEBUG_V();
       ControllerEnabled = false;
@@ -593,7 +593,7 @@ void c_ControllerMQTT::TestParameters()
       // DEBUG_V();
       ControllerEnabled = false;
       updateUiMqttMsg(emptyString);
-      mqttReconnect(true); // Reset MQTT Reconnect values while ctrlMqttFlg is false.
+      mqttReconnect(true); // Reset MQTT Reconnect values while ControllerEnabled is false.
       ControllerEnabled = true;  // Must set flag AFTER mqqtReconnect!
    }
 
@@ -927,37 +927,37 @@ String c_ControllerMQTT::returnClientCode(int code)
    switch (code)
    {
    case MQTT_CONNECTION_TIMEOUT:
-      Response = "MQTT_CONNECTION_TIMEOUT";
+      Response = F("MQTT_CONNECTION_TIMEOUT");
       break;
    case MQTT_CONNECTION_LOST:
-      Response = "MQTT_CONNECTION_LOST";
+      Response = F("MQTT_CONNECTION_LOST");
       break;
    case MQTT_CONNECT_FAILED:
-      Response = "MQTT_CONNECT_FAILED";
+      Response = F("MQTT_CONNECT_FAILED");
       break;
    case MQTT_DISCONNECTED:
-      Response = "MQTT_DISCONNECTED";
+      Response = F("MQTT_DISCONNECTED");
       break;
    case MQTT_CONNECTED:
-      Response = "MQTT_CONNECTED";
+      Response = F("MQTT_CONNECTED");
       break;
    case MQTT_CONNECT_BAD_PROTOCOL:
-      Response = "MQTT_CONNECT_BAD_PROTOCOL";
+      Response = F("MQTT_CONNECT_BAD_PROTOCOL");
       break;
    case MQTT_CONNECT_BAD_CLIENT_ID:
-      Response = "MQTT_CONNECT_BAD_CLIENT_ID";
+      Response = F("MQTT_CONNECT_BAD_CLIENT_ID");
       break;
    case MQTT_CONNECT_UNAVAILABLE:
-      Response = "MQTT_CONNECT_UNAVAILABLE";
+      Response = F("MQTT_CONNECT_UNAVAILABLE");
       break;
    case MQTT_CONNECT_BAD_CREDENTIALS:
-      Response = "MQTT_CONNECT_BAD_CREDENTIALS";
+      Response = F("MQTT_CONNECT_BAD_CREDENTIALS");
       break;
    case MQTT_CONNECT_UNAUTHORIZED:
-      Response = "MQTT_CONNECT_UNAUTHORIZED";
+      Response = F("MQTT_CONNECT_UNAUTHORIZED");
       break;
    default:
-      Response = "Undefined";
+      Response = F("Undefined");
       break;
    }
    return Response;
