@@ -27,6 +27,7 @@ class c_ControllerMessage
 {
 public:
             c_ControllerMessage();
+            c_ControllerMessage(const c_ControllerMessage& source) {} // Empty Copy constructor
    virtual  ~c_ControllerMessage();
    void     Activate(bool value);
    void     AddControls(uint16_t ctrlTab, uint16_t ParentElementId, uint16_t HiddenParentElementId = Control::noParent);
