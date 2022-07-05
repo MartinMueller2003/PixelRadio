@@ -410,7 +410,7 @@ void displayRdsText(void)
     else if (testModeFlg) {
         return;
     }
-    else if (!checkControllerRdsAvail()) { // No controllers are available. All off.
+    else if (!checkAnyRdsControllerAvailable()) { // No controllers are available. All off.
         updateUiRdsText(RDS_CTRLS_DIS_STR);
         sprintf(logBuff, "displayRdsText: Warning %s.", RDS_CTRLS_DIS_STR);
         Log.warningln(logBuff);
@@ -460,7 +460,7 @@ void startGUI(void)
 {
     buildGUI();
 
-    ESPUI.jsonUpdateDocumentSize  = 2000;                              // Default is 2000.
+    ESPUI.jsonUpdateDocumentSize  = 200;                               // Default is 2000.
     ESPUI.jsonInitialDocumentSize = 8000;                              // Default is 8000.
 
     //ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
@@ -674,7 +674,7 @@ void updateUiRDSTmr(uint32_t rdsMillis)
     if (testModeFlg) {
         ESPUI.print(homeRdsTmrID, " ");
     }
-    else if (rfCarrierFlg && checkControllerRdsAvail() && (checkLocalRdsAvail() || ControllerMgr.IsControllerActive())) {
+    else if (rfCarrierFlg && checkAnyRdsControllerAvailable() && (checkLocalRdsAvail() || ControllerMgr.IsControllerActive())) {
         timeCnt =  millis() - rdsMillis; // Get Elasped time.
         timeCnt = rdsMsgTime - timeCnt;  // Now we have Countdown time.
         timeCnt = timeCnt / 1000;        // Coverted to Secs.
@@ -688,7 +688,7 @@ void updateUiRDSTmr(uint32_t rdsMillis)
             ESPUI.print(homeRdsTmrID, RDS_EXPIRED_STR);
         }
     }
-    else if (!checkControllerRdsAvail()) {
+    else if (!checkAnyRdsControllerAvailable()) {
         ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);
     }
     else {
