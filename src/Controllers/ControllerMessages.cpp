@@ -333,17 +333,25 @@ void c_ControllerMessages::CbButtonCreate(Control *sender, int type)
 
       // DEBUG_V("Create a new message");
 
+      // DEBUG_V("Add an empty message");
       Messages.push_back(EmptyControlMessage);
+      // DEBUG_V("Set the message text");
       Messages.back().SetMessage(TextControl->value);
+      // DEBUG_V("Add it to the choice list");
       Messages.back().AddControls(EspuiParentElementId,
                                   EspuiActiveChoiceListElementId,
                                   EspuiHiddenChoiceListElementId);
+      // DEBUG_V("Make the new message the selected message");
       Messages.back().SelectMessage(true);
+      // DEBUG_V("Activate the secondary message parameter setting menu");
       Messages.back().HideMenu(false);
-      ESPUI.print(EspuiStatusMsgElementId, emptyString);
-      ESPUI.updateSelect(EspuiActiveChoiceListElementId, TextControl->value);
+      // DEBUG_V("Clear the status message");
+      // ESPUI.print(EspuiStatusMsgElementId, emptyString);
+      // DEBUG_V("Set up the buttons");
       CbTextChange(nullptr, 0);
       displaySaveWarning();
+
+      // DEBUG_V("Refresh UI");
       ESPUI.jsonDom(0);
 
    } while (false);
