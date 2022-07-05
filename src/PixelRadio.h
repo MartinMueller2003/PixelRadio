@@ -489,7 +489,7 @@ bool         checkActiveTextAvail(void);
 bool         checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controller);
 bool         checkLocalControllerAvail(void);
 bool         checkLocalRdsAvail(void);
-bool         checkControllerRdsAvail(void);
+bool         checkAnyRdsControllerAvailable(void);
 bool         checkRemoteRdsAvail(void);
 bool         checkRemoteTextAvail(void);
 void         processRDS(void);

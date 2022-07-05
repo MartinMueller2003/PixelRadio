@@ -126,6 +126,101 @@ void c_ControllerMgr::begin()
 } // begin
 
 // *********************************************************************************************
+// CheckAnyRdsControllerEnabled(): 
+// Determine if any (Local, HTTP, MQTT, Serial, FPPD) RDS Controller is Enabled.
+bool c_ControllerMgr::CheckAnyRdsControllerEnabled(bool IncludeLocalController)
+{
+   // DEBUG_START;
+
+   bool Response = false;
+   for (auto &currentController : ListOfControllers)
+   {
+      if((currentController.ControllerId == LocalControllerId) &&
+         (!IncludeLocalController))
+      {
+         continue;
+      }
+      Response |= currentController.pController->ControllerIsEnabled();
+   }
+
+   // DEBUG_END;
+   return Response;
+} // CheckAnyRdsControllerEnabled
+
+// *********************************************************************************************
+bool c_ControllerMgr::CheckRdsTextAvailable(bool IncludeLocalController)
+{
+   // DEBUG_START;
+
+   bool Response = false;
+   for (auto &currentController : ListOfControllers)
+   {
+      if((currentController.ControllerId == LocalControllerId) &&
+         (!IncludeLocalController))
+      {
+         continue;
+      }
+      Response |= currentController.pController->CheckRdsTextAvailable();
+   }
+
+   return Response;
+
+   // DEBUG_END;
+} // CheckRdsTextAvailable
+
+// ************************************************************************************************
+// checkControllerIsAvailable(): 
+// Using the supplied Controller ID, check if any HIGHER priority
+// controllers are in operation. If none are present, then the supplied controller ID won't 
+// be blocked and is available to use.
+// true = Controller is ready, false = higher priority controller is active.
+bool c_ControllerMgr::checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controllerId) 
+{
+   // DEBUG_START;
+
+   bool Response = true;
+   for (auto &currentController : ListOfControllers)
+   {
+      // is this the target controller
+      if(currentController.ControllerId == controllerId)
+      {
+         // DEBUG_V("Target controller is the highest priority with a message");
+         break;
+      }
+      
+      if(currentController.pController->CheckRdsTextAvailable())
+      {
+         // DEBUG_V("Found a higher priority controller with a message. Target controller can NOT output a message");
+         Response = false;
+         break;
+      }
+   }
+
+   // DEBUG_END;
+   return Response;
+}
+
+// *********************************************************************************************
+bool c_ControllerMgr::CheckAnyControllerIsDisplayingMessage(bool IncludeLocalController)
+{
+   // DEBUG_START;
+
+   bool Response = false;
+   for (auto &currentController : ListOfControllers)
+   {
+      if((currentController.ControllerId == LocalControllerId) &&
+         (!IncludeLocalController))
+      {
+         continue;
+      }
+      Response |= currentController.pController->ControllerIsDisplayingMessage();
+   }
+
+   // DEBUG_END;
+   return Response;
+}
+
+// *********************************************************************************************
 c_ControllerCommon * c_ControllerMgr::GetControllerById(ControllerTypeId_t Id)
 {
    return ListOfControllers[Id].pController;
@@ -153,7 +248,7 @@ bool c_ControllerMgr::GetActiveTextFlag(ControllerTypeId_t Id)
 // *********************************************************************************************
 bool c_ControllerMgr::GetControllerEnabledFlag(ControllerTypeId_t Id)
 {
-   return ListOfControllers[Id].pController->GetControllerEnabledFlag();
+   return ListOfControllers[Id].pController->ControllerIsEnabled();
 } // GetControlEnabledFlag
 
 // *********************************************************************************************
@@ -249,18 +344,14 @@ int32_t c_ControllerMgr::GetRdsMsgTime(ControllerTypeId_t Id)
 // *********************************************************************************************
 bool c_ControllerMgr::IsControllerActive()
 {
-   bool response = false;
+   bool Response = false;
 
    for (ControllerInfo_t & CurrentController : ListOfControllers)
    {
-      if (true == CurrentController.pController->GetActiveTextFlag())
-      {
-         response = true;
-         break;
-      }
+      Response |= CurrentController.pController->GetActiveTextFlag();
    }
 
-   return response;
+   return Response;
 } // IsControllerActive
 
 // *********************************************************************************************

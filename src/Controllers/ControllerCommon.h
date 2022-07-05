@@ -90,7 +90,10 @@ public:
    virtual void      SetActiveTextFlag(bool value) { activeTextFlag = value; }
    virtual bool      GetActiveTextFlag() { return activeTextFlag; }
 
-   virtual bool      GetControllerEnabledFlag() { return ControllerEnabled; }
+   virtual bool      ControllerIsEnabled() { return ControllerEnabled; }
+
+   virtual bool      CheckRdsTextAvailable() { return false; }
+   virtual bool      ControllerIsDisplayingMessage() { return false; }
 
 }; // c_ControllerCommon
 

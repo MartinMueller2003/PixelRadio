@@ -17,19 +17,19 @@
 #include "FPPDiscovery.h"
 #include "fseq.h"
 #include <WiFi.h>
-
 #include <time.h>
+#include "../language.h"
 
 #if __has_include("../memdebug.h")
 #include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
-#define FPP_TYPE_ID 0xC3
-#define FPP_VARIANT_NAME (String(F("PixelRadio")))
+#define FPP_TYPE_ID         0xC3
+#define FPP_VARIANT_NAME    String(N_PixelRadio)
 
-#define FPP_DISCOVERY_PORT 32320
-static const String ulrCommand = F("command");
-static const String ulrPath = F("path");
+#define FPP_DISCOVERY_PORT  32320
+#define ulrCommand          N_command
+#define ulrPath             N_path
 
 //-----------------------------------------------------------------------------
 c_FPPDiscovery::c_FPPDiscovery()
@@ -40,9 +40,12 @@ c_FPPDiscovery::c_FPPDiscovery()
 } // c_FPPDiscovery
 
 //-----------------------------------------------------------------------------
-void c_FPPDiscovery::begin()
+void c_FPPDiscovery::begin(FileChangeCb _FppdCb, void* _UserParam)
 {
     // DEBUG_START;
+
+    FppdCb = _FppdCb;
+    UserParam = _UserParam;
 
     hasBeenInitialized = true;
     NetworkStateChanged(WiFi.isConnected());
@@ -151,104 +154,105 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket(AsyncUDPPacket UDPpacket)
 
         switch (fppPacket->packet_type)
         {
-        case CTRL_PKT_CMD: // deprecated in favor of FPP Commands
-        {
-            MultiSyncStats.pktCommand++;
-            // DEBUG_V ("Unsupported PDU: CTRL_PKT_CMD");
-            break;
-        }
-
-        case CTRL_PKT_SYNC:
-        {
-            FPPMultiSyncPacket *msPacket = reinterpret_cast<FPPMultiSyncPacket *>(UDPpacket.data());
-            // DEBUG_V (String (F ("msPacket->sync_type: ")) + String(msPacket->sync_type));
-
-            if (msPacket->sync_type == SYNC_FILE_SEQ)
+            case CTRL_PKT_CMD: // deprecated in favor of FPP Commands
             {
-                // FSEQ type, not media
-                // DEBUG_V (String (F ("Received FPP FSEQ sync packet")));
-                FppRemoteIp = UDPpacket.remoteIP();
-                ProcessSyncPacket(msPacket->sync_action, String(msPacket->filename), msPacket->seconds_elapsed);
-            }
-            else if (msPacket->sync_type == SYNC_FILE_MEDIA)
-            {
-                // DEBUG_V (String (F ("Unsupported SYNC_FILE_MEDIA message.")));
-            }
-            else
-            {
-                // DEBUG_V (String (F ("Unexpected Multisync msPacket->sync_type: ")) + String (msPacket->sync_type));
+                MultiSyncStats.pktCommand++;
+                // DEBUG_V ("Unsupported PDU: CTRL_PKT_CMD");
+                break;
             }
 
-            break;
-        }
-
-        case CTRL_PKT_EVENT: // deprecated in favor of FPP Commands
-        {
-            // DEBUG_V ("Unsupported PDU: CTRL_PKT_EVENT");
-            break;
-        }
-
-        case CTRL_PKT_BLANK:
-        {
-            // DEBUG_V (String (F ("FPP Blank packet")));
-            MultiSyncStats.pktBlank++;
-            break;
-        }
-
-        case CTRL_PKT_PING:
-        {
-            // DEBUG_V (String (F ("Ping Packet")));
-
-            MultiSyncStats.pktPing++;
-            FPPPingPacket *pingPacket = reinterpret_cast<FPPPingPacket *>(UDPpacket.data());
-
-            // DEBUG_V (String (F ("Ping Packet subtype: ")) + String (pingPacket->ping_subtype));
-            // DEBUG_V (String (F ("Ping Packet packet.versionMajor: ")) + String (pingPacket->versionMajor));
-            // DEBUG_V (String (F ("Ping Packet packet.versionMinor: ")) + String (pingPacket->versionMinor));
-            // DEBUG_V (String (F ("Ping Packet packet.hostName:     ")) + String (pingPacket->hostName));
-            // DEBUG_V (String (F ("Ping Packet packet.hardwareType: ")) + String (pingPacket->hardwareType));
-
-            if (pingPacket->ping_subtype == 0x01)
+            case CTRL_PKT_SYNC:
             {
-                // DEBUG_V (String (F ("FPP Ping discovery packet")));
-                // received a discover ping packet, need to send a ping out
-                if (UDPpacket.isBroadcast() || UDPpacket.isMulticast())
+                FPPMultiSyncPacket *msPacket = reinterpret_cast<FPPMultiSyncPacket *>(UDPpacket.data());
+                // DEBUG_V (String (F ("msPacket->sync_type: ")) + String(msPacket->sync_type));
+
+                if (msPacket->sync_type == SYNC_FILE_SEQ)
                 {
-                    // DEBUG_V ("Broadcast Ping Response");
-                    sendPingPacket();
+                    // FSEQ type, not media
+                    // DEBUG_V (String (F ("Received FPP FSEQ sync packet")));
+                    FppRemoteIp = UDPpacket.remoteIP();
+                    ProcessSyncPacket(msPacket->sync_action, String(msPacket->filename), msPacket->seconds_elapsed);
+                }
+                else if (msPacket->sync_type == SYNC_FILE_MEDIA)
+                {
+                    // DEBUG_V (String (F ("Unsupported SYNC_FILE_MEDIA message.")));
                 }
                 else
                 {
-                    // DEBUG_V ("Unicast Ping Response");
-                    sendPingPacket(UDPpacket.remoteIP());
+                    // DEBUG_V (String (F ("Unexpected Multisync msPacket->sync_type: ")) + String (msPacket->sync_type));
                 }
+
+                break;
             }
-            else
+
+            case CTRL_PKT_EVENT: // deprecated in favor of FPP Commands
             {
-                // DEBUG_V (String (F ("Unexpected Ping sub type: ")) + String (pingPacket->ping_subtype));
+                // DEBUG_V ("Unsupported PDU: CTRL_PKT_EVENT");
+                break;
             }
-            break;
-        }
 
-        case CTRL_PKT_PLUGIN:
-        {
-            // DEBUG_V ("Unsupported PDU: CTRL_PKT_PLUGIN");
-            MultiSyncStats.pktPlugin++;
-            break;
-        }
+            case CTRL_PKT_BLANK:
+            {
+                // DEBUG_V (String (F ("FPP Blank packet")));
+                MultiSyncStats.pktBlank++;
+                CurrentFileName = emptyString;
+                break;
+            }
 
-        case CTRL_PKT_FPPCOMMAND:
-        {
-            // DEBUG_V ("Unsupported PDU: CTRL_PKT_FPPCOMMAND");
-            MultiSyncStats.pktFPPCommand++;
-            break;
-        }
+            case CTRL_PKT_PING:
+            {
+                // DEBUG_V (String (F ("Ping Packet")));
 
-        default:
-        {
-            // DEBUG_V (String ("UnHandled PDU: packet_type:  ") + String (fppPacket->packet_type));
-            break;
-        }
+                MultiSyncStats.pktPing++;
+                FPPPingPacket *pingPacket = reinterpret_cast<FPPPingPacket *>(UDPpacket.data());
+
+                // DEBUG_V (String (F ("Ping Packet subtype: ")) + String (pingPacket->ping_subtype));
+                // DEBUG_V (String (F ("Ping Packet packet.versionMajor: ")) + String (pingPacket->versionMajor));
+                // DEBUG_V (String (F ("Ping Packet packet.versionMinor: ")) + String (pingPacket->versionMinor));
+                // DEBUG_V (String (F ("Ping Packet packet.hostName:     ")) + String (pingPacket->hostName));
+                // DEBUG_V (String (F ("Ping Packet packet.hardwareType: ")) + String (pingPacket->hardwareType));
+
+                if (pingPacket->ping_subtype == 0x01)
+                {
+                    // DEBUG_V (String (F ("FPP Ping discovery packet")));
+                    // received a discover ping packet, need to send a ping out
+                    if (UDPpacket.isBroadcast() || UDPpacket.isMulticast())
+                    {
+                        // DEBUG_V ("Broadcast Ping Response");
+                        sendPingPacket();
+                    }
+                    else
+                    {
+                        // DEBUG_V ("Unicast Ping Response");
+                        sendPingPacket(UDPpacket.remoteIP());
+                    }
+                }
+                else
+                {
+                    // DEBUG_V (String (F ("Unexpected Ping sub type: ")) + String (pingPacket->ping_subtype));
+                }
+                break;
+            }
+
+            case CTRL_PKT_PLUGIN:
+            {
+                // DEBUG_V ("Unsupported PDU: CTRL_PKT_PLUGIN");
+                MultiSyncStats.pktPlugin++;
+                break;
+            }
+
+            case CTRL_PKT_FPPCOMMAND:
+            {
+                // DEBUG_V ("Unsupported PDU: CTRL_PKT_FPPCOMMAND");
+                MultiSyncStats.pktFPPCommand++;
+                break;
+            }
+
+            default:
+            {
+                // DEBUG_V (String ("UnHandled PDU: packet_type:  ") + String (fppPacket->packet_type));
+                break;
+            }
         } // switch (fppPacket->packet_type)
     } while (false);
 
@@ -261,70 +265,70 @@ void c_FPPDiscovery::ProcessSyncPacket(uint8_t action, String FileName, float Se
     // DEBUG_START;
     do // once
     {
-        // DEBUG_V (String("action: ") + String(action));
+        // DEBUG_V (String("  action: ") + String(action));
+        // DEBUG_V (String("FileName: '") + FileName + "'");
+        CurrentFileName = FileName;
 
         switch (action)
         {
-        case SYNC_PKT_START:
-        {
-            // DEBUG_V ("Sync::Start");
-            // DEBUG_V (String ("      FileName: ") + FileName);
-            // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
-            if (CurrentFileName != FileName)
+            case SYNC_PKT_START:
             {
-                CurrentFileName = FileName;
+                // DEBUG_V ("Sync::Start");
+                // DEBUG_V (String ("      FileName: ") + FileName);
+                // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
+                MultiSyncStats.pktSyncSeqStart++;
+                break;
             }
-            MultiSyncStats.pktSyncSeqStart++;
-            break;
-        }
 
-        case SYNC_PKT_STOP:
-        {
-            // DEBUG_V ("Sync::Stop");
-            // DEBUG_V (String ("      FileName: ") + FileName);
-            // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
-            CurrentFileName = emptyString;
-            MultiSyncStats.pktSyncSeqStop++;
-            break;
-        }
+            case SYNC_PKT_STOP:
+            {
+                // DEBUG_V ("Sync::Stop");
+                // DEBUG_V (String ("      FileName: ") + FileName);
+                // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
+                CurrentFileName = emptyString;
+                MultiSyncStats.pktSyncSeqStop++;
+                break;
+            }
 
-        case SYNC_PKT_SYNC:
-        {
-            // DEBUG_V ("Sync");
-            // DEBUG_V (String ("      FileName: ") + FileName);
-            // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
+            case SYNC_PKT_SYNC:
+            {
+                // DEBUG_V ("Sync");
+                // DEBUG_V (String ("      FileName: ") + FileName);
+                // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
 
-            /*
-            Log.infoln (String(float(millis()/1000.0)) + "," +
-                              String(InputFPPRemotePlayFile.GetLastFrameId()) + "," +
-                              String (seconds_elapsed) + "," +
-                              String (FrameId) + "," +
-                              String(InputFPPRemotePlayFile.GetTimeOffset(),5));
-            */
+                /*
+                Log.infoln (String(float(millis()/1000.0)) + "," +
+                                String(InputFPPRemotePlayFile.GetLastFrameId()) + "," +
+                                String (seconds_elapsed) + "," +
+                                String (FrameId) + "," +
+                                String(InputFPPRemotePlayFile.GetTimeOffset(),5));
+                */
 
-            MultiSyncStats.pktSyncSeqSync++;
-            // DEBUG_V (String ("SecondsElapsed: ") + String (SecondsElapsed));
-            break;
-        }
+                MultiSyncStats.pktSyncSeqSync++;
+                // DEBUG_V (String ("SecondsElapsed: ") + String (SecondsElapsed));
+                break;
+            }
 
-        case SYNC_PKT_OPEN:
-        {
-            // DEBUG_V ("Sync::Open");
-            // DEBUG_V (String ("      FileName: ") + FileName);
-            // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
-            // StartPlaying (FileName, FrameId);
-            MultiSyncStats.pktSyncSeqOpen++;
-            break;
-        }
+            case SYNC_PKT_OPEN:
+            {
+                // DEBUG_V ("Sync::Open");
+                // DEBUG_V (String ("      FileName: ") + FileName);
+                // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
+                // StartPlaying (FileName, FrameId);
+                MultiSyncStats.pktSyncSeqOpen++;
+                break;
+            }
 
-        default:
-        {
-            // DEBUG_V (String (F ("Sync: ERROR: Unknown Action: ")) + String (action));
-            break;
-        }
+            default:
+            {
+                // DEBUG_V (String (F ("Sync: ERROR: Unknown Action: ")) + String (action));
+                break;
+            }
 
         } // switch
     } while (false);
+
+    FppdCb(CurrentFileName, UserParam);
 
     // DEBUG_END;
 } // ProcessSyncPacket
@@ -676,8 +680,6 @@ void c_FPPDiscovery::ProcessFPPJson(AsyncWebServerRequest *request)
                 if (String(F("co-other")) == filename)
                 {
                     String resp;
-                    // OutputMgr.GetConfig (resp);
-
                     // DEBUG_V (String ("resp: ") + resp);
                     request->send(200, F("application/json"), resp);
 

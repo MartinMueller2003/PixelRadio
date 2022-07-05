@@ -274,7 +274,7 @@ void loop()
 
     // Background tasks
     ControllerMgr.poll();
-
+/*
     processDnsServer();     // AP ESPUI DNS Server
     processRDS();           // Send any available RadioText.
     processMeasurements();  // Measure the two system voltages.
@@ -289,7 +289,7 @@ void loop()
     updateGpioBootPins();   // Update the User Programmable GPIO Pins.
     updateTestTones(false); // Update the Test Tone, false=Don't Reset Tone Sequence.
     updateOnAirSign();      // Update the Optional "On Air" 12V LED Sign.
-
+*/
     wifiReconnect();        // Reconnect to WiFi if not connected to router.
     rebootSystem();         // Check to see if Reboot has been requested.
 

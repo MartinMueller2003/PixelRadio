@@ -24,6 +24,9 @@
 
 class c_FPPDiscovery
 {
+public:
+   typedef std::function<void(String& FileName, void* UserParam)> FileChangeCb;
+
 private:
 
     AsyncUDP udp;
@@ -31,10 +34,12 @@ private:
     void ProcessSyncPacket (uint8_t action, String filename, float seconds_elapsed);
     void sendPingPacket(IPAddress destination = IPAddress(255, 255, 255, 255));
 
-    bool hasBeenInitialized = false;
-    bool OldNetworkState = false;
-    IPAddress FppRemoteIp = IPAddress(uint32_t(0));
-    String CurrentFileName;
+    bool            hasBeenInitialized = false;
+    bool            OldNetworkState = false;
+    IPAddress       FppRemoteIp = IPAddress(uint32_t(0));
+    String          CurrentFileName;
+    FileChangeCb    FppdCb;
+    void *          UserParam = nullptr;
 
     void GetSysInfoJSON    (ArduinoJson::JsonObject & jsonResponse);
     void BuildFseqResponse (String fname, String & resp);
@@ -79,11 +84,12 @@ public:
     c_FPPDiscovery ();
     virtual ~c_FPPDiscovery() {}
 
-    void begin ();
+    void    begin (FileChangeCb _FppdCb, void* _UserParam);
 
-    void ProcessFPPJson     (AsyncWebServerRequest* request);
-    void ProcessGET         (AsyncWebServerRequest* request);
-    void NetworkStateChanged(bool NewNetworkState);
+    void    ProcessFPPJson      (AsyncWebServerRequest* request);
+    void    ProcessGET          (AsyncWebServerRequest* request);
+    void    NetworkStateChanged (bool NewNetworkState);
+    String& GetCurrentFileName  ()  { return CurrentFileName; }
 };
 
 extern c_FPPDiscovery FPPDiscovery;

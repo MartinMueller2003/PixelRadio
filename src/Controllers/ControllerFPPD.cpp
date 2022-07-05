@@ -34,7 +34,7 @@ c_ControllerFPPD::c_ControllerFPPD() : c_ControllerCommon("FPPD", c_ControllerMg
 c_ControllerFPPD::~c_ControllerFPPD(){}
 
 // ************************************************************************************************
-void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
+void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
 {
    // DEBUG_START;
 
@@ -43,14 +43,14 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
        "FPPD CONTROL SETTINGS",
        emptyString,
        ControlColor::None,
-       ctrlTab);
+       ParentElementId);
 
    ControlerEnabledElementId = ESPUI.addControl(
       ControlType::Switcher,
       "FPPD CONTROL",
       ControllerEnabled ? "1" : "0",
       ControlColor::Turquoise,
-      ctrlTab,
+      ParentElementId,
       [](Control *sender, int type, void *param)
       {
          if(param)
@@ -83,7 +83,7 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
       },
       this);
 
-   Sequences.AddControls(ctrlTab);
+   Sequences.AddControls(ParentElementId);
 
    // DEBUG_END;
 
@@ -93,7 +93,15 @@ void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
 void c_ControllerFPPD::begin()
 {
    // DEBUG_START;
-   FPPDiscovery.begin();
+   FPPDiscovery.begin(
+      [](String &FppdFileName, void *param)
+      {
+         if(param)
+         {
+            reinterpret_cast<c_ControllerFPPD *>(param)->ProcessFppdFile(FppdFileName);
+         }
+      },
+      this);
    // DEBUG_END;
 } // begin
 
@@ -127,6 +135,21 @@ void c_ControllerFPPD::CbSequenceLearningEnabled(Control *sender, int type)
    // DEBUG_END;
 
 } // SequenceLearningEnabledCb
+
+// *********************************************************************************************
+void c_ControllerFPPD::ProcessFppdFile(String & FppdFileName)
+{
+   // DEBUG_START;
+
+   // DEBUG_V(String("FppdFileName: '") + FppdFileName + "'");
+   if (!FppdFileName.equals(CurrentPlayingSequence))
+   {
+      DEBUG_V(String("New File: '") + FppdFileName + "'");
+      CurrentPlayingSequence = FppdFileName;
+   }
+
+   // DEBUG_END;
+} // ProcessFppdFile
 
 // *********************************************************************************************
 void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)

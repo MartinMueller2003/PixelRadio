@@ -60,6 +60,10 @@ public:
    void                 AddControls(uint16_t ctrlTab);
    void                 SaveConfiguration(ArduinoJson::JsonObject & config);
    void                 RestoreConfiguration(ArduinoJson::JsonObject & config);
+   bool                 CheckAnyRdsControllerEnabled(bool IncludeLocalController);
+   bool                 CheckRdsTextAvailable(bool IncludeLocalController);
+   bool                 checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controllerId);
+   bool                 CheckAnyControllerIsDisplayingMessage(bool IncludeLocalController);
 
    void                 SetPiCode(ControllerTypeId_t Id, uint32_t value);
    uint32_t             GetPiCode(ControllerTypeId_t Id);
@@ -87,7 +91,6 @@ public:
 
    // void                 SetControlFlag(ControllerTypeId_t Id, bool value);
    bool                 GetControllerEnabledFlag(ControllerTypeId_t Id);
-
    bool                 IsControllerActive();
 
 }; // c_ControllerMgr

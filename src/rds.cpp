@@ -23,6 +23,7 @@
 #include "PixelRadio.h"
 #include "globals.h"
 #include "QN8027Radio.h"
+#include "Controllers/ControllerMgr.h"
 
 // ************************************************************************************************
 extern QN8027Radio radio;
@@ -30,17 +31,10 @@ extern QN8027Radio radio;
 // ************************************************************************************************
 // checkactiveTextAvail(): Determine if Serial, HTTP, or MQTT controller is currently sending
 // RadioText.
-bool checkActiveTextAvail(void) {
-    bool availFlg = false;
-    bool activeTextSerialFlg = ControllerMgr.GetActiveTextFlag(SerialControllerId);
-    bool activeTextHttpFlg   = ControllerMgr.GetActiveTextFlag(HttpControllerId);
-    bool activeTextMqttFlg   = ControllerMgr.GetActiveTextFlag(MqttControllerId);
-
-    if (activeTextSerialFlg || activeTextHttpFlg || activeTextMqttFlg)
-    {
-        availFlg = true;
-    }
-    return availFlg;
+bool checkActiveTextAvail(void)
+{
+    // skip local controller
+    return ControllerMgr.CheckAnyControllerIsDisplayingMessage(false);
 }
 
 // ************************************************************************************************
@@ -48,37 +42,16 @@ bool checkActiveTextAvail(void) {
 // controllers are in operation. If none are present, then the supplied controller ID won't be
 // blocked and is available to use.
 // true = Controller is ready, false = higher priority controller is active.
-bool checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controller) {
-    bool availFlg = true;
-
-    if (controller == SerialControllerId) {                   // Priority #1, can never be blocked. Always available.
-        return true;
-    }
-    else if (controller == MqttControllerId) {                // Priority #2. Only Serial Controller can block it.
-        if (ControllerMgr.GetActiveTextFlag(SerialControllerId)) {                      // Higher Priority Controller Active;
-            availFlg = false;                           // This controller is unavailable.
-        }
-    }
-    else if (controller == HttpControllerId) {                // Priority #2. Serial and MQTT Controllers can block it.
-        if (ControllerMgr.GetActiveTextFlag(SerialControllerId) ||
-            ControllerMgr.GetActiveTextFlag(MqttControllerId) )
-        {                                               // Higher Priority Controllers Active;
-            availFlg = false;                           // This controller is unavailable.
-        }
-    }
-
-    return availFlg;
+bool checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controllerId)
+{
+    return ControllerMgr.checkControllerIsAvailable(controllerId);
 }
 
 // ************************************************************************************************
 // checkLocalControllerAvail): Determine if Local RDS Controller Mode is Enabled.
-bool checkLocalControllerAvail(void) {
-    bool availFlg = false;
-
-    if (ControllerMgr.GetControllerEnabledFlag(LocalControllerId)) {
-        availFlg = true;
-    }
-    return availFlg;
+bool checkLocalControllerAvail(void) 
+{
+    return ControllerMgr.GetControllerEnabledFlag(LocalControllerId);
 }
 
 // ************************************************************************************************
@@ -86,7 +59,10 @@ bool checkLocalControllerAvail(void) {
 bool checkLocalRdsAvail(void) {
     bool availFlg = false;
 
-    if (ControllerMgr.GetControllerEnabledFlag(LocalControllerId) && (rdsText1EnbFlg || rdsText2EnbFlg || rdsText3EnbFlg)) {
+    if (checkLocalControllerAvail() && (rdsText1EnbFlg || 
+                                        rdsText2EnbFlg || 
+                                        rdsText3EnbFlg))
+    {
         availFlg = true;
     }
     return availFlg;
@@ -94,46 +70,28 @@ bool checkLocalRdsAvail(void) {
 
 // ************************************************************************************************
 // checkRemoteRdsAvail): Determine if any Serial, HTTP, or MQTT controller Mode is Enabled.
-bool checkRemoteRdsAvail(void) {
-    bool availFlg = false;
-
-    if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId) ||
-        ControllerMgr.GetControllerEnabledFlag(MqttControllerId) ||
-        ControllerMgr.GetControllerEnabledFlag(LocalControllerId))
-    {
-        availFlg = true;
-    }
-    return availFlg;
+bool checkRemoteRdsAvail(void)
+{
+    // ask for all except "local"
+    return ControllerMgr.CheckAnyRdsControllerEnabled(false);
 }
 
 // ************************************************************************************************
 // checkRemoteTextAvail(): Determine if Serial, HTTP, or MQTT controller has RadioText available to
 // send. Ignores Local RDS.
-bool checkRemoteTextAvail(void) {
-    bool availFlg = false;
-
-    if (ControllerMgr.GetTextFlag(SerialControllerId) ||
-        ControllerMgr.GetTextFlag(HttpControllerId) ||
-        ControllerMgr.GetTextFlag(MqttControllerId))
-    {
-        availFlg = true;
-    }
-    return availFlg;
+bool checkRemoteTextAvail(void)
+{
+    // ask for all except "local"
+    return ControllerMgr.CheckRdsTextAvailable(false);
 }
 
 // ************************************************************************************************
-// checkControllerRdsAvail(): Determine if any (Local, HTTP, MQTT, Serial) RDS Controller is Enabled.
-bool checkControllerRdsAvail(void) {
-    bool availFlg = false;
-
-    if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId) ||
-        ControllerMgr.GetControllerEnabledFlag(MqttControllerId) ||
-        ControllerMgr.GetControllerEnabledFlag(HttpControllerId) ||
-        ControllerMgr.GetControllerEnabledFlag(LocalControllerId))
-    {
-        availFlg = true;
-    }
-    return availFlg;
+// checkAnyRdsControllerAvailable(): 
+// Determine if any (Local, HTTP, MQTT, Serial, FPPD) RDS Controller is Enabled.
+bool checkAnyRdsControllerAvailable(void)
+{
+    // ask for all including "local"
+    return ControllerMgr.CheckAnyRdsControllerEnabled(true);
 }
 
 // ************************************************************************************************
@@ -173,7 +131,7 @@ void processRDS(void) {
             rdsMillis = currentMillis - rdsMsgTime + 500; // Schedule next RadioText in 0.5Sec.
             return;
         }
-        else if (!checkLocalControllerAvail() && !checkControllerRdsAvail()) {
+        else if (!checkLocalControllerAvail() && !checkAnyRdsControllerAvailable()) {
             updateUiRDSTmr(0);                            // Clear Displayed Elapsed Timer.
             displayRdsText();
             rdsMillis = currentMillis - rdsMsgTime + 500; // Schedule next RadioText in 0.5Sec.
@@ -301,7 +259,7 @@ void processRDS(void) {
             updateUiRdsText(rdsRefreshTextStr);
             ControllerMgr.Display(HttpControllerId);
         }
-        else if (!checkLocalRdsAvail()  && checkControllerRdsAvail() && !ControllerMgr.IsControllerActive()) {
+        else if (!checkLocalRdsAvail()  && checkAnyRdsControllerAvailable() && !ControllerMgr.IsControllerActive()) {
             updateUiRDSTmr(0);                             // Clear Displayed Elapsed Timer.
             displayRdsText();
             rdsMillis = currentMillis - rdsMsgTime + 500;  // Schedule next RadioText in 0.5Sec.
