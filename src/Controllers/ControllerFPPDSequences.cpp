@@ -206,11 +206,11 @@ void c_ControllerFPPDSequences::CbButtonCreate(Control *sender, int type)
    {
       if (type != B_DOWN)
       {
-         DEBUG_V("Ignore unwanted button action");
+         // DEBUG_V("Ignore unwanted button action");
          break;
       }
 
-      DEBUG_V("Create a Sequence");
+      // DEBUG_V("Create a Sequence");
       DynamicJsonDocument NewConfigDoc(2048);
       JsonObject NewConfig = NewConfigDoc.to<JsonObject>();
       NewConfig[N_name] = Name;
@@ -223,22 +223,22 @@ void c_ControllerFPPDSequences::CbButtonCreate(Control *sender, int type)
       // DEBUG_V();
       AddControls(EspuiParentElementId);
 
-      DEBUG_V(String("Set the Select List to ") + Key);
+      // DEBUG_V(String("Set the Select List to ") + Key);
       ESPUI.updateSelect(EspuiChoiceListElementId, Key);
 
-      DEBUG_V("Activate");
+      // DEBUG_V("Activate");
       Activate();
 
-      DEBUG_V("Create a Sequence - Done");
+      // DEBUG_V("Create a Sequence - Done");
       CbTextChange(nullptr, 0);
-      DEBUG_V("Display Save Warning");
+      // DEBUG_V("Display Save Warning");
       displaySaveWarning();
       // DEBUG_V("Request Reload");
-      // ESPUI.jsonReload();
+      ESPUI.jsonDom(0);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // ButtonCreateCb
 
@@ -285,9 +285,9 @@ void c_ControllerFPPDSequences::CbButtonDelete(Control *sender, int type)
       CbTextChange(nullptr, 0);
       displaySaveWarning();
 
+      ESPUI.jsonDom(0);
+
    } while (false);
-   
-   ESPUI.jsonDom(0);
 
    // DEBUG_END;
 } // ButtonDeleteCb
@@ -316,8 +316,8 @@ void c_ControllerFPPDSequences::CbButtonUpdate(Control *sender, int type)
       CbTextChange(nullptr, 0);
       displaySaveWarning();
 
+      ESPUI.jsonDom(0);
    } while (false);
-   ESPUI.jsonDom(0);
 
    // DEBUG_END;
 } // ButtonUpdateCb
@@ -354,13 +354,13 @@ void c_ControllerFPPDSequences::CbChoiceList(Control *sender, int type)
 // ************************************************************************************************
 void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    Control *ChoiceList  = ESPUI.getControl(EspuiChoiceListElementId);
    Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
 
-   DEBUG_V(String("Choice value: ") + ChoiceList->value);
-   DEBUG_V(String("  Text value: ") + TextControl->value);
+   // DEBUG_V(String("Choice value: ") + ChoiceList->value);
+   // DEBUG_V(String("  Text value: ") + TextControl->value);
 
    bool DeleteAllowed = true;
    bool UpdateAllowed = true;
@@ -370,7 +370,7 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
    {
       if (ChoiceList->value.equals(N_default))
       {
-         DEBUG_V("Cant do anything to the default entry")
+         // DEBUG_V("Cant do anything to the default entry")
          DeleteAllowed = false;
          UpdateAllowed = false;
          ESPUI.updateControlValue(EspuiStatusMsgElementId, DefaultTextFieldValue);
@@ -378,7 +378,7 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 
       if (-1 != TextControl->value.indexOf(DefaultTextFieldValue))
       {
-         DEBUG_V("User did not remove the default text");
+         // DEBUG_V("User did not remove the default text");
          CreateAllowed = false;
          UpdateAllowed = false;
          ESPUI.updateControlValue(EspuiStatusMsgElementId, emptyString);
@@ -387,7 +387,7 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 
       if (TextControl->value.equals(emptyString))
       {
-         DEBUG_V("Cant use an entry without a name");
+         // DEBUG_V("Cant use an entry without a name");
          CreateAllowed = false;
          UpdateAllowed = false;
          ESPUI.updateControlValue(EspuiStatusMsgElementId, String(F("A Blank Name Is Not Allowed")));
@@ -396,7 +396,7 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 
       if (TextControl->value.equals(N_default))
       {
-         DEBUG_V("Cant use the default entry text");
+         // DEBUG_V("Cant use the default entry text");
          CreateAllowed = false;
          UpdateAllowed = false;
          ESPUI.updateControlValue(EspuiStatusMsgElementId, String(F("Cannot Create Another Default Sequence")));
@@ -405,7 +405,7 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 
       if (TextControl->value.equals(ChoiceList->value))
       {
-         DEBUG_V("No Change in text");
+         // DEBUG_V("No Change in text");
          CreateAllowed = false;
          UpdateAllowed = false;
          ESPUI.updateControlValue(EspuiStatusMsgElementId, emptyString);
@@ -414,8 +414,8 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 
       if (Sequences.end() != Sequences.find(TextControl->value))
       {
-         DEBUG_V("Name exists and it is not the selected name");
-         DEBUG_V(String("  Key: '") + Sequences.find(TextControl->value)->first + "'");
+         // DEBUG_V("Name exists and it is not the selected name");
+         // DEBUG_V(String("  Key: '") + Sequences.find(TextControl->value)->first + "'");
 
          CreateAllowed = false;
          UpdateAllowed = false;
@@ -423,19 +423,19 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
          break;
       }
 
-      DEBUG_V("valid text that could be used for the existing sequence");
+      // DEBUG_V("valid text that could be used for the existing sequence");
       ESPUI.updateControlValue(EspuiStatusMsgElementId, emptyString);
 
    } while (false);
 
-   DEBUG_V(String("CreateAllowed: ") + String(CreateAllowed));
+   // DEBUG_V(String("CreateAllowed: ") + String(CreateAllowed));
    ESPUI.setEnabled(EspuiButtonCreateElementId, CreateAllowed);
-   DEBUG_V(String("DeleteAllowed: ") + String(DeleteAllowed));
+   // DEBUG_V(String("DeleteAllowed: ") + String(DeleteAllowed));
    ESPUI.setEnabled(EspuiButtonDeleteElementId, DeleteAllowed);
-   DEBUG_V(String("UpdateAllowed: ") + String(UpdateAllowed));
+   // DEBUG_V(String("UpdateAllowed: ") + String(UpdateAllowed));
    ESPUI.setEnabled(EspuiButtonUpdateElementId, UpdateAllowed);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // TextChangeCb
 
