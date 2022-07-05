@@ -63,14 +63,17 @@ void c_ControllerMessage::Activate(bool value)
 {
    // DEBUG_START;
 
-   // DEBUG_V(String("Message: ") + Message);
-   // DEBUG_V(String("  value: ") + value);
+   // DEBUG_V(String("                   Message: ") + Message);
+   // DEBUG_V(String("                     value: ") + value);
+   // DEBUG_V(String("EspuiActiveParentElementId: ") + String(EspuiActiveParentElementId));
+   // DEBUG_V(String("EspuiHiddenParentElementId: ") + String(EspuiHiddenParentElementId));
 
    Control *MsgControl = ESPUI.getControl(EspuiMessageElementId);
    if (MsgControl)
    {
       // DEBUG_V("Update Parent Value");
       MsgControl->parentControl = (value) ? EspuiActiveParentElementId : EspuiHiddenParentElementId;
+      // DEBUG_V(String("             parentControl: ") + String(MsgControl->parentControl));
       ESPUI.updateControl(MsgControl);
    }
 
@@ -83,8 +86,10 @@ void c_ControllerMessage::AddControls(uint16_t ctrlTab, uint16_t ParentElementId
 {
    // DEBUG_START;
 
-   // DEBUG_V(String("ctrlTab: '") + String(ctrlTab) + "'");
-   // DEBUG_V(String(" parent: '") + String(ParentElementId) + "'");
+   // DEBUG_V(String("              Message: ") + Message);
+   // DEBUG_V(String("              ctrlTab: '") + String(ctrlTab) + "'");
+   // DEBUG_V(String("      ParentElementId: '") + String(ParentElementId) + "'");
+   // DEBUG_V(String("HiddenParentElementId: '") + String(HiddenParentElementId) + "'");
 
    EspuiActiveParentElementId = ParentElementId;
    EspuiHiddenParentElementId = HiddenParentElementId;
@@ -145,10 +150,10 @@ void c_ControllerMessage::AddControls(uint16_t ctrlTab, uint16_t ParentElementId
       ESPUI.addControl(ControlType::Max, "Max", String(900), ControlColor::None, EspuiDisplayDurationElementId);
    }
 
+   // DEBUG_V(String("EspuiMessageElementId: '") + String(EspuiMessageElementId) + "'");
    if (Control::noParent == EspuiMessageElementId)
    {
-      // DEBUG_V(String("              Message: ") + Message);
-      // DEBUG_V(String("      ParentElementId: ") + EspuiActiveParentElementId);
+      // DEBUG_V(String("Add Choice List Entry"));
       EspuiMessageElementId = ESPUI.addControl(
             ControlType::Option,
             Message.c_str(),
