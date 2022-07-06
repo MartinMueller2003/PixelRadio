@@ -25,6 +25,8 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
+static const String DefaultSequenceMsg = "No Sequence";
+
 // *********************************************************************************************
 c_ControllerFPPD::c_ControllerFPPD() : c_ControllerCommon("FPPD", c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
 {
@@ -83,8 +85,26 @@ void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
       },
       this);
 
+   LabelId = ESPUI.addControl(
+      ControlType::Label,
+      "Current Sequence",
+      "Current Sequence",
+      ControlColor::Turquoise,
+      ControlerEnabledElementId);
+   ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_BLACK);
+
+   CurrentSequenceElementId = ESPUI.addControl(
+      ControlType::Label,
+      "",
+      DefaultSequenceMsg.c_str(),
+      ControlColor::Turquoise,
+      ControlerEnabledElementId);
+   ESPUI.setElementStyle(CurrentSequenceElementId, CSS_LABEL_STYLE_WHITE);
+
    Sequences.AddControls(ParentElementId);
 
+   ControlsHaveBeenAdded = true;
+   
    // DEBUG_END;
 
 } // AddControls
@@ -144,8 +164,25 @@ void c_ControllerFPPD::ProcessFppdFile(String & FppdFileName)
    // DEBUG_V(String("FppdFileName: '") + FppdFileName + "'");
    if (!FppdFileName.equals(CurrentPlayingSequence))
    {
-      DEBUG_V(String("New File: '") + FppdFileName + "'");
+      // DEBUG_V(String("New File: '") + FppdFileName + "'");
       CurrentPlayingSequence = FppdFileName;
+      Control *control = ESPUI.getControl(CurrentSequenceElementId);
+      if(control)
+      {
+         if(CurrentPlayingSequence.isEmpty())
+         {
+            ESPUI.updateControlValue(control, DefaultSequenceMsg);
+         }
+         else
+         {
+            ESPUI.updateControlValue(control, CurrentPlayingSequence);
+            // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
+            if (SequenceLearningEnabled && ControlsHaveBeenAdded)
+            {
+               Sequences.LearnSequence(CurrentPlayingSequence);
+            }
+         }
+      }
    }
 
    // DEBUG_END;

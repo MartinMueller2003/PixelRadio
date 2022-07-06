@@ -440,6 +440,33 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 } // TextChangeCb
 
 // *********************************************************************************************
+void c_ControllerFPPDSequences::LearnSequence(String& NewSequenceName)
+{
+   // DEBUG_START;
+   if (Sequences.end() == Sequences.find(NewSequenceName))
+   {
+      // DEBUG_V(String("Need to add sequence: '") + NewSequenceName + "'");
+      
+      c_ControllerFPPDSequence *Temp = new c_ControllerFPPDSequence();
+      Sequences[NewSequenceName] = *Temp;
+      delete Temp;
+
+      Sequences[NewSequenceName].SetName(NewSequenceName);
+      Sequences[NewSequenceName].AddControls(EspuiParentElementId, EspuiChoiceListElementId);
+      ESPUI.updateSelect(EspuiChoiceListElementId, NewSequenceName);
+      Activate();
+      CbTextChange(nullptr, 0);
+
+      ESPUI.jsonDom(0);
+   }
+   else
+   {
+      // DEBUG_V(String("Already known sequence: '") + NewSequenceName + "'");
+   }
+   // DEBUG_END;
+} // LearnSequence
+
+// *********************************************************************************************
 void c_ControllerFPPDSequences::RestoreConfig(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;

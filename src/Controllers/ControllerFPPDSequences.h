@@ -39,6 +39,7 @@ public:
    void     CbButtonUpdate(Control *sender, int type);
    void     CbChoiceList(Control *sender, int type);
    void     CbTextChange(Control *sender, int type);
+   void     LearnSequence(String &NewSequenceName);
 
 private:
    void     AddTestObjects(ArduinoJson::JsonObject &config);
