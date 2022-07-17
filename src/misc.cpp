@@ -355,7 +355,7 @@ void updateTestTones(bool resetTimerFlg)
                 radio.sendStationName(AUDIO_PSN_STR);
                 radio.sendRadioText(tmpStr);
                 updateUiRdsText(tmpStr);
-                updateUiRDSTmr(0);     // Clear Displayed Elapsed Timer.
+                updateUiRDSTmr(true);     // Clear Displayed Elapsed Timer.
                 Log.verboseln("New Test Tone Sequence, RadioText Sent.");
                 return;                // We will send the tones on next entry.
             }

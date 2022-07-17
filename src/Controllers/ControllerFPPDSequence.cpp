@@ -67,7 +67,7 @@ void c_ControllerFPPDSequence::Activate(bool value)
          break;
       }
       // DEBUG_();
-      Messages.Activate(value);
+      // Messages.ActivateMessageSet(value);
 
    } while (false);
 
@@ -175,7 +175,7 @@ void c_ControllerFPPDSequence::SetName(String &value)
       ESPUI.updateControlValue(EspuiElementId, Name);
    }
 
-   Messages.SetTitle(Name + " " + N_Messages);
+   Messages.ActivateMessageSet(Name + " " + N_Messages);
 
    // DEBUG_END;
 } // SetName

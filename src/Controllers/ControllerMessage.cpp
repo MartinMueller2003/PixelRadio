@@ -26,150 +26,142 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
-static uint16_t EspuiTitleMsgElementId          = Control::noParent;
-static uint16_t EspuiDisplayDurationElementId   = Control::noParent;
-static uint16_t EspuiEnabledElementId           = Control::noParent;
-static uint16_t EspuiSeperatorMsgElementId      = Control::noParent;
-static uint16_t EspuiActiveParentElementId      = Control::noParent;
-static uint16_t EspuiHiddenParentElementId      = Control::noParent;
-static uint16_t EspuiRootElementId              = Control::noParent;
-static String   LabelEnable                     = F("Enable");
-static String   LabelTitle;
-
 // *********************************************************************************************
 c_ControllerMessage::c_ControllerMessage()
 {
-   // DEBUG_START;
-   // DEBUG_END;
+   DEBUG_START;
+   DEBUG_END;
 } // c_ControllerMessage
 
 // *********************************************************************************************
 c_ControllerMessage::~c_ControllerMessage()
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   if (Control::noParent != EspuiMessageElementId)
+   DEBUG_V(String("Remove Message: '") + MessageText + "'");
+
+   if (Control::noParent != MessageElementId)
    {
-      // DEBUG_V(String("Remove Message: ") + Message);
-      ESPUI.removeControl(EspuiMessageElementId);
-      EspuiMessageElementId = Control::noParent;
+      DEBUG_V("Remove Message controls ");
+      ESPUI.removeControl(MessageElementId);
+      MessageElementId = Control::noParent;
    }
 
-   // DEBUG_END;
+   DEBUG_END;
 } // c_ControllerMessage
 
 // ************************************************************************************************
 void c_ControllerMessage::Activate(bool value)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   // DEBUG_V(String("                   Message: ") + Message);
-   // DEBUG_V(String("                     value: ") + value);
-   // DEBUG_V(String("EspuiActiveParentElementId: ") + String(EspuiActiveParentElementId));
-   // DEBUG_V(String("EspuiHiddenParentElementId: ") + String(EspuiHiddenParentElementId));
+   DEBUG_V(String("          MessageText: ") + MessageText);
+   DEBUG_V(String("ActiveParentElementId: ") + String(MessageElementIds.ActiveChoiceListElementId));
+   DEBUG_V(String("HiddenParentElementId: ") + String(MessageElementIds.HiddenChoiceListElementId));
 
-   Control *MsgControl = ESPUI.getControl(EspuiMessageElementId);
-   if (MsgControl)
+   do // once
    {
-      // DEBUG_V("Update Parent Value");
-      MsgControl->parentControl = (value) ? EspuiActiveParentElementId : EspuiHiddenParentElementId;
-      // DEBUG_V(String("             parentControl: ") + String(MsgControl->parentControl));
-      ESPUI.updateControl(MsgControl);
-   }
+      Control *MsgSelectControl = ESPUI.getControl(MessageElementId);
+      if(!MsgSelectControl)
+      {
+         DEBUG_V("Could not find this message control in ESPUI.");
+         break;
+      }
 
-   // DEBUG_END;
+      if(!value)
+      {
+         DEBUG_V("Add message to the hidden choice list");
+         MsgSelectControl->parentControl = MessageElementIds.HiddenChoiceListElementId;
+      }
+      else
+      {
+         DEBUG_V("Add message to the active choice list");
+         MsgSelectControl->parentControl = MessageElementIds.ActiveChoiceListElementId;
+      }
+
+      ESPUI.updateControl(MsgSelectControl);
+
+   } while (false);
+
+   DEBUG_END;
 
 } // Activate
 
 // ************************************************************************************************
-void c_ControllerMessage::AddControls(uint16_t ctrlTab, uint16_t ParentElementId, uint16_t HiddenParentElementId)
+void c_ControllerMessage::AddControls(MessageElementIds_t _MessageElementIds)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   // DEBUG_V(String("              Message: ") + Message);
-   // DEBUG_V(String("              ctrlTab: '") + String(ctrlTab) + "'");
-   // DEBUG_V(String("      ParentElementId: '") + String(ParentElementId) + "'");
-   // DEBUG_V(String("HiddenParentElementId: '") + String(HiddenParentElementId) + "'");
+   MessageElementIds = _MessageElementIds;
 
-   EspuiActiveParentElementId = ParentElementId;
-   EspuiHiddenParentElementId = HiddenParentElementId;
-   EspuiRootElementId = ctrlTab;
+   DEBUG_V(String("                  Message: '") + MessageText + "'");
+   DEBUG_V(String("ActiveChoiceListElementId: '") + String(MessageElementIds.ActiveChoiceListElementId) + "'");
+   DEBUG_V(String("HiddenChoiceListElementId: '") + String(MessageElementIds.HiddenChoiceListElementId) + "'");
+   DEBUG_V(String("         EnabledElementId: '") + String(MessageElementIds.EnabledElementId) + "'");
+   DEBUG_V(String(" DisplayDurationElementId: '") + String(MessageElementIds.DisplayDurationElementId) + "'");
 
-   if (Control::noParent == EspuiTitleMsgElementId)
+   do // once
    {
-      // DEBUG_V(String("Add Title"));
-      EspuiTitleMsgElementId = ESPUI.addControl(
-          ControlType::Label,
-          emptyString.c_str(),
-          LabelEnable,
-          ControlColor::Turquoise,
-          EspuiRootElementId);
-      ESPUI.setElementStyle(EspuiTitleMsgElementId, CSS_LABEL_STYLE_BLACK);
-      
-      // DEBUG_V(String("Add Enabled field"));
-      EspuiEnabledElementId = ESPUI.addControl(
-          ControlType::Switcher,
-          emptyString.c_str(),
-          String(Enabled ? "1" : "0"),
-          ControlColor::Turquoise,
-          EspuiTitleMsgElementId,
-          [](Control *sender, int type, void *parm)
-          {
-             if (nullptr != parm)
-             {
-                reinterpret_cast<c_ControllerMessage *>(parm)->CbEnabled(sender, type);
-             }
-          },
-          nullptr);
+      if(Control::noParent == MessageElementIds.ActiveChoiceListElementId)
+      {
+         DEBUG_V("UI is not set up yet");
+         break;
+      }
 
-      // DEBUG_V(String("Add Seprator"));
-      EspuiSeperatorMsgElementId = ESPUI.addControl(
-          ControlType::Label,
-          emptyString.c_str(),
-          "RDS Display Duration (SECS)",
-          ControlColor::Turquoise,
-          EspuiTitleMsgElementId);
-      ESPUI.setElementStyle(EspuiSeperatorMsgElementId, CSS_LABEL_STYLE_BLACK);
+      if (Control::noParent == MessageElementId)
+      {
+         DEBUG_V(String("Add Hidden Choice List Entry"));
+         MessageElementId = ESPUI.addControl(
+               ControlType::Option,
+               MessageText.c_str(),
+               MessageText,
+               ControlColor::Turquoise,
+               MessageElementIds.HiddenChoiceListElementId);
+      }
+      DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
 
-      // DEBUG_V(String("Add Number field"));
-      EspuiDisplayDurationElementId = ESPUI.addControl(
-          ControlType::Number,
-          emptyString.c_str(),
-          "0",
-          ControlColor::Turquoise,
-          EspuiTitleMsgElementId,
-          [](Control *sender, int type, void *parm)
-          {
-             if (nullptr != parm)
-             {
-                reinterpret_cast<c_ControllerMessage *>(parm)->CbDuration(sender, type);
-             }
-          },
-          nullptr);
-      ESPUI.addControl(ControlType::Min, "Min", String(5), ControlColor::None, EspuiDisplayDurationElementId);
-      ESPUI.addControl(ControlType::Max, "Max", String(900), ControlColor::None, EspuiDisplayDurationElementId);
-   }
+      DEBUG_V("Attach callbacks to the Message Details Pane.");
+      Control *DurationControl = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
+      if (DurationControl)
+      {
+         DurationControl->user = nullptr;
+         DurationControl->extendedCallback =
+            [](Control *sender, int type, void *parm)
+            {
+               if (nullptr != parm)
+               {
+                  reinterpret_cast<c_ControllerMessage *>(parm)->CbDuration(sender, type);
+               }
+            };
 
-   // DEBUG_V(String("EspuiMessageElementId: '") + String(EspuiMessageElementId) + "'");
-   if (Control::noParent == EspuiMessageElementId)
-   {
-      // DEBUG_V(String("Add Choice List Entry"));
-      EspuiMessageElementId = ESPUI.addControl(
-            ControlType::Option,
-            Message.c_str(),
-            Message,
-            ControlColor::Turquoise,
-            EspuiActiveParentElementId);
-   }
+         ESPUI.updateControl(DurationControl);
+      }
 
-   // DEBUG_END;
+      Control *MsgEnabledControl = ESPUI.getControl(MessageElementIds.EnabledElementId);
+      if (MsgEnabledControl)
+      {
+         MsgEnabledControl->user = nullptr;
+         MsgEnabledControl->extendedCallback =
+            [](Control *sender, int type, void *parm)
+            {
+               if (nullptr != parm)
+               {
+                  reinterpret_cast<c_ControllerMessage *>(parm)->CbEnabled(sender, type);
+               }
+            };
+         ESPUI.updateControl(MsgEnabledControl);
+      }
+
+   } while (false);
+
+   DEBUG_END;
 
 } // AddControls
 
 // *********************************************************************************************
 void c_ControllerMessage::CbDuration(Control *sender, int type)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
    DurationSec = atoi(sender->value.c_str());
 
@@ -177,155 +169,114 @@ void c_ControllerMessage::CbDuration(Control *sender, int type)
    displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(DurationSec)).c_str());
 
-   // DEBUG_END;
+   DEBUG_END;
 } // EnabledCb
 
 // *********************************************************************************************
 void c_ControllerMessage::CbEnabled(Control *sender, int type)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
    Enabled = sender->value.equals("1");
-   // DEBUG_V(String("Enabled: ") + String(Enabled));
+   DEBUG_V(String("Enabled: ") + String(Enabled));
 
    displaySaveWarning();
    displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(Enabled ? "On" : "Off")).c_str());
 
-   // DEBUG_END;
+   DEBUG_END;
 } // EnabledCb
-
-// *********************************************************************************************
-void c_ControllerMessage::HideMenu(bool value)
-{
-   // DEBUG_START;
-
-   // DEBUG_V(String("value: ") + String(value));
-   ESPUI.updateVisibility(EspuiTitleMsgElementId, !value);
-
-   // DEBUG_END;
-} // HideMenu
 
 // *********************************************************************************************
 void c_ControllerMessage::RestoreConfig(ArduinoJson::JsonObject config)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
    if (config.containsKey(N_message))
    {
-      // DEBUG_V("Read message");
-      Message = (const char *)config[N_message];
-      // DEBUG_V(String("Message: ") + Message);
+      DEBUG_V("Read message");
+      MessageText = (const char *)config[N_message];
+      DEBUG_V(String("Message: ") + MessageText);
    }
 
    if (config.containsKey(N_durationSec))
    {
-      // DEBUG_V("Read Duration");
+      DEBUG_V("Read Duration");
       DurationSec = config[N_durationSec];
-      // DEBUG_V(String("DurationSec: ") + String(DurationSec));
+      DEBUG_V(String("DurationSec: ") + String(DurationSec));
    }
 
    if (config.containsKey(N_enabled))
    {
-      // DEBUG_V("Read Enabled");
+      DEBUG_V("Read Enabled");
       Enabled = config[N_enabled];
-      // DEBUG_V(String("Enabled: ") + String(Enabled));
+      DEBUG_V(String("Enabled: ") + String(Enabled));
    }
 
-   // DEBUG_END;
+   DEBUG_END;
 } // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessage::SaveConfig(ArduinoJson::JsonObject config)
 {
-   // DEBUG_START;
-   // DEBUG_V(String("Message: ") + Message);
+   DEBUG_START;
+   DEBUG_V(String("Message: ") + MessageText);
 
-   config[N_message]       = Message;
+   config[N_message]       = MessageText;
    config[N_durationSec]   = DurationSec;
    config[N_enabled]       = Enabled;
 
-   // DEBUG_END;
+   DEBUG_END;
 } // SaveConfig
 
 // ************************************************************************************************
-void c_ControllerMessage::SelectMessage(bool value)
+void c_ControllerMessage::SelectMessage()
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   // DEBUG_V(String("Message: ") + Message);
-   // DEBUG_V(String("  value: ") + value);
+   DEBUG_V(String("Message: '") + MessageText + "'");
 
    do // once
    {
-      Activate(value);
+      Activate(true);
 
-      if (!value)
-      {
-         // DEBUG_V("Nothing else to do");
-         break;
-      }
+      DEBUG_V("Update Selected item");
+      ESPUI.updateControlValue(MessageElementIds.ActiveChoiceListElementId, MessageText);
 
-      Control* control = ESPUI.getControl(EspuiTitleMsgElementId);
-      if(control)
-      {
-         // DEBUG_V("Set up Title");
-         LabelTitle = Message;
-         control->label = LabelTitle.c_str();
-         ESPUI.updateControl(control);
-      }
-
-      control = ESPUI.getControl(EspuiDisplayDurationElementId);
+      Control * control = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
       if (control)
       {
-         // DEBUG_V("Set up Duration");
+         DEBUG_V("Set up Duration");
          control->value = String(DurationSec);
          control->user = this;
-         ESPUI.updateControl(EspuiDisplayDurationElementId);
+         ESPUI.updateControl(MessageElementIds.DisplayDurationElementId);
       }
 
-      control = ESPUI.getControl(EspuiEnabledElementId);
+      control = ESPUI.getControl(MessageElementIds.EnabledElementId);
       if (control)
       {
-         // DEBUG_V("Set up enabled CB");
+         DEBUG_V("Set up enabled CB");
          control->value = String(Enabled ? "1" : "0");
          control->user = this;
-         ESPUI.updateControl(EspuiEnabledElementId);
+         ESPUI.updateControl(MessageElementIds.EnabledElementId);
       }
    } while (false);
 
-   // DEBUG_END;
+   DEBUG_END;
 
-} // SelectControl
+} // SelectMessage
 
 // *********************************************************************************************
 void c_ControllerMessage::SetMessage(String &value)
 {
-   // DEBUG_START;
+   DEBUG_START;
 
-   // DEBUG_V(String("Message: ") + Message);
-   // DEBUG_V(String("  value: ") + value);
+   DEBUG_V(String("Message: '") + MessageText + "'");
+   DEBUG_V(String("  value: '") + value + "'");
 
-   String OldValue = Message;
-   Message = value;
+   MessageText = value;
 
-   if (Control::noParent != EspuiMessageElementId)
-   {
-      // DEBUG_V("Update message string in choice list")
-      if(LabelTitle.equals(OldValue))
-      {
-         // DEBUG_V("this is the active message");
-         LabelTitle = Message;
-         SelectMessage(true);
-      }
-      else
-      {
-         // DEBUG_V("this is NOT the active message");
-         SelectMessage(false);
-      }
-   }
-
-   // DEBUG_END;
+   DEBUG_END;
 } // SetMessage
 
 // *********************************************************************************************

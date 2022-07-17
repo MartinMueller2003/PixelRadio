@@ -271,13 +271,13 @@ void c_ControllerSERIAL::serialCommands(void)
       else if (cmdStr == CMD_INFO_STR) {
          if (infoCmd(paramStr, TypeId)) {
                sprintf(printBuff,
-                     "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%02X\"}",
+                     "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}",
                      CMD_INFO_STR,
                      VERSION_STR,
                      staNameStr.c_str(),
                      WiFi.localIP().toString().c_str(),
                      WiFi.RSSI(),
-                     getControllerStatus());
+                     ControllerMgr.getControllerStatusSummary());
          }
          else {
                sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_INFO_STR);

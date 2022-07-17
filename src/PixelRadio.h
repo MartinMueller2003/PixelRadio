@@ -297,39 +297,39 @@ const IPAddress SUBNET_MASK_DEF = { 255u, 255u, 255u, 0u };
 
 // Controller Command Prototypes
 bool    audioModeCmd(String  payloadStr,
-                     c_ControllerMgr::ControllerTypeId_t controller);
+                     ControllerTypeId controller);
 bool    frequencyCmd(String  payloadStr,
-                     c_ControllerMgr::ControllerTypeId_t controller);
+                     ControllerTypeId controller);
 bool    infoCmd(String  payloadStr,
-                c_ControllerMgr::ControllerTypeId_t controller);
+                ControllerTypeId controller);
 int16_t getCommandArg(String& requestStr,
                       uint8_t maxSize);
-uint8_t getControllerStatus(void);
+// uint8_t getControllerStatus(void);
 bool    gpioCmd(String  payloadStr,
-                c_ControllerMgr::ControllerTypeId_t controller,
+                ControllerTypeId controller,
                 uint8_t pin);
 bool    logCmd(String  payloadStr,
-               c_ControllerMgr::ControllerTypeId_t controller);
+               ControllerTypeId controller);
 bool    muteCmd(String  payloadStr,
-                c_ControllerMgr::ControllerTypeId_t controller);
+                ControllerTypeId controller);
 bool    piCodeCmd(String  payloadStr,
-                  c_ControllerMgr::ControllerTypeId_t controller);
+                  ControllerTypeId controller);
 bool    ptyCodeCmd(String  payloadStr,
-                  c_ControllerMgr::ControllerTypeId_t controller);
+                  ControllerTypeId controller);
 bool    programServiceNameCmd(String  payloadStr,
-                              c_ControllerMgr::ControllerTypeId_t controller);
+                              ControllerTypeId controller);
 bool    radioTextCmd(String  payloadStr,
-                     c_ControllerMgr::ControllerTypeId_t controller);
+                     ControllerTypeId controller);
 bool    rdsTimePeriodCmd(String  payloadStr,
-                         c_ControllerMgr::ControllerTypeId_t controller);
+                         ControllerTypeId controller);
 bool    rebootCmd(String  payloadStr,
-                  c_ControllerMgr::ControllerTypeId_t controller);
+                  ControllerTypeId controller);
 bool    rfCarrierCmd(String  payloadStr,
-                  c_ControllerMgr::ControllerTypeId_t controller);
+                  ControllerTypeId controller);
 bool    startCmd(String  payloadStr,
-                 c_ControllerMgr::ControllerTypeId_t controller);
+                 ControllerTypeId controller);
 bool    stopCmd(String  payloadStr,
-                c_ControllerMgr::ControllerTypeId_t controller);
+                ControllerTypeId controller);
 
 // ESPUI (WebGUI) Prototypes
 void   buildGUI(void);
@@ -344,12 +344,11 @@ void   updateUiAudioMode(void);
 void   updateUiAudioMute(void);
 void   updateUiFreeMemory(void);
 void   updateUiFrequency(void);
-bool   updateUiGpioMsg(uint8_t pin,
-                c_ControllerMgr::ControllerTypeId_t controller);
+bool   updateUiGpioMsg(uint8_t pin, ControllerTypeId controller);
 void   updateUiIpaddress(String ipStr);
 void   updateUiLocalPtyCode(void);
 void   updateUiRdsText(String textStr);
-void   updateUiRDSTmr(uint32_t rdsMillis);
+void   updateUiRDSTmr(bool ClearDisplay);
 void   updateUiRfCarrier(void);
 void   updateUiRSSI(void);
 void   updateUiDiagTimer(void);
@@ -385,10 +384,6 @@ void   muteCallback(Control *sender,
                     int      type);
 void   radioEmphasisCallback(Control *sender,
                              int      type);
-void   rdsDisplayTimeCallback(Control *sender,
-                              int      type);
-void   rdsEnbCallback(Control *sender,
-                      int      type);
 void   rdsRstCallback(Control *sender,
                       int      type);
 void   rdsTextCallback(Control *sender,
@@ -485,13 +480,6 @@ void         updateRadioSettings(void);
 void         waitForIdle(uint16_t waitMs);
 
 // RDS Prototypes
-bool         checkActiveTextAvail(void);
-bool         checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controller);
-bool         checkLocalControllerAvail(void);
-bool         checkLocalRdsAvail(void);
-bool         checkAnyRdsControllerAvailable(void);
-bool         checkRemoteRdsAvail(void);
-bool         checkRemoteTextAvail(void);
 void         processRDS(void);
 void         resetControllerRdsValues(void);
 

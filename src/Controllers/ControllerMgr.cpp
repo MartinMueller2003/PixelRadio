@@ -32,16 +32,36 @@
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
+struct ControllerDefinition_t
+{
+   c_ControllerMgr::ControllerTypeId_t Type;
+   uint16_t                            ActiveBit;
+   uint16_t                            SendingBit;
+};
+
+static const ControllerDefinition_t ControllerDefinitions[] = 
+{
+   {c_ControllerMgr::ControllerTypeId_t::SERIAL_CNTRL, SERIAL_CONTROLLER_ACTIVE_FLAG, 0x0008 },
+   {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,   MQTT_CONTROLLER_ACTIVE_FLAG,   0x0004 },
+   {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,   FPPD_CONTROLLER_ACTIVE_FLAG,   0x1000 },
+   {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,   HTTP_CONTROLLER_ACTIVE_FLAG,   0x0002 },
+   {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,  LOCAL_CONTROLLER_ACTIVE_FLAG,  0x0001 },
+   {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,     0,                             0x0000 },
+};
+
 // *********************************************************************************************
 c_ControllerMgr::c_ControllerMgr()
 {
    // DEBUG_START;
 
-   for (int index = 0; index < int(ControllerTypeId_t::NumControllerTypes); index++)
+   for(auto& CurrentDefinition : ControllerDefinitions)
    {
-      // DEBUG_V(String("init index: ") + String(index) + " Start");
-      ListOfControllers[index].ControllerId = ControllerTypeId_t(index);
-      switch(index)
+      uint32_t index = int(CurrentDefinition.Type);
+      ListOfControllers[index].ControllerId = CurrentDefinition.Type;
+      ListOfControllers[index].ActiveBit    = CurrentDefinition.ActiveBit;
+      ListOfControllers[index].SendingBit   = CurrentDefinition.SendingBit;
+      
+      switch(CurrentDefinition.Type)
       {
          case ControllerTypeId_t::NO_CNTRL:
          {
@@ -93,8 +113,7 @@ c_ControllerMgr::c_ControllerMgr()
             break;
          }
       } // end switch(index)
-      // DEBUG_V(String("init index: ") + String(index) + " Done");
-   } // end for each controller type
+   }
 
    // DEBUG_END;
 
@@ -119,11 +138,84 @@ void c_ControllerMgr::begin()
    // DEBUG_START;
    for (auto &CurrentController : ListOfControllers)
    {
-      // DEBUG_V();
+      // DEBUG_V(String("pController: 0x") + String(uint32_t(CurrentController.pController), HEX));
       CurrentController.pController->begin();
    }
    // DEBUG_END;
 } // begin
+
+// *********************************************************************************************
+// Returns true if a new message is found
+bool c_ControllerMgr::GetNextRdsMsgToDisplay(CurrentRdsMsgInfo_t & MsgInfo)
+{
+   DEBUG_START;
+
+   bool Response = false;
+
+   CurrentRdsMsgInfo.MsgText              = emptyString;
+   CurrentRdsMsgInfo.MsgStartTimeMillis   = 0;
+   CurrentRdsMsgInfo.MsgDurationMilliSec       = 0;
+   CurrentRdsMsgInfo.ControllerId         = ControllerTypeId_t::NO_CNTRL;
+
+   do // once
+   {
+      // pass through the controllers and grab the first message that is available to send.
+      for(auto & CurrentController : ListOfControllers)
+      {
+         if(CurrentController.pController->GetNextRdsMsgToDisplay(CurrentRdsMsgInfo))
+         {
+            CurrentRdsMsgInfo.MsgStartTimeMillis = millis();
+            CurrentRdsMsgInfo.ControllerId = CurrentController.ControllerId;
+
+            Response = true;
+            break;
+         }
+      }
+
+   } while (false);
+
+   // update the response
+   MsgInfo = CurrentRdsMsgInfo;
+
+   DEBUG_END;
+   return Response;
+
+} // GetNextMsgToDisplay
+
+// *********************************************************************************************
+void c_ControllerMgr::ClearMsgHasBeenDisplayedFlag()
+{
+   DEBUG_START;
+   for (auto &CurrentController : ListOfControllers)
+   {
+      CurrentController.pController->ClearMsgHasBeenDisplayedFlag();
+   }
+   DEBUG_END;
+} // ClearMsgHasBeenDisplayedFlag
+
+// *********************************************************************************************
+uint16_t c_ControllerMgr::getControllerStatusSummary()
+{
+   DEBUG_START;
+
+   uint16_t Response = 0;
+
+   for(auto& CurrentController : ListOfControllers)
+   {
+      if(CurrentController.pController->ControllerIsEnabled())
+      {
+         Response |= CurrentController.ActiveBit;
+      }
+
+      if(CurrentController.ControllerId == CurrentRdsMsgInfo.ControllerId)
+      {
+         Response |= CurrentController.SendingBit;
+      }
+   }
+
+   DEBUG_END;
+   return Response;
+}
 
 // *********************************************************************************************
 // CheckAnyRdsControllerEnabled(): 
@@ -213,7 +305,7 @@ bool c_ControllerMgr::CheckAnyControllerIsDisplayingMessage(bool IncludeLocalCon
       {
          continue;
       }
-      Response |= currentController.pController->ControllerIsDisplayingMessage();
+      Response |= (currentController.ControllerId == CurrentRdsMsgInfo.ControllerId);
    }
 
    // DEBUG_END;

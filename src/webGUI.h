@@ -98,10 +98,6 @@ extern uint16_t radioSaveID;
 extern uint16_t radioSaveMsgID;
 
 extern uint16_t rdsDspTmID;
-extern uint16_t rdsEnbID;
-extern uint16_t rdsEnb1ID;
-extern uint16_t rdsEnb2ID;
-extern uint16_t rdsEnb3ID;
 extern uint16_t rdsPiID;
 extern uint16_t rdsPtyID;
 extern uint16_t rdsPiMsgID;
@@ -110,12 +106,6 @@ extern uint16_t rdsSaveID;
 extern uint16_t rdsSaveMsgID;
 extern uint16_t rdsSnameID;
 extern uint16_t rdsRstID;
-extern uint16_t rdsText1ID;
-extern uint16_t rdsText2ID;
-extern uint16_t rdsText3ID;
-extern uint16_t rdsText1MsgID;
-extern uint16_t rdsText2MsgID;
-extern uint16_t rdsText3MsgID;
 
 extern uint16_t wifiApBootID;
 extern uint16_t wifiApFallID;

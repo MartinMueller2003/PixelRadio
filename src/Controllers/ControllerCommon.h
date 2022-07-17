@@ -38,7 +38,7 @@ protected:
    uint32_t    PtyCode                          = 0;
    String      ProgramServiceName;
    String      PayloadTest;
-   uint32_t    RdsMsgTime                       = 0;
+   // uint32_t    RdsMsgTime                       = 0;
 
    // operational data
    String      Name; // Name of this controller
@@ -47,6 +47,9 @@ protected:
    bool        StopFlag                         = false;
    bool        activeTextFlag                   = false;
    bool        OnlineFlag                       = false;
+   uint32_t    RdsMsgTime                       = 0;
+
+   bool MsgHasBeenDisplayedFlag = false;
 
    // ESPUI control IDs
    uint16_t    EspuiParentElementId             = Control::noParent;
@@ -61,11 +64,13 @@ public:
    virtual void      AddControls(uint16_t ctrlTab) {}
    virtual void      RestoreConfiguration(ArduinoJson::JsonObject &config);
    virtual void      SaveConfiguration(ArduinoJson::JsonObject &config);
-
    String &          GetName() { return Name; }
 
    virtual void      Display(uint16_t msgId) { ESPUI.print(msgId, String(F("Source: ")) + Name + String(F(" Controller"))); }
-   
+
+   virtual bool      GetNextRdsMsgToDisplay(c_ControllerMgr::CurrentRdsMsgInfo_t &RdsMsgInfo) { return false; }
+   virtual void      ClearMsgHasBeenDisplayedFlag() { MsgHasBeenDisplayedFlag = false; }
+
    virtual void      SetPiCode(uint32_t value) { PiCode = value; }
    virtual uint32_t  GetPiCode() { return PiCode; }
 
@@ -75,6 +80,7 @@ public:
    virtual void      SetRdsProgramServiceName(String &value) { ProgramServiceName = value; }
    virtual String    GetRdsProgramServiceName() { return ProgramServiceName; }
 
+   // Start of to be deleted
    virtual void      SetTextFlag(bool value) { TextFlag = value; }
    virtual bool      GetTextFlag() { return TextFlag; }
 
@@ -82,7 +88,7 @@ public:
    virtual bool      GetStopFlag() { return StopFlag; }
 
    virtual void      SetPayloadText(String &value) { PayloadTest = value; }
-   virtual String    GetPayloadText() { return PayloadTest; }
+   virtual String &  GetPayloadText() { return PayloadTest; }
 
    virtual void      SetRdsMsgTime(uint32_t value) { RdsMsgTime = value; }
    virtual uint32_t  GetRdsMsgTime() { return RdsMsgTime; }
@@ -93,7 +99,7 @@ public:
    virtual bool      ControllerIsEnabled() { return ControllerEnabled; }
 
    virtual bool      CheckRdsTextAvailable() { return false; }
-   virtual bool      ControllerIsDisplayingMessage() { return false; }
+   // End of to be deleted
 
 }; // c_ControllerCommon
 

@@ -18,6 +18,7 @@
 
 // *********************************************************************************************
 #include "ControllerLOCAL.h"
+#include "../language.h"
 
 #if __has_include("../memdebug.h")
 #  include "../memdebug.h"
@@ -36,12 +37,80 @@ c_ControllerLOCAL::c_ControllerLOCAL() : c_ControllerCommon("LOCAL", c_Controlle
 c_ControllerLOCAL::~c_ControllerLOCAL() {}
 
 // *********************************************************************************************
+void c_ControllerLOCAL::AddControls(uint16_t ParentElementId)
+{
+   DEBUG_START;
+
+   EspuiParentElementId = ParentElementId;
+
+   ESPUI.addControl(ControlType::Separator,
+                    "LOCAL CONTROL SETTINGS",
+                    emptyString,
+                    ControlColor::None,
+                    EspuiParentElementId);
+
+   ControlerEnabledElementId = ESPUI.addControl(
+      ControlType::Switcher,
+      "LOCAL CONTROL",
+      ControllerEnabled ? "1" : "0",
+      ControlColor::Turquoise,
+      EspuiParentElementId,
+      [](Control *sender, int type, void *param)
+      {
+         if(param)
+         {
+            reinterpret_cast<c_ControllerLOCAL*>(param)->CbControllerEnabled(sender, type);
+         }
+      },
+      this);
+
+   // Messages.SetTitle(Name + " " + N_Messages);
+   Messages.AddControls(EspuiParentElementId);
+   Messages.ActivateMessageSet(Name);
+}
+
+// ************************************************************************************************
+void c_ControllerLOCAL::CbControllerEnabled(Control *sender, int type)
+{
+   // DEBUG_START;
+
+   ControllerEnabled = (type == S_ACTIVE);
+
+   // DEBUG_V();
+   displaySaveWarning();
+   displayRdsText(); // Update RDS RadioText.
+   Log.infoln((String(F("LOCAL Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
+
+   // DEBUG_END;
+} // CbControllerEnabled
+
+// *********************************************************************************************
+void c_ControllerLOCAL::CreateDefaultMsgSet()
+{
+   DEBUG_START;
+
+   Messages.clear();
+   Messages.AddMessage(F("LOCAL"), F("Msg1"));
+   Messages.AddMessage(F("LOCAL"), F("Msg2"));
+   Messages.AddMessage(F("LOCAL"), F("Msg3"));
+
+   DEBUG_END;
+}
+
+// *********************************************************************************************
 void c_ControllerLOCAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
    c_ControllerCommon::RestoreConfiguration(config);
+   Messages.RestoreConfig(config);
 
+   // do we need to create a set of default messages?
+   if(Messages.empty())
+   {
+      CreateDefaultMsgSet();
+   }
+   
    // DEBUG_END;
 } // RestoreConfiguration
 
@@ -51,6 +120,7 @@ void c_ControllerLOCAL::SaveConfiguration(ArduinoJson::JsonObject &config)
    // DEBUG_START;
 
    c_ControllerCommon::SaveConfiguration(config);
+   Messages.SaveConfig(config);
 
    // DEBUG_END;
 } // SaveConfiguration

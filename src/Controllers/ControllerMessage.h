@@ -26,28 +26,36 @@
 class c_ControllerMessage
 {
 public:
+   struct MessageElementIds_t
+   {
+      uint16_t ActiveChoiceListElementId  = Control::noParent;
+      uint16_t HiddenChoiceListElementId  = Control::noParent;
+      uint16_t MessageDetailsElementId    = Control::noParent;
+      uint16_t DisplayDurationElementId   = Control::noParent;
+      uint16_t EnabledElementId           = Control::noParent;
+   };
+
             c_ControllerMessage();
             c_ControllerMessage(const c_ControllerMessage& source) {} // Empty Copy constructor
    virtual  ~c_ControllerMessage();
    void     Activate(bool value);
-   void     AddControls(uint16_t ctrlTab, uint16_t ParentElementId, uint16_t HiddenParentElementId = Control::noParent);
+   void     AddControls(MessageElementIds_t _MessageElementIds);
    void     CbDuration(Control* sender, int type);
    void     CbEnabled(Control* sender, int type);
-   uint16_t GetElementId() { return EspuiMessageElementId; }
-   String & GetMessage() { return Message; }
-   void     HideMenu(bool value);
+   uint16_t GetElementId() { return MessageElementId; }
+   String & GetMessage() { return MessageText; }
    void     RestoreConfig(ArduinoJson::JsonObject config);
    void     SaveConfig(ArduinoJson::JsonObject config);
-   void     SelectMessage(bool value);
+   void     SelectMessage();
    void     SetMessage(String &value);
+   void     SetFppdMode();
 
 private:
-
-   uint16_t    EspuiMessageElementId      = Control::noParent;
-
-   String      Message;
+   uint16_t    MessageElementId           = Control::noParent;
+   String      MessageText;
    uint32_t    DurationSec                = 5;
-   bool        Enabled                    = false;
+   bool        Enabled                    = true;
+   MessageElementIds_t MessageElementIds;
 
 }; // c_ControllerMessage
 

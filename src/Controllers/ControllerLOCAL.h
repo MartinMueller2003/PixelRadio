@@ -19,6 +19,7 @@
 // *********************************************************************************************
 #pragma once
 #include "ControllerCommon.h"
+#include "ControllerMessages.h"
 
 class c_ControllerLOCAL : public c_ControllerCommon
 {
@@ -26,8 +27,15 @@ public:
    c_ControllerLOCAL();
    virtual ~c_ControllerLOCAL();
 
-   void SaveConfiguration(ArduinoJson::JsonObject &config);
+   void AddControls(uint16_t ctrlTab);
    void RestoreConfiguration(ArduinoJson::JsonObject &config);
+   void SaveConfiguration(ArduinoJson::JsonObject &config);
+   void CreateDefaultMsgSet();
+
+private:
+   void CbControllerEnabled(Control *sender, int type);
+
+   c_ControllerMessages Messages;
 
 }; // c_ControllerLOCAL
 

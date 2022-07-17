@@ -29,6 +29,7 @@ const PROGMEM char N_controllers              [] = "controllers";
 const PROGMEM char N_default                  [] = "default";
 const PROGMEM char N_DisplayFseqName          [] = "DisplayFseqName";
 const PROGMEM char N_durationSec              [] = "durationSec";
+const PROGMEM char N_Enable                   [] = "Enable";
 const PROGMEM char N_enabled                  [] = "enabled";
 const PROGMEM char N_list                     [] = "list";
 const PROGMEM char N_MaxIdleSec               [] = "MaxIdleSec";

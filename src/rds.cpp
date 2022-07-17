@@ -28,6 +28,8 @@
 // ************************************************************************************************
 extern QN8027Radio radio;
 
+#ifdef OldRdsWay
+
 // ************************************************************************************************
 // checkactiveTextAvail(): Determine if Serial, HTTP, or MQTT controller is currently sending
 // RadioText.
@@ -42,7 +44,7 @@ bool checkActiveTextAvail(void)
 // controllers are in operation. If none are present, then the supplied controller ID won't be
 // blocked and is available to use.
 // true = Controller is ready, false = higher priority controller is active.
-bool checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controllerId)
+bool checkControllerIsAvailable(ControllerTypeId controllerId)
 {
     return ControllerMgr.checkControllerIsAvailable(controllerId);
 }
@@ -54,6 +56,7 @@ bool checkLocalControllerAvail(void)
     return ControllerMgr.GetControllerEnabledFlag(LocalControllerId);
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // checkLocalRdsAvail() Determine if at least one Local RDS is Enabled.
 bool checkLocalRdsAvail(void) {
@@ -67,6 +70,7 @@ bool checkLocalRdsAvail(void) {
     }
     return availFlg;
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // checkRemoteRdsAvail): Determine if any Serial, HTTP, or MQTT controller Mode is Enabled.
@@ -93,12 +97,15 @@ bool checkAnyRdsControllerAvailable(void)
     // ask for all including "local"
     return ControllerMgr.CheckAnyRdsControllerEnabled(true);
 }
+#endif // def OldRdsWay
 
 // ************************************************************************************************
-// processRDS(): Local RDS RadioText Display Handler for homeTab. Must be installed in main loop
-//               There are three available Local RadioText Messages. Display time = rdsMsgTime.
+// processRDS(): Local RDS RadioText Display Handler for homeTab. 
+//               Must be installed in main loop.
+//               Display time = rdsMsgTime associated with each message.
 //               A round robbin scheduler is used and user can select which messages to show.
-void processRDS(void) {
+void processRDS(void) 
+{
     char logBuff[75 + RDS_TEXT_MAX_SZ];
     static uint8_t loop       = 0;
     uint32_t currentMillis    = 0;
@@ -113,7 +120,7 @@ void processRDS(void) {
     currentMillis = millis();
 
     if (cntMillis == 0) {
-        updateUiRDSTmr(0);         // Clear Display
+        updateUiRDSTmr(true);         // Clear Display
         cntMillis = currentMillis; // Initialize First entry;
     }
     else if (testModeFlg) {
@@ -122,16 +129,34 @@ void processRDS(void) {
         rdsMillis = currentMillis - rdsMsgTime + 500;         // Schedule next "normal" RadioText in 0.5Sec.
         return;
     }
-    else if (currentMillis - cntMillis >= RDS_MSG_UPD_TIME) { // One Second Updates.
+    else if (currentMillis - cntMillis >= RDS_MSG_UPD_TIME)
+    { // One Second Updates.
         cntMillis = currentMillis;
 
         if (!rfCarrierFlg) {
-            updateUiRDSTmr(0);                            // Clear Displayed Elapsed Timer.
+            updateUiRDSTmr(true);                            // Clear Displayed Elapsed Timer.
             displayRdsText();
             rdsMillis = currentMillis - rdsMsgTime + 500; // Schedule next RadioText in 0.5Sec.
             return;
         }
+        else
+        {
+            c_ControllerMgr::CurrentRdsMsgInfo_t CurrentRdsMsgInfo;
+            if(ControllerMgr.GetNextRdsMsgToDisplay(CurrentRdsMsgInfo))
+            {
+                sprintf(logBuff, "Controller Sending RDS Program Service Name (%s)", CurrentRdsMsgInfo.ProgramServiceName.c_str());
+                Log.infoln(logBuff);
+                radio.sendStationName(rdsRefreshPsnStr);
+                sprintf(logBuff, "Controller Sending RDS RadioText (%s).", CurrentRdsMsgInfo.MsgText.c_str());
+                Log.infoln(logBuff);
+                radio.sendRadioText(CurrentRdsMsgInfo.MsgText.c_str());
+                updateUiRdsText(CurrentRdsMsgInfo.MsgText);
+            }
+        }
+    }
+    #ifdef theoldway
         else if (!checkLocalControllerAvail() && !checkAnyRdsControllerAvailable()) {
+        {
             updateUiRDSTmr(0);                            // Clear Displayed Elapsed Timer.
             displayRdsText();
             rdsMillis = currentMillis - rdsMsgTime + 500; // Schedule next RadioText in 0.5Sec.
@@ -282,7 +307,6 @@ void processRDS(void) {
                 }
             }
         }
-    }
 
     if (!rfCarrierFlg) {                               // Radio Turned Off, nothing else to do. Exit.
         return;
@@ -404,6 +428,7 @@ void processRDS(void) {
     }
 
     updateUiRDSTmr(rdsMillis); // Refresh Countdown time on GUI homeTab.
+    #endif // def theoldway
 }
 
 // ************************************************************************************************

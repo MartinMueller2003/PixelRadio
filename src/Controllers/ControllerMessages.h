@@ -22,19 +22,11 @@
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <list>
+#include <map>
 #include <ESPUI.h>
 #include "ControllerMessage.h"
 #include "../PixelRadio.h"
-
-class c_ControllerMessagesUiControlIds
-{
-public:
-            c_ControllerMessagesUiControlIds() {}
-   virtual  ~c_ControllerMessagesUiControlIds() {}
-
-
-private:
-}; // c_ControllerMessagesUiControls
+#include "ControllerMessageSet.h"
 
 class c_ControllerMessages
 {
@@ -44,6 +36,9 @@ public:
    void     RestoreConfig(ArduinoJson::JsonObject & config);
    void     SaveConfig(ArduinoJson::JsonObject & config);
 
+   void     ActivateMessageSet(String MsgSetName);
+   void     AddMessage(String MsgSetName, String MsgText);
+   bool     AddMessageSet(String MsgSetName);
    void     AddControls(uint16_t ctrlTab);
 
    void     CbButtonCreate(Control *sender, int type);
@@ -52,23 +47,32 @@ public:
    void     CbChoiceList(Control *sender, int type);
    void     CbSwitchDisplayFseqName(Control *sender, int type);
    void     CbTextChange(Control *sender, int type);
-
-   void     clear() { Messages.clear(); }
-   void     SetTitle(String & value);
-   void     Activate(bool value);
-   void     SetShowFseqNameSelection(bool value) { ShowFseqNameSelection = value; }
+   void     clear() { MessageSets.clear(); }
+   bool     empty() { return MessageSets.empty(); }
+   // void     SetActiveMsgSet(String & MsgSetName);
+   void     SetShowFseqNameSelection(bool value);
+   // void     ShowMessageSet(String MsgSetName);
 
 private:
-   void HomeControl(uint16_t ControlId);
 
-   c_ControllerMessage *FindMessageByText(String & text);
+   uint16_t ParentElementId                = Control::noParent;
+   uint16_t StatusMsgElementId             = Control::noParent;
+   uint16_t TextEntryElementId             = Control::noParent;
+   uint16_t DisplayFseqNameElementId       = Control::noParent;
+   uint16_t DisplayFseqNameLabelElementId  = Control::noParent;
+   uint16_t ButtonCreateElementId          = Control::noParent;
+   uint16_t ButtonDeleteElementId          = Control::noParent;
+   uint16_t ButtonUpdateElementId          = Control::noParent;
+   uint16_t InstructionElementId           = Control::noParent;
+   uint16_t SeperatorMsgElementId          = Control::noParent;
+   c_ControllerMessage::MessageElementIds_t  MessageElementIds;
 
-   String   Title                   = F("Messages");
-   bool     ShowFseqNameSelection   = false;
+   String   Title;
+   String   CurrentMsgSetName;
+   bool     ShowFseqNameSelection = false;
    bool     DisplayFseqName         = false;
 
-   std::list<c_ControllerMessage> Messages;
-
+   std::map<String, c_ControllerMessageSet> MessageSets;
    
 }; // c_ControllerMessages
 

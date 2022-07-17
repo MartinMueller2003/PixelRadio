@@ -117,9 +117,6 @@ IPAddress wifiGateway = WIFI_ADDR_DEF;
 bool apFallBackFlg = AP_FALLBACK_DEF_FLG;                  // Control, Switch to AP mode if STA fails.
 bool muteFlg        = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
 bool rfAutoFlg      = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
-bool rdsText1EnbFlg = RDS_TEXTX_DEF_FLG;                   // Control, Disable local RDS Text Msg #1 if false.
-bool rdsText2EnbFlg = RDS_TEXTX_DEF_FLG;                   // Control, Disable local RDS Text Msg #1 if false.
-bool rdsText3EnbFlg = RDS_TEXTX_DEF_FLG;                   // Control, Disable local RDS Text Msg #1 if false.
 bool rfCarrierFlg   = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
 bool stereoEnbFlg   = STEREO_ENB_DEF_FLG;                  // Control, Enable Stereo FM if true (false = Mono).
 bool wifiDhcpFlg    = CTRL_DHCP_DEF_FLG;                   // Control, Use DHCP if true, else static IP.
@@ -128,8 +125,8 @@ bool WiFiRebootFlg  = WIFI_REBOOT_DEF_FLG;                 // Control, Reboot if
 uint8_t analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
 uint8_t usbVol    = (atoi(USB_VOL_DEF_STR));               // Control. Unused, for future expansion.
 
-uint8_t  rdsLocalPtyCode = RDS_PTY_CODE_DEF;               // Control. Local PTY Code, default for all controllers.
-uint16_t rdsLocalPiCode  = RDS_PI_CODE_DEF;                // Control. Local PI Code, default for all controllers.
+// uint8_t  rdsLocalPtyCode = RDS_PTY_CODE_DEF;               // Control. Local PTY Code, default for all controllers.
+// uint16_t rdsLocalPiCode  = RDS_PI_CODE_DEF;                // Control. Local PI Code, default for all controllers.
 
 uint32_t baudRate = ESP_BAUD_DEF;                          // Control.
 
@@ -145,10 +142,6 @@ String gpio33BootStr  = GPIO_DEF_STR;                      // Control.
 String inpImpedStr    = INP_IMP_DEF_STR;                   // Control.
 String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
 String mdnsNameStr    = MDNS_NAME_DEF_STR;                 // Control.
-String rdsTextMsg1Str = RDS_TEXT1_DEF_STR;                 // Control.
-String rdsTextMsg2Str = RDS_TEXT2_DEF_STR;                 // Control.
-String rdsTextMsg3Str = RDS_TEXT3_DEF_STR;                 // Control.
-String rdsLocalPsnStr = RDS_PSN_DEF_STR;                   // Control, Program Service Name.
 String rfPowerStr     = RF_PWR_DEF_STR;                    // Control.
 String staticIpStr    = "";
 String subNetStr      = subNet.toString();                 // Control.

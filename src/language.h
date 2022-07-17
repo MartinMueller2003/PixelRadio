@@ -69,7 +69,7 @@
 #define CTRL_TAB_STR         "Controllers"
 #define CTRL_HTTP_STR        "HTTP CONTROL"
 #define CTRL_HTPP_SET_STR    "HTTP CONTROL SETTINGS"
-#define CTRL_LOCAL_SEP_STR   "LOCAL CONTROL SETTINGS"
+// #define CTRL_LOCAL_SEP_STR   "LOCAL CONTROL SETTINGS"
 #define CTRL_MQTT_IP_STR     "BROKER IP ADDRESS"
 #define CTRL_MQTT_PW_STR     "BROKER PASSWORD"
 #define CTRL_MQTT_PORT_STR   "BROKER PORT NUMBER"
@@ -79,6 +79,7 @@
 #define CTRL_SERIAL_STR      "SERIAL CONTROL"
 #define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
 #define CTRL_USB_SERIAL_STR  "USB SERIAL CONTROL SETTINGS"
+
 
 #define PRE_EMPH_USA_STR     "North America (75uS)" // North America / Japan.
 #define PRE_EMPH_EUR_STR     "Europe (50uS)"        // Europe, Australia, China.
@@ -283,6 +284,7 @@ extern const PROGMEM char N_command[];
 extern const PROGMEM char N_default[];
 extern const PROGMEM char N_DisplayFseqName[];
 extern const PROGMEM char N_durationSec[];
+extern const PROGMEM char N_Enable[];
 extern const PROGMEM char N_enabled[];
 extern const PROGMEM char N_list[];
 extern const PROGMEM char N_MaxIdleSec[];

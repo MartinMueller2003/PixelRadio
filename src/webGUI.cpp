@@ -127,7 +127,6 @@ uint16_t backupSaveMsgID    = 0;
 uint16_t backupSaveSetID    = 0;
 uint16_t backupSaveSetMsgID = 0;
 
-uint16_t ctrlLocalID     = 0;
 uint16_t ctrlSaveID      = 0;
 uint16_t ctrlSaveMsgID   = 0;
 
@@ -172,11 +171,6 @@ uint16_t radioRfEnbID    = 0;
 uint16_t radioSaveID     = 0;
 uint16_t radioSaveMsgID  = 0;
 
-uint16_t rdsDspTmID    = 0;
-uint16_t rdsEnbID      = 0;
-uint16_t rdsEnb1ID     = 0;
-uint16_t rdsEnb2ID     = 0;
-uint16_t rdsEnb3ID     = 0;
 uint16_t rdsPiID       = 0;
 uint16_t rdsPtyID      = 0;
 uint16_t rdsProgNameID = 0;
@@ -184,12 +178,6 @@ uint16_t rdsSaveID     = 0;
 uint16_t rdsSaveMsgID  = 0;
 uint16_t rdsSnameID    = 0;
 uint16_t rdsRstID      = 0;
-uint16_t rdsText1ID    = 0;
-uint16_t rdsText2ID    = 0;
-uint16_t rdsText3ID    = 0;
-uint16_t rdsText1MsgID = 0;
-uint16_t rdsText2MsgID = 0;
-uint16_t rdsText3MsgID = 0;
 
 uint16_t wifiApBootID     = 0;
 uint16_t wifiApFallID     = 0;
@@ -240,9 +228,9 @@ void initCustomCss(void)
 
     ESPUI.setPanelStyle(homeFreqID,     "font-size: 3.0em;");
     ESPUI.setPanelStyle(homeOnAirID,    "font-size: 3.0em;");
-    ESPUI.setPanelStyle(homeRdsTextID,  "font-size: 1.15em;");
+//    ESPUI.setPanelStyle(homeRdsTextID,  "font-size: 1.15em;");
     ESPUI.setPanelStyle(homeRssiID,     "font-size: 1.25em;");
-    ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
+//    ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
     ESPUI.setPanelStyle(homeStaID,      "font-size: 1.15em;");
     ESPUI.setPanelStyle(homeTextMsgID,  "font-size: 1.15em;");
 
@@ -250,7 +238,7 @@ void initCustomCss(void)
     ESPUI.setPanelStyle(radioGainID,    "font-size: 1.15em;");
     ESPUI.setPanelStyle(radioSoundID,   "font-size: 1.25em;");
 
-    ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
+//    ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
     ESPUI.setPanelStyle(rdsProgNameID,  "font-size: 1.35em;");
     ESPUI.setPanelStyle(rdsPiID,        "font-size: 1.35em;");
     ESPUI.setPanelStyle(rdsPtyID,       "font-size: 1.15em;");
@@ -294,7 +282,7 @@ void initCustomCss(void)
     ESPUI.setElementStyle(homeFreqID,         "max-width: 80%;");
     ESPUI.setElementStyle(homeOnAirID,        "max-width: 80%;");
     ESPUI.setElementStyle(homeRssiID,         "max-width: 30%;");
-    ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
+//    ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
     ESPUI.setElementStyle(homeStaID,          "max-width: 65%;");
     ESPUI.setElementStyle(homeStaMsgID,       CSS_LABEL_STYLE_BLACK);
     ESPUI.setElementStyle(homeTextMsgID,      CSS_LABEL_STYLE_WHITE);
@@ -310,9 +298,9 @@ void initCustomCss(void)
     // ESPUI.setElementStyle(rdsPiID,          "font-size: 1.25em;");
     // ESPUI.setElementStyle(rdsProgNameID,    "color: black;");
     ESPUI.setElementStyle(rdsSaveMsgID,     CSS_LABEL_STYLE_BLACK);
-    ESPUI.setElementStyle(rdsText1MsgID,    CSS_LABEL_STYLE_BLACK);
-    ESPUI.setElementStyle(rdsText2MsgID,    CSS_LABEL_STYLE_BLACK);
-    ESPUI.setElementStyle(rdsText3MsgID,    CSS_LABEL_STYLE_BLACK);
+//    ESPUI.setElementStyle(rdsText1MsgID,    CSS_LABEL_STYLE_BLACK);
+//    ESPUI.setElementStyle(rdsText2MsgID,    CSS_LABEL_STYLE_BLACK);
+//    ESPUI.setElementStyle(rdsText3MsgID,    CSS_LABEL_STYLE_BLACK);
 
     ESPUI.setElementStyle(wifiDhcpMsgID,    CSS_LABEL_STYLE_BLACK);
     ESPUI.setElementStyle(wifiDevUserMsgID, CSS_LABEL_STYLE_MAROON);
@@ -321,21 +309,6 @@ void initCustomCss(void)
     ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
     ESPUI.setElementStyle(wifiStaID,        "max-width: 65%;");
     ESPUI.setElementStyle(wifiStaMsgID,     CSS_LABEL_STYLE_BLACK);
-
-    if (rdsText1EnbFlg) {
-        ESPUI.setEnabled(rdsText1ID, false); // Disable RadioText 1 Message Entry.
-        ESPUI.print(rdsText1MsgID, RDS_LOCKED_STR);
-    }
-
-    if (rdsText2EnbFlg) {
-        ESPUI.setEnabled(rdsText2ID, false); // Disable RadioText 2 Message Entry.
-        ESPUI.print(rdsText2MsgID, RDS_LOCKED_STR);
-    }
-
-    if (rdsText3EnbFlg) {
-        ESPUI.setEnabled(rdsText3ID, false); // Disable RadioText 3 Message Entry.
-        ESPUI.print(rdsText3MsgID, RDS_LOCKED_STR);
-    }
 
     // END OF STYLES
 }
@@ -388,7 +361,7 @@ int8_t getAudioGain(void)
     }
     else {
         impedance = 0;
-        Log.errorln("displayAudioGain: Undefined inpImpedStr!");
+        Log.errorln(F("displayAudioGain: Undefined inpImpedStr!"));
     }
 
     audioGain = ((vgaGain + 1) * 3) - (impedance * 3);
@@ -402,43 +375,66 @@ void displayRdsText(void)
 {
     char logBuff[RDS_TEXT_MAX_SZ + 35];
 
-    if (!rfCarrierFlg) {
-        updateUiRdsText(RDS_RF_DISABLED_STR);
-        sprintf(logBuff, "displayRdsText: Warning %s.", RDS_RF_DISABLED_STR);
-        Log.warningln(logBuff);
-    }
-    else if (testModeFlg) {
-        return;
-    }
-    else if (!checkAnyRdsControllerAvailable()) { // No controllers are available. All off.
-        updateUiRdsText(RDS_CTRLS_DIS_STR);
-        sprintf(logBuff, "displayRdsText: Warning %s.", RDS_CTRLS_DIS_STR);
-        Log.warningln(logBuff);
-    }
-    else if (checkRemoteRdsAvail() && checkRemoteTextAvail()) { // Show Remote RadioText.
-        updateUiRdsText(rdsTextMsgStr);
-        sprintf(logBuff, "Remote RadioText: %s.", rdsTextMsgStr.c_str());
-        Log.traceln(logBuff);
-    }
-    else if (!checkRemoteRdsAvail() && !checkLocalRdsAvail()) {
-        updateUiRdsText(RDS_LOCAL_DIS_STR);
+    do // once
+    {
+        if (!rfCarrierFlg) 
+        {
+            updateUiRdsText(String(RDS_RF_DISABLED_STR));
+            sprintf(logBuff, "displayRdsText: Warning %s.", RDS_RF_DISABLED_STR);
+            Log.warningln(logBuff);
+            break;
+        }
+
+        if (testModeFlg) 
+        {
+            break;
+        }
+
+        // do we have an output message?
+        c_ControllerMgr::CurrentRdsMsgInfo_t CurrentRdsMsgInfo;
+        if(ControllerMgr.GetNextRdsMsgToDisplay(CurrentRdsMsgInfo))
+        {
+            updateUiRdsText(CurrentRdsMsgInfo.MsgText);
+            if(ControllerTypeId::LOCAL_CNTRL == CurrentRdsMsgInfo.ControllerId)
+            {
+                sprintf(logBuff, "Local RadioText: %s.", CurrentRdsMsgInfo.MsgText.c_str());
+            }
+            else
+            {
+                sprintf(logBuff, "Remote RadioText: %s.", CurrentRdsMsgInfo.MsgText.c_str());
+            }
+            Log.traceln(logBuff);
+            break;
+        }
+        
+        // no controller has any message to send. 
+        // Are any controllers enabled
+        uint16_t ControllerStatusSummary = ControllerMgr.getControllerStatusSummary();
+        if(!ControllerStatusSummary)
+        {
+            updateUiRdsText(String(RDS_CTRLS_DIS_STR));
+            sprintf(logBuff, "displayRdsText: Warning %s.", RDS_CTRLS_DIS_STR);
+            Log.warningln(logBuff);
+            break;
+        }
+
+        // is the local controller active?
+        if(ControllerStatusSummary & LOCAL_CONTROLLER_ACTIVE_FLAG)
+        {
+            updateUiRdsText(String(RDS_LOCAL_BLANK_STR));
+            sprintf(logBuff, "displayRdsText: %s.", RDS_LOCAL_BLANK_STR);
+            Log.warningln(logBuff);
+            break;
+        }
+
+        // That leaves the remote controllers as the only active 
+        // controllers and they doe not have a message to send to 
+        // the radio
+        updateUiRdsText(String(RDS_LOCAL_DIS_STR));
         sprintf(logBuff, "displayRdsText: %s.", RDS_LOCAL_DIS_STR);
-        Log.traceln(logBuff);
-    }
-    else if (checkLocalRdsAvail() && (rdsTextMsgStr.length() > 0)) { // Show Local RadioText.
-        updateUiRdsText(rdsTextMsgStr);
-        sprintf(logBuff, "Local RadioText: %s.", rdsTextMsgStr.c_str());
-        Log.traceln(logBuff);
-    }
-    else if (checkLocalRdsAvail()) { // local RadioText is blank.
-        updateUiRdsText(RDS_LOCAL_BLANK_STR);
-        sprintf(logBuff, "Local RadioText: Warning %s.", RDS_LOCAL_BLANK_STR);
         Log.warningln(logBuff);
-    }
-    else {
-        updateUiRdsText(RDS_WAITING_STR);
-        Log.verboseln("Local RadioText is Disabled.");
-    }
+
+    } while (false);
 }
 
 // ************************************************************************************************
@@ -460,8 +456,9 @@ void startGUI(void)
 {
     buildGUI();
 
-    ESPUI.jsonUpdateDocumentSize  = 200;                               // Default is 2000.
-    ESPUI.jsonInitialDocumentSize = 8000;                              // Default is 8000.
+    // These have been moved to Heap and no longer impact stack
+    // ESPUI.jsonUpdateDocumentSize  = 200;                               // Default is 2000.
+    // ESPUI.jsonInitialDocumentSize = 8000;                              // Default is 8000.
 
     //ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity(Verbosity::Quiet);                              // Production mode.
@@ -529,7 +526,7 @@ void updateUiAudioMute(void)
 
 // ************************************************************************************************
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
-bool updateUiGpioMsg(uint8_t pin, c_ControllerMgr::ControllerTypeId_t controller) {
+bool updateUiGpioMsg(uint8_t pin, ControllerTypeId controller) {
     char gpioBuff[50];
     char setBuff[30];
     uint16_t msgID;
@@ -640,23 +637,18 @@ void updateUiFrequency(void)
 //                    This is a companion function to displayRdsText(). May be used standalone too.
 void updateUiRdsText(String textStr)
 {
-    char logBuff[RDS_TEXT_MAX_SZ + 40];
-
-    if (!rfCarrierFlg) {
+    if (!rfCarrierFlg) 
+    {
         textStr = RDS_RF_DISABLED_STR;
     }
-    else if (textStr.length() == 0) { // Blank RadioText Message.
-        if (checkRemoteRdsAvail() && checkRemoteTextAvail()) {
-            textStr = RDS_REMOTE_BLANK_STR;
-        }
-        else if (!checkRemoteRdsAvail() && checkLocalControllerAvail()) { // Blank Local RadioText.
-            textStr = RDS_LOCAL_BLANK_STR;
-        }
-        else {                                                            // Could be missing local or Remote RDS Text.
+    else if (textStr.isEmpty())
+    {
+        // Blank RadioText Message.
+        if (ControllerMgr.CheckAnyControllerIsDisplayingMessage(true))
+        {
             textStr = RDS_BLANK_STR;
         }
-        sprintf(logBuff, "Timer Updated RadioText: %s.", textStr.c_str());
-        Log.infoln(logBuff);
+        Log.infoln((String(F("Timer Updated RadioText: ")) + textStr).c_str());
     }
 
     ESPUI.print(homeRdsTextID, textStr); // Update homeTab RDS Message Panel.
@@ -667,33 +659,45 @@ void updateUiRdsText(String textStr)
 //                    On Entry rdsMillis=snapshot time for countdown calc.
 //                    Or pass 0 to force "Expired" message.
 //                    Test mode clears the time field.
-void updateUiRDSTmr(uint32_t rdsMillis)
+void updateUiRDSTmr(bool ClearDisplay)
 {
-     uint32_t timeCnt = 0;
+    uint32_t timeCnt = 0;
 
-    if (testModeFlg) {
-        ESPUI.print(homeRdsTmrID, " ");
-    }
-    else if (rfCarrierFlg && checkAnyRdsControllerAvailable() && (checkLocalRdsAvail() || ControllerMgr.IsControllerActive())) {
-        timeCnt =  millis() - rdsMillis; // Get Elasped time.
-        timeCnt = rdsMsgTime - timeCnt;  // Now we have Countdown time.
-        timeCnt = timeCnt / 1000;        // Coverted to Secs.
+    do // once
+    {
+        if (testModeFlg)
+        {
+            ESPUI.print(homeRdsTmrID, emptyString);
+            break;
+        }
 
-        if (rdsMillis != 0 && (timeCnt >= 0 && timeCnt <= RDS_DSP_TM_MAX)) {
-            tempStr  = timeCnt;
-            tempStr += " Secs";
-            ESPUI.print(homeRdsTmrID, tempStr);
+        if (!rfCarrierFlg || (0 == ControllerMgr.getControllerStatusSummary()))
+        {
+            // all controllers are disabled
+            ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);
+            break;
         }
-        else {
-            ESPUI.print(homeRdsTmrID, RDS_EXPIRED_STR);
+
+        c_ControllerMgr::CurrentRdsMsgInfo_t CurrentMsgInfo;
+        ControllerMgr.GetCurrentRdsMsgInfo(CurrentMsgInfo);
+        if (CurrentMsgInfo.MsgDurationMilliSec)
+        {
+            timeCnt =  millis() - CurrentMsgInfo.MsgStartTimeMillis; // Calculate Elasped time.
+            timeCnt = CurrentMsgInfo.MsgDurationMilliSec - timeCnt;  // Now we have Countdown time.
+            timeCnt = timeCnt / 1000;        // Coverted to Secs.
+
+            if (!ClearDisplay && (timeCnt > 0 && timeCnt <= RDS_DSP_TM_MAX))
+            {
+                ESPUI.print(homeRdsTmrID, String(timeCnt) + F(" Secs"));
+            }
+            else
+            {
+                ESPUI.print(homeRdsTmrID, RDS_EXPIRED_STR);
+            }
+            break;
         }
-    }
-    else if (!checkAnyRdsControllerAvailable()) {
-        ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);
-    }
-    else {
-        ESPUI.print(homeRdsTmrID, RDS_EXPIRED_STR);
-    }
+
+    } while (false);
 }
 
 // ************************************************************************************************
@@ -1083,62 +1087,9 @@ void buildGUI(void)
     // *****************
     // Local RDS Tab
 
-    ESPUI.addControl(ControlType::Separator, RDS_RADIOTEXT1_STR, "", ControlColor::None, rdsTab);
-
-    rdsText1ID =
-        ESPUI.addControl(ControlType::Text, RDS_MSG1_STR, rdsTextMsg1Str, ControlColor::Alizarin, rdsTab,
-                         &rdsTextCallback);
-
-    rdsText1MsgID = ESPUI.addControl(ControlType::Label, "MSG_AREA", "", ControlColor::Alizarin, rdsText1ID);
-
-    rdsEnb1ID =
-        ESPUI.addControl(ControlType::Switcher,
-                         RDS_ENB1_STR,
-                         (rdsText1EnbFlg ? "1" : "0"),
-                         ControlColor::Alizarin,
-                         rdsTab,
-                         &rdsEnbCallback);
-
-
-    ESPUI.addControl(ControlType::Separator, RDS_RADIOTEXT2_STR, "", ControlColor::None, rdsTab);
-
-    rdsText2ID =
-        ESPUI.addControl(ControlType::Text, RDS_MSG2_STR, rdsTextMsg2Str, ControlColor::Alizarin, rdsTab,
-                         &rdsTextCallback);
-
-    rdsText2MsgID = ESPUI.addControl(ControlType::Label, "MSG_AREA", "", ControlColor::Alizarin, rdsText2ID);
-
-    rdsEnb2ID =
-        ESPUI.addControl(ControlType::Switcher,
-                         RDS_ENB2_STR,
-                         (rdsText2EnbFlg ? "1" : "0"),
-                         ControlColor::Alizarin,
-                         rdsTab,
-                         &rdsEnbCallback);
-
-    ESPUI.addControl(ControlType::Separator, RDS_RADIOTEXT3_STR, "", ControlColor::None, rdsTab);
-
-    rdsText3ID =
-        ESPUI.addControl(ControlType::Text, RDS_MSG3_STR, rdsTextMsg3Str, ControlColor::Alizarin, rdsTab,
-                         &rdsTextCallback);
-
-    rdsText3MsgID = ESPUI.addControl(ControlType::Label, "MSG_AREA", "", ControlColor::Alizarin, rdsText3ID);
-
-    rdsEnb3ID =
-        ESPUI.addControl(ControlType::Switcher,
-                         RDS_ENB3_STR,
-                         (rdsText3EnbFlg ? "1" : "0"),
-                         ControlColor::Alizarin,
-                         rdsTab,
-                         &rdsEnbCallback);
-
     ESPUI.addControl(ControlType::Separator, RDS_GENERAL_SET_STR, "", ControlColor::None, rdsTab);
 
     tempStr    = String(ControllerMgr.GetRdsMsgTime(LocalControllerId) / 1000);
-    rdsDspTmID =
-        ESPUI.addControl(ControlType::Number, RDS_DISPLAY_TIME_STR, tempStr, ControlColor::Alizarin, rdsTab, &rdsDisplayTimeCallback);
-    ESPUI.addControl(ControlType::Min, "MIN", String(RDS_DSP_TM_MIN), ControlColor::None, rdsDspTmID);
-    ESPUI.addControl(ControlType::Max, "MAX", String(RDS_DSP_TM_MAX), ControlColor::None, rdsDspTmID);
 
     rdsProgNameID =
         ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, ControllerMgr.GetRdsProgramServiceName(LocalControllerId), ControlColor::Alizarin, rdsTab,
@@ -1325,16 +1276,6 @@ void buildGUI(void)
     //  Controller Tab
     ControllerMgr.AddControls(ctrlTab);
     ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, "", ControlColor::None, ctrlTab);
-
-
-    ESPUI.addControl(ControlType::Separator, CTRL_LOCAL_SEP_STR, "", ControlColor::None, ctrlTab);
-    ctrlLocalID =
-        ESPUI.addControl(ControlType::Switcher,
-                         "LOCAL CONTROL",
-                         ControllerMgr.GetControllerEnabledFlag(LocalControllerId) ? "1" : "0",
-                         ControlColor::Turquoise,
-                         ctrlTab,
-                         &controllerCallback);
 
     ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, ctrlTab);
     ctrlSaveID = ESPUI.addControl(ControlType::Button,

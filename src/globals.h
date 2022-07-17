@@ -33,9 +33,6 @@ extern bool newMuteFlg;
 extern bool newPreEmphFlg;
 extern bool newRfPowerFlg;
 extern bool muteFlg;
-extern bool rdsText1EnbFlg;
-extern bool rdsText2EnbFlg;
-extern bool rdsText3EnbFlg;
 extern bool rebootFlg;
 extern bool rfAutoFlg;
 extern bool rfCarrierFlg;
@@ -49,11 +46,6 @@ extern uint8_t fmRadioTestCode;
 extern uint8_t usbVol;
 
 extern uint16_t mqttPort;
-
-// extern uint8_t  rdsHttpPtyCode;
-// extern uint8_t  rdsLocalPtyCode;
-// extern uint8_t  rdsMqttPtyCode;
-// extern uint8_t  rdsSerialPtyCode;
 
 extern uint32_t baudRate;
 extern uint32_t rdsMsgTime;
@@ -84,10 +76,6 @@ extern String inpImpedStr;
 extern String ipAddrStr;
 extern String logLevelStr;
 extern String mdnsNameStr;
-extern String rdsTextMsgStr;
-extern String rdsTextMsg1Str;
-extern String rdsTextMsg2Str;
-extern String rdsTextMsg3Str;
 extern String rfPowerStr;
 extern String staNameStr;
 extern String staticIpStr;

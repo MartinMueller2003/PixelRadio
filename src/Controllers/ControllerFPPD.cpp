@@ -39,7 +39,7 @@ c_ControllerFPPD::~c_ControllerFPPD(){}
 void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
 {
    // DEBUG_START;
-
+   return;
    ESPUI.addControl(
        ControlType::Separator,
        "FPPD CONTROL SETTINGS",
@@ -139,7 +139,7 @@ void c_ControllerFPPD::CbControllerEnabled(Control *sender, int type)
 
    // DEBUG_END;
 
-} // controllerCallback
+} // CbControllerEnabled
 
 // ************************************************************************************************
 void c_ControllerFPPD::CbSequenceLearningEnabled(Control *sender, int type)

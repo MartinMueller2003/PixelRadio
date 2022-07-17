@@ -29,6 +29,7 @@
 // Radio
 extern QN8027Radio radio;
 
+#ifdef OldWay
 // *************************************************************************************************************************
 // getControllerStatus(): Returns Hex formatted value that represents which controllers are enabled and which are
 // currently sending RadioText.
@@ -79,6 +80,7 @@ uint8_t getControllerStatus(void)
 
     return status;
 }
+#endif // def OldWay
 
 // *************************************************************************************************************************
 // AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.

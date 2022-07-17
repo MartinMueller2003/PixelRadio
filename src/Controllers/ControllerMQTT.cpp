@@ -18,9 +18,10 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ControllerMQTT.h"
-#include "../language.h"
 #include <ArduinoLog.h>
+#include "../language.h"
+#include "ControllerMQTT.h"
+#include "ControllerMgr.h"
 
 #if __has_include("../memdebug.h")
 #  include "../memdebug.h"
@@ -357,7 +358,7 @@ void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, uns
                    F ("\", \"hostName\": \"") + staNameStr +
                    F ("\", \"ip\": \"") + WiFi.localIP ().toString () +
                    F ("\", \"rssi\": ") + WiFi.RSSI () +
-                   F (", \"status\": \"0x") + getControllerStatus ();
+                   F (", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
       }
       else
       {

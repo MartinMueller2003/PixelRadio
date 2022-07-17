@@ -398,13 +398,13 @@ void processWebClient(void)
 
                             if (successFlg) {
                                 client.printf(
-                                    "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%02X\"}\r\n",
+                                    "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}\r\n",
                                     CMD_INFO_STR,
                                     VERSION_STR,
                                     staNameStr.c_str(),
                                     WiFi.localIP().toString().c_str(),
                                     WiFi.RSSI(),
-                                    getControllerStatus());
+                                    ControllerMgr.getControllerStatusSummary());
                             }
                             else {
                                 client.printf("{\"%s\": \"fail\"}\r\n", CMD_INFO_STR);

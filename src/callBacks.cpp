@@ -281,35 +281,6 @@ void dhcpCallback(Control *sender, int type)
 }
 
 // ************************************************************************************************
-void controllerCallback(Control *sender, int type)
-{
-    // char logBuff[60];
-    // sprintf(logBuff, "controllerCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == ctrlLocalID) {
-        if (type == S_ACTIVE) {
-            // ControllerMgr.SetControlEnabledFlag(LocalControllerId, true);
-        }
-        else if (type == S_INACTIVE) {
-            // ControllerMgr.SetControlFlag(LocalControllerId, false);
-        }
-        displaySaveWarning();
-        tempStr  = "Local Controller Set to: ";
-        tempStr += ControllerMgr.GetControllerEnabledFlag(LocalControllerId) ? "On" : "Off";
-    }
-    else {
-        tempStr  = "controllerCallback: ";
-        tempStr += BAD_SENDER_STR;
-    }
-    displayRdsText(); // Update RDS RadioText.
-
-    char charBuff[40];
-    sprintf(charBuff, "%s.", tempStr.c_str());
-    Log.infoln(charBuff);
-}
-
-// ************************************************************************************************
 // diagBootCallback(): Reboot ESP32
 //                     Must hold button for several seconds, will reboot upon release.
 void diagBootCallback(Control *sender, int type)
@@ -787,132 +758,11 @@ void rdsDisplayTimeCallback(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// rdsEnbCallback(): Enable/disable local RDS Messages 1-3.
-//                   Add "Disabled" to homeTab's RDS field if all RDS controllers are turned off.
-void rdsEnbCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "rdsEnbCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == rdsEnb1ID) { // RDS RadioText #1 Enable.
-        if (type == S_ACTIVE) {
-            rdsText1EnbFlg = true;
-            tempStr        = "On";
-            ESPUI.print(rdsText1MsgID, RDS_LOCKED_STR);
-            ESPUI.setEnabled(rdsText1ID, false); // Disable RadioText #1 Message Text Entry.
-        }
-        else if (type == S_INACTIVE) {           // RDS RadioText #1 Disable.
-            rdsText1EnbFlg = false;
-            tempStr        = "Off";
-            ESPUI.print(rdsText1MsgID, "");
-            ESPUI.setEnabled(rdsText1ID, true); // Enable RadioText #1 Message Text Entry.
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "rdsEnbCallback #1: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        displaySaveWarning();
-        sprintf(logBuff, "Local RDS #1 Enable Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else if (sender->id == rdsEnb2ID) { // RDS RadioText #2 Enable.
-        if (type == S_ACTIVE) {
-            rdsText2EnbFlg = true;
-            tempStr        = "On";
-            ESPUI.print(rdsText2MsgID, RDS_LOCKED_STR);
-            ESPUI.setEnabled(rdsText2ID, false); // Disable RadioText #2 Message Text Entry.
-        }
-        else if (type == S_INACTIVE) {
-            rdsText2EnbFlg = false;
-            tempStr        = "Off";
-            ESPUI.print(rdsText2MsgID, "");
-            ESPUI.setEnabled(rdsText2ID, true); // Enable RadioText #2 Message Text Entry.
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "rdsEnbCallback #2: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        displaySaveWarning();
-        sprintf(logBuff, "Local RDS #2 Enable Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else if (sender->id == rdsEnb3ID) { // RDS RadioText #3 Enable.
-        if (type == S_ACTIVE) {
-            rdsText3EnbFlg = true;
-            tempStr        = "On";
-            ESPUI.print(rdsText3MsgID, RDS_LOCKED_STR);
-            ESPUI.setEnabled(rdsText3ID, false); // Disable RadioText #3 Message Text Entry.
-        }
-        else if (type == S_INACTIVE) {
-            rdsText3EnbFlg = false;
-            tempStr        = "Off";
-            ESPUI.print(rdsText3MsgID, "");
-            ESPUI.setEnabled(rdsText3ID, true); // Enable RadioText #3 Message Text Entry.
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "rdsEnbCallback #3: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        displaySaveWarning();
-        sprintf(logBuff, "Local RDS #3 Enable Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "rdsEnbCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-
-    displayRdsText();
-}
-
-// ************************************************************************************************
 // rdsRstCallback(): Reset all RDS Fields to default values.
 void rdsRstCallback(Control *sender, int type)
 {
-    // char logBuff[60];
-    // sprintf(logBuff, "rdsResetCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if ((sender->id == rdsRstID) && (type == B_DOWN)) {
-        rdsText1EnbFlg = true;
-        rdsText2EnbFlg = true;
-        rdsText3EnbFlg = true;
-
-        rdsTextMsg1Str = RDS_TEXT1_DEF_STR;
-        ESPUI.print(rdsText1ID,    rdsTextMsg1Str);
-        ESPUI.print(rdsText1MsgID, "");
-
-        rdsTextMsg2Str = RDS_TEXT2_DEF_STR;
-        ESPUI.print(rdsText2ID,    rdsTextMsg2Str);
-        ESPUI.print(rdsText2MsgID, "");
-
-        rdsTextMsg3Str = RDS_TEXT3_DEF_STR;
-        ESPUI.print(rdsText3ID,    rdsTextMsg3Str);
-        ESPUI.print(rdsText3MsgID, "");
-
-        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, RDS_PSN_DEF_STR); // Program Service Name.
-        ESPUI.print(rdsProgNameID, ControllerMgr.GetRdsProgramServiceName(LocalControllerId));
-
-        ESPUI.print(rdsEnbID,      "1");
-        ESPUI.print(rdsEnb1ID,     "1");
-        ESPUI.print(rdsEnb2ID,     "1");
-        ESPUI.print(rdsEnb3ID,     "1");
-
-        ControllerMgr.SetPtyCode(LocalControllerId, RDS_PTY_CODE_DEF);
-        updateUiLocalPtyCode();
-
-        tempStr = String(RDS_DSP_TM_DEF / 1000);
-        ESPUI.print(rdsDspTmID,    tempStr);
-        ESPUI.print(rdsRstID,      "RESET!");
-        displaySaveWarning();
 
         Log.infoln("RDS Settings Have Been Reset to Default Values.");
-    }
 }
 
 // ************************************************************************************************
@@ -926,63 +776,7 @@ void rdsTextCallback(Control *sender, int type)
     // sprintf(logBuff, "rdsTextCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
     // Log.verboseln(logBuff);
 
-    if (sender->id == rdsText1ID) {
-        if (!rdsText1EnbFlg) {
-            rdsTextMsg1Str = sender->value;
-            rdsTextMsg1Str.trim();
-
-            if (rdsTextMsg1Str.length() > RDS_TEXT_MAX_SZ) {
-                rdsTextMsg1Str = rdsTextMsg1Str.substring(0, RDS_TEXT_MAX_SZ);
-            }
-            ESPUI.print(rdsText1ID,    rdsTextMsg1Str);
-            ESPUI.print(rdsText1MsgID, "");
-            displaySaveWarning();
-            sprintf(logBuff, "RDS #1 RadioText Set to: \"%s\"", rdsTextMsg1Str.c_str());
-            Log.infoln(logBuff);
-        }
-        else {
-            ESPUI.print(rdsText1ID,    rdsTextMsg1Str);
-            ESPUI.print(rdsText1MsgID, RDS_LOCKED_STR);
-        }
-    }
-    else if (sender->id == rdsText2ID) {
-        if (!rdsText2EnbFlg) {
-            rdsTextMsg2Str = sender->value;
-            rdsTextMsg2Str.trim();
-
-            if (rdsTextMsg2Str.length() > RDS_TEXT_MAX_SZ) {
-                rdsTextMsg2Str = rdsTextMsg2Str.substring(0, RDS_TEXT_MAX_SZ);
-            }
-            ESPUI.print(rdsText2ID,    rdsTextMsg2Str);
-            ESPUI.print(rdsText2MsgID, "");
-            displaySaveWarning();
-            sprintf(logBuff, "RDS #2 RadioText Set to: \"%s\"", rdsTextMsg2Str.c_str());
-            Log.infoln(logBuff);
-        }
-        else {
-            ESPUI.print(rdsText2ID,    rdsTextMsg2Str);
-            ESPUI.print(rdsText2MsgID, RDS_LOCKED_STR);
-        }
-    }
-    else if (sender->id == rdsText3ID) {
-        if (!rdsText3EnbFlg) {
-            rdsTextMsg3Str = sender->value;
-            rdsTextMsg3Str.trim(); \
-            if (rdsTextMsg3Str.length() > RDS_TEXT_MAX_SZ) {
-                rdsTextMsg3Str = rdsTextMsg3Str.substring(0, RDS_TEXT_MAX_SZ);
-            }
-            ESPUI.print(rdsText3ID,    rdsTextMsg3Str);
-            ESPUI.print(rdsText3MsgID, "");
-            displaySaveWarning();
-            sprintf(logBuff, "RDS #3 RadioText Set to: \"%s\"", rdsTextMsg3Str.c_str());
-            Log.infoln(logBuff);
-        }
-        else {
-            ESPUI.print(rdsText3ID,    rdsTextMsg3Str);
-            ESPUI.print(rdsText3MsgID, RDS_LOCKED_STR);
-        }
-    }
-    else if (sender->id == rdsProgNameID) {
+    if (sender->id == rdsProgNameID) {
         String rdsLocalPsnStr = sender->value;
         rdsLocalPsnStr.trim();
 

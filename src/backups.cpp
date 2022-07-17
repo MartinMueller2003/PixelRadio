@@ -196,15 +196,6 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     doc["RDS_PTY_CODE"]       = ControllerMgr.GetPtyCode(LocalControllerId);
     doc["RDS_LOCAL_MSG_TIME"] = ControllerMgr.GetRdsMsgTime(LocalControllerId);
     doc["RDS_PROG_SERV_STR"]  = ControllerMgr.GetRdsProgramServiceName(LocalControllerId);
-    doc["RDS_TEXT1_ENB_FLAG"] = rdsText1EnbFlg;
-    doc["RDS_TEXT2_ENB_FLAG"] = rdsText2EnbFlg;
-    doc["RDS_TEXT3_ENB_FLAG"] = rdsText3EnbFlg;
-
-    JsonArray localRds = doc.createNestedArray("RDS_LOCAL_MSGS");
-    localRds.add(rdsTextMsg1Str);
-    localRds.add(rdsTextMsg2Str);
-    localRds.add(rdsTextMsg3Str);
-
     doc["RADIO_FM_FREQ"]      = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
     doc["RADIO_MUTE_FLAG"]    = muteFlg;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
     doc["RADIO_AUTO_FLAG"]    = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
@@ -218,13 +209,6 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     doc["USB_VOLUME"]       = usbVol;           // Use Serial Control, "VOL=0" to "VOL=30".
     doc["DIGITAL_GAIN_STR"] = digitalGainStr;   // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
     doc["INPUT_IMPED_STR"]  = inpImpedStr;      // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
-
-	// ControllerMgr.GetRdsMsgTime(LocalControllerId);
-	// doc["CTRL_LOCAL_FLAG"] = ControllerMgr.GetControlFlag(LocalControllerId);
-	// doc["CTRL_MQTT_FLAG"]  = ControllerMgr.GetControlFlag(MqttControllerId);
-	// doc["CTRL_HTTP_FLAG"]  = ControllerMgr.GetControlFlag(HttpControllerId);
-	// doc["CTRL_SERIAL_FLAG"] = ControllerMgr.GetControlFlag(SerialControllerId);
-	// doc["CTRL_SERIAL_STR"] = ControllerMgr.GetControlStr(SerialControllerId);
 
 	doc["GPIO19_STR"] = gpio19BootStr;
 	doc["GPIO23_STR"] = gpio23BootStr;
@@ -407,35 +391,10 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
     if (doc.containsKey("RDS_PTY_CODE")) {
         ControllerMgr.SetPtyCode(LocalControllerId, doc["RDS_PTY_CODE"]);
     }
-
+/*
     if (doc.containsKey("RDS_LOCAL_MSG_TIME")) {
         ControllerMgr.SetRdsMsgTime(LocalControllerId, doc["RDS_LOCAL_MSG_TIME"]);
     }
-
-    if (doc.containsKey("RDS_TEXT1_ENB_FLAG")) {
-        rdsText1EnbFlg = doc["RDS_TEXT1_ENB_FLAG"];
-    }
-
-    if (doc.containsKey("RDS_TEXT2_ENB_FLAG")) {
-        rdsText2EnbFlg = doc["RDS_TEXT2_ENB_FLAG"];
-    }
-
-    if (doc.containsKey("RDS_TEXT3_ENB_FLAG")) {
-        rdsText3EnbFlg = doc["RDS_TEXT3_ENB_FLAG"];
-    }
-
-    if ((const char *)doc["RDS_LOCAL_MSGS"][0] != NULL) {
-        rdsTextMsg1Str = (const char *)doc["RDS_LOCAL_MSGS"][0];
-    }
-
-    if ((const char *)doc["RDS_LOCAL_MSGS"][1] != NULL) {
-        rdsTextMsg2Str = (const char *)doc["RDS_LOCAL_MSGS"][1];
-    }
-
-    if ((const char *)doc["RDS_LOCAL_MSGS"][2] != NULL) {
-        rdsTextMsg3Str = (const char *)doc["RDS_LOCAL_MSGS"][2];
-    }
-
     if (doc.containsKey("RADIO_FM_FREQ")) {
         fmFreqX10 = doc["RADIO_FM_FREQ"]; // Use radio.setFrequency(MHZ) when restoring this float value.
     }
@@ -447,7 +406,7 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
     if (doc.containsKey("RADIO_AUTO_FLAG")) {
         rfAutoFlg = doc["RADIO_AUTO_FLAG"]; // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     }
-
+*/
     if (doc.containsKey("RADIO_RF_CARR_FLAG")) {
         rfCarrierFlg = doc["RADIO_RF_CARR_FLAG"]; // Use radio.RDS(0/1) when restoring this uint8 value. 1=CarrierOn.
     }
