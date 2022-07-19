@@ -90,9 +90,9 @@ void c_ControllerLOCAL::CreateDefaultMsgSet()
    // DEBUG_START;
 
    Messages.clear();
-   Messages.AddMessage(F("LOCAL"), F("Msg1"));
-   Messages.AddMessage(F("LOCAL"), F("Msg2"));
-   Messages.AddMessage(F("LOCAL"), F("Msg3"));
+   Messages.AddMessage(F("LOCAL"), F("Welcome to Our Drive-by Holiday Light Show"));
+   Messages.AddMessage(F("LOCAL"), F("For Safety Keep Automobile Running Lights On"));
+   Messages.AddMessage(F("LOCAL"), F("Please Drive Slowly and Watch Out for Children and Pets"));
 
    // DEBUG_END;
 }
