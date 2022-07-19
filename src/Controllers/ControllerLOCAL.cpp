@@ -39,7 +39,7 @@ c_ControllerLOCAL::~c_ControllerLOCAL() {}
 // *********************************************************************************************
 void c_ControllerLOCAL::AddControls(uint16_t ParentElementId)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    EspuiParentElementId = ParentElementId;
 
@@ -87,14 +87,14 @@ void c_ControllerLOCAL::CbControllerEnabled(Control *sender, int type)
 // *********************************************************************************************
 void c_ControllerLOCAL::CreateDefaultMsgSet()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    Messages.clear();
    Messages.AddMessage(F("LOCAL"), F("Msg1"));
    Messages.AddMessage(F("LOCAL"), F("Msg2"));
    Messages.AddMessage(F("LOCAL"), F("Msg3"));
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // *********************************************************************************************

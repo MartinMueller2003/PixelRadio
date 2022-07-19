@@ -462,8 +462,11 @@ void startGUI(void)
 
     //ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity(Verbosity::Quiet);                              // Production mode.
-
-    if ((userNameStr.length() == 0) ||  (userPassStr.length() == 0)) { // Missing credentials, use automatic login.
+    ESPUI.jsonInitialDocumentSize = 4000;
+    ESPUI.jsonUpdateDocumentSize = 4000;
+    
+    if ((userNameStr.length() == 0) || (userPassStr.length() == 0))
+    { // Missing credentials, use automatic login.
         ESPUI.begin("PixelRadio");
 
         // Don't use LITTLEFS, browser refreshes will crash.

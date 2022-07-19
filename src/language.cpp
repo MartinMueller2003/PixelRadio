@@ -49,6 +49,7 @@ const PROGMEM char N_ProgramServiceName       [] = "ProgramServiceName";
 const PROGMEM char N_PtyCode                  [] = "PtyCode";
 const PROGMEM char N_sequences                [] = "sequences";
 const PROGMEM char N_SequenceLearningEnabled  [] = "SequenceLearningEnabled";
+const PROGMEM char N_type                     [] = "type";
 
    // Controller Command Keywords
 const PROGMEM char  CMD_AUDMODE_STR           [] = "aud";    // Radio Stereo / Mono Audio Mode.

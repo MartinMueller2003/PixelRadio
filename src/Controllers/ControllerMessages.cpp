@@ -32,28 +32,28 @@ static const String EmptyMsgWarning       = F("WARN: Empty message is not allowe
 // *********************************************************************************************
 c_ControllerMessages::c_ControllerMessages()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // c_ControllerMessages
 
 // *********************************************************************************************
 c_ControllerMessages::~c_ControllerMessages()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // c_ControllerMessages
 
 // ************************************************************************************************
 void c_ControllerMessages::ActivateMessageSet(String MsgSetName)
 {
-   DEBUG_START;
-   DEBUG_V(String("  MsgSetName: '") + MsgSetName + "'");
+   // DEBUG_START;
+   // DEBUG_V(String("  MsgSetName: '") + MsgSetName + "'");
 
    do // once
    {
-      DEBUG_V("Turn off all message sets");
+      // DEBUG_V("Turn off all message sets");
       for (auto &MessageSet : MessageSets)
       {
          MessageSet.second.Activate(false);
@@ -63,20 +63,20 @@ void c_ControllerMessages::ActivateMessageSet(String MsgSetName)
 
       if(MessageSets.end() == MessageSets.find(MsgSetName))
       {
-         DEBUG_V("Desired message set not found. Create it.");
+         // DEBUG_V("Desired message set not found. Create it.");
          AddMessageSet(MsgSetName);
       }
 
-      DEBUG_V("Activate the desired message set");
+      // DEBUG_V("Activate the desired message set");
       MessageSets[MsgSetName].Activate(true);
 
       if (Control::noParent == MessageElementIds.ActiveChoiceListElementId)
       {
-         DEBUG_V("No Element IDs available. Not setting the messages");
+         // DEBUG_V("No Element IDs available. Not setting the messages");
          break;
       }
 
-      DEBUG_V("Set Title");
+      // DEBUG_V("Set Title");
       Control * control = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
       if(control)
       {
@@ -85,25 +85,25 @@ void c_ControllerMessages::ActivateMessageSet(String MsgSetName)
          ESPUI.updateControl(control);
       }
 
-      DEBUG_V();
+      // DEBUG_V();
       CbTextChange(nullptr, 0);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // Activate
 
 // ************************************************************************************************
 void c_ControllerMessages::AddControls(uint16_t ctrlTab)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    ParentElementId = ctrlTab;
 
    if (Control::noParent == MessageElementIds.ActiveChoiceListElementId)
    {
-      DEBUG_V(String("Add Select Hidden"));
+      // DEBUG_V(String("Add Select Hidden"));
       MessageElementIds.HiddenChoiceListElementId = ESPUI.addControl(
           ControlType::Select,
           emptyString.c_str(),
@@ -112,7 +112,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           ctrlTab);
       ESPUI.updateVisibility(MessageElementIds.HiddenChoiceListElementId, false);
       
-      DEBUG_V(String("Add Select Active messages choice list"));
+      // DEBUG_V(String("Add Select Active messages choice list"));
       MessageElementIds.ActiveChoiceListElementId = ESPUI.addControl(
           ControlType::Select,
           Title.c_str(),
@@ -129,7 +129,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           },
           this);
 
-      DEBUG_V(String("Add Delete Button"));
+      // DEBUG_V(String("Add Delete Button"));
       ButtonDeleteElementId = ESPUI.addControl(
           ControlType::Button,
           emptyString.c_str(),
@@ -146,7 +146,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           },
           this);
 
-      DEBUG_V(String("Add Update Button"));
+      // DEBUG_V(String("Add Update Button"));
       ButtonUpdateElementId = ESPUI.addControl(
           ControlType::Button,
           emptyString.c_str(),
@@ -163,7 +163,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           },
           this);
 
-      DEBUG_V(String("Add Instruction lable"));
+      // DEBUG_V(String("Add Instruction lable"));
       InstructionElementId = ESPUI.addControl(
           ControlType::Label,
           DefaultTextFieldValue.c_str(),
@@ -172,7 +172,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           MessageElementIds.ActiveChoiceListElementId);
       ESPUI.setElementStyle(InstructionElementId, CSS_LABEL_STYLE_BLACK);
 
-      DEBUG_V(String("Add Text Entry"));
+      // DEBUG_V(String("Add Text Entry"));
       TextEntryElementId = ESPUI.addControl(
           ControlType::Text,
           emptyString.c_str(),
@@ -189,7 +189,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           },
           this);
 
-      DEBUG_V(String("Add Text Size limit"));
+      // DEBUG_V(String("Add Text Size limit"));
       ESPUI.addControl(
          ControlType::Max, 
          emptyString.c_str(), 
@@ -197,7 +197,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
          ControlColor::None, 
          TextEntryElementId);
 
-      DEBUG_V(String("Add Create Button"));
+      // DEBUG_V(String("Add Create Button"));
       ButtonCreateElementId = ESPUI.addControl(
           ControlType::Button,
           emptyString.c_str(),
@@ -214,7 +214,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           },
           this);
 
-      DEBUG_V(String("Add Label for Status"));
+      // DEBUG_V(String("Add Label for Status"));
       StatusMsgElementId = ESPUI.addControl(
           ControlType::Label,
           emptyString.c_str(),
@@ -225,7 +225,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
 
       if (ShowFseqNameSelection)
       {
-         DEBUG_V(String("Add Label 2"));
+         // DEBUG_V(String("Add Label 2"));
          DisplayFseqNameLabelElementId = ESPUI.addControl(
              ControlType::Label,
              emptyString.c_str(),
@@ -235,8 +235,8 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
          ESPUI.setElementStyle(DisplayFseqNameLabelElementId,
                                CSS_LABEL_STYLE_BLACK);
 
-         DEBUG_V(String("Add Display fseq name Switcher"));
-         DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
+         // DEBUG_V(String("Add Display fseq name Switcher"));
+         // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
          DisplayFseqNameElementId = ESPUI.addControl(
              ControlType::Switcher,
              emptyString.c_str(),
@@ -253,8 +253,8 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
              nullptr);
       }
 
-      DEBUG_V("Add msg configuration pane");
-      DEBUG_V(String("Add Title"));
+      // DEBUG_V("Add msg configuration pane");
+      // DEBUG_V(String("Add Title"));
       MessageElementIds.MessageDetailsElementId = ESPUI.addControl(
           ControlType::Label,
           emptyString.c_str(),
@@ -263,7 +263,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           ctrlTab);
       ESPUI.setElementStyle(MessageElementIds.MessageDetailsElementId, CSS_LABEL_STYLE_BLACK);
          
-      DEBUG_V(String("Add Enabled field"));
+      // DEBUG_V(String("Add Enabled field"));
       MessageElementIds.EnabledElementId = ESPUI.addControl(
           ControlType::Switcher,
           emptyString.c_str(),
@@ -271,7 +271,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           ControlColor::Turquoise,
           MessageElementIds.MessageDetailsElementId);
 
-      DEBUG_V(String("Add Seprator"));
+      // DEBUG_V(String("Add Seprator"));
       SeperatorMsgElementId = ESPUI.addControl(
           ControlType::Label,
           emptyString.c_str(),
@@ -280,7 +280,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           MessageElementIds.MessageDetailsElementId);
       ESPUI.setElementStyle(SeperatorMsgElementId, CSS_LABEL_STYLE_BLACK);
 
-      DEBUG_V(String("Add Number field"));
+      // DEBUG_V(String("Add Number field"));
       MessageElementIds.DisplayDurationElementId = ESPUI.addControl(
           ControlType::Number,
           emptyString.c_str(),
@@ -292,109 +292,111 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
    }
    else
    {
-      DEBUG_V(String("NOT Adding Controls"));
+      // DEBUG_V(String("NOT Adding Controls"));
    }
 
-   DEBUG_V();
+   // DEBUG_V();
    for (auto &CurrentMessageSet : MessageSets)
    {
-      DEBUG_V();
+      // DEBUG_V();
       CurrentMessageSet.second.AddControls(MessageElementIds);
    }
    
    if(MessageSets.empty())
    {
-      DEBUG_V("Turn off msg details control");
+      // DEBUG_V("Turn off msg details control");
       ESPUI.updateVisibility(MessageElementIds.MessageDetailsElementId, false);
    }
    else
    {
-      DEBUG_V("Select the default message set.");
+      // DEBUG_V("Select the default message set.");
       ActivateMessageSet(MessageSets.begin()->first);
    }
 
-   DEBUG_V();
+   // DEBUG_V();
    CbTextChange(nullptr, 0);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // AddControls
 
 // ************************************************************************************************
 void c_ControllerMessages::AddMessage(String MsgSetName, String MsgText)
 {
-   DEBUG_START;
-   DEBUG_V(String("message set name: '") + MsgSetName + "'");
-   DEBUG_V(String("    message name: '") + MsgText + "'");
+   // DEBUG_START;
+   // DEBUG_V(String("message set name: '") + MsgSetName + "'");
+   // DEBUG_V(String("    message name: '") + MsgText + "'");
 
    do // once
    {
       if(!AddMessageSet(MsgSetName))
       {
-         DEBUG_V(String("Cant use message set name: '") + MsgSetName + "'");
+         // DEBUG_V(String("Cant use message set name: '") + MsgSetName + "'");
          break;
       }
 
-      DEBUG_V(String(" Add '" + MsgText + "' to message set: '") + MsgSetName + "'");
+      // DEBUG_V(String(" Add '" + MsgText + "' to message set: '") + MsgSetName + "'");
       MessageSets[MsgSetName].AddMessage(MsgText);
+      MessageSets[MsgSetName].ActivateMessage(MsgText);
 
       if(Control::noParent == ParentElementId)
       {
-         DEBUG_V("Cannot set up the UI connections yet");
+         // DEBUG_V("Cannot set up the UI connections yet");
          break;
       }
 
-      DEBUG_V("Set up the buttons");
+      // DEBUG_V("Set up the buttons");
       CbTextChange(nullptr, 0);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // ************************************************************************************************
 bool c_ControllerMessages::AddMessageSet(String MsgSetName)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    bool Response = true;
-   DEBUG_V(String("message set: '") + MsgSetName + "'");
+   // DEBUG_V(String("message set: '") + MsgSetName + "'");
 
    do // once
    {
       if(MsgSetName.isEmpty())
       {
-         DEBUG_V("Message set name is empty");
+         // DEBUG_V("Message set name is empty");
          Response = false;
          break;
       }
 
       if(MessageSets.end() != MessageSets.find(MsgSetName))
       {
-         DEBUG_V("Message set Already exists");
+         // DEBUG_V("Message set Already exists");
          break;
       }
 
-      DEBUG_V("Add new message set entry");
+      // DEBUG_V("Add new message set entry");
       c_ControllerMessageSet temp;
       MessageSets[MsgSetName] = temp;
       MessageSets[MsgSetName].SetName(MsgSetName);
 
       if (CurrentMsgSetName.isEmpty())
       {
+         // DEBUG_V("Make this the active message set");
          ActivateMessageSet(MsgSetName);
       }
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
    return Response;
 }
 
 // ************************************************************************************************
 void c_ControllerMessages::CbButtonCreate(Control *sender, int type)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    Control *TextControl = ESPUI.getControl(TextEntryElementId);
 
@@ -402,110 +404,109 @@ void c_ControllerMessages::CbButtonCreate(Control *sender, int type)
    {
       if (type != B_DOWN)
       {
-         DEBUG_V("Ignore unwanted button action");
+         Control * control = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
+         if(control)
+         {
+            // DEBUG_V(String("Active List: '") + control->value + "'");
+         }
+         // DEBUG_V("Ignore unwanted button action");
          break;
       }
 
-      DEBUG_V("Create a new message");
+      // DEBUG_V("Create a new message");
       AddMessage(CurrentMsgSetName, TextControl->value);
 
       displaySaveWarning();
 
-      DEBUG_V("Refresh UI");
-      ESPUI.jsonDom(0);
-
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // ButtonCreateCb
 
 // ************************************************************************************************
 void c_ControllerMessages::CbButtonDelete(Control *sender, int type)
 {
-   DEBUG_START;
-   DEBUG_V(String("       Title: '") + Title + "'");
+   // DEBUG_START;
+   // DEBUG_V(String("       Title: '") + Title + "'");
 
    Control *ChoiceControl = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
    String SelectedMsgName = ChoiceControl->value;
-   DEBUG_V(String("Choice value: '") + SelectedMsgName + "'");
+   // DEBUG_V(String("Choice value: '") + SelectedMsgName + "'");
 
    do // once
    {
       if (type != B_DOWN)
       {
-         DEBUG_V("Ignore unwanted button action");
+         // DEBUG_V("Ignore unwanted button action");
          break;
       }
 
-      DEBUG_V("Erase message from the set of messages");
+      // DEBUG_V("Erase message from the set of messages");
       MessageSets[CurrentMsgSetName].EraseMsg(SelectedMsgName);
 
-      DEBUG_V();
+      // DEBUG_V();
       CbTextChange(nullptr, 0);
-      DEBUG_V();
+      // DEBUG_V();
       displaySaveWarning();
-      DEBUG_V();
-      ESPUI.jsonDom(0);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // ButtonDeleteCb
 
 // ************************************************************************************************
 void c_ControllerMessages::CbButtonUpdate(Control *sender, int type)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String(" CurrentMsgSetName: '") + CurrentMsgSetName + "'");
+   // DEBUG_V(String(" CurrentMsgSetName: '") + CurrentMsgSetName + "'");
 
    do // once
    {
       if (type != B_DOWN)
       {
-         DEBUG_V("Ignore unwanted button actions");
+         // DEBUG_V("Ignore unwanted button actions");
          break;
       }
 
       Control *TextControl = ESPUI.getControl(TextEntryElementId);
       String NewMessageText = TextControl->value;
-      DEBUG_V(String("     NewMessageText: '") + NewMessageText + "'");
+      // DEBUG_V(String("     NewMessageText: '") + NewMessageText + "'");
 
       Control *ChoiceControl = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
       String OriginalMessageText = ChoiceControl->value;
-      DEBUG_V(String("OriginalMessageText: '") + OriginalMessageText + "'");
+      // DEBUG_V(String("OriginalMessageText: '") + OriginalMessageText + "'");
 
       MessageSets[CurrentMsgSetName].UpdateMsgText(OriginalMessageText, NewMessageText);
 
       CbTextChange(nullptr, 0);
       displaySaveWarning();
-      ESPUI.jsonDom(0);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 } // CbButtonUpdate
 
 // ************************************************************************************************
 void c_ControllerMessages::CbChoiceList(Control *sender, int type)
 {
-   DEBUG_START;
-   DEBUG_V(String("       Title: '") + Title + "'");
+   // DEBUG_START;
+   // DEBUG_V(String("       Title: '") + Title + "'");
 
    String CurrentSeletedMessageName = sender->value;
-   DEBUG_V(String("Selected: '") + CurrentSeletedMessageName + "'");
+   // DEBUG_V(String("Selected: '") + CurrentSeletedMessageName + "'");
 
    do // once
    {
       if (CurrentSeletedMessageName.equals(emptyString))
       {
-         DEBUG_V("Selected message is empty. Abort");
+         // DEBUG_V("Selected message is empty. Abort");
          ESPUI.updateText(TextEntryElementId, DefaultTextFieldValue);
          break;
       }
 
-      DEBUG_V("Set the input text to equal the selected message.");
+      // DEBUG_V("Set the input text to equal the selected message.");
       ESPUI.updateText(TextEntryElementId, CurrentSeletedMessageName);
 
       // tell the message it has been selected
@@ -513,40 +514,40 @@ void c_ControllerMessages::CbChoiceList(Control *sender, int type)
 
       // Update the warning and text fields
       CbTextChange(nullptr, 0);
-      ESPUI.jsonDom(0);
+
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // CbChoiceList
 
 // ************************************************************************************************
 void c_ControllerMessages::CbSwitchDisplayFseqName(Control *sender, int type)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    DisplayFseqName = (S_ACTIVE == type);
-   DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName))
+   // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName))
 
    displaySaveWarning();
    displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Display fseq Name Set to: ")) + String(DisplayFseqName ? "On" : "Off")).c_str());
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // DisplayFseqNameCb
 
 // ************************************************************************************************
 void c_ControllerMessages::CbTextChange(Control *, int)
 {
-   DEBUG_START;
-   DEBUG_V(String(" CurrentMsgSetName: '") + CurrentMsgSetName + "'");
+   // DEBUG_START;
+   // DEBUG_V(String(" CurrentMsgSetName: '") + CurrentMsgSetName + "'");
 
    Control *ChoiceList  = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
    Control *TextControl = ESPUI.getControl(TextEntryElementId);
 
-   DEBUG_V(String("        Text value: '") + TextControl->value + "'");
-   DEBUG_V(String("      Choice value: '") + ChoiceList->value + "'");
+   // DEBUG_V(String("        Text value: '") + TextControl->value + "'");
+   // DEBUG_V(String("      Choice value: '") + ChoiceList->value + "'");
 
    bool EnableCreate = true;
    bool EnableDelete = true;
@@ -554,16 +555,16 @@ void c_ControllerMessages::CbTextChange(Control *, int)
 
    do // once
    {
-      if (ChoiceList->value.isEmpty() || MessageSets.empty())
+      if (ChoiceList->value.isEmpty() || MessageSets[CurrentMsgSetName].empty())
       {
-         DEBUG_V("Disable delete/update buttons");
+         // DEBUG_V("Disable delete/update buttons");
          EnableDelete = false;
          EnableUpdate = false;
       }
 
       if (TextControl->value.equals(DefaultTextFieldValue))
       {
-         DEBUG_V("User did not remove the default text");
+         // DEBUG_V("User did not remove the default text");
          EnableCreate = false;
          EnableUpdate = false;
          ESPUI.print(StatusMsgElementId, emptyString);
@@ -572,7 +573,7 @@ void c_ControllerMessages::CbTextChange(Control *, int)
 
       if (-1 != TextControl->value.indexOf(DefaultTextFieldValue))
       {
-         DEBUG_V("User did not remove the default text");
+         // DEBUG_V("User did not remove the default text");
          EnableCreate = false;
          EnableUpdate = false;
          ESPUI.print(StatusMsgElementId, DefaultTextWarningMsg);
@@ -581,7 +582,7 @@ void c_ControllerMessages::CbTextChange(Control *, int)
 
       if (TextControl->value.isEmpty())
       {
-         DEBUG_V("Cant update an entry without a message");
+         // DEBUG_V("Cant update an entry without a message");
          EnableCreate = false;
          EnableUpdate = false;
          ESPUI.updateText(TextEntryElementId, DefaultTextFieldValue);
@@ -591,132 +592,97 @@ void c_ControllerMessages::CbTextChange(Control *, int)
 
       if (TextControl->value.equals(ChoiceList->value))
       {
-         DEBUG_V("No Change In Text");
+         // DEBUG_V("No Change In Text");
          EnableCreate = false;
          EnableUpdate = false;
-         ESPUI.updateControlValue(TextEntryElementId, DefaultTextFieldValue);
+         // ESPUI.updateControlValue(TextEntryElementId, DefaultTextFieldValue);
          break;
       }
 
       if(MessageSets[CurrentMsgSetName].HasMsg(TextControl->value))
       {
-         DEBUG_V("Msg exists in active set. No Create or update allowed.");
+         // DEBUG_V("Msg exists in active set. No Create or update allowed.");
          EnableCreate = false;
          EnableUpdate = false;
          ESPUI.print(StatusMsgElementId, String(F("This message already exists.")));
          break;
       }
 
-      DEBUG_V("valid text that could be used for the existing Message");
+      // DEBUG_V("valid text that could be used for the existing Message");
       ESPUI.print(StatusMsgElementId, emptyString);
 
    } while (false);
 
-   DEBUG_V("Update Buttons");
+   // DEBUG_V("Update Buttons");
    ESPUI.setEnabled(ButtonCreateElementId, EnableCreate);
    ESPUI.setEnabled(ButtonDeleteElementId, EnableDelete);
    ESPUI.setEnabled(ButtonUpdateElementId, EnableUpdate);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // TextChangeCb
 
 // *********************************************************************************************
 void c_ControllerMessages::RestoreConfig(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
-#ifdef foo
-   serializeJsonPretty(config, Serial);
+   // DEBUG_START;
+
+   // serializeJsonPretty(config, Serial);
 
    if (ShowFseqNameSelection)
    {
       if (config.containsKey(N_DisplayFseqName))
       {
          DisplayFseqName = config[N_DisplayFseqName];
-         DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
+         // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
       }
    }
+   // DEBUG_V();
 
-   if (config.containsKey(N_name))
+   if (!config.containsKey(N_messages))
    {
-      Title = (const char *)config[N_name];
+      // DEBUG_V("Create missing Message Set array");
+      config.createNestedArray(N_messages);
    }
 
-   DEBUG_V();
-
-   if (!config.containsKey(N_list))
+   // DEBUG_V();
+   JsonArray ListOfMessageSetConfigs = config[N_messages];
+   for (auto CurrentMessageSetConfig : ListOfMessageSetConfigs)
    {
-      DEBUG_V("Create missing Message Set array");
-      config.createNestedArray(N_list);
+      if (!CurrentMessageSetConfig.containsKey(N_name))
+      {
+         // DEBUG_V("Missing Message Set Name");
+         continue;
+      }
+      String MessageSetName = (const char *)CurrentMessageSetConfig[N_name];
+      // DEBUG_V(String("MessageSetName: '") + MessageSetName + "'");
+
+      // DEBUG_V("create the message set");
+      AddMessageSet(MessageSetName);
+
+      // DEBUG_V("Send the message set the config");
+      JsonObject Temp = CurrentMessageSetConfig;
+      MessageSets[MessageSetName].RestoreConfig(Temp);
    }
 
-   DEBUG_V();
-   JsonArray ListOfMessageSets = config[N_list];
-   for (JsonPair CurrentMessageSetConfig : ListOfMessageSets)
-   {
-      JsonObject MessageSetConfig = CurrentMessageSetConfig.value();
-
-      String MessageSetName = CurrentMessageSetConfig.key().c_str();
-      if (MessageSetConfig.containsKey(N_name))
-      {
-         MessageSetName = (const char *)MessageSetConfig[N_name];
-      }
-      DEBUG_V(String("MessageSetName: '") + MessageSetName + "'");
-
-      if (!MessageSetConfig.containsKey(N_list))
-      {
-         DEBUG_V("Create missing message array");
-         MessageSetConfig.createNestedArray(N_list);
-      }
-      JsonArray MessagesConfig = MessageSetConfig[N_list];
-
-      // add each message to the current message set
-      for (auto CurrentMessageConfig : MessagesConfig)
-      {
-         String MessageName;
-         if (MessageSetConfig.containsKey(N_name))
-         {
-            MessageSetName = (const char *)MessageSetConfig[N_name];
-         }
-         else
-         {
-            DEBUG_V("Cannot process entry without a valid name");
-            continue;
-         }
-
-         if(MessageSets[MessageSetName].end() != MessageSets[MessageSetName].find(MessageName))
-         {
-            DEBUG_V(String("Cannot add a duplicate entry: '") + MessageName + "'");
-            continue;
-         }
-
-         DEBUG_V(String("Add message to the message set: '") + MessageName + "'");
-         AddMessage(MessageSetName, MessageName);
-         MessageSets[MessageSetName][MessageName].RestoreConfig(CurrentMessageConfig);
-      }
-   }
-#endif // def foo
-
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessages::SaveConfig(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
-
-   config[N_name] = CurrentMsgSetName;
+   // DEBUG_START;
 
    if (ShowFseqNameSelection)
    {
       config[N_DisplayFseqName] = DisplayFseqName;
-      DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
+      // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
    }
 
-   DEBUG_V("Create List of Msg Sets");
-   JsonArray MessageSetArray = config.createNestedArray(N_list);
+   // DEBUG_V("Create List of Msg Sets");
+   JsonArray MessageSetArray = config.createNestedArray(N_messages);
 
-   DEBUG_V();
+   // DEBUG_V();
 
    for (auto & CurrentMessageSet : MessageSets)
    {
@@ -724,16 +690,30 @@ void c_ControllerMessages::SaveConfig(ArduinoJson::JsonObject &config)
       MessageSets[CurrentMessageSet.first].SaveConfig(MessageSetConfig);
    }
 
-   DEBUG_V("Final");
-   serializeJsonPretty(config, Serial);
+   // DEBUG_V("Final");
+   // serializeJsonPretty(config, Serial);
 
-   DEBUG_END;
+   // DEBUG_END;
+} // SaveConfig
+
+// *********************************************************************************************
+void c_ControllerMessages::SaveConfig(ArduinoJson::JsonObject &config, String & SetName)
+{
+   // DEBUG_START;
+
+      MessageSets[SetName].SaveConfig(config);
+
+   // DEBUG_END;
 } // SaveConfig
 
 // *********************************************************************************************
 void c_ControllerMessages::SetShowFseqNameSelection(bool value)
 {
+   // DEBUG_START;
+
    ShowFseqNameSelection = value;
+
+   // DEBUG_END;
 }
 
 // *********************************************************************************************

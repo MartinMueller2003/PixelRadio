@@ -148,7 +148,7 @@ void c_ControllerMgr::begin()
 // Returns true if a new message is found
 bool c_ControllerMgr::GetNextRdsMsgToDisplay(CurrentRdsMsgInfo_t & MsgInfo)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    bool Response = false;
 
@@ -177,7 +177,7 @@ bool c_ControllerMgr::GetNextRdsMsgToDisplay(CurrentRdsMsgInfo_t & MsgInfo)
    // update the response
    MsgInfo = CurrentRdsMsgInfo;
 
-   DEBUG_END;
+   // DEBUG_END;
    return Response;
 
 } // GetNextMsgToDisplay
@@ -185,18 +185,18 @@ bool c_ControllerMgr::GetNextRdsMsgToDisplay(CurrentRdsMsgInfo_t & MsgInfo)
 // *********************************************************************************************
 void c_ControllerMgr::ClearMsgHasBeenDisplayedFlag()
 {
-   DEBUG_START;
+   // DEBUG_START;
    for (auto &CurrentController : ListOfControllers)
    {
       CurrentController.pController->ClearMsgHasBeenDisplayedFlag();
    }
-   DEBUG_END;
+   // DEBUG_END;
 } // ClearMsgHasBeenDisplayedFlag
 
 // *********************************************************************************************
 uint16_t c_ControllerMgr::getControllerStatusSummary()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    uint16_t Response = 0;
 
@@ -213,7 +213,7 @@ uint16_t c_ControllerMgr::getControllerStatusSummary()
       }
    }
 
-   DEBUG_END;
+   // DEBUG_END;
    return Response;
 }
 
@@ -471,24 +471,18 @@ void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
 
    do // once
    {
-      if (false == config.containsKey(N_controllers))
+      if (!config.containsKey(N_controllers))
       {
          // DEBUG_V();
-         config.createNestedObject(N_controllers);
+         config.createNestedArray(N_controllers);
       }
       // DEBUG_V();
 
-      JsonObject ControllerConfigs = config[N_controllers];
+      JsonArray ControllerConfigs = config[N_controllers];
 
       for (auto &currentController : ListOfControllers)
       {
-         String ControlerName = currentController.pController->GetName();
-         if (!ControllerConfigs.containsKey(ControlerName))
-         {
-            ControllerConfigs.createNestedObject(ControlerName);
-         }
-         JsonObject ControllerConfig = ControllerConfigs[ControlerName];
-
+         JsonObject ControllerConfig = ControllerConfigs.createNestedObject();
          currentController.pController->SaveConfiguration(ControllerConfig);
       }
 
@@ -504,7 +498,7 @@ void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   // serializeJsonPretty(config, Serial);
+   serializeJsonPretty(config, Serial);
 
    do // once
    {
@@ -515,17 +509,23 @@ void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
       }
       // DEBUG_V();
 
-      JsonObject ControllerConfigs = config[N_controllers];
+      JsonArray ArrayOfControllerConfigs = config[N_controllers];
 
-      for (auto &currentController : ListOfControllers)
+      for (auto CurrentControllerConfig : ArrayOfControllerConfigs)
       {
-         String ControlerName = currentController.pController->GetName();
-         if (!ControllerConfigs.containsKey(ControlerName))
+         // DEBUG_V("Individual Controller Config");
+         // serializeJsonPretty(CurrentControllerConfig, Serial);
+         // DEBUG_V();
+         if (false == CurrentControllerConfig.containsKey(N_type))
          {
-            ControllerConfigs.createNestedObject(ControlerName);
+            // DEBUG_V("No controller type ID found");
+            continue;
          }
-         JsonObject ControllerConfig = ControllerConfigs[ControlerName];
-         currentController.pController->RestoreConfiguration(ControllerConfig);
+
+         uint32_t type = CurrentControllerConfig[N_type];
+         // DEBUG_V(String("Type ID: ") + String(type));
+         JsonObject Temp = CurrentControllerConfig;
+         ListOfControllers[type].pController->RestoreConfiguration(Temp);
       }
 
    } while (false);

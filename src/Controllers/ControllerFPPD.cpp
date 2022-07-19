@@ -39,7 +39,7 @@ c_ControllerFPPD::~c_ControllerFPPD(){}
 void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
 {
    // DEBUG_START;
-   return;
+
    ESPUI.addControl(
        ControlType::Separator,
        "FPPD CONTROL SETTINGS",
@@ -113,15 +113,19 @@ void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
 void c_ControllerFPPD::begin()
 {
    // DEBUG_START;
+
+   Sequences.begin();
+   
    FPPDiscovery.begin(
-      [](String &FppdFileName, void *param)
-      {
-         if(param)
-         {
-            reinterpret_cast<c_ControllerFPPD *>(param)->ProcessFppdFile(FppdFileName);
-         }
-      },
-      this);
+       [](String &FppdFileName, void *param)
+       {
+          if (param)
+          {
+             reinterpret_cast<c_ControllerFPPD *>(param)->ProcessFppdFile(FppdFileName);
+          }
+       },
+       this);
+
    // DEBUG_END;
 } // begin
 
@@ -177,9 +181,9 @@ void c_ControllerFPPD::ProcessFppdFile(String & FppdFileName)
          {
             ESPUI.updateControlValue(control, CurrentPlayingSequence);
             // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
-            if (SequenceLearningEnabled && ControlsHaveBeenAdded)
+            if (SequenceLearningEnabled)
             {
-               Sequences.LearnSequence(CurrentPlayingSequence);
+               Sequences.AddSequence(CurrentPlayingSequence);
             }
          }
       }
@@ -198,20 +202,16 @@ void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
    if (config.containsKey(N_SequenceLearningEnabled))
    {
       SequenceLearningEnabled = config[N_SequenceLearningEnabled];
+      // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
    }
 
    if (config.containsKey(N_MaxIdleSec))
    {
       MaxIdleTimeSec = config[N_MaxIdleSec];
+      // DEBUG_V(String("MaxIdleTimeSec: ") + String(MaxIdleTimeSec));
    }
 
-   if (!config.containsKey(N_sequences))
-   {
-      JsonObject SequencesConfig = config.createNestedObject(N_sequences);
-      SequencesConfig[N_name] = N_sequences;
-   }
-   JsonObject SequencesConfig = config[N_sequences];
-   Sequences.RestoreConfig(SequencesConfig);
+   Sequences.RestoreConfig(config);
 
    // DEBUG_V("Final");
    // serializeJsonPretty(config, Serial);
@@ -229,13 +229,7 @@ void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
    config[N_MaxIdleSec] = MaxIdleTimeSec;
    config[N_SequenceLearningEnabled] = SequenceLearningEnabled;
 
-   if (!config.containsKey(N_sequences))
-   {
-      config.createNestedObject(N_sequences);
-   }
-
-   JsonObject SequencesConfig = config[N_sequences];
-   Sequences.SaveConfig(SequencesConfig);
+   Sequences.SaveConfig(config);
 
    // DEBUG_V("Final");
    // serializeJsonPretty(config, Serial);

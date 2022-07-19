@@ -29,98 +29,101 @@
 // *********************************************************************************************
 c_ControllerMessage::c_ControllerMessage()
 {
-   DEBUG_START;
-   DEBUG_END;
+   // DEBUG_START;
+   // DEBUG_END;
 } // c_ControllerMessage
 
 // *********************************************************************************************
 c_ControllerMessage::~c_ControllerMessage()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("Remove Message: '") + MessageText + "'");
+   // DEBUG_V(String("Remove Message: '") + MessageText + "'");
 
    if (Control::noParent != MessageElementId)
    {
-      DEBUG_V("Remove Message controls ");
+      // DEBUG_V("Remove Message controls ");
       ESPUI.removeControl(MessageElementId);
       MessageElementId = Control::noParent;
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // c_ControllerMessage
 
 // ************************************************************************************************
 void c_ControllerMessage::Activate(bool value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("          MessageText: ") + MessageText);
-   DEBUG_V(String("ActiveParentElementId: ") + String(MessageElementIds.ActiveChoiceListElementId));
-   DEBUG_V(String("HiddenParentElementId: ") + String(MessageElementIds.HiddenChoiceListElementId));
+   // DEBUG_V(String("            MessageText: ") + MessageText);
+   // DEBUG_V(String("  ActiveParentElementId: ") + String(MessageElementIds.ActiveChoiceListElementId));
+   // DEBUG_V(String("  HiddenParentElementId: ") + String(MessageElementIds.HiddenChoiceListElementId));
 
    do // once
    {
       Control *MsgSelectControl = ESPUI.getControl(MessageElementId);
       if(!MsgSelectControl)
       {
-         DEBUG_V("Could not find this message control in ESPUI.");
+         // DEBUG_V("Could not find this message control in ESPUI.");
          break;
       }
 
       if(!value)
       {
-         DEBUG_V("Add message to the hidden choice list");
+         // DEBUG_V("Add message to the hidden choice list");
          MsgSelectControl->parentControl = MessageElementIds.HiddenChoiceListElementId;
       }
       else
       {
-         DEBUG_V("Add message to the active choice list");
+         // DEBUG_V("Add message to the active choice list");
          MsgSelectControl->parentControl = MessageElementIds.ActiveChoiceListElementId;
       }
 
       ESPUI.updateControl(MsgSelectControl);
 
+      // DEBUG_V(String("    MsgSelectControl ID: ") + String(MsgSelectControl->id));
+      // DEBUG_V(String("MsgSelectControl Parent: ") + String(MsgSelectControl->parentControl));
+
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // Activate
 
 // ************************************************************************************************
 void c_ControllerMessage::AddControls(MessageElementIds_t _MessageElementIds)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    MessageElementIds = _MessageElementIds;
 
-   DEBUG_V(String("                  Message: '") + MessageText + "'");
-   DEBUG_V(String("ActiveChoiceListElementId: '") + String(MessageElementIds.ActiveChoiceListElementId) + "'");
-   DEBUG_V(String("HiddenChoiceListElementId: '") + String(MessageElementIds.HiddenChoiceListElementId) + "'");
-   DEBUG_V(String("         EnabledElementId: '") + String(MessageElementIds.EnabledElementId) + "'");
-   DEBUG_V(String(" DisplayDurationElementId: '") + String(MessageElementIds.DisplayDurationElementId) + "'");
+   // DEBUG_V(String("                  Message: '") + MessageText + "'");
+   // DEBUG_V(String("ActiveChoiceListElementId: '") + String(MessageElementIds.ActiveChoiceListElementId) + "'");
+   // DEBUG_V(String("HiddenChoiceListElementId: '") + String(MessageElementIds.HiddenChoiceListElementId) + "'");
+   // DEBUG_V(String("         EnabledElementId: '") + String(MessageElementIds.EnabledElementId) + "'");
+   // DEBUG_V(String(" DisplayDurationElementId: '") + String(MessageElementIds.DisplayDurationElementId) + "'");
 
    do // once
    {
       if(Control::noParent == MessageElementIds.ActiveChoiceListElementId)
       {
-         DEBUG_V("UI is not set up yet");
+         // DEBUG_V("UI is not set up yet");
          break;
       }
 
       if (Control::noParent == MessageElementId)
       {
-         DEBUG_V(String("Add Hidden Choice List Entry"));
+         // DEBUG_V(String("Create Choice List Entry on Active Choice list"));
          MessageElementId = ESPUI.addControl(
                ControlType::Option,
                MessageText.c_str(),
                MessageText,
                ControlColor::Turquoise,
-               MessageElementIds.HiddenChoiceListElementId);
+               MessageElementIds.ActiveChoiceListElementId);
       }
-      DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
+      // DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
 
-      DEBUG_V("Attach callbacks to the Message Details Pane.");
+      // DEBUG_V("Attach callbacks to the Message Details Pane.");
       Control *DurationControl = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
       if (DurationControl)
       {
@@ -154,14 +157,14 @@ void c_ControllerMessage::AddControls(MessageElementIds_t _MessageElementIds)
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // AddControls
 
 // *********************************************************************************************
 void c_ControllerMessage::CbDuration(Control *sender, int type)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    DurationSec = atoi(sender->value.c_str());
 
@@ -169,84 +172,88 @@ void c_ControllerMessage::CbDuration(Control *sender, int type)
    displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(DurationSec)).c_str());
 
-   DEBUG_END;
+   // DEBUG_END;
 } // EnabledCb
 
 // *********************************************************************************************
 void c_ControllerMessage::CbEnabled(Control *sender, int type)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    Enabled = sender->value.equals("1");
-   DEBUG_V(String("Enabled: ") + String(Enabled));
+   // DEBUG_V(String("Enabled: ") + String(Enabled));
 
    displaySaveWarning();
    displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(Enabled ? "On" : "Off")).c_str());
 
-   DEBUG_END;
+   // DEBUG_END;
 } // EnabledCb
 
 // *********************************************************************************************
 void c_ControllerMessage::RestoreConfig(ArduinoJson::JsonObject config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    if (config.containsKey(N_message))
    {
-      DEBUG_V("Read message");
       MessageText = (const char *)config[N_message];
-      DEBUG_V(String("Message: ") + MessageText);
+      // DEBUG_V(String("MessageText: ") + MessageText);
    }
 
    if (config.containsKey(N_durationSec))
    {
-      DEBUG_V("Read Duration");
       DurationSec = config[N_durationSec];
-      DEBUG_V(String("DurationSec: ") + String(DurationSec));
+      // DEBUG_V(String("DurationSec: ") + String(DurationSec));
    }
 
    if (config.containsKey(N_enabled))
    {
-      DEBUG_V("Read Enabled");
       Enabled = config[N_enabled];
-      DEBUG_V(String("Enabled: ") + String(Enabled));
+      // DEBUG_V(String("    Enabled: ") + String(Enabled));
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessage::SaveConfig(ArduinoJson::JsonObject config)
 {
-   DEBUG_START;
-   DEBUG_V(String("Message: ") + MessageText);
+   // DEBUG_START;
+   // DEBUG_V(String("Message: ") + MessageText);
 
    config[N_message]       = MessageText;
    config[N_durationSec]   = DurationSec;
    config[N_enabled]       = Enabled;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // SaveConfig
 
 // ************************************************************************************************
 void c_ControllerMessage::SelectMessage()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("Message: '") + MessageText + "'");
+   // DEBUG_V(String("    Message: '") + MessageText + "'");
 
    do // once
    {
       Activate(true);
 
-      DEBUG_V("Update Selected item");
-      ESPUI.updateControlValue(MessageElementIds.ActiveChoiceListElementId, MessageText);
+      Control * control = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
+      if(control)
+      {
+         // DEBUG_V("Update Selected item");
+         control->value = MessageText;
+         ESPUI.updateControl(control);
+      }
 
-      Control * control = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
+      // DEBUG_V(String("Active List: '") + control->value + "'");
+
+      control = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
       if (control)
       {
-         DEBUG_V("Set up Duration");
+         // DEBUG_V("Set up Duration");
          control->value = String(DurationSec);
          control->user = this;
          ESPUI.updateControl(MessageElementIds.DisplayDurationElementId);
@@ -255,28 +262,28 @@ void c_ControllerMessage::SelectMessage()
       control = ESPUI.getControl(MessageElementIds.EnabledElementId);
       if (control)
       {
-         DEBUG_V("Set up enabled CB");
+         // DEBUG_V("Set up enabled CB");
          control->value = String(Enabled ? "1" : "0");
          control->user = this;
          ESPUI.updateControl(MessageElementIds.EnabledElementId);
       }
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // SelectMessage
 
 // *********************************************************************************************
 void c_ControllerMessage::SetMessage(String &value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("Message: '") + MessageText + "'");
-   DEBUG_V(String("  value: '") + value + "'");
+   // DEBUG_V(String("Message: '") + MessageText + "'");
+   // DEBUG_V(String("  value: '") + value + "'");
 
    MessageText = value;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // SetMessage
 
 // *********************************************************************************************

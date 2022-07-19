@@ -24,6 +24,7 @@
 #include <map>
 #include "ControllerFPPDSequence.h"
 #include <ESPUI.h>
+#include "../Language.h"
 
 class c_ControllerFPPDSequences
 {
@@ -34,28 +35,30 @@ public:
    void     SaveConfig(ArduinoJson::JsonObject & config);
 
    void     AddControls(uint16_t ctrlTab);
+   void     AddSequence(String & SequenceName);
+   void     begin();
    void     CbButtonCreate(Control *sender, int type);
    void     CbButtonDelete(Control *sender, int type);
    void     CbButtonUpdate(Control *sender, int type);
    void     CbChoiceList(Control *sender, int type);
    void     CbTextChange(Control *sender, int type);
-   void     LearnSequence(String &NewSequenceName);
 
 private:
-   void     AddTestObjects(ArduinoJson::JsonObject &config);
    void     Activate();
 
-   String   Name                          = F("FPPD Sequences");
-   String   DefaultTextFieldValue         = F("Type New Sequence Name Here");
+   String   SelectedSequenceName = N_default;
+
    uint16_t EspuiParentElementId          = Control::noParent;
    uint16_t EspuiChoiceListElementId      = Control::noParent;
    uint16_t EspuiStatusMsgElementId       = Control::noParent;
+   uint16_t EspuiInstructionMsgElementId  = Control::noParent;
    uint16_t EspuiTextEntryElementId       = Control::noParent;
    uint16_t EspuiButtonCreateElementId    = Control::noParent;
    uint16_t EspuiButtonDeleteElementId    = Control::noParent;
    uint16_t EspuiButtonUpdateElementId    = Control::noParent;
 
    std::map<String, c_ControllerFPPDSequence>Sequences;
+   c_ControllerMessages ControllerMessages;
 
 }; // c_ControllerFPPDSequences
 

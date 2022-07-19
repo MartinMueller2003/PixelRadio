@@ -41,12 +41,12 @@ c_ControllerFPPDSequence::~c_ControllerFPPDSequence()
 
    // DEBUG_V(String("Name: ") + Name);
 
-   Messages.clear();
+   Messages->clear();
    // DEBUG_V();
 
    if (Control::noParent != EspuiElementId)
    {
-      // DEBUG_V("removeControl");
+      // DEBUG_V("remove Controls");
       ESPUI.removeControl(EspuiElementId);
    }
 
@@ -57,17 +57,25 @@ c_ControllerFPPDSequence::~c_ControllerFPPDSequence()
 void c_ControllerFPPDSequence::Activate(bool value)
 {
    // DEBUG_START;
-   // DEBUG_(String("Sequence: ") + Name);
+   // DEBUG_V(String("Sequence: ") + Name);
+   // DEBUG_V(String("   value: ") + String(value));
 
    do // once
    {
-      if (Control::noParent == EspuiElementId)
+      if(!value)
       {
-         // DEBUG_("We have not been set up yet");
+         // DEBUG_V("Deactivate is ignored.");
          break;
       }
-      // DEBUG_();
-      // Messages.ActivateMessageSet(value);
+
+      if (Control::noParent == EspuiElementId)
+      {
+         // DEBUG_V("We have not been set up yet");
+         break;
+      }
+      // DEBUG_V();
+      
+      Messages->ActivateMessageSet(Name);
 
    } while (false);
 
@@ -99,8 +107,8 @@ void c_ControllerFPPDSequence::AddControls(uint16_t ctrlTab, uint16_t ParentElem
 
    // DEBUG_V(String("EspuiElementId: ") + String(EspuiElementId));
 
-   Messages.SetShowFseqNameSelection(true);
-   Messages.AddControls(EspuiRootElementId);
+   Messages->SetShowFseqNameSelection(true);
+   Messages->AddControls(EspuiRootElementId);
 
    // DEBUG_END;
 
@@ -115,26 +123,10 @@ void c_ControllerFPPDSequence::RestoreConfig(ArduinoJson::JsonObject & config)
 
    if (config.containsKey(N_name))
    {
-      // DEBUG_V();
+      // DEBUG_V("Found Name");
       Name = (const char*)config[N_name];
    }
    // DEBUG_V(String("Name: ") + Name);
-
-   if (!config.containsKey(N_messages))
-   {
-      // DEBUG_V("Create missing messages section");
-      config.createNestedObject(N_messages);
-   }
-   JsonObject MessagesConfig = config[N_messages];
-
-   // tell the messages module to allow the user to see the FSEQ name selection
-   Messages.SetShowFseqNameSelection(true);
-
-   MessagesConfig[N_name] = String(Name + " " + N_Messages);
-   Messages.RestoreConfig(MessagesConfig);
-
-   // DEBUG_V("Final");
-   // serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
 } // RestoreConfig
@@ -145,17 +137,6 @@ void c_ControllerFPPDSequence::SaveConfig(ArduinoJson::JsonObject & config)
    // DEBUG_START;
 
    config[N_name] = Name;
-
-   if (false == config.containsKey(N_messages))
-   {
-      // DEBUG_V();
-      config.createNestedObject(N_messages);
-   }
-   // DEBUG_V();
-
-   JsonObject MessagesConfig = config[N_messages];
-   Messages.SaveConfig(MessagesConfig);
-   // MessagesConfig[N_EnableDisplayFseqName] = true;
 
    // DEBUG_END;
 } // SaveConfig
@@ -175,7 +156,7 @@ void c_ControllerFPPDSequence::SetName(String &value)
       ESPUI.updateControlValue(EspuiElementId, Name);
    }
 
-   Messages.ActivateMessageSet(Name + " " + N_Messages);
+   Messages->ActivateMessageSet(Name);
 
    // DEBUG_END;
 } // SetName

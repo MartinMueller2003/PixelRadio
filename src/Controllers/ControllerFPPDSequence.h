@@ -33,14 +33,15 @@ public:
    void     AddControls(uint16_t ctrlTab, uint16_t EspuiSequencesElementId);
    void     SetName(String & value);
    void     Activate(bool value);
-   
+   void     SetMessages(c_ControllerMessages * value) { Messages = value; }
+
 private:
 
    String               Name;
    uint16_t             EspuiParentElementId = Control::noParent;
    uint16_t             EspuiRootElementId   = Control::noParent;
    uint16_t             EspuiElementId       = Control::noParent;
-   c_ControllerMessages Messages;
+   c_ControllerMessages * Messages           = nullptr;
 
 }; // c_ControllerFPPDSequence
 

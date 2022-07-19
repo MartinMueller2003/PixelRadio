@@ -19,23 +19,18 @@
 // *********************************************************************************************
 #include "ControllerFPPDSequences.h"
 #include <map>
-#include "../Language.h"
 
 #if __has_include("../memdebug.h")
 #  include "../memdebug.h"
 #endif //  __has_include("../memdebug.h")
 
+static const String Name                  = F("FPPD Sequences");
+static const String DefaultTextFieldValue = F("Type New Sequence Name Here");
+
 // *********************************************************************************************
 c_ControllerFPPDSequences::c_ControllerFPPDSequences()
 {
    // DEBUG_START;
-
-   String Key = N_default;
-   c_ControllerFPPDSequence *Temp = new c_ControllerFPPDSequence();
-   Sequences[Key] = *Temp;
-   Sequences[Key].SetName(Key);
-   delete Temp;
-
    // DEBUG_END;
 } // c_ControllerFPPDSequences
 
@@ -47,23 +42,12 @@ void c_ControllerFPPDSequences::Activate()
 {
    // DEBUG_START;
 
-   Control *ChoiceList = ESPUI.getControl(EspuiChoiceListElementId);
-   String Key = ChoiceList->value;
-   // DEBUG_V(String("Activate key ") + Key);
+   // DEBUG_V(String("Activate SelectedSequenceName ") + SelectedSequenceName);
 
    for (auto &CurrentSequence : Sequences)
    {
-      // DEBUG_V(String("Deactivate Sequence: ") + CurrentSequence.first);
-      CurrentSequence.second.Activate(false);
-   }
-
-   for (auto &CurrentSequence : Sequences)
-   {
-      if (CurrentSequence.first.equals(Key))
-      {
-         // DEBUG_V(String("Activate Sequence: ") + CurrentSequence.first);
-         CurrentSequence.second.Activate(true);
-      }
+      // DEBUG_V(String("Activate Sequence: ") + CurrentSequence.first);
+      CurrentSequence.second.Activate(CurrentSequence.first.equals(SelectedSequenceName));
    }
 
    // DEBUG_END;
@@ -94,7 +78,48 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          },
          this);
 
-      // DEBUG_V("Adding Text");
+      // DEBUG_V("Adding Delete button");
+      EspuiButtonDeleteElementId = ESPUI.addControl(
+         ControlType::Button, 
+         emptyString.c_str(), 
+         " Delete ", 
+         ControlColor::None, 
+         EspuiChoiceListElementId,
+         [](Control *sender, int type, void* param)
+         {
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonDelete(sender, type);
+            }
+         },
+         this);
+
+      // DEBUG_V("Adding Update button");
+      EspuiButtonUpdateElementId = ESPUI.addControl(
+         ControlType::Button,
+         emptyString.c_str(),
+         " Update ",
+         ControlColor::None,
+         EspuiChoiceListElementId,
+         [](Control *sender, int type, void* param)
+         {
+            if(param)
+            {
+               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonUpdate(sender, type);
+            }
+         },
+         this);
+
+      // DEBUG_V("Adding Instruction Msg");
+      EspuiInstructionMsgElementId = ESPUI.addControl(
+         ControlType::Label,
+         DefaultTextFieldValue.c_str(),
+         DefaultTextFieldValue,
+         ControlColor::Turquoise,
+         EspuiChoiceListElementId);
+      ESPUI.setElementStyle(EspuiInstructionMsgElementId, CSS_LABEL_STYLE_BLACK);
+
+      // DEBUG_V("Adding Text Entry");
       EspuiTextEntryElementId = ESPUI.addControl(
          ControlType::Text,
          emptyString.c_str(),
@@ -129,39 +154,7 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
          },
          this);
 
-      // DEBUG_V("Adding Delete");
-      EspuiButtonDeleteElementId = ESPUI.addControl(
-         ControlType::Button, 
-         emptyString.c_str(), 
-         " Delete ", 
-         ControlColor::None, 
-         EspuiChoiceListElementId,
-         [](Control *sender, int type, void* param)
-         {
-            if(param)
-            {
-               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonDelete(sender, type);
-            }
-         },
-         this);
-
-      // DEBUG_V("Adding Update");
-      EspuiButtonUpdateElementId = ESPUI.addControl(
-         ControlType::Button,
-         emptyString.c_str(),
-         " Update ",
-         ControlColor::None,
-         EspuiChoiceListElementId,
-         [](Control *sender, int type, void* param)
-         {
-            if(param)
-            {
-               reinterpret_cast<c_ControllerFPPDSequences*>(param)->CbButtonUpdate(sender, type);
-            }
-         },
-         this);
-
-      // DEBUG_V("Adding Msg");
+      // DEBUG_V("Adding Status Msg");
       EspuiStatusMsgElementId = ESPUI.addControl(
          ControlType::Label,
          emptyString.c_str(),
@@ -177,14 +170,16 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
 
    // DEBUG_V(String("Sequences.siz: ") + String(Sequences.size()));
 
-   for(auto & CurrentSequence : Sequences)
+   ControllerMessages.AddControls(EspuiParentElementId);
+
+   for (auto &CurrentSequence : Sequences)
    {
       // DEBUG_V(String("Adding Controls for ") + CurrentSequence.first);
       CurrentSequence.second.AddControls(EspuiParentElementId, EspuiChoiceListElementId);
    }
 
-   // DEBUG_V(String("Activate ") + N_default);
-   ESPUI.updateSelect(EspuiChoiceListElementId, N_default);
+   // DEBUG_V(String("Activate ") + SelectedSequenceName);
+   ESPUI.updateSelect(EspuiChoiceListElementId, SelectedSequenceName);
    Activate();
 
    CbTextChange(nullptr, 0);
@@ -194,13 +189,40 @@ void c_ControllerFPPDSequences::AddControls(uint16_t ctrlTab)
 } // AddControls
 
 // ************************************************************************************************
-void c_ControllerFPPDSequences::CbButtonCreate(Control *sender, int type)
+void c_ControllerFPPDSequences::AddSequence(String & SequenceName)
 {
    // DEBUG_START;
 
-   Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
-   String &Key = TextControl->value;
-   // DEBUG_V(String("value: '") + Key + "'");
+   SelectedSequenceName = SequenceName;
+
+   Sequences[SequenceName].SetMessages(&ControllerMessages); // must be first
+   Sequences[SequenceName].SetName(SequenceName);
+   if(Control::noParent != EspuiParentElementId)
+   {
+      Sequences[SequenceName].AddControls(EspuiParentElementId, EspuiChoiceListElementId);
+      Sequences[SequenceName].Activate(true);
+
+      CbTextChange(nullptr, 0);
+   }
+
+   // DEBUG_END;
+}
+
+// ************************************************************************************************
+void c_ControllerFPPDSequences::begin()
+{
+   // DEBUG_START;
+
+   String SequenceName = N_default;
+   AddSequence(SequenceName);
+
+   // DEBUG_END;
+}
+
+// ************************************************************************************************
+void c_ControllerFPPDSequences::CbButtonCreate(Control *sender, int type)
+{
+   // DEBUG_START;
 
    do // once
    {
@@ -210,31 +232,24 @@ void c_ControllerFPPDSequences::CbButtonCreate(Control *sender, int type)
          break;
       }
 
+      Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
+      if(!TextControl)
+      {
+         // DEBUG_V("Could not locate Text Entry control");
+         break;
+      }
+
+      SelectedSequenceName = TextControl->value;
+      // DEBUG_V(String("value: '") + SelectedSequenceName + "'");
+
+      // DEBUG_V(String("Set the Select List to ") + SelectedSequenceName);
+      ESPUI.updateSelect(EspuiChoiceListElementId, SelectedSequenceName);
+
       // DEBUG_V("Create a Sequence");
-      DynamicJsonDocument NewConfigDoc(2048);
-      JsonObject NewConfig = NewConfigDoc.to<JsonObject>();
-      NewConfig[N_name] = Name;
-      JsonObject SequenceList = NewConfig.createNestedObject(N_list);
-      JsonObject SequenceEntry = SequenceList.createNestedObject(Key);
-      SequenceEntry[N_name] = Key;
-      SequenceEntry.createNestedObject(N_messages);
-
-      RestoreConfig(NewConfig);
-      // DEBUG_V();
-      AddControls(EspuiParentElementId);
-
-      // DEBUG_V(String("Set the Select List to ") + Key);
-      ESPUI.updateSelect(EspuiChoiceListElementId, Key);
-
-      // DEBUG_V("Activate");
-      Activate();
+      AddSequence(SelectedSequenceName);
 
       // DEBUG_V("Create a Sequence - Done");
-      CbTextChange(nullptr, 0);
-      // DEBUG_V("Display Save Warning");
       displaySaveWarning();
-      // DEBUG_V("Request Reload");
-      ESPUI.jsonDom(0);
 
    } while (false);
 
@@ -268,7 +283,6 @@ void c_ControllerFPPDSequences::CbButtonDelete(Control *sender, int type)
       }
 
       // DEBUG_V("now delete it");
-      ESPUI.updateSelect(EspuiChoiceListElementId, N_default);
       ESPUI.updateControlValue(EspuiStatusMsgElementId, emptyString);
       ESPUI.updateControlValue(EspuiTextEntryElementId, DefaultTextFieldValue);
       Activate();
@@ -285,8 +299,6 @@ void c_ControllerFPPDSequences::CbButtonDelete(Control *sender, int type)
       CbTextChange(nullptr, 0);
       displaySaveWarning();
 
-      ESPUI.jsonDom(0);
-
    } while (false);
 
    // DEBUG_END;
@@ -298,25 +310,36 @@ void c_ControllerFPPDSequences::CbButtonUpdate(Control *sender, int type)
    // DEBUG_START;
 
    Control *TextControl = ESPUI.getControl(EspuiTextEntryElementId);
-   // DEBUG_V(String("Text value: '") + TextControl->value + "'");
+   String NewSequenceName = TextControl->value;
+   // DEBUG_V(String("Text value: '") + NewSequenceName +"'");
 
    Control *ChoiceControl = ESPUI.getControl(EspuiChoiceListElementId);
-   // DEBUG_V(String("Choice value: '") + ChoiceControl->value + "'");
+   String OriginalSequenceName = ChoiceControl->value;
+   // DEBUG_V(String("Choice value: '") + OriginalSequenceName + "'");
 
    do // once
    {
       if (type != B_DOWN)
       {
          // DEBUG_V("Ignore unwanted button action");
+         break;
       }
 
-      // DEBUG_V("Set the new value");
-      Sequences[ChoiceControl->value].SetName(TextControl->value);
-      ESPUI.updateSelect(EspuiChoiceListElementId, TextControl->value);
+      // DEBUG_V("Copy the old sequence into a new map entry");
+      Sequences[NewSequenceName] = Sequences[OriginalSequenceName];
+
+      // DEBUG_V("Update the name in the copy");
+      Sequences[OriginalSequenceName].SetName(NewSequenceName);
+
+      // DEBUG_V("Activate the copy");
+      Sequences[NewSequenceName].Activate(true);
+
+      // DEBUG_V("Select the copy");
+      ESPUI.updateSelect(EspuiChoiceListElementId, NewSequenceName);
+
       CbTextChange(nullptr, 0);
       displaySaveWarning();
 
-      ESPUI.jsonDom(0);
    } while (false);
 
    // DEBUG_END;
@@ -327,10 +350,10 @@ void c_ControllerFPPDSequences::CbChoiceList(Control *sender, int type)
 {
    // DEBUG_START;
 
-   String CurrentSeletedSequenceName = sender->value;
-   // DEBUG_V(String("Selected: '") + CurrentSeletedSequenceName + "'");
+   SelectedSequenceName = sender->value;
+   // DEBUG_V(String("Selected: '") + SelectedSequenceName + "'");
 
-   if (CurrentSeletedSequenceName.equals(N_default))
+   if (SelectedSequenceName.equals(N_default))
    {
       // DEBUG_V("Selected Default message set");
       ESPUI.updateControlValue(EspuiTextEntryElementId, DefaultTextFieldValue);
@@ -338,13 +361,14 @@ void c_ControllerFPPDSequences::CbChoiceList(Control *sender, int type)
    else
    {
       // DEBUG_V("Selected Sequence Specific message set");
-      ESPUI.updateControlValue(EspuiTextEntryElementId, CurrentSeletedSequenceName);
+      ESPUI.updateControlValue(EspuiTextEntryElementId, SelectedSequenceName);
    }
 
    // DEBUG_V("Activate");
    Activate();
 
    CbTextChange(nullptr, 0);
+
    ESPUI.jsonDom(0);
 
    // DEBUG_END;
@@ -440,80 +464,42 @@ void c_ControllerFPPDSequences::CbTextChange(Control *, int)
 } // TextChangeCb
 
 // *********************************************************************************************
-void c_ControllerFPPDSequences::LearnSequence(String& NewSequenceName)
-{
-   // DEBUG_START;
-   if (Sequences.end() == Sequences.find(NewSequenceName))
-   {
-      // DEBUG_V(String("Need to add sequence: '") + NewSequenceName + "'");
-      
-      c_ControllerFPPDSequence *Temp = new c_ControllerFPPDSequence();
-      Sequences[NewSequenceName] = *Temp;
-      delete Temp;
-
-      Sequences[NewSequenceName].SetName(NewSequenceName);
-      Sequences[NewSequenceName].AddControls(EspuiParentElementId, EspuiChoiceListElementId);
-      ESPUI.updateSelect(EspuiChoiceListElementId, NewSequenceName);
-      Activate();
-      CbTextChange(nullptr, 0);
-
-      ESPUI.jsonDom(0);
-   }
-   else
-   {
-      // DEBUG_V(String("Already known sequence: '") + NewSequenceName + "'");
-   }
-   // DEBUG_END;
-} // LearnSequence
-
-// *********************************************************************************************
 void c_ControllerFPPDSequences::RestoreConfig(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
+   // Make sure the default sequnce exists
+   String SequenceName = N_default;
+   AddSequence(SequenceName);
+
    // serializeJsonPretty(config, Serial);
    // DEBUG_V();
 
-   if (config.containsKey(N_name))
+   if(!config.containsKey(N_sequences))
    {
-      Name = (const char *)config[N_name];
+      config.createNestedArray(N_sequences);
    }
 
-   if (!config.containsKey(N_list))
+   JsonArray SequencesArray = config[N_sequences];
+
+   for (auto CurrentSequenceConfig : SequencesArray)
    {
-      // DEBUG_V();
-      config.createNestedObject(N_list);
-   }
-   // DEBUG_V();
-   JsonObject ListOfSequences = config[N_list];
-
-   for (JsonPair CurrentSequence : ListOfSequences)
-   {
-      String Key = CurrentSequence.key().c_str();
-      // DEBUG_V(String("Setting up: ") + Key);
-
-      JsonObject SequenceConfig = CurrentSequence.value();
-
-      // do we have an entry for this sequence
-      if (Sequences.end() == Sequences.find(Key))
+      String Key;
+      if(false == CurrentSequenceConfig.containsKey(N_name))
       {
-         // DEBUG_V(String("Add ") + Key);
-         c_ControllerFPPDSequence *Temp = new c_ControllerFPPDSequence();
-         Sequences[Key] = *Temp;
-         Sequences[Key].SetName(Key);
-         delete Temp;
+         // DEBUG_V("Missing name. Cant process record");
+         continue;
       }
-      else
-      {
-         // DEBUG_V("ERROR: Sequence already exists. Duplicate?");
-      }
+      Key = (const char *)CurrentSequenceConfig[N_name];
+      // DEBUG_V(String("Setting up sequence: ") + Key);
+      AddSequence(Key);
 
       // DEBUG_V();
-      Sequences[Key].RestoreConfig(SequenceConfig);
+      JsonObject Temp = CurrentSequenceConfig;
+      Sequences[Key].RestoreConfig(Temp);
    }
 
-   // DEBUG_V("Final");
-   // serializeJsonPretty(config, Serial);
+   ControllerMessages.RestoreConfig(config);
 
    // DEBUG_END;
 } // RestoreControllerConfiguration
@@ -523,29 +509,25 @@ void c_ControllerFPPDSequences::SaveConfig(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   // serializeJsonPretty(config, Serial);
-
-   config[N_name] = Name;
-
-   if (false == config.containsKey(N_list))
+   if (false == config.containsKey(N_sequences))
    {
       // DEBUG_V("Create List");
-      config.createNestedObject(N_list);
+      config.createNestedArray(N_sequences);
    }
-   JsonObject SequenceConfigs = config[N_list];
+   JsonArray SequenceConfigs = config[N_sequences];
 
    // DEBUG_V();
 
    for (auto & CurrentSequence : Sequences)
    {
-      if (!SequenceConfigs.containsKey(CurrentSequence.first))
-      {
-         // DEBUG_V(String("Create Sequence entry") + CurrentSequence.first);
-         SequenceConfigs.createNestedObject(CurrentSequence.first);
-      }
-      JsonObject SequenceConfig = SequenceConfigs[CurrentSequence.first];
+      // DEBUG_V(String("Create Sequence entry") + CurrentSequence.first);
+      JsonObject SequenceConfig = SequenceConfigs.createNestedObject();
       CurrentSequence.second.SaveConfig(SequenceConfig);
    }
+
+   ControllerMessages.SaveConfig(config);
+
+   // serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
 } // SaveControllerConfiguration

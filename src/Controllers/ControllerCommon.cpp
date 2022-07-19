@@ -75,6 +75,8 @@ void c_ControllerCommon::SaveConfiguration(ArduinoJson::JsonObject & config)
 {
    // DEBUG_START;
 
+   config[N_name]                = Name;
+   config[N_type]                = TypeId;
    config[N_ControllerEnabled]   = ControllerEnabled;
    config[N_PiCode]              = PiCode;
    config[N_PtyCode]             = PtyCode;

@@ -35,6 +35,7 @@ public:
    virtual  ~c_ControllerMessages();
    void     RestoreConfig(ArduinoJson::JsonObject & config);
    void     SaveConfig(ArduinoJson::JsonObject & config);
+   void     SaveConfig(ArduinoJson::JsonObject & config, String& SetName);
 
    void     ActivateMessageSet(String MsgSetName);
    void     AddMessage(String MsgSetName, String MsgText);

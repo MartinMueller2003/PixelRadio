@@ -304,7 +304,7 @@ extern const PROGMEM char N_ProgramServiceName[];
 extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];
 extern const PROGMEM char N_SequenceLearningEnabled[];
-
+extern const PROGMEM char N_type[];
 
    // Controller Command Keywords
 extern const PROGMEM char  CMD_AUDMODE_STR[];

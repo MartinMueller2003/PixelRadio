@@ -28,67 +28,71 @@
 // *********************************************************************************************
 c_ControllerMessageSet::c_ControllerMessageSet()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // c_ControllerMessageSet
 
 // *********************************************************************************************
 c_ControllerMessageSet::~c_ControllerMessageSet()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_END;
+   // DEBUG_END;
 } // c_ControllerMessageSet
 
 // *********************************************************************************************
-void c_ControllerMessageSet::Activate(bool value)
+void c_ControllerMessageSet::Activate(bool Activating)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    for(auto& CurrentMessage : Messages)
    {
-      CurrentMessage.second.Activate(value);
+      CurrentMessage.second.Activate(Activating);
    }
 
-   if(!Messages.empty() && value)
+   if(Activating)
    {
-      DEBUG_V("Activate first message");
-      ActivateMessage(Messages.begin()->first);
-   }
-   else
-   {
-      DEBUG_V("No messages");
+      if(Messages.empty())
+      {
+         // DEBUG_V("No messages");
+         ShowMsgDetailsPane(false);
+      }
+      else
+      {
+         // DEBUG_V("Activate first message");
+         ActivateMessage(Messages.begin()->first);
+      }
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // ************************************************************************************************
 void c_ControllerMessageSet::ActivateMessage(String MsgName)
 {
-   DEBUG_START;
-   DEBUG_V(String("  MsgSetName: '") + MsgSetName + "'");
-   DEBUG_V(String("     MsgName: '") + MsgName + "'");
+   // DEBUG_START;
+   // DEBUG_V(String("  MsgSetName: '") + MsgSetName + "'");
+   // DEBUG_V(String("     MsgName: '") + MsgName + "'");
 
    do // once
    {
       if (Control::noParent == MessageElementIds.ActiveChoiceListElementId)
       {
-         DEBUG_V("No Element IDs available. Not setting the messages");
+         // DEBUG_V("No Element IDs available. Not setting the messages");
          break;
       }
 
       if(Messages.end() == Messages.find(MsgName))
       {
-         DEBUG_V("Desired message not found");
+         // DEBUG_V("Desired message not found");
          AddMessage(MsgName);
       }
 
-      DEBUG_V(String("Update the choice list and populate message details"));
+      // DEBUG_V(String("Update the choice list and populate message details"));
       Messages[MsgName].SelectMessage();
 
-      DEBUG_V(String("Show the message details pane"));
+      // DEBUG_V(String("Show the message details pane"));
       CurrentMsgName = MsgName;
       ShowMsgDetailsPane(true);
 
@@ -96,18 +100,18 @@ void c_ControllerMessageSet::ActivateMessage(String MsgName)
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // ActivateMessage
 
 // ************************************************************************************************
 void c_ControllerMessageSet::AddControls(c_ControllerMessage::MessageElementIds_t  _MessageElementIds)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    MessageElementIds = _MessageElementIds;
 
-   DEBUG_V();
+   // DEBUG_V();
    for(auto& CurrentMessage : Messages)
    {
       CurrentMessage.second.AddControls(MessageElementIds);
@@ -115,80 +119,75 @@ void c_ControllerMessageSet::AddControls(c_ControllerMessage::MessageElementIds_
    
    if(Messages.empty())
    {
-      DEBUG_V("Turn off msg details control");
+      // DEBUG_V("Turn off msg details control");
       ShowMsgDetailsPane(false);
    }
    else
    {
-      DEBUG_V("Select the default message set.");
+      // DEBUG_V("Select the default message set.");
       Messages.begin()->second.Activate(true);
-      DEBUG_V("Turn on msg details control");
+      // DEBUG_V("Turn on msg details control");
       CurrentMsgName = Messages.begin()->first;
       ShowMsgDetailsPane(true);
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 
 } // AddControls
 
 // ************************************************************************************************
 void c_ControllerMessageSet::AddMessage(String MsgText)
 {
-   DEBUG_START;
-   DEBUG_V(String("     message set: '") + MsgSetName + "'");
-   DEBUG_V(String("    message name: '") + MsgText + "'");
+   // DEBUG_START;
+   // DEBUG_V(String("     message set: '") + MsgSetName + "'");
+   // DEBUG_V(String("    message name: '") + MsgText + "'");
 
    do // once
    {
       if(MsgText.isEmpty())
       {
-         DEBUG_V("Cant add an empty message");
+         // DEBUG_V("Cant add an empty message");
          break;
       }
 
       if (Messages.end() != Messages.find(MsgText))
       {
-         DEBUG_V("Cant add a duplicate message.");
+         // DEBUG_V("Cant add a duplicate message.");
          break;
       }
 
-      { // limit the life of the temp object
-         DEBUG_V("Create the message");
-         c_ControllerMessage temp;
-         Messages[MsgText] = temp;
-         Messages[MsgText].SetMessage(MsgText);
-         CurrentMsgName = MsgText;
-      }
+      // DEBUG_V("Create the message");
+      Messages[MsgText].SetMessage(MsgText);
+      CurrentMsgName = MsgText;
       
       if(Control::noParent == MessageElementIds.ActiveChoiceListElementId)
       {
-         DEBUG_V("Defer setting up UI");
+         // DEBUG_V("Defer setting up UI");
          break;
       }
 
-      DEBUG_V("Set up the UI connections");
+      // DEBUG_V("Set up the UI connections");
       Messages[MsgText].AddControls(MessageElementIds);
-      DEBUG_V("Make the new message the selected message");
+      // DEBUG_V("Make the new message the selected message");
       Messages[MsgText].SelectMessage();
-      ShowMsgDetailsPane(true);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // ************************************************************************************************
 void c_ControllerMessageSet::EraseMsg(String MsgTxt)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("MsgTxt: '") + MsgTxt + "'");
+   // DEBUG_V(String("MsgTxt: '") + MsgTxt + "'");
 
    do // once
    {
       if(Messages.end() == Messages.find(MsgTxt))
       {
-         DEBUG_V("Message not found");
+         // DEBUG_V("Message not found");
          break;
       }
 
@@ -196,106 +195,101 @@ void c_ControllerMessageSet::EraseMsg(String MsgTxt)
 
       if(!MsgTxt.equals(CurrentMsgName))
       {
-         DEBUG_V("Deleted message is not the current active message");
+         // DEBUG_V("Deleted message is not the current active message");
          break;
       }
 
       if(Messages.empty())
       {
-         DEBUG_V("No messages left to display");
+         // DEBUG_V("No messages left to display");
          ShowMsgDetailsPane(false);
          break;
       }
 
-      DEBUG_V("Display the first message in the list");
+      // DEBUG_V("Display the first message in the list");
       Messages.begin()->second.Activate(true);
       CurrentMsgName = Messages.begin()->first;
       ShowMsgDetailsPane(true);
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // *********************************************************************************************
-void c_ControllerMessageSet::RestoreConfig(ArduinoJson::JsonObject &MsgSetConfig)
+void c_ControllerMessageSet::RestoreConfig(ArduinoJson::JsonObject &config)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   if (MsgSetConfig.containsKey(N_name))
+   // DEBUG_V(String("MsgSetName: ") + MsgSetName);
+
+   if (!config.containsKey(N_list))
    {
-      MsgSetName = (const char *)MsgSetConfig[N_name];
+      // DEBUG_V("Create missing Message array");
+      config.createNestedArray(N_list);
    }
 
-   DEBUG_V();
+   // DEBUG_V();
+   JsonArray ListOfMessages = config[N_list];
 
-   if (!MsgSetConfig.containsKey(N_list))
-   {
-      DEBUG_V("Create missing Message array");
-      MsgSetConfig.createNestedArray(N_list);
-   }
-
-   DEBUG_V();
-   JsonArray ListOfMessages = MsgSetConfig[N_list];
-
-   DEBUG_V("add each message to the current message set");
+   // DEBUG_V("add each message to the current message set");
    for (auto CurrentMessageConfig : ListOfMessages)
    {
       String MessageName;
-      if (!CurrentMessageConfig.containsKey(N_name))
+      if (!CurrentMessageConfig.containsKey(N_message))
       {
-         DEBUG_V("Cannot process message config entry without a name");
+         // DEBUG_V("Cannot process message config entry without a name");
          continue;
       }
 
-      MessageName = (const char *)CurrentMessageConfig[N_name];
+      MessageName = (const char *)CurrentMessageConfig[N_message];
       if(MessageName.isEmpty())
       {
-         DEBUG_V("Cannot process message config entry with an empty name");
+         // DEBUG_V("Cannot process message config entry with an empty name");
          continue;
       }
 
       if(Messages.end() != Messages.find(MessageName))
       {
-         DEBUG_V(String("Cannot add a duplicate entry: '") + MessageName + "'");
+         // DEBUG_V(String("Cannot add a duplicate entry: '") + MessageName + "'");
          continue;
       }
 
-      DEBUG_V(String("Add message to the message set: '") + MessageName + "'");
+      // DEBUG_V(String("Add message to the message set: '") + MessageName + "'");
       AddMessage(MessageName);
       Messages[MessageName].RestoreConfig(CurrentMessageConfig);
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessageSet::SaveConfig(ArduinoJson::JsonObject &MsgSetConfig)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    MsgSetConfig[N_name] = MsgSetName;
 
-   DEBUG_V("Create List");
+   // DEBUG_V("Create List");
    JsonArray MessageArray = MsgSetConfig.createNestedArray(N_list);
 
-   DEBUG_V();
+   // DEBUG_V();
    for(auto& currentMessage : Messages)
    {
       JsonObject MessageConfig = MessageArray.createNestedObject();
       currentMessage.second.SaveConfig(MessageConfig);
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 } // SaveConfig
 
 // *********************************************************************************************
 void c_ControllerMessageSet::ShowMsgDetailsPane(bool value)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
-   DEBUG_V(String("CurrentMsgName: '") + CurrentMsgName + "'");
-   DEBUG_V(String("         value: '") + String(value) + "'");
+   // DEBUG_V(String("CurrentMsgName: '") + CurrentMsgName + "'");
+   // DEBUG_V(String("         value: '") + String(value) + "'");
    
    Control *control = ESPUI.getControl(MessageElementIds.MessageDetailsElementId);
    if(control)
@@ -305,46 +299,46 @@ void c_ControllerMessageSet::ShowMsgDetailsPane(bool value)
       ESPUI.updateControl(control);
    }
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // *********************************************************************************************
 void c_ControllerMessageSet::UpdateMsgText(String& OriginalMessageText, String& NewMessageText)
 {
-   DEBUG_START;
+   // DEBUG_START;
 
    do // once
    {
       if(NewMessageText.isEmpty())
       {
-         DEBUG_V("New message is empty");
+         // DEBUG_V("New message is empty");
          break;
       }
 
       if(Messages.end() == Messages.find(OriginalMessageText))
       {
-         DEBUG_V("Cant find old text in the map");
+         // DEBUG_V("Cant find old text in the map");
          break;
       }
 
       AddMessage(NewMessageText);
-      DEBUG_V("Copy settings");
+      // DEBUG_V("Copy settings");
       Messages[NewMessageText] = Messages[OriginalMessageText];
       Messages[NewMessageText].AddControls(MessageElementIds);
 
-      DEBUG_V("Delete the original");
+      // DEBUG_V("Delete the original");
       Messages.erase(OriginalMessageText);
 
       if(OriginalMessageText.equals(CurrentMsgName))
       {
-         DEBUG_V("We are the current selected message");
+         // DEBUG_V("We are the current selected message");
          CurrentMsgName = NewMessageText;
          Messages[NewMessageText].Activate(true);
       }
 
    } while (false);
 
-   DEBUG_END;
+   // DEBUG_END;
 }
 
 // *********************************************************************************************
