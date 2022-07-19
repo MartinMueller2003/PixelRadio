@@ -23,9 +23,6 @@
 
 // ************************************************************************************************
 
-#define ABOUT_TAB_STR  "About"
-#define ABOUT_VERS_STR "About PixelRadio"
-
 #define ADJUST_ANA_VOL_STR    "AUDIO VOLUME"
 #define ADJUST_FM_FRQ_STR     "FM FREQUENCY"
 #define ADJUST_FRQ_CTRL_STR   "FM TRANSMIT FREQUENCY"
@@ -277,7 +274,10 @@
 # define WIFI_MDNS_NAME_STR  "MDNS NAME"
 #endif // ifdef OTA_ENB
 
+extern const PROGMEM char N_About[];
+extern const PROGMEM char N_About_PixelRadio[];
 extern const PROGMEM char N_Baudrate[];
+extern const PROGMEM char N_br[];
 extern const PROGMEM char N_ControllerEnabled[];
 extern const PROGMEM char N_controllers[];
 extern const PROGMEM char N_command[];
@@ -305,6 +305,7 @@ extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];
 extern const PROGMEM char N_SequenceLearningEnabled[];
 extern const PROGMEM char N_type[];
+extern const PROGMEM char N_Version[];
 
    // Controller Command Keywords
 extern const PROGMEM char  CMD_AUDMODE_STR[];

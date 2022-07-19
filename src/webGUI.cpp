@@ -88,8 +88,9 @@
 #include "PixelRadio.h"
 #include "globals.h"
 #include "language.h"
-#include "ESPUI.h"
+#include <ESPUI.h>
 #include "Controllers/ControllerMgr.h"
+#include "memdebug.h"
 
 
 // ************************************************************************************************
@@ -462,8 +463,8 @@ void startGUI(void)
 
     //ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity(Verbosity::Quiet);                              // Production mode.
-    ESPUI.jsonInitialDocumentSize = 4000;
-    ESPUI.jsonUpdateDocumentSize = 4000;
+    ESPUI.jsonInitialDocumentSize = 5000;
+    ESPUI.jsonUpdateDocumentSize = 5000;
     
     if ((userNameStr.length() == 0) || (userPassStr.length() == 0))
     { // Missing credentials, use automatic login.
@@ -871,7 +872,7 @@ void buildGUI(void)
     gpioTab   = ESPUI.addControl(ControlType::Tab, "GPIO", GPIO_TAB_STR);
     backupTab = ESPUI.addControl(ControlType::Tab, "BACKUP", BACKUP_TAB_STR);
     diagTab   = ESPUI.addControl(ControlType::Tab, "DIAG", DIAG_TAB_STR);
-    aboutTab  = ESPUI.addControl(ControlType::Tab, "ABOUT", ABOUT_TAB_STR);
+    aboutTab  = ESPUI.addControl(ControlType::Tab, "ABOUT", N_About);
 
     // ************
     // Home Tab
@@ -1278,7 +1279,7 @@ void buildGUI(void)
     // *************
     //  Controller Tab
     ControllerMgr.AddControls(ctrlTab);
-    ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, "", ControlColor::None, ctrlTab);
+    // ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, "", ControlColor::None, ctrlTab);
 
     ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, ctrlTab);
     ctrlSaveID = ESPUI.addControl(ControlType::Button,
@@ -1442,22 +1443,30 @@ void buildGUI(void)
     // ******************
     // About Tab
 
-    tempStr     = "Version ";
+    tempStr     = N_Version;
     tempStr    += VERSION_STR;
-    tempStr    += "<br>";
+    tempStr    += N_br;
     tempStr    += BLD_DATE_STR;
-    tempStr    += "<br>";
+    tempStr    += N_br;
     tempStr    += AUTHOR_STR;
-    tempStr    += "<br>";
+    tempStr    += N_br;
     tempStr    += GITHUB_REPO_STR;
-    tempStr    += "<br>";
-    aboutLogoID = ESPUI.addControl(ControlType::Label,
-                                   ABOUT_VERS_STR,
+    tempStr    += N_br;
 
-/*(makeWebGif("/RadioLogo225x75_base64.gif", 225, 75, "white")),*/
-                                   (makeWebGif("/RadioLogo225x75_base64.gif", 200, 66, "white")),
-                                   ControlColor::None,
-                                   aboutTab);
+    /*(makeWebGif("/RadioLogo225x75_base64.gif", 225, 75, "white")),*/
+    static String WebGif = (makeWebGif("/RadioLogo225x75_base64.gif", 200, 66, "white"));
+    // DEBUG_V(String("WebGif.Length: ") + String(WebGif.length()));
+    aboutLogoID = ESPUI.addControl(
+        ControlType::Label,
+        N_About,
+        WebGif,
+        ControlColor::None,
+        aboutTab);
 
-    aboutVersionID = ESPUI.addControl(ControlType::Label, ABOUT_VERS_STR, tempStr, ControlColor::None, aboutLogoID);
+    aboutVersionID = ESPUI.addControl(
+        ControlType::Label, 
+        N_About_PixelRadio, 
+        tempStr, 
+        ControlColor::None, 
+        aboutLogoID);
 }

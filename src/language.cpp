@@ -22,7 +22,10 @@
 // ************************************************************************************************
 #include "Language.h"
 
+const PROGMEM char N_About                    [] = "About";
+const PROGMEM char N_About_PixelRadio         [] = "About PixelRadio";
 const PROGMEM char N_Baudrate                 [] = "Baudrate";
+const PROGMEM char N_br                       [] = "<br>";
 const PROGMEM char N_ControllerEnabled        [] = "ControllerEnabled";
 const PROGMEM char N_command                  [] = "command";
 const PROGMEM char N_controllers              [] = "controllers";
@@ -50,6 +53,7 @@ const PROGMEM char N_PtyCode                  [] = "PtyCode";
 const PROGMEM char N_sequences                [] = "sequences";
 const PROGMEM char N_SequenceLearningEnabled  [] = "SequenceLearningEnabled";
 const PROGMEM char N_type                     [] = "type";
+const PROGMEM char N_Version                  [] = "Version";
 
    // Controller Command Keywords
 const PROGMEM char  CMD_AUDMODE_STR           [] = "aud";    // Radio Stereo / Mono Audio Mode.
