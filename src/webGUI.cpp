@@ -153,10 +153,12 @@ uint16_t homeFreqID    = 0;
 uint16_t homeOnAirID   = 0;
 uint16_t homeRdsTextID = 0;
 uint16_t homeRdsTmrID  = 0;
+#ifdef OldWay
 uint16_t homeRssiID    = 0;
 uint16_t homeStaID     = 0;
 uint16_t homeStaMsgID  = 0;
 uint16_t homeTextMsgID = 0;
+#endif // def OldWay
 
 uint16_t radioAudioID    = 0;
 uint16_t radioAudioMsgID = 0;
@@ -180,39 +182,13 @@ uint16_t rdsSaveMsgID  = 0;
 uint16_t rdsSnameID    = 0;
 uint16_t rdsRstID      = 0;
 
-uint16_t wifiApBootID     = 0;
-uint16_t wifiApFallID     = 0;
-uint16_t wifiApID         = 0;
-uint16_t wifiApIpID       = 0;
-uint16_t wifiApNameID     = 0;
-uint16_t wifiDevPwMsgID   = 0;
-uint16_t wifiDevUserID    = 0;
-uint16_t wifiDevUserMsgID = 0;
-uint16_t wifiDevPwID      = 0;
-uint16_t wifiDhcpID       = 0;
-uint16_t wifiDhcpMsgID    = 0;
-uint16_t wifiDnsID        = 0;
-uint16_t wifiGatewayID    = 0;
-uint16_t wifiIpID         = 0;
-uint16_t wifiMdnsNameID   = 0;
-uint16_t wifiNetID        = 0;
-uint16_t wifiRssiID       = 0;
-uint16_t wifiSaveID       = 0;
-uint16_t wifiSaveMsgID    = 0;
-uint16_t wifiSsidID       = 0;
-uint16_t wifiStaID        = 0;
-uint16_t wifiStaMsgID     = 0;
-uint16_t wifiStaNameID    = 0;
-uint16_t wifiSubID        = 0;
-uint16_t wifiWpaKeyID     = 0;
-
-
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
 //                   It is called AFTER ESPUI.begin(), see bottom of startGUI().
 //                   Note: width and max-width appear to do the same thing. But try both. Avoid widths <30% or expect text wrap.
 void initCustomCss(void)
 {
+    DEBUG_START;
     // START OF PANEL INLINE STYLES
     ESPUI.setPanelStyle(aboutLogoID,    "background-color: white; color: black;");
 
@@ -229,28 +205,27 @@ void initCustomCss(void)
 
     ESPUI.setPanelStyle(homeFreqID,     "font-size: 3.0em;");
     ESPUI.setPanelStyle(homeOnAirID,    "font-size: 3.0em;");
-//    ESPUI.setPanelStyle(homeRdsTextID,  "font-size: 1.15em;");
-    ESPUI.setPanelStyle(homeRssiID,     "font-size: 1.25em;");
+#ifdef OldWay
 //    ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
-    ESPUI.setPanelStyle(homeStaID,      "font-size: 1.15em;");
-    ESPUI.setPanelStyle(homeTextMsgID,  "font-size: 1.15em;");
+#endif // def OldWay
 
     ESPUI.setPanelStyle(radioFreqID,    "font-size: 3.0em;");
     ESPUI.setPanelStyle(radioGainID,    "font-size: 1.15em;");
     ESPUI.setPanelStyle(radioSoundID,   "font-size: 1.25em;");
 
+#ifdef OldWay
 //    ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
+#endif // def OldWay
     ESPUI.setPanelStyle(rdsProgNameID,  "font-size: 1.35em;");
     ESPUI.setPanelStyle(rdsPiID,        "font-size: 1.35em;");
     ESPUI.setPanelStyle(rdsPtyID,       "font-size: 1.15em;");
 
+#ifdef OldWay
     // ESPUI.setPanelStyle(rdsProgNameID, "width: 45%; font-size: 1.5em;"); // Bug? See
     //  https://github.com/s00500/ESPUI/pull/147#issuecomment-1009821269.
     // ESPUI.setPanelStyle(rdsPiID,"width: 30%; font-size: 1.25em;"); // Only valid if wide panel is used.
     //  ESPUI.setPanelStyle(rdsPiID,        "max-width: 40%;"); // Does not work. Too bad.
-
-    ESPUI.setPanelStyle(wifiRssiID, "font-size: 1.25em;");
-    ESPUI.setPanelStyle(wifiStaID,  "font-size: 1.15em;");
+#endif // def OldWay
 
     // END OF PANEL INLINE STYLES.
 
@@ -282,11 +257,9 @@ void initCustomCss(void)
 
     ESPUI.setElementStyle(homeFreqID,         "max-width: 80%;");
     ESPUI.setElementStyle(homeOnAirID,        "max-width: 80%;");
-    ESPUI.setElementStyle(homeRssiID,         "max-width: 30%;");
+#ifdef OldWay
 //    ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
-    ESPUI.setElementStyle(homeStaID,          "max-width: 65%;");
-    ESPUI.setElementStyle(homeStaMsgID,       CSS_LABEL_STYLE_BLACK);
-    ESPUI.setElementStyle(homeTextMsgID,      CSS_LABEL_STYLE_WHITE);
+#endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
@@ -303,14 +276,10 @@ void initCustomCss(void)
 //    ESPUI.setElementStyle(rdsText2MsgID,    CSS_LABEL_STYLE_BLACK);
 //    ESPUI.setElementStyle(rdsText3MsgID,    CSS_LABEL_STYLE_BLACK);
 
-    ESPUI.setElementStyle(wifiDhcpMsgID,    CSS_LABEL_STYLE_BLACK);
-    ESPUI.setElementStyle(wifiDevUserMsgID, CSS_LABEL_STYLE_MAROON);
-    ESPUI.setElementStyle(wifiDevPwMsgID,   CSS_LABEL_STYLE_MAROON);
-    ESPUI.setElementStyle(wifiRssiID,       "max-width: 30%;");
-    ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
-    ESPUI.setElementStyle(wifiStaID,        "max-width: 65%;");
-    ESPUI.setElementStyle(wifiStaMsgID,     CSS_LABEL_STYLE_BLACK);
+#ifdef OldWay
+#endif // def OldWay
 
+    DEBUG_END;
     // END OF STYLES
 }
 
@@ -448,39 +417,58 @@ void displaySaveWarning(void)
     ESPUI.print(gpioSaveMsgID,      SAVE_SETTINGS_MSG_STR);
     ESPUI.print(radioSaveMsgID,     SAVE_SETTINGS_MSG_STR);
     ESPUI.print(rdsSaveMsgID,       SAVE_SETTINGS_MSG_STR);
+#ifdef OldWay
     ESPUI.print(wifiSaveMsgID,      SAVE_SETTINGS_MSG_STR);
+#endif // def OldWay
 }
 
 // ************************************************************************************************
 // startGUI(): Must be called once in startup, AFTER wifiConnect()
 void startGUI(void)
 {
+    DEBUG_START;
+
     buildGUI();
+    DEBUG_V();
 
     // These have been moved to Heap and no longer impact stack
-    // ESPUI.jsonUpdateDocumentSize  = 200;                               // Default is 2000.
-    // ESPUI.jsonInitialDocumentSize = 8000;                              // Default is 8000.
-
-    //ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
+    // ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity(Verbosity::Quiet);                              // Production mode.
     ESPUI.jsonInitialDocumentSize = 5000;
     ESPUI.jsonUpdateDocumentSize = 5000;
-    
-    if ((userNameStr.length() == 0) || (userPassStr.length() == 0))
+    DEBUG_V();
+
+    DEBUG_V();
+    initCustomCss();
+    DEBUG_END;
+}
+
+// ************************************************************************************************
+void StartESPUI()
+{
+    DEBUG_START;
+    if ((userNameStr.isEmpty()) || (userPassStr.isEmpty()))
     { // Missing credentials, use automatic login.
+        DEBUG_V();
         ESPUI.begin("PixelRadio");
+        DEBUG_V();
 
         // Don't use LITTLEFS, browser refreshes will crash.
         // ESPUI.beginLITTLEFS(APP_NAME_STR);
     }
-    else {
+    else 
+    {
+        DEBUG_V();
+#ifdef OldWay
         ESPUI.begin("PixelRadio", userNameStr.c_str(), userPassStr.c_str());
+        DEBUG_V();
+#endif // def OldWay
+        ESPUI.begin("PixelRadio");
 
         // Don't use LITLEFS, browser refreshes will crash.
         // ESPUI.beginLITTLEFS(APP_NAME_STR, userNameStr.c_str(), userPassStr.c_str());
     }
-
-    initCustomCss();
+    DEBUG_END;
 }
 
 // ************************************************************************************************
@@ -514,86 +502,51 @@ void updateUiAudioLevel(void)
 
 // ************************************************************************************************
 // updateUiAudioMode(): Update the Stereo/Mono Audio Mode shown on the UI radioTab.
-void updateUiAudioMode(void)
+void updateUiAudioMode(bool stereoEnbFlg)
 {
-    ESPUI.print(radioAudioMsgID, stereoEnbFlg ? RADIO_STEREO_STR : RADIO_MONO_STR);
+    ESPUI.print(radioAudioMsgID, stereoEnbFlg ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
     ESPUI.updateControlValue(radioAudioID, stereoEnbFlg ? "1" : "0");
 }
 
 // ************************************************************************************************
 // updateUiAudioMute(): Update the Audio Mute Switch Position on the UI adjTab.
-void updateUiAudioMute(void)
+void updateUiAudioMute(bool value)
 {
-    ESPUI.setElementStyle(adjMuteID, muteFlg ? "background: red;" : "background: #bebebe;");
-    ESPUI.updateControlValue(adjMuteID, muteFlg ? "1" : "0");
+    ESPUI.setElementStyle(adjMuteID, value ? F("background: red;") : F("background: #bebebe;"));
+    ESPUI.updateControlValue(adjMuteID, value ? "1" : "0");
 }
 
 // ************************************************************************************************
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
-bool updateUiGpioMsg(uint8_t pin, ControllerTypeId controller) {
-    char gpioBuff[50];
-    char setBuff[30];
+bool updateUiGpioMsg(uint8_t pin, String & ControllerName, bool PinState) 
+{
+    DEBUG_START;
     uint16_t msgID;
-    String controllerStr;
 
-    controllerStr = ControllerMgr.GetName(controller);
-    controllerStr.toUpperCase();
+    switch(pin)
+    {
+        case GPIO19_PIN:
+        {
+            msgID = gpio19MsgID;
+            break;
+        }
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> updateUiGpioMsg: Undefined Controller!");
-        return false;
+        case GPIO23_PIN:
+        {
+            msgID = gpio23MsgID;
+            break;
+        }
+
+        case GPIO33_PIN:
+        {
+            msgID = gpio33MsgID;
+            break;
+        }
     }
 
-    if (pin == GPIO19_PIN) {
-        msgID = gpio19MsgID;
+    ESPUI.print(msgID, String(F("{ SET TO ")) + ((PinState) ? GPIO_OUT_HI_STR : GPIO_OUT_LO_STR) + F(" BY ") + ControllerName + F(" }"));
 
-        if (gpio19CtrlStr == CMD_GPIO_OUT_HIGH_STR) {
-            sprintf(setBuff, "%s", GPIO_OUT_HI_STR);
-        }
-        else if (gpio19CtrlStr == CMD_GPIO_OUT_LOW_STR) {
-            sprintf(setBuff, "%s", GPIO_OUT_LO_STR);
-        }
-        else {
-            Log.errorln("-> updateUiGpioMsg: Undefined GPIO19 State!");
-            return false;
-        }
-    }
-    else if (pin == GPIO23_PIN) {
-        msgID = gpio23MsgID;
-
-        if (gpio23CtrlStr == CMD_GPIO_OUT_HIGH_STR) {
-            sprintf(setBuff, "%s", GPIO_OUT_HI_STR);
-        }
-        else if (gpio23CtrlStr == CMD_GPIO_OUT_LOW_STR) {
-            sprintf(setBuff, "%s", GPIO_OUT_LO_STR);
-        }
-        else {
-            Log.errorln("-> updateUiGpioMsg: Undefined GPIO23 State!");
-            return false;
-        }
-    }
-    else if (pin == GPIO33_PIN) {
-        msgID = gpio33MsgID;
-
-        if (gpio33CtrlStr == CMD_GPIO_OUT_HIGH_STR) {
-            sprintf(setBuff, "%s", GPIO_OUT_HI_STR);
-        }
-        else if (gpio33CtrlStr == CMD_GPIO_OUT_LOW_STR) {
-            sprintf(setBuff, "%s", GPIO_OUT_LO_STR);
-        }
-        else {
-            Log.errorln("-> updateUiGpioMsg: Undefined GPIO33 State!");
-            return false;
-        }
-    }
-    else {
-        Log.errorln("-> updateUiGpioMsg: Undefined GPIO Pin.");
-        return false;
-    }
-
-    sprintf(gpioBuff, "{ SET TO %s BY %s }", setBuff, controllerStr.c_str());
-    ESPUI.print(msgID, gpioBuff);
-
+    DEBUG_END;
     return true;
 }
 
@@ -601,8 +554,10 @@ bool updateUiGpioMsg(uint8_t pin, ControllerTypeId controller) {
 // updateUiIpaddress(): Update the IP address shown on homeTab and wifiTab.
 void updateUiIpaddress(String ipStr)
 {
+#ifdef OldWay
     ESPUI.print(homeStaMsgID, ipStr);
     ESPUI.print(wifiStaMsgID, ipStr);
+#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -624,7 +579,7 @@ void updateUiFreeMemory(void)
 
 // ************************************************************************************************
 // updateUiFrequency(): Update the FM Transmit Frequency on the UI's adjTab, homeTab, and radioTab.
-void updateUiFrequency(void)
+void updateUiFrequency(int fmFreqX10)
 {
     float tempFloat = float(fmFreqX10) / 10.0f;
 
@@ -740,7 +695,9 @@ void updateUiRSSI(void)
     if (previousMillis == 0) {
         previousMillis = millis();       // Initialize First entry;
     }
-    else if (millis() - previousMillis >= RSSI_UPD_TIME) {
+    else if (millis() - previousMillis >= RSSI_UPD_TIME) 
+    {
+#ifdef OldWay 
         if (getWifiMode() == WIFI_STA) { // Serial log only if STA mode.
             tempStr  = getRSSI();
             tempStr += UNITS_DBM_STR;
@@ -752,6 +709,7 @@ void updateUiRSSI(void)
         }
         ESPUI.print(wifiRssiID, tempStr);
         ESPUI.print(homeRssiID, tempStr);
+#endif // def OldWay
         previousMillis = millis(); // Do this last.
     }
 }
@@ -840,9 +798,11 @@ void updateUiVolts(void)
 // updateUiWfiMode(): Update the UI's WiFi Mode.
 void updateUiWfiMode(void)
 {
+#ifdef OldWay 
     tempStr = String(getWifiModeStr());
     ESPUI.print(homeStaID, tempStr);
     ESPUI.print(wifiStaID, tempStr);
+#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -857,6 +817,8 @@ void updateUiWfiMode(void)
 //
 void buildGUI(void)
 {
+    DEBUG_START;
+
     tempStr.reserve(125); // Avoid memory re-allocation fragments on the Global String.
     char  charBuff[25];
     float tempFloat;
@@ -874,6 +836,7 @@ void buildGUI(void)
     diagTab   = ESPUI.addControl(ControlType::Tab, "DIAG", DIAG_TAB_STR);
     aboutTab  = ESPUI.addControl(ControlType::Tab, "ABOUT", N_About);
 
+    DEBUG_V();
     // ************
     // Home Tab
     ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, "", ControlColor::None, homeTab);
@@ -904,11 +867,13 @@ void buildGUI(void)
     ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, "", ControlColor::None, homeTab);
     tempStr       = HOME_RDS_WAIT_STR;
     homeRdsTextID = ESPUI.addControl(ControlType::Label, HOME_CUR_TEXT_STR, tempStr, ControlColor::Peterriver, homeTab);
+#ifdef OldWay
     homeTextMsgID = ESPUI.addControl(ControlType::Label, "", tempStr, ControlColor::Peterriver, homeRdsTextID);
 
     homeRdsTmrID = ESPUI.addControl(ControlType::Label, HOME_RDS_TIMER_STR, tempStr, ControlColor::Peterriver, homeTab);
 
     ESPUI.addControl(ControlType::Separator, HOME_SEP_WIFI_STR, "", ControlColor::None, homeTab);
+
     tempStr    = getRSSI();
     tempStr   += UNITS_DBM_STR;
     homeRssiID = ESPUI.addControl(ControlType::Label, HOME_WIFI_STR, tempStr, ControlColor::Peterriver, homeTab);
@@ -920,9 +885,11 @@ void buildGUI(void)
                                  homeTab);
     homeStaMsgID =
         ESPUI.addControl(ControlType::Label, "IP_ADDR", ipAddrStr, ControlColor::Carrot, homeStaID);
-
+#endif // def OldWay
+    DEBUG_V();
+    
     // **************
-    // Ajust Tab
+    // Adjust Tab
 
     ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, "", ControlColor::None, adjTab);
 
@@ -965,7 +932,7 @@ void buildGUI(void)
     adjSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Wetasphalt, adjSaveID);
 
-
+    DEBUG_V();
     // ************
     // Radio Tab
 
@@ -986,6 +953,7 @@ void buildGUI(void)
                                     ControlColor::Emerald,
                                     radioTab,
                                     &rfCarrierCallback);
+    DEBUG_V();
 
     // RF Power Control is not compatible with the RF Amp Circutry.
     // Low Power levels do not correctly excite the PA Transistor.
@@ -1020,6 +988,7 @@ void buildGUI(void)
     tempStr         = stereoEnbFlg ? RADIO_STEREO_STR : RADIO_MONO_STR;
     radioAudioMsgID =
         ESPUI.addControl(ControlType::Label, RADIO_AUDIO_MODE_STR, tempStr, ControlColor::Emerald, radioAudioID);
+    DEBUG_V();
 
     #ifdef ADV_RADIO_FEATURES
     radioEmphID =
@@ -1051,6 +1020,7 @@ void buildGUI(void)
     ESPUI.addControl(ControlType::Option, INP_IMP10K_STR, INP_IMP10K_STR, ControlColor::None, radioImpID);
     ESPUI.addControl(ControlType::Option, INP_IMP20K_STR, INP_IMP20K_STR, ControlColor::None, radioImpID);
     ESPUI.addControl(ControlType::Option, INP_IMP40K_STR, INP_IMP40K_STR, ControlColor::None, radioImpID);
+    DEBUG_V();
 
     #ifdef ADV_RADIO_FEATURES
     radioDgainID =
@@ -1093,11 +1063,12 @@ void buildGUI(void)
 
     ESPUI.addControl(ControlType::Separator, RDS_GENERAL_SET_STR, "", ControlColor::None, rdsTab);
 
-    tempStr    = String(ControllerMgr.GetRdsMsgTime(LocalControllerId) / 1000);
+    tempStr = ""; // String(ControllerMgr.GetRdsMsgTime(LocalControllerId) / 1000);
 
     rdsProgNameID =
         ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, ControllerMgr.GetRdsProgramServiceName(LocalControllerId), ControlColor::Alizarin, rdsTab,
                          &rdsTextCallback);
+    DEBUG_V();
 
     sprintf(charBuff, "0x%04X", ControllerMgr.GetPiCode(LocalControllerId));
     rdsPiID =
@@ -1129,122 +1100,27 @@ void buildGUI(void)
                                  &saveSettingsCallback);
     rdsSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Alizarin, rdsSaveID);
+#ifdef OldWay
 
     //
     // *************
     //  WiFi Tab
 
-    ESPUI.addControl(ControlType::Separator, WIFI_STATUS_SEP_STR, "", ControlColor::None, wifiTab);
-
-    tempStr    = getRSSI();
-    tempStr   += UNITS_DBM_STR;
-    wifiRssiID =
-        ESPUI.addControl(ControlType::Label, WIFI_RSSI_STR, tempStr, ControlColor::Carrot, wifiTab);
-    wifiStaID =
-        ESPUI.addControl(ControlType::Label, WIFI_STA_STATUS_STR, String(getWifiModeStr()), ControlColor::Carrot, wifiTab);
-    wifiStaMsgID =
-        ESPUI.addControl(ControlType::Label, "IP_ADDR", ipAddrStr, ControlColor::Carrot, wifiStaID);
-
-
-    ESPUI.addControl(ControlType::Separator, WIFI_CRED_SEP_STR, "", ControlColor::None, wifiTab);
-
-    wifiSsidID =
-        ESPUI.addControl(ControlType::Text, WIFI_SSID_STR, wifiSSIDStr, ControlColor::Carrot, wifiTab,
-                         &setWiFiAuthenticationCallback);
-    wifiWpaKeyID =
-        ESPUI.addControl(ControlType::Text,
-                         WIFI_WPA_KEY_STR,
-                         WIFI_PASS_HIDE_STR,
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &setWiFiAuthenticationCallback);
-
-    ESPUI.addControl(ControlType::Separator, WIFI_ADDR_SEP_STR, "", ControlColor::None, wifiTab);
-
-    wifiIpID =
-        ESPUI.addControl(ControlType::Text,
-                         WIFI_IP_ADDR_STR,
-                         staticIpStr,
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &setWiFiAddrsCallback);
-
-    wifiGatewayID =
-        ESPUI.addControl(ControlType::Text,
-                         WIFI_GATEWAY_STR,
-                         wifiGatewayStr,
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &setWiFiAddrsCallback);
-
-    wifiSubID =
-        ESPUI.addControl(ControlType::Text,
-                         WIFI_SUBNET_STR,
-                         subNetStr,
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &setWiFiAddrsCallback);
-
-    wifiDnsID =
-        ESPUI.addControl(ControlType::Text,
-                         WIFI_DNS_STR,
-                         wifiDnsStr,
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &setWiFiAddrsCallback);
-
-
-    if ((wifiDhcpFlg == false) && (wifiValidateSettings() == false)) {
-        tempStr     = DHCP_LOCKED_STR;
-        wifiDhcpFlg = true; // Force DHCP mode.
-    }
-    else {
-        tempStr = "";
-    }
-    wifiDhcpID =
-        ESPUI.addControl(ControlType::Switcher,
-                         WIFI_WEB_DHCP_STR,
-                         wifiDhcpFlg ? "1" : "0",
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &dhcpCallback);
-    wifiDhcpMsgID = ESPUI.addControl(ControlType::Label, "MSG_AREA", tempStr, ControlColor::Carrot, wifiDhcpID);
-
-
-    ESPUI.addControl(ControlType::Separator, WIFI_NAME_SEP_STR, "", ControlColor::None, wifiTab);
-    wifiStaNameID =
-        ESPUI.addControl(ControlType::Text, WIFI_WEBSRV_NAME_STR, staNameStr, ControlColor::Carrot, wifiTab, &setWiFiNamesCallback);
-
-    wifiApNameID =
-        ESPUI.addControl(ControlType::Text, WIFI_AP_NAME_STR, apNameStr, ControlColor::Carrot, wifiTab, &setWiFiNamesCallback);
+#endif // def OldWay
+    DEBUG_V();
+    WiFiDriver.addControls(homeTab, wifiTab);
+    DEBUG_V();
 
     // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
     #ifdef MDNS_ENB
+#ifdef OldWay
     wifiMdnsNameID =
         ESPUI.addControl(ControlType::Text, WIFI_MDNS_NAME_STR, mdnsNameStr, ControlColor::Carrot, wifiTab, &setWiFiNamesCallback);
+#endif // def OldWay
     #endif // ifdef MDNS_ENB
     // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
 
-    ESPUI.addControl(ControlType::Separator, WIFI_DEV_CRED_SEP_STR, "", ControlColor::None, wifiTab);
-
-    wifiDevUserID = ESPUI.addControl(ControlType::Text,
-                                     WIFI_DEV_USER_NM_STR,
-                                     userNameStr,
-                                     ControlColor::Carrot,
-                                     wifiTab,
-                                     &setLoginCallback);
-
-    wifiDevUserMsgID = ESPUI.addControl(ControlType::Label, "MSG_AREA", WIFI_BLANK_MSG_STR, ControlColor::Alizarin, wifiDevUserID);
-
-
-    wifiDevPwID = ESPUI.addControl(ControlType::Text,
-                                   WIFI_DEV_USER_PW_STR,
-                                   userPassStr,
-                                   ControlColor::Carrot,
-                                   wifiTab,
-                                   &setLoginCallback);
-
-    wifiDevPwMsgID = ESPUI.addControl(ControlType::Label, "MSG_AREA", WIFI_BLANK_MSG_STR, ControlColor::Alizarin, wifiDevPwID);
+#ifdef OldWay
 
     ESPUI.addControl(ControlType::Separator, WIFI_AP_IP_SEP_STR, "", ControlColor::None, wifiTab);
 
@@ -1273,7 +1149,9 @@ void buildGUI(void)
                                   &saveSettingsCallback);
     wifiSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Carrot, wifiSaveID);
+#endif // def OldWay
 
+    DEBUG_V();
 
     //
     // *************
@@ -1290,6 +1168,7 @@ void buildGUI(void)
                                   &saveSettingsCallback);
     ctrlSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Turquoise, ctrlSaveID);
+    DEBUG_V();
 
     //
     // *****************
@@ -1332,6 +1211,7 @@ void buildGUI(void)
                                   &saveSettingsCallback);
     gpioSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::None, gpioSaveID);
+    DEBUG_V();
 
 
     //
@@ -1366,6 +1246,7 @@ void buildGUI(void)
                          backupTab,
                          &backupCallback);
     backupRestoreMsgID = ESPUI.addControl(ControlType::Label, "RESTORE_MSG", "", ControlColor::Wetasphalt, backupRestoreID);
+    DEBUG_V();
 
     //
     // ******************
@@ -1423,6 +1304,7 @@ void buildGUI(void)
     diagLogMsgID = ESPUI.addControl(ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
 
     ESPUI.addControl(ControlType::Separator, DIAG_SYSTEM_SEP_STR, "", ControlColor::None, diagTab);
+    DEBUG_V();
 
     tempStr      = ESP.getFreeHeap();
     tempStr     += " Bytes";
@@ -1469,4 +1351,5 @@ void buildGUI(void)
         tempStr, 
         ControlColor::None, 
         aboutLogoID);
+    DEBUG_END;
 }

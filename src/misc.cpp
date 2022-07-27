@@ -33,16 +33,13 @@ extern QN8027Radio radio;
 const String addChipID(const char *name) {
     uint32_t chipid = 0;
     char     buff[50];
-    String   idStr;
 
     for (int i = 0; i < 17; i = i + 8) {
         chipid |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
     }
 
-    snprintf(buff, SSID_MAX_SZ, "%s-%08X", name, chipid);
-    idStr = buff;
-
-    return idStr;
+    snprintf(buff, sizeof(buff)-1, "%08X", chipid);
+    return String(name) + String(buff);
 }
 
 // *********************************************************************************************

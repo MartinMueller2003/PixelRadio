@@ -113,6 +113,7 @@ int16_t getCommandArg(String& requestStr, uint8_t maxSize) {
 }
 
 #endif // ifdef HTTP_ENB
+#ifdef OldWay
 
 // ************************************************************************************************
 // getRSSI(): Get the RSSI value.
@@ -178,12 +179,14 @@ String getWifiModeStr(void)
 
     return wifiModeStr;
 }
+#endif // def OldWay
 
 // *************************************************************************************************************************
 // gpioHttpControl(): HTTP handler for GPIO Commands. This is a companion to processWebClient().
 #ifdef HTTP_ENB
 void gpioHttpControl(WiFiClient client, String requestStr, uint8_t pin)
 {
+#ifdef OldWay
     bool successFlg = true;
     char charBuff[60];
 
@@ -207,6 +210,7 @@ void gpioHttpControl(WiFiClient client, String requestStr, uint8_t pin)
 
     client.print(charBuff);
     client.println(HTML_CLOSE_STR);
+#endif // def OldWay
 }
 
 #endif // ifdef HTTP_ENB
@@ -229,6 +233,7 @@ String makeHttpCmdStr(String cmdStr) {
 #ifdef HTTP_ENB
 void processWebClient(void)
 {
+#ifdef OldWay
     static bool connectFlg = false;
     bool successFlg        = true;
     uint16_t charCnt       = 0;
@@ -260,8 +265,10 @@ void processWebClient(void)
         currentLine = ""; // Init string to hold incoming data from the client,
 
         // while (client.connected()) { // loop while the client is connected.
-        while (client.connected() && millis() - previousTime <= CLIENT_TIMEOUT) {
-            if (client.available()) {
+        while (client.connected() && millis() - previousTime <= CLIENT_TIMEOUT) 
+        {
+            if (client.available()) 
+            {
                 char c = client.read();
 
                 if (charCnt < HTTP_RESPONSE_MAX_SZ) {
@@ -274,7 +281,8 @@ void processWebClient(void)
                     // if the current line is zero, you got two newline characters in a row.
                     // that's the end of the client HTTP request body, so check for the
                     // optional post data. Then process the command.
-                    if (currentLine.length() == 0) {
+                    if (currentLine.length() == 0)
+                    {
                         // Log.verboseln(requestStr.c_str());
                         requestLcStr = requestStr;
                         requestLcStr.toLowerCase();
@@ -282,7 +290,8 @@ void processWebClient(void)
                         // ************ PROCESS POST DATA (if any) ***************
                         uint16_t contentLenIndex = requestLcStr.indexOf(HTTP_POST_STR);
 
-                        if (contentLenIndex > 0) {
+                        if (contentLenIndex > 0)
+                         {
                             String lenStr = requestLcStr.substring(contentLenIndex + sizeof(HTTP_POST_STR));
 
                             if (lenStr.toInt() > 0) {
@@ -396,12 +405,15 @@ void processWebClient(void)
                             client.print(HTML_HEADER_STR);
                             client.print(HTML_DOCTYPE_STR);
 
-                            if (successFlg) {
+                            if (successFlg) 
+                            {
+                                String HostName;
+                                WiFiDriver.GetHostName(HostName);
                                 client.printf(
                                     "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}\r\n",
                                     CMD_INFO_STR,
                                     VERSION_STR,
-                                    staNameStr.c_str(),
+                                    HostName.c_str(),
                                     WiFi.localIP().toString().c_str(),
                                     WiFi.RSSI(),
                                     ControllerMgr.getControllerStatusSummary());
@@ -729,6 +741,7 @@ void processWebClient(void)
         client.stop();     // Close the GET HTTP connection.
         Log.infoln("-> HTTP Controller: Connected Client Now Idle, Disconnected).");
     }
+#endif // def OldWay
 }
 
 #endif // ifdef HTTP_ENB
@@ -786,6 +799,7 @@ unsigned char urlDecodeHex(char c)
     return(0);
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // wifiReconnect(): If WiFI not connected, or in AP mode, then peridoically atttempt a STA reconnect.
 void wifiReconnect(void)
@@ -861,14 +875,16 @@ bool wifiConnect(void)
         Log.infoln("-> DHCP Connection Enabled");
     }
 
+    String HostName;
+    WiFiDriver.GetHostName(HostName);
     // WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE); // Workaround for setting host name. (Dec-22-2021 bug, see
     // https://github.com/espressif/arduino-esp32/issues/4732)
-    if (staNameStr.length() == 0) {
-        staNameStr = STA_NAME_DEF_STR;
-        sprintf(logBuff, "-> STA Name Missing, Using %s", staNameStr.c_str());
+    if (HostName.isEmpty()) {
+        HostName = STA_NAME_DEF_STR;
+        sprintf(logBuff, "-> STA Name Missing, Using %s", HostName.c_str());
         Log.warningln(logBuff);
     }
-    WiFi.setHostname(staNameStr.c_str()); // MUST set the host name (for WiFi router) BEFORE wifi.mode().
+    WiFi.setHostname(HostName.c_str()); // MUST set the host name (for WiFi router) BEFORE wifi.mode().
     WiFi.mode(WIFI_STA);                  // Enable WiFi.
     delay(100);                           // Wait for SYSTEM_EVENT_AP_START to occur.
 
@@ -1074,3 +1090,4 @@ bool wifiValidateSettings(void)
 
     return successFlg;
 }
+#endif // def OldWay

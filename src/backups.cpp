@@ -32,10 +32,11 @@
 #include <SD.h>
 #include "PixelRadio.h"
 #include "globals.h"
+#include "Network/WiFiDriver.hpp"
 
 
 // *************************************************************************************************************************
-const uint16_t JSON_CFG_SZ    = 6500;
+const uint16_t JSON_CFG_SZ    = 10000;
 const uint16_t JSON_CRED_SIZE = 300;
 
 const char* sdTypeStr[] = {"Not Installed", "V1", "V2", "SDHC", "Unknown"};
@@ -87,11 +88,10 @@ bool checkEmergencyCredentials(const char *fileName)
         return false;
     }
 
-    if (((const char *)doc["WIFI_SSID_STR"] != NULL) && ((const char *)doc["WIFI_WPA_KEY_STR"] != NULL)) {
-        wifiSSIDStr   = (const char *)doc["WIFI_SSID_STR"];
-        wifiWpaKeyStr = (const char *)doc["WIFI_WPA_KEY_STR"];
-        wifiDhcpFlg   = true;
-        successFlg    = true;
+    if (((const char *)doc["WIFI_SSID_STR"] != NULL) && ((const char *)doc["WIFI_WPA_KEY_STR"] != NULL))
+    {
+        JsonObject root = doc.as<JsonObject>();
+        WiFiDriver.restoreConfiguration(root);
         Log.warningln("-> User Provided New WiFi Credentials.");
         Log.warningln("-> Will Use DHCP Mode on this Session.");
         Log.verboseln("-> Credentials JSON used %u Bytes.", doc.memoryUsage());
@@ -168,34 +168,22 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     // Allocate a temporary JsonDocument
     // MUST set the capacity to match your requirements.
     // Use https://arduinojson.org/assistant to compute the capacity.
+
     DynamicJsonDocument doc(JSON_CFG_SZ);
     // *****************************************************************
 
     doc["USER_NAME_STR"] = userNameStr;
     doc["USER_PW_STR"]   = userPassStr;
-
-    doc["STA_NAME_STR"]     = staNameStr;
     doc["MDNS_NAME_STR"]    = mdnsNameStr;
-    doc["AP_NAME_STR"]      = apNameStr;
-    doc["AP_IP_ADDR_STR"]   = apIpAddrStr;
-    doc["AP_FALLBACK_FLAG"] = apFallBackFlg;
 
     JsonObject root = doc.as<JsonObject>();
-    ControllerMgr.SaveConfiguration(root);
-
-    doc["WIFI_SSID_STR"]    = wifiSSIDStr;
-    doc["WIFI_WPA_KEY_STR"] = wifiWpaKeyStr;
-    doc["WIFI_IP_ADDR_STR"] = staticIpStr;
-    doc["WIFI_GATEWAY_STR"] = wifiGatewayStr;
-    doc["WIFI_SUBNET_STR"]  = subNetStr;
-    doc["WIFI_DNS_STR"]     = wifiDnsStr;
-    doc["WIFI_DHCP_FLAG"]   = wifiDhcpFlg;
-    doc["WIFI_REBOOT_FLAG"] = WiFiRebootFlg;
+    ControllerMgr.saveConfiguration(root);
+    WiFiDriver.saveConfiguration(root);
 
     doc["RDS_PI_CODE"]        = ControllerMgr.GetPiCode(LocalControllerId); // Use radio.setPiCode() when restoring this hex value.
     doc["RDS_PTY_CODE"]       = ControllerMgr.GetPtyCode(LocalControllerId);
-    doc["RDS_LOCAL_MSG_TIME"] = ControllerMgr.GetRdsMsgTime(LocalControllerId);
-    doc["RDS_PROG_SERV_STR"]  = ControllerMgr.GetRdsProgramServiceName(LocalControllerId);
+    doc["RDS_LOCAL_MSG_TIME"] = 0; // ControllerMgr.GetRdsMsgTime(LocalControllerId);
+    doc["RDS_PROG_SERV_STR"]  = ""; // ControllerMgr.GetRdsProgramServiceName(LocalControllerId);
     doc["RADIO_FM_FREQ"]      = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
     doc["RADIO_MUTE_FLAG"]    = muteFlg;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
     doc["RADIO_AUTO_FLAG"]    = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
@@ -281,8 +269,8 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
     }
 
     if (!file) {
-        Log.errorln("-> Failed to Locate Configuration File (%s).", fileName);
-        Log.infoln("-> Create the Missing File by Performing a \"Save Settings\" in the PixelRadio App.");
+        Log.errorln(F("-> Failed to Locate Configuration File (%s)."), fileName);
+        Log.infoln(F("-> Create the Missing File by Performing a \"Save Settings\" in the PixelRadio App."));
         if (restoreMode == SD_CARD_MODE) {
             SD.end();
             spiSdCardShutDown();
@@ -293,7 +281,9 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
         Log.verboseln("-> Located Configuration File (%s)", fileName);
     }
 
-    DynamicJsonDocument raw_doc(JSON_CFG_SZ);
+    // empirically Arduino Json needs 3.5 x the json text size to parse the file.
+    uint32_t DocSize = uint32_t(file.size()) * 4; 
+    DynamicJsonDocument raw_doc(DocSize);
 
     DeserializationError error = deserializeJson(raw_doc, file);
 
@@ -310,50 +300,16 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
         return false;
     }
     JsonObject doc = raw_doc.as <JsonObject>();
-    ControllerMgr.RestoreConfiguration(doc);
 
-    if ((const char *)doc["USER_NAME_STR"] != NULL) {
-        userNameStr = (const char *)doc["USER_NAME_STR"];
-    }
+    ReadFromJSON(userNameStr, doc, F("USER_NAME_STR"));
+    ReadFromJSON(userPassStr, doc, F("USER_PASSWORD_STR"));
 
-    if ((const char *)doc["USER_PW_STR"] != NULL) {
-        userPassStr = (const char *)doc["USER_PW_STR"];
-    }
+    ControllerMgr.restoreConfiguration(doc);
+    WiFiDriver.restoreConfiguration(doc);
 
-    if ((const char *)doc["STA_NAME_STR"] != NULL) {
-        staNameStr = (const char *)doc["STA_NAME_STR"];
-    }
-
+#ifdef OldWay
     if ((const char *)doc["MDNS_NAME_STR"] != NULL) {
         mdnsNameStr = (const char *)doc["MDNS_NAME_STR"];
-    }
-
-    if ((const char *)doc["AP_NAME_STR"] != NULL) {
-        apNameStr = (const char *)doc["AP_NAME_STR"];
-    }
-
-    if ((const char *)doc["AP_IP_ADDR_STR"] != NULL) {
-        apIpAddrStr = (const char *)doc["AP_IP_ADDR_STR"];
-    }
-
-    if ((const char *)doc["WIFI_SSID_STR"] != NULL) {
-        wifiSSIDStr = (const char *)doc["WIFI_SSID_STR"];
-    }
-
-    if ((const char *)doc["WIFI_WPA_KEY_STR"] != NULL) {
-        wifiWpaKeyStr = (const char *)doc["WIFI_WPA_KEY_STR"];
-    }
-
-    if ((const char *)doc["WIFI_IP_ADDR_STR"] != NULL) {
-        staticIpStr = (const char *)doc["WIFI_IP_ADDR_STR"];
-    }
-
-    if ((const char *)doc["WIFI_GATEWAY_STR"] != NULL) {
-        wifiGatewayStr = (const char *)doc["WIFI_GATEWAY_STR"];
-    }
-
-    if ((const char *)doc["WIFI_SUBNET_STR"] != NULL) {
-        subNetStr = (const char *)doc["WIFI_SUBNET_STR"];
     }
 
     if ((const char *)doc["WIFI_DNS_STR"] != NULL) {
@@ -365,24 +321,9 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
 //        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, Temp);
 //    }
 
-    hotSpotIP.fromString(apIpAddrStr);
-    staticIP.fromString(staticIpStr);
-    subNet.fromString(subNetStr);
     wifiDNS.fromString(wifiDnsStr);
-    wifiGateway.fromString(wifiGatewayStr);
 
-
-    if (doc.containsKey("AP_FALLBACK_FLAG")) {
-        apFallBackFlg = doc["AP_FALLBACK_FLAG"];
-    }
-
-    if (doc.containsKey("WIFI_DHCP_FLAG")) {
-        wifiDhcpFlg = doc["WIFI_DHCP_FLAG"];
-    }
-
-    if (doc.containsKey("WIFI_REBOOT_FLAG")) {
-        WiFiRebootFlg = doc["WIFI_REBOOT_FLAG"];
-    }
+#endif // def OldWay
 
     if (doc.containsKey("RDS_PI_CODE")) {
         ControllerMgr.SetPiCode(LocalControllerId, doc["RDS_PI_CODE"]); // Use radio.setPiCode() when restoring this hex value.

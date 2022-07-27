@@ -67,7 +67,7 @@ void adjFmFreqCallback(Control *sender, int type) {
         tempStr  = String(tempFloat, 1);
         tempStr += UNITS_MHZ_STR;
 
-        updateUiFrequency();
+        updateUiFrequency(true);
         displaySaveWarning();
         sprintf(logBuff, "FM Frequency Set to: %s.", tempStr.c_str());
         Log.infoln(logBuff);
@@ -78,6 +78,7 @@ void adjFmFreqCallback(Control *sender, int type) {
     }
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // apFallBkCallback(): Enable/Disable AP Fallback using control element on WiFi Tab.
 void apBootCallback(Control *sender, int type)
@@ -135,6 +136,7 @@ void apFallBkCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // audioCallback(): Update the Stereo / Mono Audio modes.
@@ -152,14 +154,14 @@ void audioCallback(Control *sender, int type)
               tempStr      = "Stereo";
 
               // ESPUI.print(radioAudioMsgID, RADIO_STEREO_STR);
-              updateUiAudioMode();
+              updateUiAudioMode(true);
               break;
           case S_INACTIVE:
               stereoEnbFlg = false;
               tempStr      = "Mono";
 
               // ESPUI.print(radioAudioMsgID, RADIO_MONO_STR);
-              updateUiAudioMode();
+              updateUiAudioMode(false);
               break;
           default:
               tempStr = BAD_VALUE_STR;
@@ -242,6 +244,7 @@ void backupCallback(Control *sender, int type)
     }
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // dhcpCallback(): Enable/disable DHCP Connection mode. If false, use static IP.
 void dhcpCallback(Control *sender, int type)
@@ -279,6 +282,7 @@ void dhcpCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // diagBootCallback(): Reboot ESP32
@@ -754,15 +758,14 @@ void rdsDisplayTimeCallback(Control *sender, int type)
     }
     displaySaveWarning();
     Log.infoln("Local RDS Message Time Set to: %u.", timerVal);
-    ControllerMgr.SetRdsMsgTime(LocalControllerId, uint32_t(timerVal) * 1000); // Convert Secs to mSecs.
+    // ControllerMgr.SetRdsMsgTime(LocalControllerId, uint32_t(timerVal) * 1000); // Convert Secs to mSecs.
 }
 
 // ************************************************************************************************
 // rdsRstCallback(): Reset all RDS Fields to default values.
 void rdsRstCallback(Control *sender, int type)
 {
-
-        Log.infoln("RDS Settings Have Been Reset to Default Values.");
+    Log.infoln("RDS Settings Have Been Reset to Default Values.");
 }
 
 // ************************************************************************************************
@@ -948,8 +951,12 @@ void saveSettingsCallback(Control *sender, int type)
         (sender->id == backupSaveSetID) ||
         (sender->id == gpioSaveID) ||
         (sender->id == radioSaveID) ||
-        (sender->id == rdsSaveID)  ||
-        (sender->id == wifiSaveID)) {
+        (sender->id == rdsSaveID))
+#ifdef OldWay
+          ||
+        (sender->id == wifiSaveID)) 
+#endif // def OldWay
+        {
         // DEBUG_V();
         switch (type) {
           case B_DOWN:
@@ -966,7 +973,9 @@ void saveSettingsCallback(Control *sender, int type)
                   ESPUI.print(gpioSaveMsgID,      passMsg);
                   ESPUI.print(radioSaveMsgID,     passMsg);
                   ESPUI.print(rdsSaveMsgID,       passMsg);
+#ifdef OldWay
                   ESPUI.print(wifiSaveMsgID,      passMsg);
+#endif // def OldWay
                   Log.infoln("-> Configuration Save Successful.");
               }
               else {
@@ -976,7 +985,9 @@ void saveSettingsCallback(Control *sender, int type)
                   ESPUI.print(gpioSaveMsgID,      BACKUP_SAV_FAIL_STR);
                   ESPUI.print(radioSaveMsgID,     BACKUP_SAV_FAIL_STR);
                   ESPUI.print(rdsSaveMsgID,       BACKUP_SAV_FAIL_STR);
+#ifdef OldWay
                   ESPUI.print(wifiSaveMsgID,      BACKUP_SAV_FAIL_STR);
+#endif // def OldWay
                   Log.errorln("-> Configuration Save Failed.");
               }
               break;
@@ -994,36 +1005,6 @@ void saveSettingsCallback(Control *sender, int type)
     }
 
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-// setLoginCallback(): Change Device Login Credentials.
-void setLoginCallback(Control *sender, int type)
-{
-    char logBuff[USER_NM_MAX_SZ + 50];
-
-    // sprintf(logBuff, "setLoginCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiDevUserID) {
-        userNameStr = sender->value;
-        userNameStr = userNameStr.substring(0, USER_NM_MAX_SZ);
-        ESPUI.print(wifiDevUserID, userNameStr);
-        displaySaveWarning();
-        sprintf(logBuff, "Device Username Set to: \"%s\"", userNameStr.c_str());
-    }
-    else if (sender->id == wifiDevPwID) {
-        userPassStr = sender->value;
-        userPassStr = userPassStr.substring(0, USER_PW_MAX_SZ);
-        ESPUI.print(wifiDevPwID, userPassStr);
-        displaySaveWarning();
-        sprintf(logBuff, "Device Password Set to: \"%s\"", userPassStr.c_str());
-    }
-    else {
-        sprintf(logBuff, "setLoginCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-    Log.infoln(logBuff);
 }
 
 // ************************************************************************************************
@@ -1113,6 +1094,7 @@ void setPtyCodeCallback(Control *sender, int type)
     }
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // setWiFiAddrsCallback(): Update WiFi Static IP and subnet (for Static IP). Also update AP (Hotspot) IP address.
 void setWiFiAddrsCallback(Control *sender, int type)
@@ -1362,14 +1344,14 @@ void setWiFiNamesCallback(Control *sender, int type)
     // Log.verboseln(logBuff);
 
     if (sender->id == wifiStaNameID) {
-        staNameStr = sender->value;
-        staNameStr = staNameStr.substring(0, STA_NAME_MAX_SZ);
+        HostName = sender->value;
+        HostName = HostName.substring(0, STA_NAME_MAX_SZ);
 
-        if (staNameStr.length() == 0) {
-            staNameStr = STA_NAME_DEF_STR;
+        if (HostName.length() == 0) {
+            HostName = STA_NAME_DEF_STR;
         }
-        ESPUI.print(wifiStaNameID, staNameStr);
-        sprintf(logBuff, "Webserver (STA) Name Set to: \"%s\"", staNameStr.c_str());
+        ESPUI.print(wifiStaNameID, HostName);
+        sprintf(logBuff, "Webserver (STA) Name Set to: \"%s\"", HostName.c_str());
         Log.infoln(logBuff);
     }
     else if (sender->id == wifiApNameID) {
@@ -1401,6 +1383,7 @@ void setWiFiNamesCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // testModeCallback(): Audio Test Tone Mode Control (true = Audio Test Mode On).

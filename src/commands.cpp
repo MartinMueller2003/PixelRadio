@@ -17,10 +17,8 @@
  */
 
 // *************************************************************************************************************************
-#include <ArduinoLog.h>
-#include "config.h"
-#include "PixelRadio.h"
-#include "globals.h"
+#include "Commands.h"
+#include "memdebug.h"
 #include "language.h"
 #include "QN8027Radio.h"
 
@@ -29,736 +27,593 @@
 // Radio
 extern QN8027Radio radio;
 
-#ifdef OldWay
 // *************************************************************************************************************************
-// getControllerStatus(): Returns Hex formatted value that represents which controllers are enabled and which are
-// currently sending RadioText.
-//  Bit D7: Serial Controller is Enabled.
-//  Bit D6: MQTT Controller is Enabled.
-//  Bit D5: HTTP Controller is Enabled.
-//  Bit D4: Local Controller is Enabled.
-//  Bit D3: Serial Controller is Sending RDS.
-//  Bit D2: MQTT Controller is Sending RDS.
-//  Bit D1: HTTP Controller is Sending RDS.
-//  Bit D0: Local Controller is Sending RDS.
-//
-uint8_t getControllerStatus(void)
+CommandProcessor::CommandProcessor()
 {
-    uint8_t status = 0;
-
-    if (ControllerMgr.GetControllerEnabledFlag(SerialControllerId)) {
-        status = status | 0x80; // Set Bit D7.
-    }
-
-    if (ControllerMgr.GetControllerEnabledFlag(MqttControllerId)) {
-        status = status | 0x40; // Set Bit D6.
-    }
-
-    if (ControllerMgr.GetControllerEnabledFlag(HttpControllerId)) {
-        status = status | 0x20; // Set Bit D5.
-    }
-
-    if (checkLocalRdsAvail()) {
-        status = status | 0x10; // Set Bit D4.
-    }
-
-    if (ControllerMgr.GetActiveTextFlag(SerialControllerId)) {
-        status = status | 0x08; // Set Bit D3.
-    }
-
-    if (ControllerMgr.GetActiveTextFlag(MqttControllerId)) {
-        status = status | 0x04; // Set Bit D2.
-    }
-
-    if (ControllerMgr.GetActiveTextFlag(HttpControllerId)) {
-        status = status | 0x02; // Set Bit D1.
-    }
-
-    if (ControllerMgr.GetActiveTextFlag(LocalControllerId)) {
-        status = status | 0x01; // Set Bit D0.
-    }
-
-    return status;
 }
-#endif // def OldWay
 
 // *************************************************************************************************************************
-// AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
-bool audioModeCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::ProcessCommand(String &RawCommand, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_AUD_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
+    bool response = false;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> audioModeCmd: Undefined Controller!");
-        return false;
-    }
-
+    String cmd;
+    String payloadStr;
     payloadStr.trim();
     payloadStr.toLowerCase();
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+    do // once
+    {
+        if(cmd.equals(F("aud")))    {response = audioMode           (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("freq")))   {response = frequency           (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("gpio19"))) {response = gpio19              (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("gpio23"))) {response = gpio23              (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("gpio33"))) {response = gpio33              (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("mute")))   {response = mute                (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("pic")))    {response = piCode              (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("rtper")))  {response = rdsTimePeriod       (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("psn")))    {response = programServiceName  (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("pty")))    {response = ptyCode             (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("rfc")))    {response = rfCarrier           (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("rtm")))    {response = radioText           (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("start")))  {response = start               (payloadStr, ControllerName); break;}
+        if(cmd.equals(F("stop")))   {response = stop                (payloadStr, ControllerName); break;}
+    } while (false);
 
-    if (payloadStr == CMD_MODE_STER_STR) {
-        stereoEnbFlg    = true;
-        newAudioModeFlg = true;
-        updateUiAudioMode();
-    }
-    else if (payloadStr == CMD_MODE_MONO_STR) {
-        stereoEnbFlg    = false;
-        newAudioModeFlg = true;
-        updateUiAudioMode();
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid Audio Mode Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-
-    payloadStr.toUpperCase();
-    sprintf(logBuff, "-> %s Controller: Audio Mode Set to %s.", controllerStr.c_str(), payloadStr.c_str());
-    Log.verboseln(logBuff);
-
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool frequencyCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+// AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
+bool CommandProcessor::audioMode(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_FREQ_MAX_SZ;
-    int16_t freq;
-    String  controllerStr;
+    DEBUG_START;
+    bool response = true;
+    bool stereoEnbFlg = true;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    do // once
+    {
+        if (payloadStr.equals(CMD_MODE_STER_STR))
+        {
+            stereoEnbFlg = true;
+        }
+        else if (payloadStr.equals(CMD_MODE_MONO_STR))
+        {
+            stereoEnbFlg = false;
+        }
+        else 
+        {
+            Log.errorln((String(F("->")) + ControllerName + F(": Invalid Audio Mode Payload '") + payloadStr + F("'")).c_str());
+            response = false;
+            break;
+        }
+        updateUiAudioMode(stereoEnbFlg);
+        // updateRadioAudioMode(stereoEnbFlg);
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> frequencyCmd: Undefined Controller!");
-        return false;
-    }
+        Log.verboseln(
+            (String(F("->")) + 
+            ControllerName + 
+            F(": Audio Mode Set to ") + 
+            ((stereoEnbFlg) ? F("'STEREO'") : F("'MONO'") )).c_str());
 
-    payloadStr.trim();
+    } while (false);
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+    DEBUG_END;
 
-    freq = payloadStr.toInt();
+    return response;
+}
 
-    if ((!strIsUint(payloadStr)) ||
-        (freq < FM_FREQ_MIN_X10) || (freq > FM_FREQ_MAX_X10)) {
-        sprintf(logBuff, "-> %s Controller: Invalid Radio Frequency Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
+// *************************************************************************************************************************
+bool CommandProcessor::frequency(String & payloadStr, String & ControllerName)
+{
+    DEBUG_START;
+    bool response = true;
 
-    fmFreqX10  = freq;
-    newFreqFlg = true;
-    updateUiFrequency();
-    sprintf(logBuff, "-> %s Controller: Transmit Frequency Set to %2.1fMhz.", controllerStr.c_str(), (float(fmFreqX10)) / 10.0f);
-    Log.verboseln(logBuff);
-    return true;
+    do // once
+    {
+        if (payloadStr.length() > CMD_FREQ_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_FREQ_MAX_SZ);
+        }
+
+        int freq = payloadStr.toInt();
+
+        if ((!strIsUint(payloadStr)) ||
+            (freq < FM_FREQ_MIN_X10) || 
+            (freq > FM_FREQ_MAX_X10)) 
+        {
+            Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid Radio Frequency Payload (") + payloadStr + F("'")).c_str());
+            response = false;
+            break;
+        }
+
+        updateUiFrequency(freq);
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Transmit Frequency Set to ") + String(((float(freq)) / 10.0f), 1) + F("Mhz")).c_str());
+
+    } while (false);
+
+    DEBUG_END;
+    return response;
+}
+
+// *************************************************************************************************************************
+bool CommandProcessor::gpio19(String & payloadStr, String & ControllerName)
+{
+    return gpio(payloadStr, ControllerName, GPIO19_PIN);
+}
+
+// *************************************************************************************************************************
+bool CommandProcessor::gpio23(String & payloadStr, String & ControllerName)
+{
+    return gpio(payloadStr, ControllerName, GPIO23_PIN);
+}
+
+// *************************************************************************************************************************
+bool CommandProcessor::gpio33(String & payloadStr, String & ControllerName)
+{
+    return gpio(payloadStr, ControllerName, GPIO33_PIN);
 }
 
 // *************************************************************************************************************************
 // gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
-bool gpioCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller, uint8_t pin)
+bool CommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_num_t pin)
 {
-    char logBuff[110];
-    const  uint8_t maxSize = CMD_GPIO_MAX_SZ;
-    String controllerStr;
-    String gpioPinStr;
+    DEBUG_START;
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
+    bool response = true;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> gpioCmd: Undefined Controller!");
-        return false;
-    }
-
-    if (!((pin == GPIO19_PIN) || (pin == GPIO23_PIN) || (pin == GPIO33_PIN))) {
-        sprintf(logBuff, "-> gpioCmd: %s Controller Used Invalid GPIO Pin (%d), Command Ignored.", controllerStr.c_str(), pin);
-        Log.errorln(logBuff);
-        return false;
-    }
-
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
-
-    if (payloadStr == CMD_GPIO_READ_STR) {
-        sprintf(logBuff, "-> %s Controller: Read GPIO Pin-%d, Value= %d.", controllerStr.c_str(), pin, digitalRead(pin));
-        Log.infoln(logBuff);
-        return true;
-    }
-    else if (payloadStr == CMD_GPIO_OUT_HIGH_STR) {
-        if (pin == GPIO19_PIN) {
-            if ((gpio19BootStr == GPIO_OUT_HI_STR) || (gpio19BootStr == GPIO_OUT_LO_STR)) {
-                digitalWrite(GPIO19_PIN, HIGH);
-                gpio19CtrlStr = CMD_GPIO_OUT_HIGH_STR;
-                sprintf(logBuff, "-> %s Controller: Setting GPIO Pin-%d to %s.", controllerStr.c_str(), pin, CMD_GPIO_OUT_HIGH_STR);
-                Log.infoln(logBuff);
-                updateUiGpioMsg(pin, controller);
-            }
-            else {
-                sprintf(logBuff, "-> %s Controller: Cannot Write to GPIO Pin-%d (it is Input Pin).", controllerStr.c_str(), pin);
-                Log.warningln(logBuff);
-                return false;
-            }
+    do // once
+    {
+        if (payloadStr.length() > CMD_GPIO_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_GPIO_MAX_SZ);
         }
-        else if (pin == GPIO23_PIN) {
-            if ((gpio23BootStr == GPIO_OUT_HI_STR) || (gpio23BootStr == GPIO_OUT_LO_STR)) {
-                digitalWrite(GPIO23_PIN, HIGH);
-                gpio23CtrlStr = CMD_GPIO_OUT_HIGH_STR;
-                sprintf(logBuff, "-> %s Controller: Setting GPIO Pin-%d to %s.", controllerStr.c_str(), pin, CMD_GPIO_OUT_HIGH_STR);
-                Log.infoln(logBuff);
-                updateUiGpioMsg(pin, controller);
-            }
-            else {
-                sprintf(logBuff, "-> %s Controller: Cannot Write to GPIO Pin-%d (it is Input Pin).", controllerStr.c_str(), pin);
-                Log.warningln(logBuff);
-                return false;
-            }
-        }
-        else if (pin == GPIO33_PIN) {
-            if ((gpio33BootStr == GPIO_OUT_HI_STR) || (gpio33BootStr == GPIO_OUT_LO_STR)) {
-                digitalWrite(GPIO33_PIN, HIGH);
-                gpio33CtrlStr = CMD_GPIO_OUT_HIGH_STR;
-                sprintf(logBuff, "-> %s Controller: Setting GPIO Pin-%d to %s.", controllerStr.c_str(), pin, CMD_GPIO_OUT_HIGH_STR);
-                Log.infoln(logBuff);
-                updateUiGpioMsg(pin, controller);
-            }
-            else {
-                sprintf(logBuff, "-> %s Controller: Cannot Write to GPIO Pin-%d (it is Input Pin).", controllerStr.c_str(), pin);
-                Log.warningln(logBuff);
-                return false;
-            }
-        }
-    }
-    else if (payloadStr == CMD_GPIO_OUT_LOW_STR) {
-        if (pin == GPIO19_PIN) {
-            if ((gpio19BootStr == GPIO_OUT_HI_STR) || (gpio19BootStr == GPIO_OUT_LO_STR)) {
-                digitalWrite(GPIO19_PIN, LOW);
-                gpio19CtrlStr = CMD_GPIO_OUT_LOW_STR;
-                sprintf(logBuff, "-> %s Controller: Setting GPIO Pin-%d to %s.", controllerStr.c_str(), pin, CMD_GPIO_OUT_LOW_STR);
-                Log.infoln(logBuff);
-                updateUiGpioMsg(pin, controller);
-            }
-            else {
-                sprintf(logBuff, "-> %s Controller: Cannot Write to GPIO Pin-%d (it is Input Pin).", controllerStr.c_str(), pin);
-                Log.warningln(logBuff);
-                return false;
-            }
-        }
-        else if (pin == GPIO23_PIN) {
-            if ((gpio23BootStr == GPIO_OUT_HI_STR) || (gpio23BootStr == GPIO_OUT_LO_STR)) {
-                digitalWrite(GPIO23_PIN, LOW);
-                gpio23CtrlStr = CMD_GPIO_OUT_LOW_STR;
-                sprintf(logBuff, "-> %s Controller: Setting GPIO Pin-%d to %s.", controllerStr.c_str(), pin, CMD_GPIO_OUT_LOW_STR);
-                Log.infoln(logBuff);
-                updateUiGpioMsg(pin, controller);
-            }
-            else {
-                sprintf(logBuff, "-> %s Controller: Cannot Write to GPIO Pin-%d (it is Input Pin).", controllerStr.c_str(), pin);
-                Log.warningln(logBuff);
-                return false;
-            }
-        }
-        else if (pin == GPIO33_PIN) {
-            if ((gpio33BootStr == GPIO_OUT_HI_STR) || (gpio33BootStr == GPIO_OUT_LO_STR)) {
-                digitalWrite(GPIO33_PIN, LOW);
-                gpio33CtrlStr = CMD_GPIO_OUT_LOW_STR;
-                sprintf(logBuff, "-> %s Controller: Setting GPIO Pin-%d to %s.", controllerStr.c_str(), pin, CMD_GPIO_OUT_LOW_STR);
-                Log.infoln(logBuff);
-                updateUiGpioMsg(pin, controller);
-            }
-            else {
-                sprintf(logBuff, "-> %s Controller: Cannot Write to GPIO Pin-%d (it is Input Pin).", controllerStr.c_str(), pin);
-                Log.warningln(logBuff);
-                return false;
-            }
-        }
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid GPIO Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
 
-    return true;
+        if (payloadStr.equals(F(CMD_GPIO_READ_STR)))
+        {
+            Log.infoln((String(F("-> ")) + ControllerName + F(" Controller: Read GPIO Pin-") + String(pin) + F(", Value= ") + String(digitalRead(pin))).c_str());
+            break;
+        }
+
+        if (!payloadStr.equals(CMD_GPIO_OUT_HIGH_STR) &&
+            !payloadStr.equals(CMD_GPIO_OUT_LOW_STR))
+        {
+            Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid GPIO Payload (") + payloadStr + F("), Ignored.")).c_str());
+            response = false;
+            break;
+        }
+
+        bool NewPinState = payloadStr.equals(CMD_GPIO_OUT_HIGH_STR) ? HIGH : LOW;
+        digitalWrite(pin, NewPinState);
+        Log.infoln((String(F("-> ")) + ControllerName + F(" Controller: Setting GPIO Pin-") + String(pin) + F(" to ") + ((pin) ? F(CMD_GPIO_OUT_HIGH_STR) : F(CMD_GPIO_OUT_LOW_STR))).c_str());
+        updateUiGpioMsg(pin, ControllerName, NewPinState);
+
+    } while (false);
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool infoCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::info(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_SYS_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
+    bool response = true;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> infoCmd: Undefined Controller!");
-        return false;
+    if (payloadStr.length() > CMD_SYS_MAX_SZ)
+    {
+        payloadStr = payloadStr.substring(0, CMD_SYS_MAX_SZ);
     }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
-
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
+    if (!payloadStr.equals(F(CMD_SYS_CODE_STR)))
+    {
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Info Command")).c_str());
+    }
+    else 
+    {
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid INFO Payload (") + payloadStr + F("), Ignored.")).c_str());
+        response = false;
     }
 
-    if (payloadStr == CMD_SYS_CODE_STR) {
-        sprintf(logBuff, "-> %s Controller: Info Command.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid INFO Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
 // logCmd(): Set the Serial Log Level to Silent or reset back to system (Web UI) setting.
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
-bool logCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::log(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_LOG_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    bool response = true;
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> logCmd: Undefined Controller!");
-        return false;
-    }
+    do // once
+    {
+        if (payloadStr.length() > CMD_LOG_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_LOG_MAX_SZ);
+        }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
+        if (payloadStr == CMD_LOG_SIL_STR) 
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Log Level Set to LOG_LEVEL_SILENT.")).c_str());
+            Serial.flush();
+            Log.begin(LOG_LEVEL_SILENT, &Serial);
+            break;
+        }
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+        if (payloadStr == CMD_LOG_RST_STR) 
+        {
+            String logLevelStr; // TBD
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Log Level Restored to ") + logLevelStr).c_str());
+            Serial.flush();
+            Log.begin(getLogLevel(), &Serial);
+            break;
+        }
 
-    if (payloadStr == CMD_LOG_SIL_STR) {
-        sprintf(logBuff, "-> %s Controller: Log Level Set to LOG_LEVEL_SILENT.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        Serial.flush();
-        Log.begin(LOG_LEVEL_SILENT, &Serial);
-        Log.setShowLevel(false); // Do not show loglevel, we will do this in the prefix
-    }
-    else if (payloadStr == CMD_LOG_RST_STR) {
-        sprintf(logBuff, "-> %s Controller: Log Level Restored to %s.", controllerStr.c_str(), logLevelStr.c_str());
-        Log.verboseln(logBuff);
-        Serial.flush();
-        Log.begin(getLogLevel(), &Serial);
-        Log.setShowLevel(false); // Do not show loglevel, we will do this in the prefix
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid LOG Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid LOG Payload (") + payloadStr + F("), Ignored.")).c_str());
+        response = false;
+
+    } while (false);
+
+    Log.setShowLevel(false); // Do not show loglevel, we will do this in the prefix
     Serial.flush();
 
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool muteCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::mute(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_MUTE_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    bool response = true;
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> muteCmd: Undefined Controller!");
-        return false;
-    }
+    do // once
+    {
+        if (payloadStr.length() > CMD_MUTE_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_MUTE_MAX_SZ);
+        }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
+        if (payloadStr.equals(CMD_MUTE_ON_STR))
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Mute Set to ON (Audio Off).")).c_str());
+            // muteFlg    = true;
+            updateUiAudioMute(true);
+            break;
+        }
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+        if (payloadStr == CMD_MUTE_OFF_STR) 
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Mute Set to OFF (Audio On).")).c_str());
+            // muteFlg    = false;
+            updateUiAudioMute(false);
+            break;
+        }
 
-    if (payloadStr == CMD_MUTE_ON_STR) {
-        sprintf(logBuff, "-> %s Controller: Mute Set to ON (Audio Off).", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        muteFlg    = true;
-        newMuteFlg = true;
-        updateUiAudioMute();
-    }
-    else if (payloadStr == CMD_MUTE_OFF_STR) {
-        sprintf(logBuff, "-> %s Controller: Mute Set to OFF (Audio On).", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        muteFlg    = false;
-        newMuteFlg = true;
-        updateUiAudioMute();
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid MUTE Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-    return true;
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid MUTE Payload (") + payloadStr + F("), Ignored.")).c_str());
+        response = false;
+
+    } while (false);
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool piCodeCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::piCode(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_PI_MAX_SZ;
+   DEBUG_START;
+
+    bool response = true;
     uint32_t tempPiCode;
-    String   controllerStr;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> piCodeCmd: Undefined Controller!");
-        return false;
-    }
-
-    payloadStr.trim();
-
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
-
-    tempPiCode = strtol(payloadStr.c_str(), NULL, HEX);
-
-    if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX)) {
-        sprintf(logBuff, "-> %s Controller: Invalid RDS PI Code Value (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-    else {
-        if (radio.getPiCode() != (uint16_t)(tempPiCode)) { // New PI Code.
-            ControllerMgr.SetPiCode(controller, tempPiCode);
-            ControllerMgr.SetTextFlag(controller, true);
-
-            displaySaveWarning();
-            sprintf(logBuff, "-> %s Controller: PI Code Set to 0x%04X.", controllerStr.c_str(), tempPiCode);
+    do // once
+    {
+        if (payloadStr.length() > CMD_PI_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_PI_MAX_SZ);
         }
-        else {
-            sprintf(logBuff, "-> %s Controller: PI Code Unchanged (0x%04X).", controllerStr.c_str(), tempPiCode);
+
+        tempPiCode = strtol(payloadStr.c_str(), NULL, HEX);
+
+        if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX)) 
+        {
+            Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid RDS PI Code Value (") + payloadStr + F("), Ignored.")).c_str());
+            response = false;
+            break;
         }
-        Log.verboseln(logBuff);
-    }
-    return true;
+
+        if (radio.getPiCode() == (uint16_t)(tempPiCode))
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: PI Code Unchanged (0x") + String(tempPiCode, HEX) + F(").")).c_str());
+            break;
+        }
+
+        // New PI Code.
+        // ControllerMgr.SetPiCode(controller, tempPiCode);
+        // ControllerMgr.SetTextFlag(controller, true);
+
+        // displaySaveWarning();
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: PI Code Set to (0x") + String(tempPiCode, HEX) + F(").")).c_str());
+
+    } while (false);
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool ptyCodeCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::ptyCode(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_PTY_MAX_SZ;
-    int16_t tempPtyCode;
-    String  controllerStr;
+   DEBUG_START;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    bool response = true;
+    uint32_t tempPtyCode;
 
-    if (controllerStr.isEmpty()) {
-        Log.errorln("-> ptyCodeCmd: Undefined Controller!");
-        return false;
-    }
-
-    payloadStr.trim();
-
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
-    tempPtyCode = payloadStr.toInt();
-
-    if ((strIsUint(payloadStr) == false) ||
-        (tempPtyCode < RDS_PTY_CODE_MIN) ||
-        (tempPtyCode > RDS_PTY_CODE_MAX)) {
-        sprintf(logBuff, "-> %s Controller: Invalid RDS PTY Code Value (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-    else {
-        if (radio.getPTYCode() != (uint8_t)(tempPtyCode)) { // New PTY Code.
-            ControllerMgr.SetPiCode(controller, tempPtyCode);
-            ControllerMgr.SetTextFlag(controller, true);
-
-            displaySaveWarning();
-            sprintf(logBuff, "-> %s Controller: PTY Code Set to %d.", controllerStr.c_str(), tempPtyCode);
+    do // once
+    {
+        if (payloadStr.length() > CMD_PTY_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_PTY_MAX_SZ);
         }
-        else {
-            sprintf(logBuff, "-> %s Controller: PTY Code Unchanged (%d).", controllerStr.c_str(), tempPtyCode);
+
+        tempPtyCode = payloadStr.toInt();
+
+        if ((tempPtyCode < RDS_PTY_CODE_MIN) || (tempPtyCode > RDS_PTY_CODE_MAX)) 
+        {
+            Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid RDS PTY Code Value (") + payloadStr + F("), Ignored.")).c_str());
+            response = false;
+            break;
         }
-        Log.verboseln(logBuff);
-    }
-    return true;
+
+        if (radio.getPTYCode() == (uint8_t)(tempPtyCode))
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: PTY Code Unchanged (0x") + String(tempPtyCode, HEX) + F(").")).c_str());
+            break;
+        }
+
+        // New PTY Code.
+        // ControllerMgr.SetPtyCode(controller, tempPtyCode);
+        // ControllerMgr.SetTextFlag(controller, true);
+
+        // displaySaveWarning();
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: PTY Code Set to (0x") + String(tempPtyCode, HEX) + F(").")).c_str());
+
+    } while (false);
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool programServiceNameCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::programServiceName(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_PSN_MAX_SZ;
-    String controllerStr;
+   DEBUG_START;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    bool response = true;
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> programServiceNameCmd: Undefined Controller!");
-        return false;
-    }
+    do // once
+    {
+        if (payloadStr.length() > CMD_PSN_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_PSN_MAX_SZ);
+        }
 
-    payloadStr.trim();
+        // ControllerMgr.SetRdsProgramServiceName(controller, payloadStr);
+        // ControllerMgr.SetTextFlag(controller, true);
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+        // displaySaveWarning();
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RDS PSN Set to ") + payloadStr).c_str());
 
-    ControllerMgr.SetRdsProgramServiceName(controller, payloadStr);
-    ControllerMgr.SetTextFlag(controller, true);
-    sprintf(logBuff, "-> %s Controller: RDS PSN Set to %s", controllerStr.c_str(), payloadStr.c_str());
-    Log.verboseln(logBuff);
-    return true;
+    } while (false);
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool radioTextCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::radioText(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100 + CMD_RT_MAX_SZ];
-    const  uint8_t maxSize = CMD_RT_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    bool response = true;
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> radioTextCmd: Undefined Controller!");
-        return false;
-    }
+    do // once
+    {
+        if (payloadStr.length() > CMD_RT_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_RT_MAX_SZ);
+        }
 
-    payloadStr.trim();
+        // ControllerMgr.SetPayloadText(controller, payloadStr);
+        // ControllerMgr.SetTextFlag(controller, true);
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+        // displaySaveWarning();
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RadioText Changed to ") + payloadStr).c_str());
 
-    ControllerMgr.SetPayloadText(controller, payloadStr);
-    ControllerMgr.SetTextFlag(controller, true);
+    } while (false);
 
-    sprintf(logBuff, "-> %s Controller: RadioText Changed to %s", controllerStr.c_str(), payloadStr.c_str());
-    Log.verboseln(logBuff);
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
-bool rdsTimePeriodCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::rdsTimePeriod(String & payloadStr, String & ControllerName)
 {
+    DEBUG_START;
+    bool response = true;
     bool capFlg = false;
-    char logBuff[100];
     int32_t rtTime = 0;
-    String  controllerStr;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    do // once
+    {
+        if (payloadStr.length() > CMD_RT_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_RT_MAX_SZ);
+        }
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> rdsTimePeriodCmd: Undefined Controller!");
-        return false;
-    }
+        rtTime = strtol(payloadStr.c_str(), NULL, 10);
 
-    payloadStr.trim();
-    rtTime = strtol(payloadStr.c_str(), NULL, 10);
+        if ((payloadStr.length() > CMD_TIME_MAX_SZ) || (rtTime <= 0)) 
+        {
+            Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: RDS Time Period Value is Invalid, Ignored.")).c_str());
+            response = false;
+            break;
+        }
 
-    if ((payloadStr.length() > CMD_TIME_MAX_SZ) || (rtTime <= 0)) {
-        Log.errorln("-> RDS Time Period Value is Invalid, Ignored.");
-        return false;
-    }
-    else if (rtTime > RDS_DSP_TM_MAX) {
-        capFlg = true;
-        rtTime = RDS_DSP_TM_MAX;
-    }
-    else if (rtTime < RDS_DSP_TM_MIN) {
-        capFlg = true;
-        rtTime = RDS_DSP_TM_MIN;
-    }
+        if (rtTime > RDS_DSP_TM_MAX) 
+        {
+            capFlg = true;
+            rtTime = RDS_DSP_TM_MAX;
+        }
+        else if (rtTime < RDS_DSP_TM_MIN) 
+        {
+            capFlg = true;
+            rtTime = RDS_DSP_TM_MIN;
+        }
 
-    ControllerMgr.SetPayloadText(controller, payloadStr);
-    ControllerMgr.SetTextFlag(controller, true);
-    ControllerMgr.SetRdsMsgTime(controller, rtTime * 1000);
+        // ControllerMgr.SetPayloadText(controller, payloadStr);
+        // ControllerMgr.SetTextFlag(controller, true);
+        // ControllerMgr.SetRdsMsgTime(controller, rtTime * 1000);
+        String Msg;
+        if (capFlg)
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RDS Time Period Value out-of-range, set to ") + String(rtTime) + " secs.").c_str());
+        }
+        else 
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RDS Time Period Value set to ") + String(rtTime) + " secs.").c_str());
+        }
 
-    if (capFlg) {
-        sprintf(logBuff, "-> %s Controller: RDS Time Period Value out-of-range, set to %d secs.", controllerStr.c_str(), rtTime);
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: RDS Time Period Set to %d Secs.", controllerStr.c_str(), rtTime);
-    }
-    Log.verboseln(logBuff);
+    } while (false);
 
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool rebootCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::reboot(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_SYS_MAX_SZ;
-    String controllerStr;
+    DEBUG_START
+    bool response = true;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> rebootCmd: Undefined Controller!");
-        return false;
+    if (payloadStr.length() > CMD_SYS_MAX_SZ)
+    {
+        payloadStr = payloadStr.substring(0, CMD_SYS_MAX_SZ);
     }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
-
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
+    if (payloadStr.equals(F(CMD_SYS_CODE_STR)))
+    {
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: System Rebooted.")).c_str());
+        // rebootFlg = true; // Request system reboot.
+    }
+    else 
+    {
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid REBOOT Payload (") + payloadStr + F("), Ignored.")).c_str());
+        response = false;
     }
 
-    if (payloadStr == CMD_SYS_CODE_STR) {
-        sprintf(logBuff, "-> %s Controller: System Rebooted.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        rebootFlg = true; // Request system reboot.
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid REBOOT Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool rfCarrierCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::rfCarrier(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_RF_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
 
-    controllerStr = ControllerMgr.GetName(controller);
+    bool response = true;
 
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> rfCarrierCmd: Undefined Controller!");
-        return false;
-    }
+    do // once
+    {
+        if (payloadStr.length() > CMD_RF_MAX_SZ) 
+        {
+            payloadStr = payloadStr.substring(0, CMD_RF_MAX_SZ);
+        }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
+        if (payloadStr.equals(CMD_RF_ON_STR))
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RF Carrier Set to ON.")).c_str());
+            // rfCarrierFlg  = true;
+            // newCarrierFlg = true;
+            updateUiRfCarrier();
+            break;
+        }
 
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
+        if (payloadStr == CMD_RF_OFF_STR) 
+        {
+            Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RF Carrier Set to OFF.")).c_str());
+            // rfCarrierFlg  = false;
+            // newCarrierFlg = true;
+            updateUiRfCarrier();
+            break;
+        }
 
-    if (payloadStr == CMD_RF_ON_STR) {
-        sprintf(logBuff, "-> %s Controller: RF Carrier Set to ON.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        rfCarrierFlg  = true;
-        newCarrierFlg = true;
-        updateUiRfCarrier();
-    }
-    else if (payloadStr == CMD_RF_OFF_STR) {
-        sprintf(logBuff, "-> %s Controller: RF Carrier Set to OFF.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        rfCarrierFlg  = false;
-        newCarrierFlg = true;
-        updateUiRfCarrier();
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid RF Carrier Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid RF Carrier Payload (") + payloadStr + F("), Ignored.")).c_str());
+        response = false;
 
-    return true;
+    } while (false);
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool startCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::start(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const uint8_t maxSize = CMD_RDS_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
+    bool response = true;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.isEmpty())
+    if (payloadStr.length() > CMD_RDS_MAX_SZ)
     {
-        Log.errorln("-> startCmd: Undefined Controller!");
-        return false;
+        payloadStr = payloadStr.substring(0, CMD_RDS_MAX_SZ);
     }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
-
-    if (payloadStr.length() > maxSize)
+    if (payloadStr.equals(F(CMD_RDS_CODE_STR)))
     {
-        payloadStr = payloadStr.substring(0, maxSize);
-    }
-
-    if (payloadStr == CMD_RDS_CODE_STR)
-    {
-        sprintf(logBuff, "-> %s Controller: Start RDS.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-        ControllerMgr.SetTextFlag(controller, true);
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Start RDS.")).c_str());
+        // ControllerMgr.SetTextFlag(controller, true);
     }
     else
     {
-        sprintf(logBuff, "-> %s Controller: Invalid START Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid START Payload (") + payloadStr + F("), Ignored.")).c_str());
+        response = false;
     }
-    return true;
+
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool stopCmd(String payloadStr, c_ControllerMgr::ControllerTypeId_t controller)
+bool CommandProcessor::stop(String & payloadStr, String & ControllerName)
 {
-    char logBuff[100];
-    const  uint8_t maxSize = CMD_RDS_MAX_SZ;
-    String controllerStr;
+    DEBUG_START;
+    bool response = true;
 
-    controllerStr = ControllerMgr.GetName(controller);
-
-    if (controllerStr.length() == 0) {
-        Log.errorln("-> stopCmd: Undefined Controller!");
-        return false;
+    if (payloadStr.length() > CMD_RDS_MAX_SZ)
+    {
+        payloadStr = payloadStr.substring(0, CMD_RDS_MAX_SZ);
     }
 
-    payloadStr.trim();
-    payloadStr.toLowerCase();
-
-    if (payloadStr.length() > maxSize) {
-        payloadStr = payloadStr.substring(0, maxSize);
+    if (payloadStr.equals(F(CMD_RDS_CODE_STR)))
+    {
+        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Stop RDS.")).c_str());
+        // ControllerMgr.SetStopFlag(controller, true);
+    }
+    else 
+    {
+        Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid STOP Payload (") + payloadStr + F("), Ignored.")).c_str());
     }
 
-    if (payloadStr == CMD_RDS_CODE_STR) {
-        sprintf(logBuff, "-> %s Controller: Stop RDS.", controllerStr.c_str());
-        Log.verboseln(logBuff);
-
-        ControllerMgr.SetStopFlag(controller, true);
-    }
-    else {
-        sprintf(logBuff, "-> %s Controller: Invalid STOP Payload (%s), Ignored.", controllerStr.c_str(), payloadStr.c_str());
-        Log.errorln(logBuff);
-        return false;
-    }
-    return true;
+    DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************

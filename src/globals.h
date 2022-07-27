@@ -18,7 +18,9 @@
 
 // *********************************************************************************************
 
+#ifdef Oldway
 extern bool apFallBackFlg;
+#endif // def Oldway
 extern bool newVgaGainFlg;
 extern bool newAutoRfFlg;
 extern bool newCarrierFlg;
@@ -38,8 +40,9 @@ extern bool rfAutoFlg;
 extern bool rfCarrierFlg;
 extern bool stereoEnbFlg;
 extern bool testModeFlg;
-extern bool wifiDhcpFlg;
+#ifdef Oldway
 extern bool WiFiRebootFlg;
+#endif // def Oldway
 
 extern uint8_t analogVol;
 extern uint8_t fmRadioTestCode;
@@ -54,16 +57,8 @@ extern uint16_t fmFreqX10;
 extern float vbatVolts;
 extern float paVolts;
 
-// WiFi Vars, including Credentials
-extern IPAddress hotSpotIP;
-extern IPAddress subNet;
-extern IPAddress staticIP;
-extern IPAddress wifiDNS;
-extern IPAddress wifiGateway;
 
 // GUI Strings
-extern String apNameStr;
-extern String apIpAddrStr;
 extern String preEmphasisStr;
 extern String digitalGainStr;
 extern String gpio19BootStr;
@@ -73,17 +68,9 @@ extern String gpio19CtrlStr;
 extern String gpio23CtrlStr;
 extern String gpio33CtrlStr;
 extern String inpImpedStr;
-extern String ipAddrStr;
 extern String logLevelStr;
 extern String mdnsNameStr;
 extern String rfPowerStr;
-extern String staNameStr;
-extern String staticIpStr;
-extern String subNetStr;
 extern String userNameStr;
 extern String userPassStr;
 extern String vgaGainStr;
-extern String wifiDnsStr;
-extern String wifiGatewayStr;
-extern String wifiSSIDStr;
-extern String wifiWpaKeyStr;

@@ -441,6 +441,7 @@ void resetControllerRdsValues(void)
     radio.setPiCode(ControllerMgr.GetPiCode(LocalControllerId)); // Local RDS PI Code is Fixed Value.
     radio.setPtyCode(ControllerMgr.GetPtyCode(LocalControllerId)); // Default RDS PTY Code.
 
+#ifdef OldWay
     // USB Serial RDS Controller. All values can be changed during runtime by Serial Commands.
     ControllerMgr.SetRdsProgramServiceName(SerialControllerId, ControllerMgr.GetRdsProgramServiceName(LocalControllerId)); 	// Default Program Service Name (Mimic Local Controller).
     ControllerMgr.SetPayloadText(SerialControllerId, ""); 																	// Clear Controller's RadioText Message.
@@ -461,6 +462,8 @@ void resetControllerRdsValues(void)
     ControllerMgr.SetPiCode(HttpControllerId, ControllerMgr.GetPiCode(LocalControllerId)); 									// Default PI Code (Mimic Local Controller).
     ControllerMgr.SetPtyCode(HttpControllerId, ControllerMgr.GetPiCode(LocalControllerId));                                 // Default PTY Code (Mimic Local Controller).
     ControllerMgr.SetRdsMsgTime(HttpControllerId, ControllerMgr.GetRdsMsgTime(LocalControllerId)); 							// Default RDS Message Time (Mimic Local Controller),
+#endif // def OldWay
+
 }
 
 // ************************************************************************************************

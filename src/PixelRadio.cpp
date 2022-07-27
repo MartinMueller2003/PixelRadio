@@ -65,6 +65,7 @@
 #include "language.h"
 #include "QN8027Radio.h"
 #include "Controllers/ControllerMgr.h"
+#include "Network/WiFiDriver.hpp"
 
 // ************************************************************************************************
 // Global Section
@@ -102,14 +103,17 @@ float paVolts   = 0.0f;                      // RF Power Amp's Power Supply Volt
 String gpio19CtrlStr    = "";                // GPIO-19 State if Changed by Serial/MQTT/HTTP Controller.
 String gpio23CtrlStr    = "";                // GPIO-23 State if Changed by Serial/MQTT/HTTP Controller.
 String gpio33CtrlStr    = "";                // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
-String ipAddrStr        = "";                // DHCP IP Address;
 String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
+
+#ifdef OldWay
+ ipAddrStr        = "";                // DHCP IP Address;
 
 IPAddress hotSpotIP   = HOTSPOT_IP_DEF;
 IPAddress staticIP    = IP_ADDR_DEF;
 IPAddress subNet      = SUBNET_MASK_DEF;
 IPAddress wifiDNS     = WIFI_ADDR_DEF;
 IPAddress wifiGateway = WIFI_ADDR_DEF;
+#endif // def OldWay
 
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
@@ -119,8 +123,8 @@ bool muteFlg        = RADIO_MUTE_DEF_FLG;                  // Control, Mute audi
 bool rfAutoFlg      = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
 bool rfCarrierFlg   = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
 bool stereoEnbFlg   = STEREO_ENB_DEF_FLG;                  // Control, Enable Stereo FM if true (false = Mono).
-bool wifiDhcpFlg    = CTRL_DHCP_DEF_FLG;                   // Control, Use DHCP if true, else static IP.
-bool WiFiRebootFlg  = WIFI_REBOOT_DEF_FLG;                 // Control, Reboot if all connections fail.
+// bool wifiDhcpFlg    = CTRL_DHCP_DEF_FLG;                   // Control, Use DHCP if true, else static IP.
+// bool WiFiRebootFlg  = WIFI_REBOOT_DEF_FLG;                 // Control, Reboot if all connections fail.
 
 uint8_t analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
 uint8_t usbVol    = (atoi(USB_VOL_DEF_STR));               // Control. Unused, for future expansion.
@@ -132,8 +136,6 @@ uint32_t baudRate = ESP_BAUD_DEF;                          // Control.
 
 uint16_t fmFreqX10 = FM_FREQ_DEF_X10;                      // Control. FM MHz Frequency X 10 (881 - 1079).
 
-String apNameStr      = AP_NAME_DEF_STR;                   // Control.
-String apIpAddrStr    = IpAddressToString(HOTSPOT_IP_DEF); // Control.
 String preEmphasisStr = PRE_EMPH_DEF_STR;                  // Control.
 String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
 String gpio19BootStr  = GPIO_DEF_STR;                      // Control.
@@ -143,16 +145,19 @@ String inpImpedStr    = INP_IMP_DEF_STR;                   // Control.
 String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
 String mdnsNameStr    = MDNS_NAME_DEF_STR;                 // Control.
 String rfPowerStr     = RF_PWR_DEF_STR;                    // Control.
+#ifdef OldWay
 String staticIpStr    = "";
 String subNetStr      = subNet.toString();                 // Control.
-String staNameStr     = STA_NAME_DEF_STR;                  // Control.
+#endif // def OldWay
 String userNameStr    = LOGIN_USER_NAME_STR;               // Control.
 String userPassStr    = LOGIN_USER_PW_STR;                 // Control.
 String vgaGainStr     = VGA_GAIN_DEF_STR;                  // Control.
+#ifdef OldWay
 String wifiDnsStr     = "";                                // Control.
 String wifiGatewayStr = "";                                // Control.
 String wifiSSIDStr    = SSID_NM_STR;                       // Control, Private WiFi Credentials.
 String wifiWpaKeyStr  = WPA_KEY_STR;                       // Control, Private WiFi Credentials.
+#endif // def OldWay
 
 // *********************************************************************************************
 
@@ -197,11 +202,9 @@ void setup()
     initSerialLog(true); // Initally Set to verbose log level. Will use config file setting at end of setup.
 
     // Let's Start System Initialization
-    sprintf(logBuff, "PixelRadio FM Transmitter %s", AUTHOR_STR);
-    Log.infoln(logBuff);
-    sprintf(logBuff, "Version %s, %s", VERSION_STR, BLD_DATE_STR);
-    Log.infoln(logBuff);
-    Log.infoln("System is Starting ...");
+    Log.infoln((String(F("PixelRadio FM Transmitter ")) + F(AUTHOR_STR)).c_str());
+    Log.infoln(((String(F("Version ")) + F(VERSION_STR) + F(", ") + F(BLD_DATE_STR))).c_str());
+    Log.infoln(F("System is Starting ..."));
 
     // Initialize EEPROM Emulation.
     // initEprom();
@@ -209,12 +212,12 @@ void setup()
     // Setup ADC
     initVdcAdc();    // Initialize the Bat Voltage ADC.
     initVdcBuffer(); // Initialize the two Power Supply Measurement Buffers.
-    Log.infoln("Initialized VBAT and RF_VDC ADCs.");
+    Log.infoln(F("Initialized VBAT and RF_VDC ADCs."));
 
     // Setup the File System.
     littlefsInit();
     instalLogoImageFile();
-
+    WiFiDriver.Begin();
     ControllerMgr.begin();
 
     // Restore System Settings from File System.
@@ -227,12 +230,6 @@ void setup()
     }
 
     digitalWrite(MUX_PIN, TONE_ON);                         // Turn off Music (Mux) LED.
-
-    if (wifiConnect()) {                                    // Connected to Web Server.
-        #ifdef OTA_ENB
-        otaInit();                                          // Init OTA services.
-        #endif // ifdef OTA_ENB
-    }
 
     digitalWrite(MUX_PIN, TONE_OFF); // Turn on Music (Mux) LED, restore Line-In to external audio.
 
@@ -257,17 +254,19 @@ void setup()
     Log.infoln("Changing Log Level to %s", logLevelStr.c_str());
     initSerialLog(false);
     Serial.flush();
+
 }
 
 // *********************************************************************************************
 // Main Loop.
 void loop()
 {
-    Log.setLevel(LOG_LEVEL_SILENT);
+    Log.setLevel(LOG_LEVEL_INFO);
 
     // Background tasks
+    WiFiDriver.Poll();
     ControllerMgr.poll();
-/*
+#ifdef OldWay 
     processDnsServer();     // AP ESPUI DNS Server
     processRDS();           // Send any available RadioText.
     processMeasurements();  // Measure the two system voltages.
@@ -282,7 +281,7 @@ void loop()
     updateGpioBootPins();   // Update the User Programmable GPIO Pins.
     updateTestTones(false); // Update the Test Tone, false=Don't Reset Tone Sequence.
     updateOnAirSign();      // Update the Optional "On Air" 12V LED Sign.
-*/
+
     wifiReconnect();        // Reconnect to WiFi if not connected to router.
     rebootSystem();         // Check to see if Reboot has been requested.
 
@@ -293,6 +292,8 @@ void loop()
     #ifdef OTA_ENB
     ArduinoOTA.handle(); // OTA Service.
     #endif // ifdef OTA_ENB
+#endif // def OldWay 
+
 }
 
 // *********************************************************************************************

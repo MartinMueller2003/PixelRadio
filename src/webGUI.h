@@ -107,6 +107,7 @@ extern uint16_t rdsSaveMsgID;
 extern uint16_t rdsSnameID;
 extern uint16_t rdsRstID;
 
+#ifdef OldWay
 extern uint16_t wifiApBootID;
 extern uint16_t wifiApFallID;
 extern uint16_t wifiApID;
@@ -132,3 +133,4 @@ extern uint16_t wifiStaMsgID;
 extern uint16_t wifiStaNameID;
 extern uint16_t wifiSubID;
 extern uint16_t wifiWpaKeyID;
+#endif // def OldWay
