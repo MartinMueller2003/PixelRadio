@@ -36,24 +36,24 @@ c_ControllerNONE::c_ControllerNONE() : c_ControllerCommon("NONE", c_ControllerMg
 c_ControllerNONE::~c_ControllerNONE() {}
 
 // *********************************************************************************************
-void c_ControllerNONE::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerNONE::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::RestoreConfiguration(config);
+   c_ControllerCommon::restoreConfiguration(config);
 
    // DEBUG_END;
-} // RestoreConfiguration
+} // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerNONE::SaveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerNONE::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::SaveConfiguration(config);
+   c_ControllerCommon::saveConfiguration(config);
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *********************************************************************************************
 // EOF

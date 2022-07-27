@@ -38,7 +38,7 @@ c_ControllerCommon::c_ControllerCommon(String _Name, c_ControllerMgr::Controller
 c_ControllerCommon::~c_ControllerCommon(){}
 
 // *********************************************************************************************
-void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerCommon::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
@@ -71,7 +71,7 @@ void c_ControllerCommon::RestoreConfiguration(ArduinoJson::JsonObject &config)
 } // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerCommon::SaveConfiguration(ArduinoJson::JsonObject & config)
+void c_ControllerCommon::saveConfiguration(ArduinoJson::JsonObject & config)
 {
    // DEBUG_START;
 
@@ -84,7 +84,7 @@ void c_ControllerCommon::SaveConfiguration(ArduinoJson::JsonObject & config)
    config[N_PayloadTest]         = PayloadTest;
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *********************************************************************************************
 // EOF

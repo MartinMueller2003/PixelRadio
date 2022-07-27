@@ -98,11 +98,11 @@ void c_ControllerLOCAL::CreateDefaultMsgSet()
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::RestoreConfiguration(config);
+   c_ControllerCommon::restoreConfiguration(config);
    Messages.RestoreConfig(config);
 
    // do we need to create a set of default messages?
@@ -112,18 +112,18 @@ void c_ControllerLOCAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
    }
    
    // DEBUG_END;
-} // RestoreConfiguration
+} // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerLOCAL::SaveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::SaveConfiguration(config);
+   c_ControllerCommon::saveConfiguration(config);
    Messages.SaveConfig(config);
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *********************************************************************************************
 // EOF

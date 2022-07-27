@@ -46,11 +46,13 @@ void c_ControllerMQTT::Begin ()
    // DEBUG_START;
    mqttClient.setClient(wifiClient);
 
+#ifdef OldWay 
    if (wifiConnect ())
    { 
       // Connected to Web Server.
       Init (); // Init MQTT services.
    }
+#endif // def OldWay 
    // DEBUG_END;
 } // Begin
 
@@ -168,11 +170,13 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
       MessageStr = MQTT_MISSING_STR;
       ControllerEnabled = false; // Force DHCP mode.
    }
+#ifdef OldWay 
    else if (getWifiMode () == WIFI_AP)
    {
       // DEBUG_V();
       MessageStr = MQTT_NOT_AVAIL_STR;
    }
+#endif // def OldWay 
    else
    {
       // DEBUG_V();
@@ -264,6 +268,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
 void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, unsigned int length)
 {
    // DEBUG_START;
+#ifdef OldWay
    // char cBuff[length + 2];                    // Allocate Character buffer.
    // char logBuff[length + strlen (topic) + 60]; // Allocate a big buffer space.
    // char mqttBuff[140 + sizeof (VERSION_STR) + STA_NAME_MAX_SZ];
@@ -352,13 +357,14 @@ void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, uns
       if (infoCmd (payloadStr, MqttControllerId))
       {
          // DEBUG_V();
-         extern String staNameStr;
-         Message = String (F ("{\"")) + CMD_INFO_STR +
-                   F ("\": \"ok\", \"version\": \"") + VERSION_STR +
-                   F ("\", \"hostName\": \"") + staNameStr +
-                   F ("\", \"ip\": \"") + WiFi.localIP ().toString () +
-                   F ("\", \"rssi\": ") + WiFi.RSSI () +
-                   F (", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
+         String HostName;
+         WiFiDriver.GetHostname(HostName);
+         Message = String(F("{\"")) + CMD_INFO_STR +
+                   F("\": \"ok\", \"version\": \"") + VERSION_STR +
+                   F("\", \"hostName\": \"") + HostName +
+                   F("\", \"ip\": \"") + WiFi.localIP().toString() +
+                   F("\", \"rssi\": ") + WiFi.RSSI() +
+                   F(", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary();
       }
       else
       {
@@ -373,7 +379,7 @@ void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, uns
    {
       // DEBUG_V();
       Log.infoln (F ("MQTT: Received Audio Mute Command"));
-      muteCmd (payloadStr, MqttControllerId);
+      muteCmd (payloadStr, Name);
    }
    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PICODE_STR))
    {
@@ -422,6 +428,7 @@ void c_ControllerMQTT::mqttClientCallback (const char *topic, byte *payload, uns
       // DEBUG_V();
       Log.errorln ( (String (F ("MQTT: Received Unknown Command (")) + topicStr + F ("), Ignored.")).c_str ());
    }
+#endif // def OldWay
    // DEBUG_END;
 } // mqttClientCallback
 
@@ -761,11 +768,11 @@ void c_ControllerMQTT::setMqttNameCallback (Control *sender, int type)
 } // setMqttNameCallback
 
 // *********************************************************************************************
-void c_ControllerMQTT::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerMQTT::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::RestoreConfiguration(config);
+   c_ControllerCommon::restoreConfiguration(config);
 
    if (true == config.containsKey(F(N_MQTT_NAME_STR)))
    {
@@ -793,14 +800,14 @@ void c_ControllerMQTT::RestoreConfiguration(ArduinoJson::JsonObject &config)
    }
    
    // DEBUG_END;
-} // RestoreConfiguration
+} // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerMQTT::SaveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerMQTT::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::SaveConfiguration(config);
+   c_ControllerCommon::saveConfiguration(config);
 
    config[N_MQTT_NAME_STR] = mqttNameStr;
    config[N_MQTT_PW_STR]   = mqttPwStr;
@@ -808,7 +815,7 @@ void c_ControllerMQTT::SaveConfiguration(ArduinoJson::JsonObject &config)
    config[N_MQTT_IP_STR]   = RemoteIp.toString();
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *************************************************************************************************************************
 // gpioMqttControl (): MQTT handler for GPIO Commands. This is a companion to mqttCallback ().
@@ -823,7 +830,9 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 
    Log.infoln ( (String (F ("-> MQTT Controller: Received GPIO Pin-")) + String (pin) + " Command").c_str ());
 
+#ifdef OldWay
    successFlg = gpioCmd (payloadStr, MqttControllerId, pin);
+#endif // def OldWay
    // DEBUG_V();
 
    if (!successFlg)

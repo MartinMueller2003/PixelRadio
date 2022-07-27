@@ -25,8 +25,8 @@ class c_ControllerHTTP : public c_ControllerCommon
 public:
             c_ControllerHTTP();
    virtual  ~c_ControllerHTTP();
-   void     SaveConfiguration(ArduinoJson::JsonObject &config);
-   void     RestoreConfiguration(ArduinoJson::JsonObject &config);
+   void     saveConfiguration(ArduinoJson::JsonObject &config);
+   void     restoreConfiguration(ArduinoJson::JsonObject &config);
    void     AddControls(uint16_t ctrlTab);
    void     CbControllerEnabled(Control *sender, int type);
 

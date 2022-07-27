@@ -31,8 +31,8 @@ public:
    void     ProcessFppdFile(String & FppdFileName);
 
    void     AddControls(uint16_t ctrlTab);
-   void     RestoreConfiguration(ArduinoJson::JsonObject & config);
-   void     SaveConfiguration(ArduinoJson::JsonObject & config);
+   void     restoreConfiguration(ArduinoJson::JsonObject & config);
+   void     saveConfiguration(ArduinoJson::JsonObject & config);
    void     CbControllerEnabled(Control *sender, int type);
    void     CbSequenceLearningEnabled(Control *sender, int type);
 

@@ -110,13 +110,15 @@ void c_ControllerSERIAL::initSerialControl(void)
 // gpioSerialControl(): Serial handler for GPIO Commands.
 void c_ControllerSERIAL::gpioSerialControl(String paramStr, uint8_t pin)
 {
-   bool successFlg = true;
+   bool successFlg = false;
    String Response;
 
    // sprintf(charBuff, "Serial Controller: Received GPIO Pin-%d Command", pin);
    // Log.infoln(charBuff);
 
+#ifdef OldWay
    successFlg = gpioCmd(paramStr, TypeId, pin);
+#endif // def OldWay
 
    if (!successFlg)
    {
@@ -183,8 +185,10 @@ void c_ControllerSERIAL::CbBaudrateControl(Control *sender, int type)
 void c_ControllerSERIAL::serialCommands(void)
 {
    // DEBUG_START;
-   
-   extern String staNameStr;
+#ifdef OldWay
+
+   String HostName;
+   WiFiDriver.GetHostName(HostName);
 
    char printBuff[140 + sizeof(VERSION_STR) + STA_NAME_MAX_SZ];
 
@@ -274,7 +278,7 @@ void c_ControllerSERIAL::serialCommands(void)
                      "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}",
                      CMD_INFO_STR,
                      VERSION_STR,
-                     staNameStr.c_str(),
+                     HostName.c_str(),
                      WiFi.localIP().toString().c_str(),
                      WiFi.RSSI(),
                      ControllerMgr.getControllerStatusSummary());
@@ -394,6 +398,7 @@ void c_ControllerSERIAL::serialCommands(void)
       }
       Serial.flush(); // Purge the serial controller to prevent conflicts with serialLog.
    }
+#endif // def OldWay
 
    // DEBUG_END;
 }
@@ -480,11 +485,11 @@ bool c_ControllerSERIAL::SetBaudrate(String NewRate)
 } // SetBaudrate
 
 // *********************************************************************************************
-void c_ControllerSERIAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerSERIAL::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::RestoreConfiguration(config);
+   c_ControllerCommon::restoreConfiguration(config);
 
    if(config.containsKey(N_Baudrate))
    {
@@ -493,19 +498,19 @@ void c_ControllerSERIAL::RestoreConfiguration(ArduinoJson::JsonObject &config)
    }
 
    // DEBUG_END;
-} // RestoreConfiguration
+} // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerSERIAL::SaveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerSERIAL::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::SaveConfiguration(config);
+   c_ControllerCommon::saveConfiguration(config);
 
    config[N_Baudrate] = BaudRateStr;
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *********************************************************************************************
 // EOF

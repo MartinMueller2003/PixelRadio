@@ -81,8 +81,8 @@ public:
    void                 Display(ControllerTypeId_t Id);
    c_ControllerCommon * GetControllerById(ControllerTypeId_t Id);
    String               GetName(ControllerTypeId_t Id);
-   void                 RestoreConfiguration(ArduinoJson::JsonObject & config);
-   void                 SaveConfiguration(ArduinoJson::JsonObject & config);
+   void                 restoreConfiguration(ArduinoJson::JsonObject & config);
+   void                 saveConfiguration(ArduinoJson::JsonObject & config);
    uint16_t             getControllerStatusSummary();
    void                 GetCurrentRdsMsgInfo(CurrentRdsMsgInfo_t &MsgInfo) { MsgInfo = CurrentRdsMsgInfo; }
 
@@ -114,15 +114,12 @@ public:
    void                 SetPayloadText(ControllerTypeId_t Id, String value);
    String               GetPayloadText(ControllerTypeId_t Id);
 
+#ifdef NoLongerNeeded
    void                 SetRdsMsgTime(ControllerTypeId_t Id, int32_t value);
    int32_t              GetRdsMsgTime(ControllerTypeId_t Id);
+#endif // def NoLongerNeeded
 
-   void                 SetActiveTextFlag(ControllerTypeId_t Id, bool value);
-   bool                 GetActiveTextFlag(ControllerTypeId_t Id);
-
-   // void                 SetControlFlag(ControllerTypeId_t Id, bool value);
    bool                 GetControllerEnabledFlag(ControllerTypeId_t Id);
-   bool                 IsControllerActive();
 
 }; // c_ControllerMgr
 

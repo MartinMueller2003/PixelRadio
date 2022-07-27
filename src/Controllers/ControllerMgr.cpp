@@ -325,6 +325,7 @@ void c_ControllerMgr::Display(ControllerTypeId_t Id)
    ListOfControllers[Id].pController->Display(homeTextMsgID);
 } // Display
 
+#ifdef NoLongerNeeded
 // *********************************************************************************************
 void c_ControllerMgr::SetActiveTextFlag(ControllerTypeId_t Id, bool value)
 {
@@ -336,6 +337,7 @@ bool c_ControllerMgr::GetActiveTextFlag(ControllerTypeId_t Id)
 {
    return ListOfControllers[Id].pController->GetActiveTextFlag();
 } // GetActiveTextFlag
+#endif // def NoLongerNeeded
 
 // *********************************************************************************************
 bool c_ControllerMgr::GetControllerEnabledFlag(ControllerTypeId_t Id)
@@ -421,6 +423,7 @@ String c_ControllerMgr::GetPayloadText(ControllerTypeId_t Id)
    return ListOfControllers[Id].pController->GetPayloadText();
 } // GetPayloadText
 
+#ifdef NoLongerNeeded
 // *********************************************************************************************
 void c_ControllerMgr::SetRdsMsgTime(ControllerTypeId_t Id, int32_t value)
 {
@@ -432,19 +435,7 @@ int32_t c_ControllerMgr::GetRdsMsgTime(ControllerTypeId_t Id)
 {
    return ListOfControllers[Id].pController->GetRdsMsgTime();
 } // GetRdsMsgTime
-
-// *********************************************************************************************
-bool c_ControllerMgr::IsControllerActive()
-{
-   bool Response = false;
-
-   for (ControllerInfo_t & CurrentController : ListOfControllers)
-   {
-      Response |= CurrentController.pController->GetActiveTextFlag();
-   }
-
-   return Response;
-} // IsControllerActive
+#endif // def NoLongerNeeded
 
 // *********************************************************************************************
 void c_ControllerMgr::poll()
@@ -465,7 +456,7 @@ void c_ControllerMgr::AddControls(uint16_t ctrlTab)
 } // AddControls
 
 // *********************************************************************************************
-void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerMgr::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
@@ -483,7 +474,7 @@ void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
       for (auto &currentController : ListOfControllers)
       {
          JsonObject ControllerConfig = ControllerConfigs.createNestedObject();
-         currentController.pController->SaveConfiguration(ControllerConfig);
+         currentController.pController->saveConfiguration(ControllerConfig);
       }
 
    } while (false);
@@ -491,10 +482,10 @@ void c_ControllerMgr::SaveConfiguration(ArduinoJson::JsonObject &config)
    serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *********************************************************************************************
-void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerMgr::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
@@ -525,13 +516,13 @@ void c_ControllerMgr::RestoreConfiguration(ArduinoJson::JsonObject &config)
          uint32_t type = CurrentControllerConfig[N_type];
          // DEBUG_V(String("Type ID: ") + String(type));
          JsonObject Temp = CurrentControllerConfig;
-         ListOfControllers[type].pController->RestoreConfiguration(Temp);
+         ListOfControllers[type].pController->restoreConfiguration(Temp);
       }
 
    } while (false);
 
    // DEBUG_END;
-} // RestoreConfiguration
+} // restoreConfiguration
 
 c_ControllerMgr ControllerMgr;
 

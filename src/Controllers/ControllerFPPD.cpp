@@ -193,11 +193,11 @@ void c_ControllerFPPD::ProcessFppdFile(String & FppdFileName)
 } // ProcessFppdFile
 
 // *********************************************************************************************
-void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerFPPD::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::RestoreConfiguration(config);
+   c_ControllerCommon::restoreConfiguration(config);
 
    if (config.containsKey(N_SequenceLearningEnabled))
    {
@@ -217,14 +217,14 @@ void c_ControllerFPPD::RestoreConfiguration(ArduinoJson::JsonObject &config)
    // serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
-} // RestoreConfiguration
+} // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerFPPD::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   c_ControllerCommon::SaveConfiguration(config);
+   c_ControllerCommon::saveConfiguration(config);
 
    config[N_MaxIdleSec] = MaxIdleTimeSec;
    config[N_SequenceLearningEnabled] = SequenceLearningEnabled;
@@ -235,7 +235,7 @@ void c_ControllerFPPD::SaveConfiguration(ArduinoJson::JsonObject &config)
    // serializeJsonPretty(config, Serial);
 
    // DEBUG_END;
-} // SaveConfiguration
+} // saveConfiguration
 
 // *********************************************************************************************
 // EOF

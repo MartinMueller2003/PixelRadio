@@ -21,6 +21,7 @@
 #include "ControllerCommon.h"
 #include <PubSubClient.h>
 #include <WiFi.h>
+#include "../credentials.h"
 
 class c_ControllerMQTT : public c_ControllerCommon
 {
@@ -29,8 +30,8 @@ public:
    virtual  ~c_ControllerMQTT(void);
    void     Begin(void);
    void     poll(void);
-   void     SaveConfiguration(ArduinoJson::JsonObject &config);
-   void     RestoreConfiguration(ArduinoJson::JsonObject &config);
+   void     saveConfiguration(ArduinoJson::JsonObject &config);
+   void     restoreConfiguration(ArduinoJson::JsonObject &config);
 
    void     AddControls(uint16_t ctrlTab);
    void     setMqttAuthenticationCallback(Control *sender, int type);

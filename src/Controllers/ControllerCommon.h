@@ -45,9 +45,9 @@ protected:
    CtypeId     TypeId                           = NullControllerId;
    bool        TextFlag                         = false;
    bool        StopFlag                         = false;
-   bool        activeTextFlag                   = false;
+   // bool        activeTextFlag                   = false;
    bool        OnlineFlag                       = false;
-   uint32_t    RdsMsgTime                       = 0;
+   // uint32_t    RdsMsgTime                       = 0;
 
    bool MsgHasBeenDisplayedFlag = false;
 
@@ -62,8 +62,8 @@ public:
    virtual void      begin() {}
    virtual void      poll() {}
    virtual void      AddControls(uint16_t ctrlTab) {}
-   virtual void      RestoreConfiguration(ArduinoJson::JsonObject &config);
-   virtual void      SaveConfiguration(ArduinoJson::JsonObject &config);
+   virtual void      restoreConfiguration(ArduinoJson::JsonObject &config);
+   virtual void      saveConfiguration(ArduinoJson::JsonObject &config);
    String &          GetName() { return Name; }
 
    virtual void      Display(uint16_t msgId) { ESPUI.print(msgId, String(F("Source: ")) + Name + String(F(" Controller"))); }
@@ -90,13 +90,12 @@ public:
    virtual void      SetPayloadText(String &value) { PayloadTest = value; }
    virtual String &  GetPayloadText() { return PayloadTest; }
 
+#ifdef NoLongerNeeded
    virtual void      SetRdsMsgTime(uint32_t value) { RdsMsgTime = value; }
    virtual uint32_t  GetRdsMsgTime() { return RdsMsgTime; }
+#endif // def NoLongerNeeded
 
-   virtual void      SetActiveTextFlag(bool value) { activeTextFlag = value; }
-   virtual bool      GetActiveTextFlag() { return activeTextFlag; }
-
-   virtual bool      ControllerIsEnabled() { return ControllerEnabled; }
+           bool      ControllerIsEnabled() { return ControllerEnabled; }
 
    virtual bool      CheckRdsTextAvailable() { return false; }
    // End of to be deleted
