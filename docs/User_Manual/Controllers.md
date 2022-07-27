@@ -7,10 +7,12 @@ It was developed for holiday "Pixel" displays (e.g., animated Christmas lights).
 
 To fully utilize the RadioText features it's important to understand PixelRadio's RDS Controllers.
 There are four of them, named as follows:
-1. Serial Controller
+1. Serial USB Controller
+1. Serial TTL Controller
 2. MQTT Controller
-3. HTTP Controller
-4. Local Controller
+3. FPPD Controller
+4. HTTP Controller
+5. Local Controller
 
 Each controller can receive RDS (RadioText) and System commands.
 They operate independently.
@@ -27,7 +29,7 @@ The command syntax is text based.
 For example, the HTTP controller can be commanded to broadcast a RadioText Message by using a URL like this:\
 `http://pixelradio.local:8080/cmd?rtm=Welcome to Our Pixel Show. Enjoy!`
 
-The four controllers must be configured before use.
+The six controllers must be configured before use.
 Please see the [CONTROLLERS Tab](./ControlTab.md) document for details.
 
 &nbsp;&nbsp;&nbsp;
