@@ -143,7 +143,6 @@ String gpio23BootStr  = GPIO_DEF_STR;                      // Control.
 String gpio33BootStr  = GPIO_DEF_STR;                      // Control.
 String inpImpedStr    = INP_IMP_DEF_STR;                   // Control.
 String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
-String mdnsNameStr    = MDNS_NAME_DEF_STR;                 // Control.
 String rfPowerStr     = RF_PWR_DEF_STR;                    // Control.
 #ifdef OldWay
 String staticIpStr    = "";

@@ -58,9 +58,8 @@ public:
 private:
 
 
-
-
-
+    uint32_t    NextPollTime            = 0;
+    uint32_t    PollInterval            = 1000;
 
     bool    ReportedIsWiFiConnected = false;
 

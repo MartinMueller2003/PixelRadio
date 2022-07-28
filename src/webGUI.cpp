@@ -130,6 +130,8 @@ uint16_t backupSaveSetMsgID = 0;
 
 uint16_t ctrlSaveID      = 0;
 uint16_t ctrlSaveMsgID   = 0;
+uint16_t wifiSaveID      = 0;
+uint16_t wifiSaveMsgID   = 0;
 
 uint16_t diagBootID    = 0;
 uint16_t diagBootMsgID = 0;
@@ -188,7 +190,7 @@ uint16_t rdsRstID      = 0;
 //                   Note: width and max-width appear to do the same thing. But try both. Avoid widths <30% or expect text wrap.
 void initCustomCss(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
     // START OF PANEL INLINE STYLES
     ESPUI.setPanelStyle(aboutLogoID,    "background-color: white; color: black;");
 
@@ -279,7 +281,7 @@ void initCustomCss(void)
 #ifdef OldWay
 #endif // def OldWay
 
-    DEBUG_END;
+    // DEBUG_END;
     // END OF STYLES
 }
 
@@ -426,49 +428,49 @@ void displaySaveWarning(void)
 // startGUI(): Must be called once in startup, AFTER wifiConnect()
 void startGUI(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     buildGUI();
-    DEBUG_V();
+    // DEBUG_V();
 
     // These have been moved to Heap and no longer impact stack
     // ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity(Verbosity::Quiet);                              // Production mode.
     ESPUI.jsonInitialDocumentSize = 5000;
     ESPUI.jsonUpdateDocumentSize = 5000;
-    DEBUG_V();
+    // DEBUG_V();
 
-    DEBUG_V();
+    // DEBUG_V();
     initCustomCss();
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************
 void StartESPUI()
 {
-    DEBUG_START;
+    // DEBUG_START;
     if ((userNameStr.isEmpty()) || (userPassStr.isEmpty()))
     { // Missing credentials, use automatic login.
-        DEBUG_V();
+        // DEBUG_V();
         ESPUI.begin("PixelRadio");
-        DEBUG_V();
+        // DEBUG_V();
 
         // Don't use LITTLEFS, browser refreshes will crash.
         // ESPUI.beginLITTLEFS(APP_NAME_STR);
     }
     else 
     {
-        DEBUG_V();
+        // DEBUG_V();
 #ifdef OldWay
         ESPUI.begin("PixelRadio", userNameStr.c_str(), userPassStr.c_str());
-        DEBUG_V();
+        // DEBUG_V();
 #endif // def OldWay
         ESPUI.begin("PixelRadio");
 
         // Don't use LITLEFS, browser refreshes will crash.
         // ESPUI.beginLITTLEFS(APP_NAME_STR, userNameStr.c_str(), userPassStr.c_str());
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************
@@ -520,7 +522,7 @@ void updateUiAudioMute(bool value)
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
 bool updateUiGpioMsg(uint8_t pin, String & ControllerName, bool PinState) 
 {
-    DEBUG_START;
+    // DEBUG_START;
     uint16_t msgID;
 
     switch(pin)
@@ -546,7 +548,7 @@ bool updateUiGpioMsg(uint8_t pin, String & ControllerName, bool PinState)
 
     ESPUI.print(msgID, String(F("{ SET TO ")) + ((PinState) ? GPIO_OUT_HI_STR : GPIO_OUT_LO_STR) + F(" BY ") + ControllerName + F(" }"));
 
-    DEBUG_END;
+    // DEBUG_END;
     return true;
 }
 
@@ -817,7 +819,7 @@ void updateUiWfiMode(void)
 //
 void buildGUI(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     tempStr.reserve(125); // Avoid memory re-allocation fragments on the Global String.
     char  charBuff[25];
@@ -836,7 +838,7 @@ void buildGUI(void)
     diagTab   = ESPUI.addControl(ControlType::Tab, "DIAG", DIAG_TAB_STR);
     aboutTab  = ESPUI.addControl(ControlType::Tab, "ABOUT", N_About);
 
-    DEBUG_V();
+    // DEBUG_V();
     // ************
     // Home Tab
     ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, "", ControlColor::None, homeTab);
@@ -886,7 +888,7 @@ void buildGUI(void)
     homeStaMsgID =
         ESPUI.addControl(ControlType::Label, "IP_ADDR", ipAddrStr, ControlColor::Carrot, homeStaID);
 #endif // def OldWay
-    DEBUG_V();
+    // DEBUG_V();
     
     // **************
     // Adjust Tab
@@ -932,7 +934,7 @@ void buildGUI(void)
     adjSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Wetasphalt, adjSaveID);
 
-    DEBUG_V();
+    // DEBUG_V();
     // ************
     // Radio Tab
 
@@ -953,7 +955,7 @@ void buildGUI(void)
                                     ControlColor::Emerald,
                                     radioTab,
                                     &rfCarrierCallback);
-    DEBUG_V();
+    // DEBUG_V();
 
     // RF Power Control is not compatible with the RF Amp Circutry.
     // Low Power levels do not correctly excite the PA Transistor.
@@ -988,7 +990,7 @@ void buildGUI(void)
     tempStr         = stereoEnbFlg ? RADIO_STEREO_STR : RADIO_MONO_STR;
     radioAudioMsgID =
         ESPUI.addControl(ControlType::Label, RADIO_AUDIO_MODE_STR, tempStr, ControlColor::Emerald, radioAudioID);
-    DEBUG_V();
+    // DEBUG_V();
 
     #ifdef ADV_RADIO_FEATURES
     radioEmphID =
@@ -1020,7 +1022,7 @@ void buildGUI(void)
     ESPUI.addControl(ControlType::Option, INP_IMP10K_STR, INP_IMP10K_STR, ControlColor::None, radioImpID);
     ESPUI.addControl(ControlType::Option, INP_IMP20K_STR, INP_IMP20K_STR, ControlColor::None, radioImpID);
     ESPUI.addControl(ControlType::Option, INP_IMP40K_STR, INP_IMP40K_STR, ControlColor::None, radioImpID);
-    DEBUG_V();
+    // DEBUG_V();
 
     #ifdef ADV_RADIO_FEATURES
     radioDgainID =
@@ -1068,7 +1070,7 @@ void buildGUI(void)
     rdsProgNameID =
         ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, ControllerMgr.GetRdsProgramServiceName(LocalControllerId), ControlColor::Alizarin, rdsTab,
                          &rdsTextCallback);
-    DEBUG_V();
+    // DEBUG_V();
 
     sprintf(charBuff, "0x%04X", ControllerMgr.GetPiCode(LocalControllerId));
     rdsPiID =
@@ -1100,45 +1102,14 @@ void buildGUI(void)
                                  &saveSettingsCallback);
     rdsSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Alizarin, rdsSaveID);
-#ifdef OldWay
 
     //
     // *************
     //  WiFi Tab
 
-#endif // def OldWay
-    DEBUG_V();
+    // DEBUG_V();
     WiFiDriver.addControls(homeTab, wifiTab);
-    DEBUG_V();
-
-    // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
-    #ifdef MDNS_ENB
-#ifdef OldWay
-    wifiMdnsNameID =
-        ESPUI.addControl(ControlType::Text, WIFI_MDNS_NAME_STR, mdnsNameStr, ControlColor::Carrot, wifiTab, &setWiFiNamesCallback);
-#endif // def OldWay
-    #endif // ifdef MDNS_ENB
-    // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
-
-#ifdef OldWay
-
-    ESPUI.addControl(ControlType::Separator, WIFI_AP_IP_SEP_STR, "", ControlColor::None, wifiTab);
-
-    wifiApIpID =
-        ESPUI.addControl(ControlType::Text, WIFI_AP_IP_ADDR_STR, apIpAddrStr, ControlColor::Carrot, wifiTab, &setWiFiAddrsCallback);
-
-    wifiApFallID =
-        ESPUI.addControl(ControlType::Switcher, WIFI_AP_FALLBK_STR, "1", ControlColor::Carrot, wifiTab, &apFallBkCallback);
-
-    //    ESPUI.addControl(ControlType::Separator, WIFI_BOOT_SEP_STR, "", ControlColor::None, wifiTab);
-
-    wifiApBootID =
-        ESPUI.addControl(ControlType::Switcher,
-                         WIFI_AP_REBOOT_STR,
-                         WiFiRebootFlg ? "1" : "0",
-                         ControlColor::Carrot,
-                         wifiTab,
-                         &apBootCallback);
+    // DEBUG_V();
 
     ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, wifiTab);
     wifiSaveID = ESPUI.addControl(ControlType::Button,
@@ -1149,9 +1120,8 @@ void buildGUI(void)
                                   &saveSettingsCallback);
     wifiSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Carrot, wifiSaveID);
-#endif // def OldWay
 
-    DEBUG_V();
+    // DEBUG_V();
 
     //
     // *************
@@ -1168,7 +1138,7 @@ void buildGUI(void)
                                   &saveSettingsCallback);
     ctrlSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Turquoise, ctrlSaveID);
-    DEBUG_V();
+    // DEBUG_V();
 
     //
     // *****************
@@ -1211,7 +1181,7 @@ void buildGUI(void)
                                   &saveSettingsCallback);
     gpioSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::None, gpioSaveID);
-    DEBUG_V();
+    // DEBUG_V();
 
 
     //
@@ -1246,7 +1216,7 @@ void buildGUI(void)
                          backupTab,
                          &backupCallback);
     backupRestoreMsgID = ESPUI.addControl(ControlType::Label, "RESTORE_MSG", "", ControlColor::Wetasphalt, backupRestoreID);
-    DEBUG_V();
+    // DEBUG_V();
 
     //
     // ******************
@@ -1304,7 +1274,7 @@ void buildGUI(void)
     diagLogMsgID = ESPUI.addControl(ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
 
     ESPUI.addControl(ControlType::Separator, DIAG_SYSTEM_SEP_STR, "", ControlColor::None, diagTab);
-    DEBUG_V();
+    // DEBUG_V();
 
     tempStr      = ESP.getFreeHeap();
     tempStr     += " Bytes";
@@ -1351,5 +1321,5 @@ void buildGUI(void)
         tempStr, 
         ControlColor::None, 
         aboutLogoID);
-    DEBUG_END;
+    // DEBUG_END;
 }

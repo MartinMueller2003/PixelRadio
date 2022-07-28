@@ -174,7 +174,6 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
 
     doc["USER_NAME_STR"] = userNameStr;
     doc["USER_PW_STR"]   = userPassStr;
-    doc["MDNS_NAME_STR"]    = mdnsNameStr;
 
     JsonObject root = doc.as<JsonObject>();
     ControllerMgr.saveConfiguration(root);

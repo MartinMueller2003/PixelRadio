@@ -69,7 +69,6 @@ extern String gpio23CtrlStr;
 extern String gpio33CtrlStr;
 extern String inpImpedStr;
 extern String logLevelStr;
-extern String mdnsNameStr;
 extern String rfPowerStr;
 extern String userNameStr;
 extern String userPassStr;

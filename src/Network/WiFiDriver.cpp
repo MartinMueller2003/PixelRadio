@@ -390,6 +390,7 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject & json)
     ConfigChanged |= ReadFromJSON (StaHostname,                     json, F("STA_NAME_STR"));
     ConfigChanged |= ReadFromJSON (ApHostname,                      json, F("AP_NAME_STR"));
     ConfigChanged |= ReadFromJSON (TempApIp,                        json, F("AP_IP_ADDR_STR"));
+    ConfigChanged |= ReadFromJSON (mdnsName,                        json, F("MDNS_NAME_STR"));
 
     staticIp.fromString (TempIp);
     staticGateway.fromString (TempGateway);
@@ -424,6 +425,7 @@ void c_WiFiDriver::saveConfiguration (JsonObject& json)
     json["STA_NAME_STR"]        = StaHostname;
     json["AP_NAME_STR"]         = ApHostname;
     json["AP_IP_ADDR_STR"]      = ApIp.toString();
+    json["MDNS_NAME_STR"]       = mdnsName;
 
     // DEBUG_END;
 
@@ -761,6 +763,10 @@ void fsm_WiFi_state_ConnectedToAP::Poll ()
         // DEBUG_V ("WiFi Handle Silent Disconnect");
         WiFi.reconnect ();
     }
+    else
+    {
+        pWiFiDriver->UpdateStatusFields();
+    }
 
     /// DEBUG_END;
 } // fsm_WiFi_state_ConnectedToAP::Poll
@@ -822,6 +828,10 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
     {
         Log.verboseln(String(F ("WiFi Lost the connection to the STA")).c_str());
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
+    }
+    else
+    {
+        pWiFiDriver->UpdateStatusFields();
     }
 
     /// DEBUG_END;

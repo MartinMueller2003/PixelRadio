@@ -239,7 +239,7 @@
 #define WIFI_DISABLE_STR       "WiFi Disabled"
 #define WIFI_AP_FALLBK_STR     "AP FALLBACK ENABLE"
 #define WIFI_AP_IP_ADDR_STR    "AP IP ADDRESS"
-#define WIFI_AP_IP_SEP_STR     "AP (HOTSPOT) IP SETTINGS"
+#define WIFI_AP_IP_SEP_STR     "AP (HOTSPOT) SETTINGS"
 #define WIFI_AP_MODE_STR       "AP Mode (Hot Spot)"
 #define WIFI_AP_NAME_STR       "AP (HOTSPOT) NAME"
 #define WIFI_AP_REBOOT_STR     "AP REBOOT"

@@ -182,9 +182,6 @@ const uint32_t I2C_FREQ_HZ     = 100000;          // I2C master clock frequency
 // Measurement:
 const int32_t MEAS_TIME = 50;                     // Measurement Refresh Time, in mS.
 
-// MDNS & OTA
-#define MDNS_NAME_DEF_STR "PixelRadio"            // Default MDNS and OTA WiFi Name.
-
 // Radio
 const uint16_t AUDIO_LEVEL_MAX = 675;             // Maxium Audio Level (peak mV) Measurement by QN8027.
 const uint32_t AUDIO_MEAS_TIME = 2000;            // Sample period for Audio Level Meas.

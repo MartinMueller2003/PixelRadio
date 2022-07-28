@@ -1366,18 +1366,6 @@ void setWiFiNamesCallback(Control *sender, int type)
         sprintf(logBuff, "HotSpot (AP) Name Set to: \"%s\"", apNameStr.c_str());
         Log.infoln(logBuff);
     }
-    else if (sender->id == wifiMdnsNameID) {
-        mdnsNameStr = sender->value;
-        mdnsNameStr = mdnsNameStr.substring(0, MDNS_NAME_MAX_SZ);
-
-        if (mdnsNameStr.length() == 0) {
-            mdnsNameStr = MDNS_NAME_DEF_STR;
-        }
-        ESPUI.print(wifiMdnsNameID, mdnsNameStr);
-        displaySaveWarning();
-        sprintf(logBuff, "MDNS/OTA Name Set to: \"%s\"", mdnsNameStr.c_str());
-        Log.infoln(logBuff);
-    }
     else {
         sprintf(logBuff, "setWiFiNamesCallback: %s.", BAD_SENDER_STR);
         Log.errorln(logBuff);
