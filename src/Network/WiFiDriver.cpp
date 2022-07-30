@@ -16,6 +16,7 @@
 #include <esp_wifi.h>
 #include "WiFiDriver.hpp"
 #include "../memdebug.h"
+#include <Int64String.h>
 
 //-----------------------------------------------------------------------------
 /*
@@ -59,6 +60,8 @@
 const PROGMEM char default_ssid             [] = SSID_NM_STR;
 const PROGMEM char default_passphrase       [] = WPA_KEY_STR;
 const PROGMEM char default_AP_passphrase    [] = AP_PSK_STR;
+
+#define DNS_PORT 53       // Webserver DNS port.
 
 /*****************************************************************************/
 /* FSM                                                                       */
@@ -125,7 +128,6 @@ void c_WiFiDriver::Begin ()
     {        
         // saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
     }
-
 
 #ifdef FixMe
     if (FileMgr.SdCardIsInstalled())
@@ -278,7 +280,7 @@ void c_WiFiDriver::GetStatus (JsonObject& jsonStatus)
     GetHostname (StaHostname);
     jsonStatus[F("WIFI_HOSTNAME")] = StaHostname;
 
-    jsonStatus[F("WIFI_RSSI")] = WiFi.RSSI ();
+    jsonStatus[F("WIFI_RSSI")] = getRSSI();
     jsonStatus[F("WIFI_IP_ADDR_STR")] = getIpAddress ().toString ();
     jsonStatus[F("WIFI_SUBNET_STR")] = getIpSubNetMask ().toString ();
     jsonStatus[F("WIFI_MAC_STR")] = WiFi.macAddress ();
@@ -719,13 +721,24 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
     {
         WiFi.enableSTA(false);
         WiFi.enableAP(true);
-        String ssid = F(AP_NAME_DEF_STR);
-        WiFi.softAP (ssid.c_str ());
+        String FinalSsid = pWiFiDriver->ApHostname;
+
+        #ifdef ADD_CHIP_ID
+        FinalSsid += int64String (ESP.getEfuseMac (), HEX);
+        #endif // ifdef ADD_CHIP_ID
+
+        String PSK;
+        #ifdef REQUIRE_WIFI_AP_PSK
+        Log.infoln(String(F("-> HotSpot Requires PSK")).c_str());
+        PSK = F(AP_PSK_STR);     // Enable PSK.
+        #endif // ifdef REQUIRE_WIFI_AP_PSK
+
+        WiFi.softAP (FinalSsid.c_str (), PSK.c_str());
 
         pWiFiDriver->setIpAddress (WiFi.localIP ());
         pWiFiDriver->setIpSubNetMask (WiFi.subnetMask ());
 
-        Log.infoln(String(String (F ("WiFi SOFTAP:       ssid: '")) + ssid).c_str());
+        Log.infoln(String(String (F ("WiFi SOFTAP:       ssid: '")) + FinalSsid).c_str());
         Log.infoln(String(String (F ("WiFi SOFTAP: IP Address: '")) + pWiFiDriver->getIpAddress ().toString ()).c_str());
     }
     else
@@ -765,6 +778,12 @@ void fsm_WiFi_state_ConnectedToAP::Poll ()
     }
     else
     {
+        pWiFiDriver->dnsServer.processNextRequest();
+
+        #ifdef OTA_ENB
+        ArduinoOTA.handle(); // OTA Service.
+        #endif // ifdef OTA_ENB
+
         pWiFiDriver->UpdateStatusFields();
     }
 
@@ -785,7 +804,8 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
 
     pWiFiDriver->setIpAddress( WiFi.localIP () );
     pWiFiDriver->setIpSubNetMask( WiFi.subnetMask () );
-    pWiFiDriver->ConnectionStatusMessage = F("Connected to an AP as a STA");
+    pWiFiDriver->ConnectionStatusMessage = 
+        (pWiFiDriver->UsingDhcp()) ? F("STA Mode (DHCP)") : F("STA Mode (Static)");
     pWiFiDriver->UpdateStatusFields();
 
     Log.infoln(String(String (F ("Connected with IP: ")) + pWiFiDriver->getIpAddress ().toString ()).c_str());
@@ -795,10 +815,26 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
     extern void StartESPUI();
     StartESPUI();
 
-#ifdef OTA_ENB
-    otaInit();                                          // Init OTA services.
-    #endif // ifdef OTA_ENB
+    #ifdef MDNS_ENB
+    // The mDNS initialization is also handled by the ArduinoOTA.begin() function. This code block is a duplicate for MDNS only.
+    if (!MDNS.begin(pWiFiDriver->mdnsName.c_str()))
+    {
+        // ArduinoOTA.setHostname() MUST use the same name!
+        Log.errorln(String(F("-> Error starting mDNS; Service is disabled.")).c_str());
+    }
+    else 
+    {
+        Log.infoln(String(F("-> Server mDNS has started")).c_str());
+        Log.infoln(String(F("-> Open http://%s.local in your browser")).c_str(), pWiFiDriver->mdnsName.c_str() );
 
+        MDNS.addService("http", "tcp", WEBSERVER_PORT);
+        MDNS.addServiceTxt("http", "tcp", "arduino", pWiFiDriver->mdnsName.c_str());
+    }
+    #endif // ifdef MDNS_ENB
+
+    #ifdef OTA_ENB
+    otaInit(pWiFiDriver->mdnsName);                                          // Init OTA services.
+    #endif // ifdef OTA_ENB
 
     // DEBUG_END;
 } // fsm_WiFi_state_ConnectedToAP::Init
@@ -827,6 +863,8 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
     if (0 == WiFi.softAPgetStationNum ())
     {
         Log.verboseln(String(F ("WiFi Lost the connection to the STA")).c_str());
+        pWiFiDriver->dnsServer.stop();
+        Log.warningln("-> DNS Server Terminated.");
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
     }
     else
@@ -850,12 +888,17 @@ void fsm_WiFi_state_ConnectedToSta::Init ()
 
     pWiFiDriver->setIpAddress (WiFi.softAPIP ());
     pWiFiDriver->setIpSubNetMask (IPAddress (255, 255, 255, 0));
-    pWiFiDriver->ConnectionStatusMessage = F("Connected to a STA as an AP");
+    pWiFiDriver->ConnectionStatusMessage = F("AP Mode");
     pWiFiDriver->UpdateStatusFields();
 
-    Log.infoln(String(String(F("Connected to STA with IP: ")) + pWiFiDriver->getIpAddress().toString()).c_str());
+    Log.infoln(String(String(F("Connected to a STA, Local AP IP: ")) + pWiFiDriver->getIpAddress().toString()).c_str());
 
     pWiFiDriver->SetIsWiFiConnected (true);
+
+    if(!pWiFiDriver->dnsServer.start(uint16_t(DNS_PORT), String("*"), pWiFiDriver->ApIp))
+    {
+        Log.errorln(String(F("WIFI: AP mode DNS Failed to start. No Web Sockets available.")).c_str());
+    }
 
     // DEBUG_END;
 } // fsm_WiFi_state_ConnectedToSta::Init
@@ -867,6 +910,8 @@ void fsm_WiFi_state_ConnectedToSta::OnDisconnect ()
     // DEBUG_START;
 
     Log.verboseln(String(F ("WiFi STA Disconnected")).c_str());
+    pWiFiDriver->dnsServer.stop();
+    Log.warningln("-> DNS Server Terminated.");
     fsm_WiFi_state_ConnectionFailed_imp.Init ();
 
     // DEBUG_END;

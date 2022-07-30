@@ -20,7 +20,8 @@ public:
                 c_WiFiDriverUi ();
     virtual     ~c_WiFiDriverUi ();
 
-    void        addControls(uint16_t _HomeTabId, uint16_t _WiFiTabId);
+    void        addControls(uint16_t _WiFiTabId);
+    void        addHomeControls(uint16_t _WiFiTabId);
 
     void        CbSetApFallback(Control * sender, int type);
     void        CbSetApIpAddr(Control * sender, int type);
@@ -42,17 +43,24 @@ public:
 
 protected:
     void        UpdateStatusFields();
+    int8_t      getRSSI         ();
 
     #define AP_NAME_DEF_STR     "PixelRadioAP"
     #define STA_NAME_DEF_STR    "PixelRadio"
     #define CLIENT_TIMEOUT      500   // Webserver Client Timeout, in mS.
     #define AP_TIMEOUT          60
     #define MDNS_NAME_DEF_STR   "PixelRadio" // Default MDNS and OTA WiFi Name.
+    #ifdef OTA_ENB
+    #define WIFI_MDNS_NAME_STR  "MDNS / OTA NAME"
+    #else // ifdef OTA_ENB
+    #define WIFI_MDNS_NAME_STR  "MDNS NAME"
+    #endif // ifdef OTA_ENB
 
     // config_t           *config = nullptr;                           // Current configuration
     String      StaHostname             = F(STA_NAME_DEF_STR);
     String      ApHostname              = F(AP_NAME_DEF_STR);
-    IPAddress   ApIp                    = IPAddress (0, 0, 0, 0);
+    String      mdnsName                = MDNS_NAME_DEF_STR;
+    IPAddress   ApIp                    = { 192u, 168u, 4u, 1u };
     IPAddress   CurrentIpAddress        = IPAddress (0, 0, 0, 0);
     IPAddress   CurrentNetmask          = IPAddress (0, 0, 0, 0);
     IPAddress   CurrentGateway          = IPAddress (0, 0, 0, 0);
@@ -70,10 +78,17 @@ protected:
     uint32_t    sta_timeout             = CLIENT_TIMEOUT;  ///< Timeout when connected as client (station)
     bool        RebootOnWiFiFailureToConnect = true;
     String      ConnectionStatusMessage;
-    String      mdnsName                = MDNS_NAME_DEF_STR;
 
 private:
     void        SetStaticFieldsVisibility();
+
+    #define AP_NAME_MAX_SZ    F("18")
+    #define STA_NAME_MAX_SZ   F("18")
+    #define MDNS_NAME_MAX_SZ  F("18")
+    #define SSID_MAX_SZ       F("32")   // Maximum permitted SSID Size according to standards.
+    #define USER_NM_MAX_SZ    F("10")
+    #define USER_PW_MAX_SZ    F("10")
+    #define PASSPHRASE_MAX_SZ F("48")
 
     uint16_t    HomeTabID               = Control::noParent;
     uint16_t    WiFiTabID               = Control::noParent;
@@ -101,11 +116,12 @@ private:
 
     uint16_t    wifiMdnsNameID          = Control::noParent;
     uint16_t    wifiNetID               = Control::noParent;
-    uint16_t    wifiSaveID              = Control::noParent;
-    uint16_t    wifiSaveMsgID           = Control::noParent;
     uint16_t    wifiSsidID              = Control::noParent;
     uint16_t    wifiStaNameID           = Control::noParent;
     uint16_t    wifiWpaKeyID            = Control::noParent;
 
+    uint16_t    homeRssiID              = Control::noParent;
+    uint16_t    homeStaID               = Control::noParent;
+    uint16_t    homeStaMsgID            = Control::noParent;
 
 }; // c_WiFiDriverUi

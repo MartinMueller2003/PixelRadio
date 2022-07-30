@@ -13,6 +13,8 @@
 */
 
 #include "../PixelRadio.h"
+#include <DNSServer.h>
+#include <ESPmDNS.h>
 #include <WiFi.h>
 #include "WiFiDriverUi.hpp"
 
@@ -50,21 +52,19 @@ public:
     bool        Get_RebootOnWiFiFailureToConnect () { return RebootOnWiFiFailureToConnect; }
     String      GetConfig_ssid  () { return ssid; }
     String      GetConfig_passphrase () { return passphrase; }
-    void        GetHostname     (String& name);
+    void        GetHostname     (String & name);
     void        SetHostname     (String & name);
     void        Disable         ();
     void        Enable          ();
+    bool        UsingDhcp       () { return (UseDhcp && !ValidateStaticSettings()); }
 
 private:
-
-
     uint32_t    NextPollTime            = 0;
     uint32_t    PollInterval            = 1000;
 
     bool    ReportedIsWiFiConnected = false;
 
     int     ValidateConfig  ();
-
     void    SetUpIp         ();
 
     void    onWiFiConnect   (const WiFiEvent_t event, const WiFiEventInfo_t info);
@@ -85,6 +85,7 @@ protected:
     friend class fsm_WiFi_state;
     fsm_WiFi_state * pCurrentFsmState = nullptr;
     uint32_t         FsmTimerWiFiStartTime = 0;
+    DNSServer   dnsServer;
 
 }; // c_WiFiDriver
 
@@ -105,7 +106,7 @@ public:
 
     virtual void Poll (void) = 0;
     virtual void Init (void) = 0;
-    virtual void GetStateName (String& sName) = 0;
+    virtual void GetStateName (String & sName) = 0;
     virtual void OnConnect (void) = 0;
     virtual void OnDisconnect (void) = 0;
             void GetDriverName (String & Name) { Name = F("WiFiDrv"); }
@@ -122,7 +123,7 @@ public:
 
     virtual void Poll (void);
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Boot"); }
+    virtual void GetStateName (String & sName) { sName = F ("Boot"); }
     virtual void OnConnect (void)             { /* ignore */ }
     virtual void OnDisconnect (void)          { /* ignore */ }
 
@@ -137,7 +138,7 @@ public:
 
     virtual void Poll (void);
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Connecting Using Config Credentials"); }
+    virtual void GetStateName (String & sName) { sName = F ("Connecting Using Config Credentials"); }
     virtual void OnConnect (void);
     virtual void OnDisconnect (void) {}
 
@@ -152,7 +153,7 @@ public:
 
     virtual void Poll (void);
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Connecting Using Default Credentials"); }
+    virtual void GetStateName (String & sName) { sName = F ("Connecting Using Default Credentials"); }
     virtual void OnConnect (void);
     virtual void OnDisconnect (void) {}
 
@@ -167,7 +168,7 @@ public:
 
     virtual void Poll (void);
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Connected To AP"); }
+    virtual void GetStateName (String & sName) { sName = F ("Connected To AP"); }
     virtual void OnConnect (void) {}
     virtual void OnDisconnect (void);
 
@@ -182,7 +183,7 @@ public:
 
     virtual void Poll (void);
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Connecting As AP"); }
+    virtual void GetStateName (String & sName) { sName = F ("Connecting As AP"); }
     virtual void OnConnect (void);
     virtual void OnDisconnect (void) {}
 
@@ -197,7 +198,7 @@ public:
 
     virtual void Poll (void);
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Connected To STA"); }
+    virtual void GetStateName (String & sName) { sName = F ("Connected To STA"); }
     virtual void OnConnect (void) {}
     virtual void OnDisconnect (void);
 
@@ -212,7 +213,7 @@ public:
 
     virtual void Poll(void) {}
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Connection Failed"); }
+    virtual void GetStateName (String & sName) { sName = F ("Connection Failed"); }
     virtual void OnConnect (void) {}
     virtual void OnDisconnect (void) {}
 
@@ -227,7 +228,7 @@ public:
 
     virtual void Poll (void) {}
     virtual void Init (void);
-    virtual void GetStateName (String& sName) { sName = F ("Disabled"); }
+    virtual void GetStateName (String & sName) { sName = F ("Disabled"); }
     virtual void OnConnect (void) {}
     virtual void OnDisconnect (void) {}
 

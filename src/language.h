@@ -268,12 +268,6 @@
 #define WIFI_WEBSRV_NAME_STR   "WEBSERVER NAME"
 #define WIFI_WPA_KEY_STR       "WIFI WPA KEY"
 
-#ifdef OTA_ENB
-# define WIFI_MDNS_NAME_STR  "MDNS / OTA NAME"
-#else // ifdef OTA_ENB
-# define WIFI_MDNS_NAME_STR  "MDNS NAME"
-#endif // ifdef OTA_ENB
-
 extern const PROGMEM char N_About[];
 extern const PROGMEM char N_About_PixelRadio[];
 extern const PROGMEM char N_Baudrate[];

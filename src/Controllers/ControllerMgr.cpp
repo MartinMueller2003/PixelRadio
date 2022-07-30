@@ -260,38 +260,6 @@ bool c_ControllerMgr::CheckRdsTextAvailable(bool IncludeLocalController)
    // DEBUG_END;
 } // CheckRdsTextAvailable
 
-// ************************************************************************************************
-// checkControllerIsAvailable(): 
-// Using the supplied Controller ID, check if any HIGHER priority
-// controllers are in operation. If none are present, then the supplied controller ID won't 
-// be blocked and is available to use.
-// true = Controller is ready, false = higher priority controller is active.
-bool c_ControllerMgr::checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controllerId) 
-{
-   // DEBUG_START;
-
-   bool Response = true;
-   for (auto &currentController : ListOfControllers)
-   {
-      // is this the target controller
-      if(currentController.ControllerId == controllerId)
-      {
-         // DEBUG_V("Target controller is the highest priority with a message");
-         break;
-      }
-      
-      if(currentController.pController->CheckRdsTextAvailable())
-      {
-         // DEBUG_V("Found a higher priority controller with a message. Target controller can NOT output a message");
-         Response = false;
-         break;
-      }
-   }
-
-   // DEBUG_END;
-   return Response;
-}
-
 // *********************************************************************************************
 bool c_ControllerMgr::CheckAnyControllerIsDisplayingMessage(bool IncludeLocalController)
 {

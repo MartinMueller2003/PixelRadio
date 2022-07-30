@@ -28,20 +28,6 @@
 extern QN8027Radio radio;
 
 // *********************************************************************************************
-
-// addChipID(): Add the ESP32 Chip ID to the provided name. Used to create unique host names.
-const String addChipID(const char *name) {
-    uint32_t chipid = 0;
-    char     buff[50];
-
-    for (int i = 0; i < 17; i = i + 8) {
-        chipid |= ((ESP.getEfuseMac() >> (40 - i)) & 0xff) << i;
-    }
-
-    snprintf(buff, sizeof(buff)-1, "%08X", chipid);
-    return String(name) + String(buff);
-}
-
 // *********************************************************************************************
 uint8_t i2cScanner(void)
 {

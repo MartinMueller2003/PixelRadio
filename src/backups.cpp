@@ -306,23 +306,10 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
     ControllerMgr.restoreConfiguration(doc);
     WiFiDriver.restoreConfiguration(doc);
 
-#ifdef OldWay
-    if ((const char *)doc["MDNS_NAME_STR"] != NULL) {
-        mdnsNameStr = (const char *)doc["MDNS_NAME_STR"];
-    }
-
-    if ((const char *)doc["WIFI_DNS_STR"] != NULL) {
-        wifiDnsStr = (const char *)doc["WIFI_DNS_STR"];
-    }
-
 //    if ((const char *)doc["RDS_PROG_SERV_STR"] != NULL) {
 //        String Temp = doc["RDS_PROG_SERV_STR"];
 //        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, Temp);
 //    }
-
-    wifiDNS.fromString(wifiDnsStr);
-
-#endif // def OldWay
 
     if (doc.containsKey("RDS_PI_CODE")) {
         ControllerMgr.SetPiCode(LocalControllerId, doc["RDS_PI_CODE"]); // Use radio.setPiCode() when restoring this hex value.

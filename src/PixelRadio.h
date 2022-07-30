@@ -243,52 +243,8 @@ const uint16_t VOLTS_UPD_TIME = 3750;  // Power Supply Volts GUI Update time (on
 #define HTML_DOCTYPE_STR  "<!DOCTYPE HTML>\r\n<html>"
 #define HTML_CLOSE_STR    "</html>\r\n\r\n"
 
-const uint16_t DNS_PORT          = 53;   // Webserver DNS port.
 const uint16_t HTTP_PORT         = 8080; // Port for HTTP commands
-
-#ifdef OldWay
-// WiFi:
-const uint8_t  AP_NAME_MAX_SZ    = 18;
-const uint8_t  MAX_CON_FAIL_CNT  = 10;   // Max Allowed Connection Attempts before reboot (if WiFiRebootFlg=true)
-const uint8_t  MDNS_NAME_MAX_SZ  = 18;
-const uint8_t  PASSPHRASE_MAX_SZ = 48;
-const uint8_t  SSID_MAX_SZ       = 32;   // Maximum permitted SSID Size according to standards.
-const uint8_t  STA_NAME_MAX_SZ   = 18;
-const uint8_t  USER_NM_MAX_SZ    = 10;
-const uint8_t  USER_PW_MAX_SZ    = 10;
-const uint8_t  WIFI_RETRY_CNT    = 20;    // Maximum number of WiFi connect attempts before AP mode.
-const uint8_t  WL_AP_CONNECTED   = 8;     // Define locally, avoids needing WiFi101 library.
 const uint16_t WEBSERVER_PORT    = 80;    // Port for Web Server. Do not change.
-const int32_t  RECONNECT_TIME    = 75000; // WiFi Reconnect Time, in mS. Recommended minimum is 1 minute.
-
-#define AP_NAME_DEF_STR  "PixelRadioAP"
-#define STA_NAME_DEF_STR "PixelRadio"
-#endif // def OldWay
-
-/*
-   WIFI_POWER_20dBm      // 20dBm NOT DEFINED! (Reset default, highest supply current ~150mA)
-   WIFI_POWER_19_5dBm    // 19.5dBm, Highest Power available via API.
-   WIFI_POWER_19dBm      // 19dBm
-   WIFI_POWER_18_5dBm    // 18.5dBm
-   WIFI_POWER_17dBm      // 17dBm
-   WIFI_POWER_15dBm      // 15dBm
-   WIFI_POWER_13dBm      // 13dBm
-   WIFI_POWER_11dBm      // 11dBm
-   WIFI_POWER_8_5dBm     // 8dBm
-   WIFI_POWER_7dBm       // 7dBm
-   WIFI_POWER_5dBm       // 5dBm
-   WIFI_POWER_2dBm       // 2dBm
-   WIFI_POWER_MINUS_1dBm // -1dBm output, lowest supply current ~120mA
-   Power-Up Default Power value is 80 (19.5dBm).
- */
-const wifi_power_t MAX_WIFI_PWR = WIFI_POWER_19_5dBm; // Use Max RF Power.
-const wifi_power_t RUN_WIFI_PWR = WIFI_POWER_19_5dBm; // Use High RF Power during runtime.
-
-// WiFi IP Addresses:
-// const IPAddress IP_ADDR_DEF     = { 0u, 0u, 0u, 0u };
-// const IPAddress WIFI_ADDR_DEF   = { 0u, 0u, 0u, 0u };
-// const IPAddress HOTSPOT_IP_DEF  = { 192u, 168u, 4u, 1u };
-// const IPAddress SUBNET_MASK_DEF = { 255u, 255u, 255u, 0u };
 
 // *********************************************************************************************
 
@@ -349,7 +305,6 @@ void   updateUiLocalPtyCode(void);
 void   updateUiRdsText(String textStr);
 void   updateUiRDSTmr(bool ClearDisplay);
 void   updateUiRfCarrier(void);
-void   updateUiRSSI(void);
 void   updateUiDiagTimer(void);
 void   updateUiVolts(void);
 void   updateUiWfiMode(void);
@@ -438,7 +393,6 @@ void         measureVdcVoltage(void);
 void         processMeasurements(void);
 
 // Misc Prototypes
-const String addChipID(const char *name);
 void         initEprom(void);
 uint8_t      i2cScanner(void);
 void         rebootSystem(void);
@@ -457,7 +411,7 @@ void         updateTestTones(bool resetTimerFlg);
 const String returnClientCode(int code);
 
 // OTA Prototypes
-void         otaInit(void);
+void         otaInit(String & mdnsname);
 
 // Radio Protypes
 bool         calibrateAntenna(void);
@@ -487,20 +441,10 @@ uint8_t      getLogLevel(void);
 void         initSerialLog(bool verbose);
 
 // webServer Prototypes
-// OldWay int8_t       getWifiMode(void);
-// OldWay int8_t       getRSSI(void);
-void         processDnsServer(void);
 void         processWebClient(void);
-void         refresh_mDNS(void);
-void         scanmDNS(void);
-bool         wifiValidateSettings(void);
-// OldWay bool         wifiConnect(void);
-// OldWay void         wifiReconnect(void);
-// OldWay String       getWifiModeStr(void);
-String       IpAddressToString(const IPAddress& ipAddress);
+
 String       urlDecode(String urlStr);
 uint8_t      urlDecodeHex(char c);
-IPAddress    convertIpString(String ipStr);
 
 template <typename J, typename N>
 bool ReadFromJSON (float & OutValue, J& Json, N Name)

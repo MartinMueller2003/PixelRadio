@@ -79,9 +79,6 @@ extern uint16_t homeFreqID;
 extern uint16_t homeOnAirID;
 extern uint16_t homeRdsTextID;
 extern uint16_t homeRdsTmrID;
-extern uint16_t homeRssiID;
-extern uint16_t homeStaID;
-extern uint16_t homeStaMsgID;
 
 extern uint16_t radioAudioID;
 extern uint16_t radioAudioMsgID;
@@ -107,30 +104,5 @@ extern uint16_t rdsSaveMsgID;
 extern uint16_t rdsSnameID;
 extern uint16_t rdsRstID;
 
-#ifdef OldWay
-extern uint16_t wifiApBootID;
-extern uint16_t wifiApFallID;
-extern uint16_t wifiApID;
-extern uint16_t wifiApIpID;
-extern uint16_t wifiApNameID;
-extern uint16_t wifiDevPwMsgID;
-extern uint16_t wifiDevUserID;
-extern uint16_t wifiDevUserMsgID;
-extern uint16_t wifiDevPwID;
-extern uint16_t wifiDhcpID;
-extern uint16_t wifiDhcpMsgID;
-extern uint16_t wifiDnsID;
-extern uint16_t wifiGatewayID;
-extern uint16_t wifiIpID;
-extern uint16_t wifiMdnsNameID;
-extern uint16_t wifiNetID;
-extern uint16_t wifiRssiID;
 extern uint16_t wifiSaveID;
 extern uint16_t wifiSaveMsgID;
-extern uint16_t wifiSsidID;
-extern uint16_t wifiStaID;
-extern uint16_t wifiStaMsgID;
-extern uint16_t wifiStaNameID;
-extern uint16_t wifiSubID;
-extern uint16_t wifiWpaKeyID;
-#endif // def OldWay

@@ -78,66 +78,6 @@ void adjFmFreqCallback(Control *sender, int type) {
     }
 }
 
-#ifdef OldWay
-// ************************************************************************************************
-// apFallBkCallback(): Enable/Disable AP Fallback using control element on WiFi Tab.
-void apBootCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "apBootCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiApBootID) {
-        if (type == S_ACTIVE) {
-            WiFiRebootFlg = true;
-        }
-        else if (type == S_INACTIVE) {
-            WiFiRebootFlg = false;
-        }
-        else {
-            sprintf(logBuff, "apBootCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        displaySaveWarning();
-        Log.infoln("AP Reboot Set to: %s.", WiFiRebootFlg ? "On" : "Off");
-    }
-    else {
-        sprintf(logBuff, "apBootCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// apFallBkCallback(): Enable/Disable AP Fallback using control element on WiFi Tab.
-void apFallBkCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "apFallBkCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiApFallID) {
-        if (type == S_ACTIVE) {
-            apFallBackFlg = true;
-        }
-        else if (type == S_INACTIVE) {
-            apFallBackFlg = false;
-        }
-        else {
-            sprintf(logBuff, "apFallBkCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        displaySaveWarning();
-        Log.infoln("AP Fallback Set to: %s.", apFallBackFlg ? "On" : "Off");
-    }
-    else {
-        sprintf(logBuff, "apFallBkCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-#endif // def OldWay
-
 // ************************************************************************************************
 // audioCallback(): Update the Stereo / Mono Audio modes.
 void audioCallback(Control *sender, int type)
@@ -243,46 +183,6 @@ void backupCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
-
-#ifdef OldWay
-// ************************************************************************************************
-// dhcpCallback(): Enable/disable DHCP Connection mode. If false, use static IP.
-void dhcpCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "dhcpCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiDhcpID) {
-        if (type == S_ACTIVE) {
-            wifiDhcpFlg = true;
-            ESPUI.print(wifiDhcpMsgID, ""); // Erase Status Message.
-        }
-        else if (type == S_INACTIVE) {
-            if (!wifiValidateSettings()) {
-                wifiDhcpFlg = true;              // Force back On.
-                ESPUI.print(wifiDhcpID,    "1"); // Move Switch Back to On Position.
-                ESPUI.print(wifiDhcpMsgID, DHCP_LOCKED_STR);
-                Log.warningln("dhcpCallback: Some Wifi Settings Missing, DHCP will be used.");
-            }
-            else {
-                wifiDhcpFlg = false;
-            }
-        }
-        else {
-            sprintf(logBuff, "dhcpCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        displaySaveWarning();
-        Log.infoln("WiFi Connection Set to: %s.", wifiDhcpFlg ? "DHCP" : "Static IP");
-    }
-    else {
-        sprintf(logBuff, "dhcpCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-#endif // def OldWay
 
 // ************************************************************************************************
 // diagBootCallback(): Reboot ESP32
@@ -946,16 +846,13 @@ void saveSettingsCallback(Control *sender, int type)
     // sprintf(logBuff, "serialCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
     // Log.verboseln(logBuff);
 
-    if ((sender->id == adjSaveID)  ||
-        (sender->id == ctrlSaveID) ||
+    if ((sender->id == adjSaveID)       ||
+        (sender->id == ctrlSaveID)      ||
         (sender->id == backupSaveSetID) ||
-        (sender->id == gpioSaveID) ||
-        (sender->id == radioSaveID) ||
-        (sender->id == rdsSaveID))
-#ifdef OldWay
-          ||
+        (sender->id == gpioSaveID)      ||
+        (sender->id == radioSaveID)     ||
+        (sender->id == rdsSaveID)       ||
         (sender->id == wifiSaveID)) 
-#endif // def OldWay
         {
         // DEBUG_V();
         switch (type) {
@@ -973,9 +870,8 @@ void saveSettingsCallback(Control *sender, int type)
                   ESPUI.print(gpioSaveMsgID,      passMsg);
                   ESPUI.print(radioSaveMsgID,     passMsg);
                   ESPUI.print(rdsSaveMsgID,       passMsg);
-#ifdef OldWay
                   ESPUI.print(wifiSaveMsgID,      passMsg);
-#endif // def OldWay
+
                   Log.infoln("-> Configuration Save Successful.");
               }
               else {
@@ -985,9 +881,8 @@ void saveSettingsCallback(Control *sender, int type)
                   ESPUI.print(gpioSaveMsgID,      BACKUP_SAV_FAIL_STR);
                   ESPUI.print(radioSaveMsgID,     BACKUP_SAV_FAIL_STR);
                   ESPUI.print(rdsSaveMsgID,       BACKUP_SAV_FAIL_STR);
-#ifdef OldWay
                   ESPUI.print(wifiSaveMsgID,      BACKUP_SAV_FAIL_STR);
-#endif // def OldWay
+
                   Log.errorln("-> Configuration Save Failed.");
               }
               break;
@@ -1093,285 +988,6 @@ void setPtyCodeCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
-
-#ifdef OldWay
-// ************************************************************************************************
-// setWiFiAddrsCallback(): Update WiFi Static IP and subnet (for Static IP). Also update AP (Hotspot) IP address.
-void setWiFiAddrsCallback(Control *sender, int type)
-{
-    IPAddress tempApAddr;
-    IPAddress tempDnsAddr;
-    IPAddress tempGatewayAddr;
-    IPAddress tempIpAddr;
-    IPAddress tempSubAddr;
-    char logBuff[60];
-
-    // sprintf(logBuff, "setWiFiAddrsCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiIpID) {
-        tempStr = sender->value;
-
-        if ((tempStr.length() == 0)) {
-            wifiDhcpFlg = true;
-            staticIpStr = "";                // Erase Static IP.
-            ESPUI.print(wifiDhcpID,    "1"); // Force to DHCP mode.
-            ESPUI.print(wifiDhcpMsgID, DHCP_LOCKED_STR);
-            Log.warningln("setWiFi: Static IP Address Erased. Must Use DHCP.");
-        }
-        else {
-            tempIpAddr = convertIpString(tempStr); // Convert to IP Class Array.
-
-            if ((tempIpAddr[0] == 0) && (tempIpAddr[1] == 0) && (tempIpAddr[2] == 0) && (tempIpAddr[3] == 0)) {
-                ESPUI.print(wifiIpID, staticIpStr);
-                Log.warningln("setWiFi: Static IP Address Invalid, Ignored.");
-            }
-            else {
-                staticIpStr = tempStr;                      // Copy, IP is valid.
-                staticIP    = convertIpString(staticIpStr); // Convert IP to String.
-                staticIpStr = IpAddressToString(staticIP);  // Convert the IP String back to IPAddress (reformat it).
-                ESPUI.print(wifiIpID, staticIpStr);
-                displaySaveWarning();
-                sprintf(logBuff, "IP Address Set to: %s", staticIpStr.c_str());
-                Log.infoln(logBuff);
-
-                tempGatewayAddr = convertIpString(wifiGatewayStr);    // Convert to IP Class Array.
-
-                if ((tempGatewayAddr[0] == 0) && (tempGatewayAddr[1] == 0) && (tempGatewayAddr[2] == 0) && (tempGatewayAddr[3] == 0)) {
-                    wifiGateway[0] = staticIP[0];                     // First Octet.
-                    wifiGateway[1] = staticIP[1];
-                    wifiGateway[2] = staticIP[2];
-                    wifiGateway[3] = 1;                               // Empty Gateway = IP address with last octet set to 1.
-                    wifiGatewayStr = IpAddressToString(wifiGateway);
-                    wifiGateway    = convertIpString(wifiGatewayStr); // Reformat Gateway Address.
-                    ESPUI.print(wifiGatewayID, wifiGatewayStr);
-                }
-
-                tempDnsAddr = convertIpString(wifiDnsStr);    // Convert to IP Class Array.
-
-                if ((tempDnsAddr[0] == 0) && (tempDnsAddr[1] == 0) && (tempDnsAddr[2] == 0) && (tempDnsAddr[3] == 0)) {
-                    wifiDNS[0] = staticIP[0];                 // First Octet.
-                    wifiDNS[1] = staticIP[1];
-                    wifiDNS[2] = staticIP[2];
-                    wifiDNS[3] = 1;                           // Empty DNS = IP address with last octet set to 1.
-                    wifiDnsStr = IpAddressToString(wifiDNS);
-                    wifiDNS    = convertIpString(wifiDnsStr); // Reformat DNS Address.
-                    ESPUI.print(wifiDnsID, wifiDnsStr);
-                }
-
-                if (wifiValidateSettings()) {
-                    ESPUI.print(wifiDhcpMsgID, ""); // Erase DHCP Status Message.
-                }
-            }
-        }
-    }
-    else if (sender->id == wifiGatewayID) {
-        tempStr = sender->value;
-
-        if ((tempStr.length() == 0)) {
-            wifiDhcpFlg    = true;
-            wifiGatewayStr = "";             // Erase Static IP.
-            wifiGateway    = convertIpString("0.0.0.0");
-            ESPUI.print(wifiDhcpID,    "1"); // Force to DHCP mode.
-            ESPUI.print(wifiDhcpMsgID, DHCP_LOCKED_STR);
-            Log.warningln("setWiFi: Gateway Address Erased. Must Use DHCP.");
-        }
-        else {
-            tempGatewayAddr = convertIpString(tempStr); // Convert to IP Class Array.
-
-            if ((tempGatewayAddr[0] == 0) && (tempGatewayAddr[1] == 0) && (tempGatewayAddr[2] == 0) && (tempGatewayAddr[3] == 0)) {
-                ESPUI.print(wifiGatewayID, wifiGatewayStr);
-                Log.warningln("setWiFi: Gateway Address Invalid, Ignored.");
-            }
-            else {
-                wifiGatewayStr = tempStr;                         // Copy, IP is valid.
-                wifiGateway    = convertIpString(wifiGatewayStr); // Convert IP to String.
-                wifiGatewayStr = IpAddressToString(wifiGateway);  // Convert the Gateway String back to IPAddress (reformat it).
-                ESPUI.print(wifiGatewayID, wifiGatewayStr);
-                displaySaveWarning();
-                sprintf(logBuff, "Gateway Address Set to: %s", wifiGatewayStr.c_str());
-                Log.infoln(logBuff);
-            }
-
-            if (wifiValidateSettings()) {
-                ESPUI.print(wifiDhcpMsgID, ""); // Erase DHCP Status Message.
-            }
-        }
-    }
-    else if (sender->id == wifiSubID) {
-        tempStr = sender->value;
-
-        if (tempStr.length() == 0) {
-            wifiDhcpFlg = true;
-            subNetStr   = "";                // Erase Static IP SubNet.
-            ESPUI.print(wifiDhcpID,    "1"); // Force to DHCP mode.
-            ESPUI.print(wifiDhcpMsgID, DHCP_LOCKED_STR);
-            Log.warningln("setWiFi: Subnet Mask Erased. Must Use DHCP.");
-        }
-        else {
-            tempSubAddr = convertIpString(tempStr); // Convert to IP Class Array.
-
-            if ((tempSubAddr[0] == 0) && (tempSubAddr[1] == 0) && (tempSubAddr[2] == 0) && (tempSubAddr[3] == 0)) {
-                ESPUI.print(wifiSubID, subNetStr);
-                Log.warningln("setWiFi: Subnet Mask Invalid, Ignored.");
-            }
-            else {
-                subNetStr = tempStr;                    // Copy, Subnet is valid.
-                subNet    = convertIpString(subNetStr); // Convert IP to String.
-                subNetStr = IpAddressToString(subNet);  // Convert the IP String back to IPAddress (reformat it).
-                ESPUI.print(wifiSubID, subNetStr);
-                displaySaveWarning();
-                sprintf(logBuff, "Subnet Mask Set to: %s", subNetStr.c_str());
-                Log.infoln(logBuff);
-
-                if (wifiValidateSettings()) {
-                    ESPUI.print(wifiDhcpMsgID, ""); // Erase DHCP Status Message.
-                }
-            }
-        }
-    }
-    else if (sender->id == wifiDnsID) {
-        tempStr = sender->value;
-
-        if ((tempStr.length() == 0)) {
-            wifiDhcpFlg = true;
-            wifiDnsStr  = "";                // Erase Static IP.
-            wifiDNS     = convertIpString("0.0.0.0");
-            ESPUI.print(wifiDhcpID,    "1"); // Force to DHCP mode.
-            ESPUI.print(wifiDhcpMsgID, DHCP_LOCKED_STR);
-            Log.warningln("setWiFi: DNS Address Erased. Must Use DHCP.");
-        }
-        else {
-            tempDnsAddr = convertIpString(tempStr); // Convert to IP Class Array.
-
-            if ((tempDnsAddr[0] == 0) && (tempDnsAddr[1] == 0) && (tempDnsAddr[2] == 0) && (tempDnsAddr[3] == 0)) {
-                ESPUI.print(wifiDnsID, wifiDnsStr);
-                Log.warningln("setWiFi: DNS Address Invalid, Ignored.");
-            }
-            else {
-                wifiDnsStr = tempStr;                     // Copy, IP is valid.
-                wifiDNS    = convertIpString(wifiDnsStr); // Convert IP to String.
-                wifiDnsStr = IpAddressToString(wifiDNS);  // Convert the DNS String back to IPAddress (reformat it).
-                ESPUI.print(wifiDnsID, wifiDnsStr);
-                displaySaveWarning();
-                sprintf(logBuff, "Wifi DNS Address Set to: %s", wifiDnsStr.c_str());
-                Log.infoln(logBuff);
-            }
-
-            if (wifiValidateSettings()) {
-                ESPUI.print(wifiDhcpMsgID, ""); // Erase DHCP Status Message.
-            }
-        }
-    }
-    else if (sender->id == wifiApIpID) {
-        tempStr    = sender->value;
-        tempApAddr = convertIpString(tempStr); // Convert to IP Class Array.
-
-        if ((tempApAddr[0] == 0) && (tempApAddr[1] == 0) && (tempApAddr[2] == 0) && (tempApAddr[3] == 0)) {
-            ESPUI.print(wifiApIpID, apIpAddrStr);
-            Log.warningln("setWiFi: HotSpot (AP) IP Address Invalid, Ignored.");
-        }
-        else {
-            apIpAddrStr = tempStr;                      // Copy, IP is valid.
-            hotSpotIP   = convertIpString(apIpAddrStr); // Convert IP to String.
-            apIpAddrStr = IpAddressToString(hotSpotIP); // Convert the IP String back to IPAddress (reformat it).
-            hotSpotIP   = tempApAddr;                   // Update Global AP IP Address for webserver.
-            ESPUI.print(wifiApIpID, apIpAddrStr);
-            displaySaveWarning();
-            sprintf(logBuff, "HotSpot (AP) IP Address Set to: %s", apIpAddrStr.c_str());
-            Log.infoln(logBuff);
-        }
-    }
-    else {
-        sprintf(logBuff, "setWiFiAddrsCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// setWiFiAuthenticationCallback(): Update WiFi SSID and PW.
-void setWiFiAuthenticationCallback(Control *sender, int type)
-{
-    char   logBuff[SSID_MAX_SZ + 40];
-    String shortHideStr = WIFI_PASS_HIDE_STR;
-
-    // sprintf(logBuff, "setWiFiAuthenticationCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiSsidID) {
-        wifiSSIDStr = sender->value;
-
-        if (wifiSSIDStr.length() > SSID_MAX_SZ) {
-            wifiSSIDStr = wifiSSIDStr.substring(0, SSID_MAX_SZ);
-            Log.errorln("setWiFiAuthenticationCallback: SSID Too Long, Truncated to 32 chars.");
-        }
-        ESPUI.print(wifiSsidID, wifiSSIDStr);
-        displaySaveWarning();
-        sprintf(logBuff, "WiFi SSID Set to: \"%s\"", wifiSSIDStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else if (sender->id == wifiWpaKeyID) {
-        tempStr      = sender->value;
-        tempStr      = tempStr.substring(0, PASSPHRASE_MAX_SZ);
-        shortHideStr = shortHideStr.substring(0, 6);                            // First 5 chars of the "PW Hidden" text.
-
-        if (tempStr.indexOf(shortHideStr) >= 0) {                               // Hmm, "Hidden" text msg is present.
-            ESPUI.print(wifiWpaKeyID, WIFI_PASS_HIDE_STR);                      // Reprint "PW Hidden" msg.
-            // sprintf(logBuff, "WiFi WPA Key Unchanged: \"%s\"", wifiWpaKeyStr.c_str());   // Show WPA Key in Log.
-            sprintf(logBuff, "WiFi WPA Key Unchanged: %s", WIFI_PASS_HIDE_STR); // Hide WPA Key in Log.
-        }
-        else {                                                                  // New Password is available.
-            wifiWpaKeyStr = tempStr;
-            ESPUI.print(wifiWpaKeyID, wifiWpaKeyStr);
-            displaySaveWarning();
-            sprintf(logBuff, "WiFi WPA Key Set to: \"%s\"", wifiWpaKeyStr.c_str());
-        }
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "setWiFiAuthenticationCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// setWiFiNamesCallback(): Update WiFi STA and AP names.
-void setWiFiNamesCallback(Control *sender, int type)
-{
-    char logBuff[STA_NAME_MAX_SZ + 50];
-
-    // sprintf(logBuff, "setWifiNamesCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == wifiStaNameID) {
-        HostName = sender->value;
-        HostName = HostName.substring(0, STA_NAME_MAX_SZ);
-
-        if (HostName.length() == 0) {
-            HostName = STA_NAME_DEF_STR;
-        }
-        ESPUI.print(wifiStaNameID, HostName);
-        sprintf(logBuff, "Webserver (STA) Name Set to: \"%s\"", HostName.c_str());
-        Log.infoln(logBuff);
-    }
-    else if (sender->id == wifiApNameID) {
-        apNameStr = sender->value;
-        apNameStr = apNameStr.substring(0, AP_NAME_MAX_SZ);
-
-        if (apNameStr.length() == 0) {
-            apNameStr = AP_NAME_DEF_STR;
-        }
-        ESPUI.print(wifiApNameID, apNameStr);
-        displaySaveWarning();
-        sprintf(logBuff, "HotSpot (AP) Name Set to: \"%s\"", apNameStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "setWiFiNamesCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-#endif // def OldWay
 
 // ************************************************************************************************
 // testModeCallback(): Audio Test Tone Mode Control (true = Audio Test Mode On).

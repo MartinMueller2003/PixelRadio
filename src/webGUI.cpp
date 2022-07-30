@@ -97,92 +97,87 @@
 // Local Strings.
 String tempStr;
 
-uint16_t aboutTab  = 0;
-uint16_t adjTab    = 0;
-uint16_t backupTab = 0;
-uint16_t ctrlTab   = 0;
-uint16_t diagTab   = 0;
-uint16_t gpioTab   = 0;
-uint16_t homeTab   = 0;
-uint16_t radioTab  = 0;
-uint16_t rdsTab    = 0;
-uint16_t wifiTab   = 0;
+uint16_t aboutTab  = Control::noParent;
+uint16_t adjTab    = Control::noParent;
+uint16_t backupTab = Control::noParent;
+uint16_t ctrlTab   = Control::noParent;
+uint16_t diagTab   = Control::noParent;
+uint16_t gpioTab   = Control::noParent;
+uint16_t homeTab   = Control::noParent;
+uint16_t radioTab  = Control::noParent;
+uint16_t rdsTab    = Control::noParent;
+uint16_t wifiTab   = Control::noParent;
 
-uint16_t aboutLogoID    = 0;
-uint16_t aboutVersionID = 0;
+uint16_t aboutLogoID    = Control::noParent;
+uint16_t aboutVersionID = Control::noParent;
 
-uint16_t adjAvolID     = 0;
-uint16_t adjFmDispID   = 0;
-uint16_t adjFreqID     = 0;
-uint16_t adjMuteID     = 0;
-uint16_t adjSaveID     = 0;
-uint16_t adjSaveMsgID  = 0;
-uint16_t radioSoundID  = 0;
-uint16_t adjTestModeID = 0;
-uint16_t adjUvolID     = 0;
+uint16_t adjAvolID     = Control::noParent;
+uint16_t adjFmDispID   = Control::noParent;
+uint16_t adjFreqID     = Control::noParent;
+uint16_t adjMuteID     = Control::noParent;
+uint16_t adjSaveID     = Control::noParent;
+uint16_t adjSaveMsgID  = Control::noParent;
+uint16_t radioSoundID  = Control::noParent;
+uint16_t adjTestModeID = Control::noParent;
+uint16_t adjUvolID     = Control::noParent;
 
-uint16_t backupRestoreID    = 0;
-uint16_t backupRestoreMsgID = 0;
-uint16_t backupSaveID       = 0;
-uint16_t backupSaveMsgID    = 0;
-uint16_t backupSaveSetID    = 0;
-uint16_t backupSaveSetMsgID = 0;
+uint16_t backupRestoreID    = Control::noParent;
+uint16_t backupRestoreMsgID = Control::noParent;
+uint16_t backupSaveID       = Control::noParent;
+uint16_t backupSaveMsgID    = Control::noParent;
+uint16_t backupSaveSetID    = Control::noParent;
+uint16_t backupSaveSetMsgID = Control::noParent;
 
-uint16_t ctrlSaveID      = 0;
-uint16_t ctrlSaveMsgID   = 0;
-uint16_t wifiSaveID      = 0;
-uint16_t wifiSaveMsgID   = 0;
+uint16_t ctrlSaveID      = Control::noParent;
+uint16_t ctrlSaveMsgID   = Control::noParent;
+uint16_t wifiSaveID      = Control::noParent;
+uint16_t wifiSaveMsgID   = Control::noParent;
 
-uint16_t diagBootID    = 0;
-uint16_t diagBootMsgID = 0;
-uint16_t diagLogID     = 0;
-uint16_t diagLogMsgID  = 0;
-uint16_t diagMemoryID  = 0;
-uint16_t diagTimerID   = 0;
-uint16_t diagVbatID    = 0;
-uint16_t diagVdcID     = 0;
+uint16_t diagBootID    = Control::noParent;
+uint16_t diagBootMsgID = Control::noParent;
+uint16_t diagLogID     = Control::noParent;
+uint16_t diagLogMsgID  = Control::noParent;
+uint16_t diagMemoryID  = Control::noParent;
+uint16_t diagTimerID   = Control::noParent;
+uint16_t diagVbatID    = Control::noParent;
+uint16_t diagVdcID     = Control::noParent;
 
-uint16_t gpio19ID      = 0;
-uint16_t gpio23ID      = 0;
-uint16_t gpio33ID      = 0;
-uint16_t gpio19MsgID   = 0;
-uint16_t gpio23MsgID   = 0;
-uint16_t gpio33MsgID   = 0;
-uint16_t gpioSaveID    = 0;
-uint16_t gpioSaveMsgID = 0;
+uint16_t gpio19ID      = Control::noParent;
+uint16_t gpio23ID      = Control::noParent;
+uint16_t gpio33ID      = Control::noParent;
+uint16_t gpio19MsgID   = Control::noParent;
+uint16_t gpio23MsgID   = Control::noParent;
+uint16_t gpio33MsgID   = Control::noParent;
+uint16_t gpioSaveID    = Control::noParent;
+uint16_t gpioSaveMsgID = Control::noParent;
 
-uint16_t homeFreqID    = 0;
-uint16_t homeOnAirID   = 0;
-uint16_t homeRdsTextID = 0;
-uint16_t homeRdsTmrID  = 0;
-#ifdef OldWay
-uint16_t homeRssiID    = 0;
-uint16_t homeStaID     = 0;
-uint16_t homeStaMsgID  = 0;
-uint16_t homeTextMsgID = 0;
-#endif // def OldWay
+uint16_t homeFreqID    = Control::noParent;
+uint16_t homeOnAirID   = Control::noParent;
+uint16_t homeRdsTextID = Control::noParent;
+uint16_t homeRdsTmrID  = Control::noParent;
+uint16_t homeTextMsgID = Control::noParent;
 
-uint16_t radioAudioID    = 0;
-uint16_t radioAudioMsgID = 0;
-uint16_t radioVgaGainID  = 0;
-uint16_t radioDgainID    = 0;
-uint16_t radioAutoID     = 0;
-uint16_t radioEmphID     = 0;
-uint16_t radioFreqID     = 0;
-uint16_t radioGainID     = 0;
-uint16_t radioImpID      = 0;
-uint16_t radioPwrID      = 0;
-uint16_t radioRfEnbID    = 0;
-uint16_t radioSaveID     = 0;
-uint16_t radioSaveMsgID  = 0;
+uint16_t radioAudioID    = Control::noParent;
+uint16_t radioAudioMsgID = Control::noParent;
+uint16_t radioVgaGainID  = Control::noParent;
+uint16_t radioDgainID    = Control::noParent;
+uint16_t radioAutoID     = Control::noParent;
+uint16_t radioEmphID     = Control::noParent;
+uint16_t radioFreqID     = Control::noParent;
+uint16_t radioGainID     = Control::noParent;
+uint16_t radioImpID      = Control::noParent;
+uint16_t radioPwrID      = Control::noParent;
+uint16_t radioRfEnbID    = Control::noParent;
+uint16_t radioSaveID     = Control::noParent;
+uint16_t radioSaveMsgID  = Control::noParent;
 
-uint16_t rdsPiID       = 0;
-uint16_t rdsPtyID      = 0;
-uint16_t rdsProgNameID = 0;
-uint16_t rdsSaveID     = 0;
-uint16_t rdsSaveMsgID  = 0;
-uint16_t rdsSnameID    = 0;
-uint16_t rdsRstID      = 0;
+uint16_t rdsPiID       = Control::noParent;
+uint16_t rdsPtyID      = Control::noParent;
+uint16_t rdsProgNameID = Control::noParent;
+uint16_t rdsSaveID     = Control::noParent;
+uint16_t rdsSaveMsgID  = Control::noParent;
+uint16_t rdsSnameID    = Control::noParent;
+uint16_t rdsRstID      = Control::noParent;
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
@@ -207,27 +202,21 @@ void initCustomCss(void)
 
     ESPUI.setPanelStyle(homeFreqID,     "font-size: 3.0em;");
     ESPUI.setPanelStyle(homeOnAirID,    "font-size: 3.0em;");
-#ifdef OldWay
-//    ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
-#endif // def OldWay
+    ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
 
     ESPUI.setPanelStyle(radioFreqID,    "font-size: 3.0em;");
     ESPUI.setPanelStyle(radioGainID,    "font-size: 1.15em;");
     ESPUI.setPanelStyle(radioSoundID,   "font-size: 1.25em;");
 
-#ifdef OldWay
-//    ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
-#endif // def OldWay
+    // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
     ESPUI.setPanelStyle(rdsProgNameID,  "font-size: 1.35em;");
     ESPUI.setPanelStyle(rdsPiID,        "font-size: 1.35em;");
     ESPUI.setPanelStyle(rdsPtyID,       "font-size: 1.15em;");
 
-#ifdef OldWay
-    // ESPUI.setPanelStyle(rdsProgNameID, "width: 45%; font-size: 1.5em;"); // Bug? See
+    ESPUI.setPanelStyle(rdsProgNameID,  "width: 45%; font-size: 1.5em;"); // Bug? See
     //  https://github.com/s00500/ESPUI/pull/147#issuecomment-1009821269.
-    // ESPUI.setPanelStyle(rdsPiID,"width: 30%; font-size: 1.25em;"); // Only valid if wide panel is used.
-    //  ESPUI.setPanelStyle(rdsPiID,        "max-width: 40%;"); // Does not work. Too bad.
-#endif // def OldWay
+    ESPUI.setPanelStyle(rdsPiID,        "width: 30%; font-size: 1.25em;"); // Only valid if wide panel is used.
+    ESPUI.setPanelStyle(rdsPiID,        "max-width: 40%;"); // Does not work. Too bad.
 
     // END OF PANEL INLINE STYLES.
 
@@ -259,9 +248,7 @@ void initCustomCss(void)
 
     ESPUI.setElementStyle(homeFreqID,         "max-width: 80%;");
     ESPUI.setElementStyle(homeOnAirID,        "max-width: 80%;");
-#ifdef OldWay
-//    ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
-#endif // def OldWay
+    ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
@@ -270,16 +257,10 @@ void initCustomCss(void)
     ESPUI.setElementStyle(radioAudioMsgID, CSS_LABEL_STYLE_BLACK);
     ESPUI.setElementStyle(radioSaveMsgID,  CSS_LABEL_STYLE_RED);
     ESPUI.setElementStyle(radioSoundID,    "max-width: 35%;");
-
-    // ESPUI.setElementStyle(rdsPiID,          "font-size: 1.25em;");
-    // ESPUI.setElementStyle(rdsProgNameID,    "color: black;");
     ESPUI.setElementStyle(rdsSaveMsgID,     CSS_LABEL_STYLE_BLACK);
-//    ESPUI.setElementStyle(rdsText1MsgID,    CSS_LABEL_STYLE_BLACK);
-//    ESPUI.setElementStyle(rdsText2MsgID,    CSS_LABEL_STYLE_BLACK);
-//    ESPUI.setElementStyle(rdsText3MsgID,    CSS_LABEL_STYLE_BLACK);
 
-#ifdef OldWay
-#endif // def OldWay
+    ESPUI.setElementStyle(rdsPiID,          "font-size: 1.25em;");
+    ESPUI.setElementStyle(rdsProgNameID,    "color: black;");
 
     // DEBUG_END;
     // END OF STYLES
@@ -419,9 +400,7 @@ void displaySaveWarning(void)
     ESPUI.print(gpioSaveMsgID,      SAVE_SETTINGS_MSG_STR);
     ESPUI.print(radioSaveMsgID,     SAVE_SETTINGS_MSG_STR);
     ESPUI.print(rdsSaveMsgID,       SAVE_SETTINGS_MSG_STR);
-#ifdef OldWay
     ESPUI.print(wifiSaveMsgID,      SAVE_SETTINGS_MSG_STR);
-#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -553,16 +532,6 @@ bool updateUiGpioMsg(uint8_t pin, String & ControllerName, bool PinState)
 }
 
 // ************************************************************************************************
-// updateUiIpaddress(): Update the IP address shown on homeTab and wifiTab.
-void updateUiIpaddress(String ipStr)
-{
-#ifdef OldWay
-    ESPUI.print(homeStaMsgID, ipStr);
-    ESPUI.print(wifiStaMsgID, ipStr);
-#endif // def OldWay
-}
-
-// ************************************************************************************************
 // updateUiFreeMemory(): Update the Free Heap Memory on the diagTab.
 void updateUiFreeMemory(void)
 {
@@ -687,36 +656,6 @@ void updateUiRfCarrier(void)
 }
 
 // ************************************************************************************************
-// updateUiRSSI(): Update the UI's RSSI label element with dBm value.
-//               Note: AP Mode doesn't receive a RSSI sgnal from a router, so it returns a special message.
-void updateUiRSSI(void)
-{
-    static uint32_t previousMillis = 0;
-    char logBuff[60];
-
-    if (previousMillis == 0) {
-        previousMillis = millis();       // Initialize First entry;
-    }
-    else if (millis() - previousMillis >= RSSI_UPD_TIME) 
-    {
-#ifdef OldWay 
-        if (getWifiMode() == WIFI_STA) { // Serial log only if STA mode.
-            tempStr  = getRSSI();
-            tempStr += UNITS_DBM_STR;
-            sprintf(logBuff, "WiFi RSSI: %d%s.", getRSSI(), UNITS_DBM_STR);
-            Log.traceln(logBuff);
-        }
-        else {
-            tempStr = "- N/A -";
-        }
-        ESPUI.print(wifiRssiID, tempStr);
-        ESPUI.print(homeRssiID, tempStr);
-#endif // def OldWay
-        previousMillis = millis(); // Do this last.
-    }
-}
-
-// ************************************************************************************************
 // updateUiLocalPiCode() Update the PI Code on the Local RDS Tab.
 void updateUiLocalPiCode(void)
 {
@@ -797,17 +736,6 @@ void updateUiVolts(void)
 }
 
 // ************************************************************************************************
-// updateUiWfiMode(): Update the UI's WiFi Mode.
-void updateUiWfiMode(void)
-{
-#ifdef OldWay 
-    tempStr = String(getWifiModeStr());
-    ESPUI.print(homeStaID, tempStr);
-    ESPUI.print(wifiStaID, tempStr);
-#endif // def OldWay
-}
-
-// ************************************************************************************************
 // buildGUI(): Create the Web GUI. Must call this
 //    Enable the following option if you want sliders to be continuous (update during move) and not discrete (update on
 // stop):
@@ -869,25 +797,10 @@ void buildGUI(void)
     ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, "", ControlColor::None, homeTab);
     tempStr       = HOME_RDS_WAIT_STR;
     homeRdsTextID = ESPUI.addControl(ControlType::Label, HOME_CUR_TEXT_STR, tempStr, ControlColor::Peterriver, homeTab);
-#ifdef OldWay
     homeTextMsgID = ESPUI.addControl(ControlType::Label, "", tempStr, ControlColor::Peterriver, homeRdsTextID);
-
     homeRdsTmrID = ESPUI.addControl(ControlType::Label, HOME_RDS_TIMER_STR, tempStr, ControlColor::Peterriver, homeTab);
 
-    ESPUI.addControl(ControlType::Separator, HOME_SEP_WIFI_STR, "", ControlColor::None, homeTab);
-
-    tempStr    = getRSSI();
-    tempStr   += UNITS_DBM_STR;
-    homeRssiID = ESPUI.addControl(ControlType::Label, HOME_WIFI_STR, tempStr, ControlColor::Peterriver, homeTab);
-
-    homeStaID = ESPUI.addControl(ControlType::Label,
-                                 HOME_STA_STR,
-                                 String(getWifiModeStr()),
-                                 ControlColor::Peterriver,
-                                 homeTab);
-    homeStaMsgID =
-        ESPUI.addControl(ControlType::Label, "IP_ADDR", ipAddrStr, ControlColor::Carrot, homeStaID);
-#endif // def OldWay
+    WiFiDriver.addHomeControls(homeTab);
     // DEBUG_V();
     
     // **************
@@ -1108,7 +1021,7 @@ void buildGUI(void)
     //  WiFi Tab
 
     // DEBUG_V();
-    WiFiDriver.addControls(homeTab, wifiTab);
+    WiFiDriver.addControls(wifiTab);
     // DEBUG_V();
 
     ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, wifiTab);

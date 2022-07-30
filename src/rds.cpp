@@ -28,76 +28,8 @@
 // ************************************************************************************************
 extern QN8027Radio radio;
 
-#ifdef OldRdsWay
-
-// ************************************************************************************************
-// checkactiveTextAvail(): Determine if Serial, HTTP, or MQTT controller is currently sending
-// RadioText.
-bool checkActiveTextAvail(void)
-{
-    // skip local controller
-    return ControllerMgr.CheckAnyControllerIsDisplayingMessage(false);
-}
-
-// ************************************************************************************************
-// checkControllerIsAvailable(): Using the supplied Controller ID, check if any HIGHER priority
-// controllers are in operation. If none are present, then the supplied controller ID won't be
-// blocked and is available to use.
-// true = Controller is ready, false = higher priority controller is active.
-bool checkControllerIsAvailable(ControllerTypeId controllerId)
-{
-    return ControllerMgr.checkControllerIsAvailable(controllerId);
-}
-
-// ************************************************************************************************
-// checkLocalControllerAvail): Determine if Local RDS Controller Mode is Enabled.
-bool checkLocalControllerAvail(void) 
-{
-    return ControllerMgr.GetControllerEnabledFlag(LocalControllerId);
-}
-
 #ifdef OldWay
-// ************************************************************************************************
-// checkLocalRdsAvail() Determine if at least one Local RDS is Enabled.
-bool checkLocalRdsAvail(void) {
-    bool availFlg = false;
 
-    if (checkLocalControllerAvail() && (rdsText1EnbFlg || 
-                                        rdsText2EnbFlg || 
-                                        rdsText3EnbFlg))
-    {
-        availFlg = true;
-    }
-    return availFlg;
-}
-#endif // def OldWay
-
-// ************************************************************************************************
-// checkRemoteRdsAvail): Determine if any Serial, HTTP, or MQTT controller Mode is Enabled.
-bool checkRemoteRdsAvail(void)
-{
-    // ask for all except "local"
-    return ControllerMgr.CheckAnyRdsControllerEnabled(false);
-}
-
-// ************************************************************************************************
-// checkRemoteTextAvail(): Determine if Serial, HTTP, or MQTT controller has RadioText available to
-// send. Ignores Local RDS.
-bool checkRemoteTextAvail(void)
-{
-    // ask for all except "local"
-    return ControllerMgr.CheckRdsTextAvailable(false);
-}
-
-// ************************************************************************************************
-// checkAnyRdsControllerAvailable(): 
-// Determine if any (Local, HTTP, MQTT, Serial, FPPD) RDS Controller is Enabled.
-bool checkAnyRdsControllerAvailable(void)
-{
-    // ask for all including "local"
-    return ControllerMgr.CheckAnyRdsControllerEnabled(true);
-}
-#endif // def OldRdsWay
 
 // ************************************************************************************************
 // processRDS(): Local RDS RadioText Display Handler for homeTab. 
@@ -154,7 +86,6 @@ void processRDS(void)
             }
         }
     }
-    #ifdef theoldway
         else if (!checkLocalControllerAvail() && !checkAnyRdsControllerAvailable()) {
         {
             updateUiRDSTmr(0);                            // Clear Displayed Elapsed Timer.
@@ -428,7 +359,7 @@ void processRDS(void)
     }
 
     updateUiRDSTmr(rdsMillis); // Refresh Countdown time on GUI homeTab.
-    #endif // def theoldway
+}
 }
 
 // ************************************************************************************************
@@ -441,7 +372,6 @@ void resetControllerRdsValues(void)
     radio.setPiCode(ControllerMgr.GetPiCode(LocalControllerId)); // Local RDS PI Code is Fixed Value.
     radio.setPtyCode(ControllerMgr.GetPtyCode(LocalControllerId)); // Default RDS PTY Code.
 
-#ifdef OldWay
     // USB Serial RDS Controller. All values can be changed during runtime by Serial Commands.
     ControllerMgr.SetRdsProgramServiceName(SerialControllerId, ControllerMgr.GetRdsProgramServiceName(LocalControllerId)); 	// Default Program Service Name (Mimic Local Controller).
     ControllerMgr.SetPayloadText(SerialControllerId, ""); 																	// Clear Controller's RadioText Message.
@@ -462,9 +392,9 @@ void resetControllerRdsValues(void)
     ControllerMgr.SetPiCode(HttpControllerId, ControllerMgr.GetPiCode(LocalControllerId)); 									// Default PI Code (Mimic Local Controller).
     ControllerMgr.SetPtyCode(HttpControllerId, ControllerMgr.GetPiCode(LocalControllerId));                                 // Default PTY Code (Mimic Local Controller).
     ControllerMgr.SetRdsMsgTime(HttpControllerId, ControllerMgr.GetRdsMsgTime(LocalControllerId)); 							// Default RDS Message Time (Mimic Local Controller),
-#endif // def OldWay
 
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // EOF

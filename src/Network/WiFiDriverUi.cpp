@@ -38,24 +38,22 @@ c_WiFiDriverUi::~c_WiFiDriverUi()
 } // ~c_WiFiDriverUi
 
 //-----------------------------------------------------------------------------
-void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
+void c_WiFiDriverUi::addControls(uint16_t _WiFiTabID)
 {
     // DEBUG_START;
 
     uint16_t TempID = Control::noParent;
     do // once
     {
-        if(Control::noParent != HomeTabID)
+        if(Control::noParent != WiFiTabID)
         {
             // DEBUG_V("Cant reinit the UI");
             break;
         }
-
-        HomeTabID = _HomeTabId;
         WiFiTabID = _WiFiTabID;
 
-//-----------------------------------------------------------------------------
-        ESPUI.addControl(ControlType::Separator, WIFI_STATUS_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
+        //-----------------------------------------------------------------------------
+        TempID = ESPUI.addControl(ControlType::Separator, WIFI_STATUS_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
 
         wifiStatusRssiID = ESPUI.addControl(ControlType::Label, 
                                       WIFI_RSSI_STR, 
@@ -82,8 +80,8 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
         ESPUI.setElementStyle(wifiStatusIpAddrID, F("max-width: 45%;"));
         ESPUI.setPanelStyle(wifiStatusIpAddrID,   F("font-size: 1.25em;"));
 
-//-----------------------------------------------------------------------------
-        ESPUI.addControl(ControlType::Separator, WIFI_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
+        //-----------------------------------------------------------------------------
+        TempID = ESPUI.addControl(ControlType::Separator, WIFI_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
 
         wifiSsidID = ESPUI.addControl(  ControlType::Text, 
                                         WIFI_SSID_STR, 
@@ -98,6 +96,7 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
                                             }
                                         },
                                         this);
+        TempID = ESPUI.addControl(ControlType::Max, emptyString.c_str(), SSID_MAX_SZ, ControlColor::None, wifiSsidID);
 
         wifiWpaKeyID = ESPUI.addControl(    ControlType::Text,
                                             WIFI_WPA_KEY_STR, 
@@ -112,9 +111,10 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
                                                 }
                                             },
                                             this);
+        TempID = ESPUI.addControl(ControlType::Max, emptyString.c_str(), PASSPHRASE_MAX_SZ, ControlColor::None, wifiWpaKeyID);
 
-//-----------------------------------------------------------------------------
-        ESPUI.addControl(ControlType::Separator, WIFI_ADDR_SEP_STR, emptyString.c_str(), ControlColor::None, WiFiTabID);
+        //-----------------------------------------------------------------------------
+        TempID = ESPUI.addControl(ControlType::Separator, WIFI_ADDR_SEP_STR, emptyString.c_str(), ControlColor::None, WiFiTabID);
 
         wifiDhcpID = ESPUI.addControl(  ControlType::Switcher,
                                         WIFI_WEB_DHCP_STR, 
@@ -198,7 +198,7 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
                                             },
                                             this);
 
-//-----------------------------------------------------------------------------
+        //-----------------------------------------------------------------------------
         ESPUI.addControl(ControlType::Separator, WIFI_NAME_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
 
         wifiStaNameID = ESPUI.addControl(   ControlType::Text, 
@@ -214,6 +214,7 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
                                                 }
                                             },
                                             this);
+        ESPUI.addControl(ControlType::Max, emptyString.c_str(), STA_NAME_MAX_SZ, ControlColor::None, wifiStaNameID);
 
         wifiApNameID = ESPUI.addControl(    ControlType::Text, 
                                             WIFI_AP_NAME_STR, 
@@ -228,116 +229,115 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
                                                 }
                                             },
                                             this);
+        ESPUI.addControl(ControlType::Max, emptyString.c_str(), AP_NAME_MAX_SZ, ControlColor::None, wifiApNameID);
 
-    // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
-    #ifdef MDNS_ENB
-    wifiMdnsNameID = ESPUI.addControl(  ControlType::Text, 
-                                        WIFI_MDNS_NAME_STR, 
-                                        mdnsName, 
+        #ifdef MDNS_ENB
+        // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
+        wifiMdnsNameID = ESPUI.addControl(  ControlType::Text, 
+                                            WIFI_MDNS_NAME_STR, 
+                                            mdnsName, 
+                                            ControlColor::Carrot, 
+                                            WiFiTabID, 
+                                            [](Control *sender, int type, void *parm)
+                                            {
+                                                if (nullptr != parm)
+                                                {
+                                                    reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetMdnsName(sender, type);
+                                                }
+                                            },
+                                            this);
+        ESPUI.addControl(ControlType::Max, emptyString.c_str(), MDNS_NAME_MAX_SZ, ControlColor::None, wifiMdnsNameID);
+        // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
+        #endif // ifdef MDNS_ENB
+
+        //-----------------------------------------------------------------------------
+        ESPUI.addControl(ControlType::Separator, WIFI_DEV_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
+
+        wifiDevUserID = ESPUI.addControl(   ControlType::Text,
+                                            WIFI_DEV_USER_NM_STR,
+                                            userNameStr,
+                                            ControlColor::Carrot,
+                                            WiFiTabID,
+                                            [](Control *sender, int type, void *parm)
+                                            {
+                                                if (nullptr != parm)
+                                                {
+                                                    reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetUiLoginName(sender, type);
+                                                }
+                                            },
+                                            this);
+        ESPUI.addControl(ControlType::Max, emptyString.c_str(), USER_NM_MAX_SZ, ControlColor::None, wifiDevUserID);
+        wifiDevUserMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), F(WIFI_BLANK_MSG_STR), ControlColor::Alizarin, wifiDevUserID);
+        ESPUI.setElementStyle(wifiDevUserMsgID, CSS_LABEL_STYLE_MAROON);
+
+        wifiDevPwID = ESPUI.addControl( ControlType::Text,
+                                        WIFI_DEV_USER_PW_STR,
+                                        userPassStr,
+                                        ControlColor::Carrot,
+                                        WiFiTabID,
+                                        [](Control *sender, int type, void *parm)
+                                        {
+                                            if (nullptr != parm)
+                                            {
+                                                reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetUiLoginPassword(sender, type);
+                                            }
+                                        },
+                                        this);
+        ESPUI.addControl(ControlType::Max, emptyString.c_str(), USER_PW_MAX_SZ, ControlColor::None, wifiDevPwID);
+        wifiDevPwMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), F(WIFI_BLANK_MSG_STR), ControlColor::Alizarin, wifiDevPwID);
+        ESPUI.setElementStyle(wifiDevPwMsgID,   CSS_LABEL_STYLE_MAROON);
+
+        //-----------------------------------------------------------------------------
+        ESPUI.addControl(ControlType::Separator, WIFI_AP_IP_SEP_STR, emptyString.c_str(), ControlColor::None, WiFiTabID);
+
+        wifiApIpID = ESPUI.addControl(  ControlType::Text, 
+                                        WIFI_AP_IP_ADDR_STR, 
+                                        ApIp.toString(), 
                                         ControlColor::Carrot, 
                                         WiFiTabID, 
                                         [](Control *sender, int type, void *parm)
                                         {
                                             if (nullptr != parm)
                                             {
-                                                reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetMdnsName(sender, type);
+                                                reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetApIpAddr(sender, type);
                                             }
                                         },
                                         this);
-    #endif // ifdef MDNS_ENB
-    // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
 
-//-----------------------------------------------------------------------------
-    ESPUI.addControl(ControlType::Separator, WIFI_DEV_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
-
-    wifiDevUserID = ESPUI.addControl(   ControlType::Text,
-                                        WIFI_DEV_USER_NM_STR,
-                                        userNameStr,
-                                        ControlColor::Carrot,
-                                        WiFiTabID,
-                                        [](Control *sender, int type, void *parm)
-                                        {
-                                            if (nullptr != parm)
+        wifiApFallID = ESPUI.addControl(    ControlType::Switcher, 
+                                            WIFI_AP_FALLBK_STR, 
+                                            (ap_fallbackIsEnabled) ? "1" : "0", 
+                                            ControlColor::Carrot, 
+                                            WiFiTabID,
+                                            [](Control *sender, int type, void *parm)
                                             {
-                                                reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetUiLoginName(sender, type);
-                                            }
-                                        },
-                                        this);
-    wifiDevUserMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), F(WIFI_BLANK_MSG_STR), ControlColor::Alizarin, wifiDevUserID);
+                                                if (nullptr != parm)
+                                                {
+                                                    reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetApFallback(sender, type);
+                                                }
+                                            },
+                                            this);
 
-    wifiDevPwID = ESPUI.addControl( ControlType::Text,
-                                    WIFI_DEV_USER_PW_STR,
-                                    userPassStr,
-                                    ControlColor::Carrot,
-                                    WiFiTabID,
-                                    [](Control *sender, int type, void *parm)
-                                    {
-                                        if (nullptr != parm)
-                                        {
-                                            reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetUiLoginPassword(sender, type);
-                                        }
-                                    },
-                                    this);
-    wifiDevPwMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), F(WIFI_BLANK_MSG_STR), ControlColor::Alizarin, wifiDevPwID);
-
-//-----------------------------------------------------------------------------
-    ESPUI.addControl(ControlType::Separator, WIFI_AP_IP_SEP_STR, emptyString.c_str(), ControlColor::None, WiFiTabID);
-
-    wifiApIpID = ESPUI.addControl(  ControlType::Text, 
-                                    WIFI_AP_IP_ADDR_STR, 
-                                    ApIp.toString(), 
-                                    ControlColor::Carrot, 
-                                    WiFiTabID, 
-                                    [](Control *sender, int type, void *parm)
-                                    {
-                                        if (nullptr != parm)
-                                        {
-                                            reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetApIpAddr(sender, type);
-                                        }
-                                    },
-                                    this);
-
-    wifiApFallID = ESPUI.addControl(    ControlType::Switcher, 
-                                        WIFI_AP_FALLBK_STR, 
-                                        (ap_fallbackIsEnabled) ? "1" : "0", 
-                                        ControlColor::Carrot, 
-                                        WiFiTabID,
-                                        [](Control *sender, int type, void *parm)
-                                        {
-                                            if (nullptr != parm)
+        // ESPUI.addControl(ControlType::Separator, WIFI_BOOT_SEP_STR, "", ControlColor::None, wifiTab);
+        wifiApBootID = ESPUI.addControl(    ControlType::Switcher,
+                                            WIFI_AP_REBOOT_STR,
+                                            (RebootOnWiFiFailureToConnect) ? "1" : "0",
+                                            ControlColor::Carrot,
+                                            WiFiTabID,
+                                            [](Control *sender, int type, void *parm)
                                             {
-                                                reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetApFallback(sender, type);
-                                            }
-                                        },
-                                        this);
-
-    // ESPUI.addControl(ControlType::Separator, WIFI_BOOT_SEP_STR, "", ControlColor::None, wifiTab);
-    wifiApBootID = ESPUI.addControl(    ControlType::Switcher,
-                                        WIFI_AP_REBOOT_STR,
-                                        (RebootOnWiFiFailureToConnect) ? "1" : "0",
-                                        ControlColor::Carrot,
-                                        WiFiTabID,
-                                        [](Control *sender, int type, void *parm)
-                                        {
-                                            if (nullptr != parm)
-                                            {
-                                                reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetApReboot(sender, type);
-                                            }
-                                        },
-                                        this);
-
+                                                if (nullptr != parm)
+                                                {
+                                                    reinterpret_cast<c_WiFiDriverUi *>(parm)->CbSetApReboot(sender, type);
+                                                }
+                                            },
+                                            this);
 #ifdef OldWay
-        ESPUI.setPanelStyle(homeRssiID,         "font-size: 1.25em;");
-        ESPUI.setPanelStyle(homeStaID,          "font-size: 1.15em;");
+        ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
+
         ESPUI.setPanelStyle(homeTextMsgID,      "font-size: 1.15em;");
-        ESPUI.setElementStyle(homeRssiID,       "max-width: 30%;");
-        ESPUI.setElementStyle(homeStaID,        "max-width: 65%;");
-        ESPUI.setElementStyle(homeStaMsgID,     CSS_LABEL_STYLE_BLACK);
         ESPUI.setElementStyle(homeTextMsgID,    CSS_LABEL_STYLE_WHITE);
 
-        ESPUI.setElementStyle(wifiDevUserMsgID, CSS_LABEL_STYLE_MAROON);
-        ESPUI.setElementStyle(wifiDevPwMsgID,   CSS_LABEL_STYLE_MAROON);
-        ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
 #endif // def OldWay
 
     } while (false);
@@ -345,6 +345,41 @@ void c_WiFiDriverUi::addControls(uint16_t _HomeTabId, uint16_t _WiFiTabID)
     ValidateStaticSettings();
     SetStaticFieldsVisibility();
     UpdateStatusFields();
+
+    // DEBUG_END;
+}
+
+//-----------------------------------------------------------------------------
+void c_WiFiDriverUi::addHomeControls(uint16_t _HomeTabID)
+{
+    // DEBUG_START;
+
+    do // once
+    {
+        if(HomeTabID == _HomeTabID)
+        {
+            // DEBUG_V("Already created the UI controls");
+            break;
+        }
+        HomeTabID = _HomeTabID;
+        // DEBUG_V(String("HomeTabID: ") + String(HomeTabID));
+
+        ESPUI.addControl(ControlType::Separator, HOME_SEP_WIFI_STR, emptyString, ControlColor::None, HomeTabID);
+        // DEBUG_V();
+
+        homeRssiID = ESPUI.addControl(ControlType::Label, HOME_WIFI_STR, emptyString, ControlColor::Peterriver, HomeTabID);
+        ESPUI.setPanelStyle(homeRssiID,         "font-size: 1.25em;");
+        ESPUI.setElementStyle(homeRssiID,       "max-width: 30%;");
+
+        homeStaID = ESPUI.addControl(ControlType::Label, HOME_STA_STR, emptyString, ControlColor::Peterriver, HomeTabID);
+        ESPUI.setPanelStyle(homeStaID,          "font-size: 1.15em;");
+        ESPUI.setElementStyle(homeStaID,        "max-width: 65%;");
+
+        homeStaMsgID = ESPUI.addControl(ControlType::Label, "IP_ADDR", emptyString, ControlColor::Peterriver, HomeTabID);
+        ESPUI.setElementStyle(homeStaMsgID, F("max-width: 45%;"));
+        ESPUI.setPanelStyle(homeStaMsgID,   F("font-size: 1.25em;"));
+
+    } while (false);
 
     // DEBUG_END;
 }
@@ -369,7 +404,7 @@ void c_WiFiDriverUi::CbSetApFallback(Control * sender, int type)
         }
 
         ap_fallbackIsEnabled = NewApFallback;
-
+        Log.infoln((String(F("AP Fallback Set to: ")) + (ap_fallbackIsEnabled ? F("On") : F("Off"))).c_str());
         displaySaveWarning();
 
     } while (false);
@@ -417,14 +452,21 @@ void c_WiFiDriverUi::CbSetApName(Control * sender, int type)
 
     do // once
     {
-        if(NewValue.equals(StaHostname))
+        if(NewValue.isEmpty())
+        {
+            Log.warningln(String(F("-> AP hostname cannot be empty.")).c_str());
+            ESPUI.updateControlValue(sender, ApHostname);
+            break;
+        }
+
+        if(NewValue.equals(ApHostname))
         {
             // DEBUG_V("Name did not change");
             break;
         }
 
-        StaHostname = NewValue;
-
+        ApHostname = NewValue;
+        Log.infoln((String(F("Webserver (AP) Name Set to: \"")) + ApHostname + F("\"")).c_str());
         displaySaveWarning();
 
     } while (false);
@@ -452,7 +494,7 @@ void c_WiFiDriverUi::CbSetApReboot(Control * sender, int type)
         }
 
         RebootOnWiFiFailureToConnect = NewRebootOnWiFiFailureToConnect;
-
+        Log.infoln((String(F("AP Reboot Set to: ")) + (NewRebootOnWiFiFailureToConnect ? F("On") : F("Off"))).c_str());
         displaySaveWarning();
 
     } while (false);
@@ -480,6 +522,7 @@ void c_WiFiDriverUi::CbSetDhcp(Control * sender, int type)
         }
 
         UseDhcp = NewUseDhcp;
+        Log.infoln((String(F("WiFi Connection Set to: ")) + (UseDhcp ? F("DHCP") : F("Static IP"))).c_str());
 
         SetStaticFieldsVisibility();
         ValidateStaticSettings();
@@ -570,7 +613,7 @@ void c_WiFiDriverUi::CbSetSSID(Control * sender, int type)
         }
 
         ssid = NewValue;
-
+        Log.infoln((String(F("WiFi SSID Set to: \"")) + ssid + "\"").c_str());
         displaySaveWarning();
 
     } while (false);
@@ -678,6 +721,13 @@ void c_WiFiDriverUi::CbSetStaName(Control * sender, int type)
 
     do // once
     {
+        if(NewValue.isEmpty())
+        {
+            Log.warningln(String(F("-> STA hostname cannot be empty.")).c_str());
+            ESPUI.updateControlValue(sender, StaHostname);
+            break;
+        }
+
         if(NewValue.equals(StaHostname))
         {
             // DEBUG_V("Name did not change");
@@ -685,7 +735,7 @@ void c_WiFiDriverUi::CbSetStaName(Control * sender, int type)
         }
 
         StaHostname = NewValue;
-
+        Log.infoln((String(F("Webserver (STA) Name Set to: \"")) + StaHostname + F("\"")).c_str());
         displaySaveWarning();
 
     } while (false);
@@ -777,6 +827,25 @@ void c_WiFiDriverUi::CbSetWPAkey(Control * sender, int type)
     // DEBUG_END;
 }
 
+// ************************************************************************************************
+// getRSSI(): Get the RSSI value.
+//            Note: AP Mode will always return 0 since it doesn't receive a sgnal from a router.
+int8_t c_WiFiDriverUi::getRSSI(void)
+{
+    int16_t rssi;
+
+    rssi = WiFi.RSSI();
+
+    if (rssi < -127) {
+        rssi = -127;
+    }
+    else if (rssi > 20) {
+        rssi = 20;
+    }
+
+    return int8_t(rssi);
+}
+
 //-----------------------------------------------------------------------------
 void c_WiFiDriverUi::SetStaticFieldsVisibility()
 {
@@ -795,9 +864,13 @@ void c_WiFiDriverUi::UpdateStatusFields()
 {
     // DEBUG_START;
 
-    ESPUI.updateControlValue(wifiStatusRssiID,   String(WiFi.RSSI()) + UNITS_DBM_STR);
+    ESPUI.updateControlValue(wifiStatusRssiID,   String(getRSSI()) + UNITS_DBM_STR);
     ESPUI.updateControlValue(wifiStatusStaApID,  ConnectionStatusMessage);
     ESPUI.updateControlValue(wifiStatusIpAddrID, String(CurrentIpAddress.toString()));
+
+    ESPUI.updateControlValue(homeRssiID,   String(getRSSI()) + UNITS_DBM_STR);
+    ESPUI.updateControlValue(homeStaMsgID, ConnectionStatusMessage);
+    ESPUI.updateControlValue(homeStaID,    String(CurrentIpAddress.toString()));
 
     // DEBUG_END;
 }
@@ -811,6 +884,12 @@ bool c_WiFiDriverUi::ValidateStaticSettings()
 
     do // once
     {
+        if(UseDhcp)
+        {
+            // DEBUG_V("Dont check the rest of the settings if they dont matter");
+            break;
+        }
+
         if (staticIp == IPAddress((uint32_t)0))
         {
             Log.warningln("WiFi: Static IP Address is empty. Using DHCP.");
@@ -835,6 +914,7 @@ bool c_WiFiDriverUi::ValidateStaticSettings()
             break;
         }
 
+        // DEBUG_V("All settings are valid. We can use Static settings");
         response = true;
 
     } while (false);

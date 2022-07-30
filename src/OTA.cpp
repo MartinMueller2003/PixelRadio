@@ -29,12 +29,10 @@
 #include "PixelRadio.h"
 #include "globals.h"
 
-extern const char *mDNShost; // Host name. Used by OTA and mDNS (they share the same name).
-
 #ifdef OTA_ENB
 // *********************************************************************************************
 // Must call wifiConnect() BEFORE calling otaInit().
-void otaInit(void)
+void otaInit(String & mdnsname)
 {
     static int8_t prog           = 0;     // Upload Progress, in percent.
     static int8_t oldProg        = -1;    // Previous Upload Progress.
@@ -45,14 +43,14 @@ void otaInit(void)
     ArduinoOTA
     .onStart([]() {
         oldProg        = -1;
-        String typeStr = "";
+        String typeStr = emptyString;
 
         if (ArduinoOTA.getCommand() == U_FLASH) {
-            typeStr        = "Sketch Firmware.";
+            typeStr        = F("Sketch Firmware.");
             updateLittleFS = false;
         }
         else {
-            typeStr        = "LITTLEFS File System.";
+            typeStr        = F("LITTLEFS File System.");
             updateLittleFS = true;
         }
 
@@ -61,7 +59,7 @@ void otaInit(void)
         Log.infoln(logBuff);
 
         //WiFi.setTxPower(MAX_WIFI_PWR);
-        Log.infoln(" -> Set WiFi RF Power to Maximum.");
+        // Log.infoln(" -> Set WiFi RF Power to Maximum.");
 
         if (updateLittleFS == true) {
             LittleFS.end(); // Important, Must Unmount LITTLEFS!
@@ -72,7 +70,7 @@ void otaInit(void)
     .onEnd([]() {
         delay(10);
         //WiFi.setTxPower(RUN_WIFI_PWR);
-        Log.infoln(" -> Restored Normal WiFi RF Power.\r\n");
+        // Log.infoln(" -> Restored Normal WiFi RF Power.\r\n");
         #ifdef OTA_REBOOT_ENB
         Log.fatalln("OTA COMPLETE, SYSTEM REBOOTING ...\r\n");
         #else // ifdef OTA_REBOOT_ENB
@@ -120,14 +118,7 @@ void otaInit(void)
         }
     });
 
-    if (mdnsNameStr.length() == 0) {
-        mdnsNameStr = MDNS_NAME_DEF_STR;
-        char logBuff[40 + MDNS_NAME_MAX_SZ];
-        sprintf(logBuff, " ArduinoOTA Name Missing, Using %s", mdnsNameStr.c_str());
-        Log.warningln(logBuff);
-    }
-
-    ArduinoOTA.setHostname(mdnsNameStr.c_str()); // OTA and mDNS must share the same Host name.
+    ArduinoOTA.setHostname(mdnsname.c_str()); // OTA and mDNS must share the same Host name.
     #ifdef OTA_REBOOT_ENB
     ArduinoOTA.setRebootOnSuccess(true);         // Enable reboot after OTA.
     #else // ifdef OTA_REBOOT_ENB

@@ -102,7 +102,6 @@ public:
    // below are to be deleted
    bool                 CheckAnyRdsControllerEnabled(bool IncludeLocalController);
    bool                 CheckRdsTextAvailable(bool IncludeLocalController);
-   bool                 checkControllerIsAvailable(c_ControllerMgr::ControllerTypeId_t controllerId);
    bool                 CheckAnyControllerIsDisplayingMessage(bool IncludeLocalController);
 
    void                 SetTextFlag(ControllerTypeId_t Id, bool value);

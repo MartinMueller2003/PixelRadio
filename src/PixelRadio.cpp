@@ -57,7 +57,6 @@
 #include <Arduino.h>
 #include <ArduinoOTA.h>
 #include <ArduinoLog.h>
-#include <DNSServer.h>
 #include <WiFi.h>
 #include "config.h"
 #include "credentials.h"
@@ -105,16 +104,6 @@ String gpio23CtrlStr    = "";                // GPIO-23 State if Changed by Seri
 String gpio33CtrlStr    = "";                // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
 String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
 
-#ifdef OldWay
- ipAddrStr        = "";                // DHCP IP Address;
-
-IPAddress hotSpotIP   = HOTSPOT_IP_DEF;
-IPAddress staticIP    = IP_ADDR_DEF;
-IPAddress subNet      = SUBNET_MASK_DEF;
-IPAddress wifiDNS     = WIFI_ADDR_DEF;
-IPAddress wifiGateway = WIFI_ADDR_DEF;
-#endif // def OldWay
-
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
 
@@ -144,19 +133,9 @@ String gpio33BootStr  = GPIO_DEF_STR;                      // Control.
 String inpImpedStr    = INP_IMP_DEF_STR;                   // Control.
 String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
 String rfPowerStr     = RF_PWR_DEF_STR;                    // Control.
-#ifdef OldWay
-String staticIpStr    = "";
-String subNetStr      = subNet.toString();                 // Control.
-#endif // def OldWay
 String userNameStr    = LOGIN_USER_NAME_STR;               // Control.
 String userPassStr    = LOGIN_USER_PW_STR;                 // Control.
 String vgaGainStr     = VGA_GAIN_DEF_STR;                  // Control.
-#ifdef OldWay
-String wifiDnsStr     = "";                                // Control.
-String wifiGatewayStr = "";                                // Control.
-String wifiSSIDStr    = SSID_NM_STR;                       // Control, Private WiFi Credentials.
-String wifiWpaKeyStr  = WPA_KEY_STR;                       // Control, Private WiFi Credentials.
-#endif // def OldWay
 
 // *********************************************************************************************
 
@@ -266,11 +245,9 @@ void loop()
     WiFiDriver.Poll();
     ControllerMgr.poll();
 #ifdef OldWay 
-    processDnsServer();     // AP ESPUI DNS Server
     processRDS();           // Send any available RadioText.
     processMeasurements();  // Measure the two system voltages.
 
-    updateUiRSSI();         // Update the WiFi Signal Strength on UI homeTab & wifiTab.
     updateUiFreeMemory();   // Update the Memory value on UI diagTab.
     updateUiAudioLevel();   // Update the Audio Level value on UI diagtab.
     updateUiDiagTimer();    // Upddate the Elapsed Timer on UI diagTab.
@@ -281,16 +258,12 @@ void loop()
     updateTestTones(false); // Update the Test Tone, false=Don't Reset Tone Sequence.
     updateOnAirSign();      // Update the Optional "On Air" 12V LED Sign.
 
-    wifiReconnect();        // Reconnect to WiFi if not connected to router.
     rebootSystem();         // Check to see if Reboot has been requested.
 
     #ifdef HTTP_ENB
     processWebClient();     // Process Any Available HTTP RDS commands.
     #endif // ifdef HTTP_ENB
 
-    #ifdef OTA_ENB
-    ArduinoOTA.handle(); // OTA Service.
-    #endif // ifdef OTA_ENB
 #endif // def OldWay 
 
 }

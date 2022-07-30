@@ -18,9 +18,6 @@
 
 // *********************************************************************************************
 
-#ifdef Oldway
-extern bool apFallBackFlg;
-#endif // def Oldway
 extern bool newVgaGainFlg;
 extern bool newAutoRfFlg;
 extern bool newCarrierFlg;
@@ -40,23 +37,16 @@ extern bool rfAutoFlg;
 extern bool rfCarrierFlg;
 extern bool stereoEnbFlg;
 extern bool testModeFlg;
-#ifdef Oldway
-extern bool WiFiRebootFlg;
-#endif // def Oldway
 
 extern uint8_t analogVol;
 extern uint8_t fmRadioTestCode;
 extern uint8_t usbVol;
 
-extern uint16_t mqttPort;
-
-extern uint32_t baudRate;
 extern uint32_t rdsMsgTime;
 
 extern uint16_t fmFreqX10;
 extern float vbatVolts;
 extern float paVolts;
-
 
 // GUI Strings
 extern String preEmphasisStr;
