@@ -109,7 +109,6 @@ uint16_t wifiTab   = Control::noParent;
 uint16_t aboutLogoID    = Control::noParent;
 uint16_t aboutVersionID = Control::noParent;
 
-uint16_t adjAvolID     = Control::noParent;
 uint16_t adjFmDispID   = Control::noParent;
 uint16_t adjFreqID     = Control::noParent;
 uint16_t adjSaveID     = Control::noParent;
@@ -478,19 +477,6 @@ void updateUiFreeMemory(void)
     }
 }
 
-// ************************************************************************************************
-// updateUiFrequency(): Update the FM Transmit Frequency on the UI's adjTab, homeTab, and radioTab.
-void updateUiFrequency(int fmFreqX10)
-{
-    float tempFloat = float(fmFreqX10) / 10.0f;
-
-    tempStr  = String(tempFloat, 1);
-    tempStr += UNITS_MHZ_STR;
-
-    ESPUI.print(adjFmDispID, tempStr);
-    ESPUI.print(homeFreqID,  tempStr);
-    ESPUI.print(radioFreqID, tempStr);
-}
 
 #ifdef OldWay
 // ************************************************************************************************

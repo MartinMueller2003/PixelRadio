@@ -26,7 +26,6 @@ extern bool rebootFlg;
 extern uint8_t usbVol;
 
 extern float vbatVolts;
-extern float paVolts;
 
 // GUI Strings
 extern String gpio19BootStr;
