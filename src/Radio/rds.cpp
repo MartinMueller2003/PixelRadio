@@ -21,15 +21,11 @@
 #include <ArduinoLog.h>
 #include <string>
 #include "PixelRadio.h"
-#include "globals.h"
-#include "QN8027Radio.h"
-#include "Controllers/ControllerMgr.h"
+// #include "globals.h"
+#include "rds.hpp"
 
 // ************************************************************************************************
-extern QN8027Radio radio;
-
 #ifdef OldWay
-
 
 // ************************************************************************************************
 // processRDS(): Local RDS RadioText Display Handler for homeTab. 

@@ -18,12 +18,12 @@
 
 // *********************************************************************************************
 #include "ControllerHTTP.h"
-#include "../Language.h"
+#include "Language.h"
 #include <ArduinoLog.h>
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerHTTP : public c_ControllerCommon
@@ -44,7 +44,6 @@ void c_ControllerHTTP::CbControllerEnabled(Control *sender, int type)
    ControllerEnabled = (type == S_ACTIVE);
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("HTTP Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;

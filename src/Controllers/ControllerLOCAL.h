@@ -31,6 +31,7 @@ public:
    void restoreConfiguration(ArduinoJson::JsonObject &config);
    void saveConfiguration(ArduinoJson::JsonObject &config);
    void CreateDefaultMsgSet();
+   void GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
 
 private:
    void CbControllerEnabled(Control *sender, int type);

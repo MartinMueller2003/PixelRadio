@@ -20,9 +20,9 @@
 #include "ControllerFPPDSequences.h"
 #include <map>
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 static const String Name                  = F("FPPD Sequences");
 static const String DefaultTextFieldValue = F("Type New Sequence Name Here");

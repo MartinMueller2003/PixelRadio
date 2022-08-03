@@ -35,6 +35,7 @@ public:
    void     saveConfiguration(ArduinoJson::JsonObject & config);
    void     CbControllerEnabled(Control *sender, int type);
    void     CbSequenceLearningEnabled(Control *sender, int type);
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Sequences.GetNextRdsMessage(Response); }}
 
 private:
    

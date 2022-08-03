@@ -36,19 +36,6 @@
 #define AUDIO_TEST_STR    "PIXELRADIO AUDIO TEST"
 #define AUDIO_PSN_STR     "TestTone"  // RDS PSN for Audio Test Tone mode, Max 8 Chars.
 
-#define VGA_GAIN0_STR     "3dB"
-#define VGA_GAIN1_STR     "6dB"
-#define VGA_GAIN2_STR     "9dB"
-#define VGA_GAIN3_STR     "12dB (default)"
-#define VGA_GAIN4_STR     "15dB"
-#define VGA_GAIN5_STR     "18dB"
-#define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
-
-#define INP_IMP05K_STR   "5K Ohms"
-#define INP_IMP10K_STR   "10K Ohms"
-#define INP_IMP20K_STR   "20K Ohms (default)"
-#define INP_IMP40K_STR   "40K Ohms"
-#define INP_IMP_DEF_STR  INP_IMP20K_STR;
 
 #define APP_NAME_STR  N_PixelRadio
 
@@ -78,9 +65,6 @@
 #define CTRL_USB_SERIAL_STR  "USB SERIAL CONTROL SETTINGS"
 
 
-#define PRE_EMPH_USA_STR     "North America (75uS)" // North America / Japan.
-#define PRE_EMPH_EUR_STR     "Europe (50uS)"        // Europe, Australia, China.
-#define PRE_EMPH_DEF_STR     PRE_EMPH_USA_STR;
 
 #define DIAG_BOOT_MSG1_STR   "WARNING: SYSTEM WILL REBOOT<br>** RELEASE NOW TO ABORT **"
 #define DIAG_BOOT_MSG2_STR   "** SYSTEM REBOOTING **<br>WAIT 30 SECONDS BEFORE ACCESSING WEB PAGE."
@@ -113,10 +97,6 @@
 // #define DIG_AUD_GAIN2_STR     "DIAG2"
 // #define DIG_AUD_GAIN_DEF_STR  DIG_AUD_GAIN0_STR;
 
-#define DIG_GAIN0_STR     "0 dB (default)"
-#define DIG_GAIN1_STR     "1 dB"
-#define DIG_GAIN2_STR     "2 dB"
-#define DIG_GAIN_DEF_STR  DIG_GAIN0_STR;
 
 #define ERROR_MSG_STR  "ERROR"
 
@@ -223,10 +203,6 @@
 #define RF_AUTO_ENB_STR  "Turn Off RF >60 Secs Silence"
 #define RF_AUTO_DEF_STR  RF_AUTO_DIS_STR;
 
-#define RF_PWR_LOW_STR   "Low"
-#define RF_PWR_MED_STR   "Med"
-#define RF_PWR_HIGH_STR  "High (default)"
-#define RF_PWR_DEF_STR   RF_PWR_HIGH_STR;
 
 #define SAVE_SETTINGS_STR      "SAVE SETTINGS"
 #define SAVE_SETTINGS_MSG_STR  "[ Settings Changed, Save Required ]"

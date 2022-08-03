@@ -14,10 +14,10 @@
 #include <WiFi.h>
 #include <ArduinoLog.h>
 #include "WiFiDriverUi.hpp"
-#include "../memdebug.h"
-#include "../language.h"
-#include "../PixelRadio.h"
-#include "../globals.h"
+#include "memdebug.h"
+#include "language.h"
+#include "PixelRadio.h"
+#include "globals.h"
 
 extern void displaySaveWarning();
 

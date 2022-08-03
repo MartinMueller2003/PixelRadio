@@ -18,11 +18,11 @@
 #include "fseq.h"
 #include <WiFi.h>
 #include <time.h>
-#include "../language.h"
+#include "language.h"
 
-#if __has_include("../memdebug.h")
-#include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 #define FPP_TYPE_ID         0xC3
 #define FPP_VARIANT_NAME    String(N_PixelRadio)

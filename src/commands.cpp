@@ -20,12 +20,7 @@
 #include "Commands.h"
 #include "memdebug.h"
 #include "language.h"
-#include "QN8027Radio.h"
-
-
-// *************************************************************************************************************************
-// Radio
-extern QN8027Radio radio;
+#include "radio.hpp"
 
 // *************************************************************************************************************************
 CommandProcessor::CommandProcessor()
@@ -328,15 +323,16 @@ bool CommandProcessor::piCode(String & payloadStr, String & ControllerName)
             response = false;
             break;
         }
-
+#ifdef OldWay
         if (radio.getPiCode() == (uint16_t)(tempPiCode))
         {
             Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: PI Code Unchanged (0x") + String(tempPiCode, HEX) + F(").")).c_str());
             break;
         }
+#endif // def OldWay
 
         // New PI Code.
-        // ControllerMgr.SetPiCode(controller, tempPiCode);
+        // Radio.SetPiCode(controller, tempPiCode);
         // ControllerMgr.SetTextFlag(controller, true);
 
         // displaySaveWarning();
@@ -372,11 +368,13 @@ bool CommandProcessor::ptyCode(String & payloadStr, String & ControllerName)
             break;
         }
 
+#ifdef OldWay
         if (radio.getPTYCode() == (uint8_t)(tempPtyCode))
         {
             Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: PTY Code Unchanged (0x") + String(tempPtyCode, HEX) + F(").")).c_str());
             break;
         }
+#endif // def OldWay
 
         // New PTY Code.
         // ControllerMgr.SetPtyCode(controller, tempPtyCode);
@@ -541,8 +539,7 @@ bool CommandProcessor::rfCarrier(String & payloadStr, String & ControllerName)
         if (payloadStr.equals(CMD_RF_ON_STR))
         {
             Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: RF Carrier Set to ON.")).c_str());
-            // rfCarrierFlg  = true;
-            // newCarrierFlg = true;
+            // Radio.setRfCarrier(true);
             updateUiRfCarrier();
             break;
         }

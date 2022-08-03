@@ -19,12 +19,12 @@
 // *********************************************************************************************
 #include "ControllerMessage.h"
 #include <map>
-#include "../Language.h"
-#include "../PixelRadio.h"
+#include "Language.h"
+#include "PixelRadio.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 c_ControllerMessage::c_ControllerMessage()
@@ -169,7 +169,6 @@ void c_ControllerMessage::CbDuration(Control *sender, int type)
    DurationSec = atoi(sender->value.c_str());
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(DurationSec)).c_str());
 
    // DEBUG_END;
@@ -184,7 +183,6 @@ void c_ControllerMessage::CbEnabled(Control *sender, int type)
    // DEBUG_V(String("Enabled: ") + String(Enabled));
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Message Duration Set to: ")) + String(Enabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;

@@ -20,6 +20,7 @@
 #pragma once
 #include "ControllerCommon.h"
 #include "RBD_SerialManager.h"
+#include "ControllerMessages.h"
 
 #define SERIAL_DEF_STR SERIAL_115_STR;
 extern const PROGMEM char SERIAL_OFF_STR[];
@@ -39,6 +40,7 @@ public:
    void     gpioSerialControl(String paramStr, uint8_t pin); // Serial handler for GPIO Commands.
    void     AddControls(uint16_t ctrlTab);
    uint16_t GetMsgId() { return EspuiMsgId; }
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
 
 private:
    bool     ctrlSerialFlg(void); // Return true if Serial Controller is Enabled, else false;
@@ -53,6 +55,7 @@ private:
    String   paramStr;
    String   BaudRateStr = SERIAL_DEF_STR; // Parameter string.
    uint32_t BaudRate = 0;
+   c_ControllerMessages Messages;
 
 }; // c_ControllerSERIAL
 

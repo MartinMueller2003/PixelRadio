@@ -11,11 +11,11 @@
     (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
 */
 
-#include "../PixelRadio.h"
+#include "PixelRadio.h"
 #include <ArduinoLog.h>
 #include <esp_wifi.h>
 #include "WiFiDriver.hpp"
-#include "../memdebug.h"
+#include "memdebug.h"
 #include <Int64String.h>
 
 //-----------------------------------------------------------------------------
@@ -40,9 +40,9 @@
 
 */
 
-#if __has_include("../credentials.h")
-#   include "../credentials.h"
-#endif //  __has_include("../credentials.h")
+#if __has_include("credentials.h")
+#   include "credentials.h"
+#endif //  __has_include("credentials.h")
 
 #if !defined(SSID_NM_STR)
 #   define SSID_NM_STR "DEFAULT_SSID_NOT_SET"

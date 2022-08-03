@@ -25,7 +25,7 @@
 #include <map>
 #include <ESPUI.h>
 #include "ControllerMessage.h"
-#include "../PixelRadio.h"
+#include "PixelRadio.h"
 
 class c_ControllerMessageSet
 {
@@ -44,6 +44,7 @@ public:
    bool     HasMsg(String & MsgTxt) { return (Messages.end() != Messages.find(MsgTxt)); }
    void     SetName(String & value) { MsgSetName = value; }
    void     UpdateMsgText(String& OriginalMessageText, String& NewMessageText);
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) {}
 
 private:
    void     ShowMsgDetailsPane(bool value);

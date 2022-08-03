@@ -651,6 +651,7 @@ void processWebClient(void)
 
 #endif // ifdef HTTP_ENB
 
+#ifdef OldWay
 // *********************************************************************************************
 // urlDecode(): Convert URL encoding into ASII.
 String urlDecode(String urlStr)
@@ -696,3 +697,4 @@ unsigned char urlDecodeHex(char c)
 
     return(0);
 }
+#endif // def OldWay

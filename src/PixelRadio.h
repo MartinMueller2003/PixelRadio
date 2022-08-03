@@ -1,3 +1,4 @@
+#pragma once
 /*
    File: PixelRadio.h
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
@@ -16,11 +17,10 @@
  */
 
 // *********************************************************************************************
-#pragma once
 #include <Arduino.h>
 #include <WiFi.h>
-#include "Controllers/ControllerMgr.h"
-#include "Network/WiFiDriver.hpp"
+#include "ControllerMgr.h"
+#include "WiFiDriver.hpp"
 #include "config.h"
 #include "ESPUI.h"
 
@@ -123,11 +123,6 @@ const uint32_t ELAPSED_TMR_TIME = 1000;   // RDS Elapsed Time Update period, in 
 #define  LOGO_GIF_NAME    "/RadioLogo225x75_base64.gif" // Base64 gif file, 225 pixel W x 75 pixel H.
 const uint8_t LITTLEFS_MODE = 1;
 const uint8_t SD_CARD_MODE  = 2;
-
-// FM Radio: QN8027 Test Codes
-const uint8_t FM_TEST_OK   = 0;          // QN8027 Is Ok.
-const uint8_t FM_TEST_VSWR = 1;          // QN8027 RF Out has Bad VSWR.
-const uint8_t FM_TEST_FAIL = 2;          // QN8027 Chip Bad or missing.
 
 // FM Radio: All FM Frequencies are X10.
 const uint16_t FM_FREQ_DEF_X10 = 887;    // 88.7MHz FM.
@@ -289,9 +284,10 @@ bool    stopCmd(String  payloadStr,
 // ESPUI (WebGUI) Prototypes
 void   buildGUI(void);
 void   displayActiveController(uint8_t controller);
+#ifdef OldWay
 void   displayRdsText(void);
+#endif // def OldWay
 void   displaySaveWarning(void);
-int8_t getAudioGain(void);
 void   initCustomCss(void);
 void   startGUI(void);
 void   updateUiAudioLevel(void);
@@ -302,12 +298,13 @@ void   updateUiFrequency(int Freq10x);
 bool   updateUiGpioMsg(gpio_num_t pin, String & ControllerName, bool PinState);
 void   updateUiIpaddress(String ipStr);
 void   updateUiLocalPtyCode(void);
+#ifdef OldWay
 void   updateUiRdsText(String textStr);
 void   updateUiRDSTmr(bool ClearDisplay);
+#endif // def OldWay
 void   updateUiRfCarrier(void);
 void   updateUiDiagTimer(void);
 void   updateUiVolts(void);
-void   updateUiWfiMode(void);
 
 // ESPUI Callbacks
 void   adjFmFreqCallback(Control *sender,
@@ -316,8 +313,10 @@ void   apBootCallback(Control *sender,
                       int      type);
 void   apFallBkCallback(Control *sender,
                         int      type);
+#ifdef OldWay
 void   audioCallback(Control *sender,
                      int      type);
+#endif // def OldWay
 void   backupCallback(Control *sender,
                       int      type);
 void   dhcpCallback(Control *sender,
@@ -352,17 +351,6 @@ void   saveSettingsCallback(Control *sender,
                             int      type);
 void   setLoginCallback(Control *sender,
                         int      type);
-void setPiCodeCallback(Control *sender,
-                       int      type);
-void setPtyCodeCallback(Control *sender,
-                        int      type);
-void setWiFiAuthenticationCallback(Control *sender,
-                                   int      type);
-void setWiFiNamesCallback(Control *sender,
-                          int      type);
-void setWiFiAddrsCallback(Control *sender,
-                          int      type);
-
 void testModeCallback(Control *sender,
                       int      type);
 
@@ -413,28 +401,11 @@ const String returnClientCode(int code);
 // OTA Prototypes
 void         otaInit(String & mdnsname);
 
-// Radio Protypes
-bool         calibrateAntenna(void);
-bool         checkRadioIsPresent(void);
-uint8_t      initRadioChip(void);
-uint16_t     measureAudioLevel(void);
-void         setAudioImpedance(void);
-void         setAudioMute(void);
-void         setDigitalGain(void);
-void         setFrequency(void);
-void         setMonoAudio(void);
-void         setPreEmphasis(void);
-void         setRfAutoOff(void);
-void         setRfCarrier(void);
-void         setRfPower(void);
-void         setVgaGain(void);
-void         updateOnAirSign(void);
-void         updateRadioSettings(void);
-void         waitForIdle(uint16_t waitMs);
-
 // RDS Prototypes
+#ifdef OldWay
 void         processRDS(void);
 void         resetControllerRdsValues(void);
+#endif // def OldWay
 
 // Serial Log
 uint8_t      getLogLevel(void);
@@ -443,8 +414,10 @@ void         initSerialLog(bool verbose);
 // webServer Prototypes
 void         processWebClient(void);
 
+#ifdef OldWay
 String       urlDecode(String urlStr);
 uint8_t      urlDecodeHex(char c);
+#endif // def OldWay
 
 template <typename J, typename N>
 bool ReadFromJSON (float & OutValue, J& Json, N Name)

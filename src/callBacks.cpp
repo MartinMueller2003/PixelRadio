@@ -25,59 +25,7 @@
 #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-// ************************************************************************************************
-void adjFmFreqCallback(Control *sender, int type) {
-    char logBuff[60];
-
-    // sprintf(logBuff, "adjFmFreqCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == adjFreqID) {
-        if (type == P_LEFT_DOWN) {       // Decr
-            fmFreqX10 -= FM_FREQ_SKP_KHZ;
-        }
-        else if (type == P_RIGHT_DOWN) { // Incr
-            fmFreqX10 += FM_FREQ_SKP_KHZ;
-        }
-        else if (type == P_BACK_DOWN) {  // Decr
-            fmFreqX10 -= FM_FREQ_SKP_MHZ;
-        }
-        else if (type == P_FOR_DOWN) {   // Incr
-            fmFreqX10 += FM_FREQ_SKP_MHZ;
-        }
-        else if ((type == P_LEFT_UP) || (type == P_RIGHT_UP) || (type == P_BACK_UP) || (type == P_FOR_UP)) {
-            Log.verboseln("FM Frequency Pad Button Released.");
-            return;
-        }
-        else {
-            sprintf(logBuff, "adjFmFreqCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-            return;
-        }
-
-        if (fmFreqX10 > FM_FREQ_MAX_X10) {
-            fmFreqX10 = FM_FREQ_MAX_X10;
-        }
-        else if (fmFreqX10 < FM_FREQ_MIN_X10) {
-            fmFreqX10 = FM_FREQ_MIN_X10;
-        }
-
-        newFreqFlg = true; // Tell main loop we have a new setting to update.
-        float tempFloat = float(fmFreqX10) / 10.0f;
-        tempStr  = String(tempFloat, 1);
-        tempStr += UNITS_MHZ_STR;
-
-        updateUiFrequency(true);
-        displaySaveWarning();
-        sprintf(logBuff, "FM Frequency Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "adjFmFreqCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
+#ifdef OldWay
 // ************************************************************************************************
 // audioCallback(): Update the Stereo / Mono Audio modes.
 void audioCallback(Control *sender, int type)
@@ -117,6 +65,7 @@ void audioCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 void backupCallback(Control *sender, int type)
@@ -326,83 +275,6 @@ void diagLogCallback(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// gainAdjust(): Adjust Digital (USB) or Analog Input Gain. Sets String.
-void gainAdjustCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "gainAdjustCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == radioDgainID) {
-        if (sender->value == DIG_GAIN0_STR) {
-            digitalGainStr = DIG_GAIN0_STR;
-            tempStr        = DIG_GAIN0_STR;
-        }
-        else if (sender->value == DIG_GAIN1_STR) {
-            digitalGainStr = DIG_GAIN1_STR;
-            tempStr        = DIG_GAIN1_STR;
-        }
-        else if (sender->value == DIG_GAIN2_STR) {
-            digitalGainStr = DIG_GAIN2_STR;
-            tempStr        = DIG_GAIN2_STR;
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-        }
-        newDigGainFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "Digital Gain Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else if (sender->id == radioVgaGainID) {
-        if (sender->value == VGA_GAIN0_STR) {
-            vgaGainStr = VGA_GAIN0_STR;
-            tempStr    = VGA_GAIN0_STR;
-        }
-        else if (sender->value == VGA_GAIN1_STR) {
-            vgaGainStr = VGA_GAIN1_STR;
-            tempStr    = VGA_GAIN1_STR;
-        }
-        else if (sender->value == VGA_GAIN2_STR) {
-            vgaGainStr = VGA_GAIN2_STR;
-            tempStr    = VGA_GAIN2_STR;
-        }
-        else if (sender->value == VGA_GAIN3_STR) {
-            vgaGainStr = VGA_GAIN3_STR;
-            tempStr    = VGA_GAIN3_STR;
-        }
-        else if (sender->value == VGA_GAIN4_STR) {
-            vgaGainStr = VGA_GAIN4_STR;
-            tempStr    = VGA_GAIN4_STR;
-        }
-        else if (sender->value == VGA_GAIN5_STR) {
-            vgaGainStr = VGA_GAIN5_STR;
-            tempStr    = VGA_GAIN5_STR;
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "gainAdjust: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-
-        newVgaGainFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-
-        tempStr  = getAudioGain();
-        tempStr += " dB";
-        ESPUI.print(radioGainID, tempStr);
-
-        sprintf(logBuff, "Analog Input Gain Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "gainAdjust: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
 // gpioCallback(): GPIO Pin Configuration
 void gpioCallback(Control *sender, int type)
 {
@@ -518,123 +390,8 @@ void gpioCallback(Control *sender, int type)
     }
 }
 
-// ************************************************************************************************
-// impAdjustCallback(): Adjust Audio Input Impedance. Sets String.
-void impAdjustCallback(Control *sender, int type)
-{
-    char logBuff[60];
 
-    // sprintf(logBuff, "impAdjustCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
 
-    if (sender->id == radioImpID) {
-        if (sender->value == INP_IMP05K_STR) {
-            inpImpedStr = INP_IMP05K_STR;
-            tempStr     = INP_IMP05K_STR;
-        }
-        else if (sender->value == INP_IMP10K_STR) {
-            inpImpedStr = INP_IMP10K_STR;
-            tempStr     = INP_IMP10K_STR;
-        }
-        else if (sender->value == INP_IMP20K_STR) {
-            inpImpedStr = INP_IMP20K_STR;
-            tempStr     = INP_IMP20K_STR;
-        }
-        else if (sender->value == INP_IMP40K_STR) {
-            inpImpedStr = INP_IMP40K_STR;
-            tempStr     = INP_IMP40K_STR;
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "impAdjust: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        newInpImpFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-
-        tempStr  = getAudioGain();
-        tempStr += " dB";
-        ESPUI.print(radioGainID, tempStr);
-
-        sprintf(logBuff, "Input Impedance Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "impAdjustCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// muteCallback(): Turn audio on/off (true = Mute the audio).
-void muteCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "muteCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == adjMuteID) {
-        if (type == S_ACTIVE) {
-            ESPUI.setElementStyle(adjMuteID, "background: red;");
-            muteFlg = true;
-            tempStr = "On";
-        }
-        else if (type == S_INACTIVE) {
-            ESPUI.setElementStyle(adjMuteID, "background: #bebebe;");
-            muteFlg = false;
-            tempStr = "Off";
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "muteCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        newMuteFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "Audio Mute Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "muteCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// radioEmphasisCallback(): Set Radio pre-emphasis to North America or European. Sets String.
-void radioEmphasisCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "radioEmphasisCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == radioEmphID) {
-        if (sender->value == PRE_EMPH_USA_STR) {
-            preEmphasisStr = PRE_EMPH_USA_STR;
-            tempStr        = PRE_EMPH_USA_STR;
-        }
-        else if (sender->value == PRE_EMPH_EUR_STR) {
-            preEmphasisStr = PRE_EMPH_EUR_STR;
-            tempStr        = PRE_EMPH_EUR_STR;
-        }
-        else {
-            // preEmphasisStr = PRE_EMPH_DEF_STR;
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "radioEmphasisCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        newPreEmphFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "Pre-Emphasis Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "radioEmphasisCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
 
 // ************************************************************************************************
 // rdsDisplayTimeCallback(): Allow user to change the Local RDS RadioText display time.
@@ -668,6 +425,7 @@ void rdsRstCallback(Control *sender, int type)
     Log.infoln("RDS Settings Have Been Reset to Default Values.");
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // rdsTextCallback(): RDS RadioText Editing Handler. Provides Lock state (prevents edits) if RDS field is currently
 // Enabled.
@@ -697,6 +455,7 @@ void rdsTextCallback(Control *sender, int type)
         Log.errorln(logBuff);
     }
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // rfAutoOff(): Control Sound Activated RF Carrier Shutdown Feature. Sets Boolean.
@@ -734,101 +493,6 @@ void rdsTextCallback(Control *sender, int type)
     }
    }
  */
-
-// ************************************************************************************************
-// rfCarrierCallback(): Controls RF Carrier, On/Off.
-void rfCarrierCallback(Control *sender, int type)
-{
-    char logBuff[70];
-
-    // sprintf(logBuff, "rfCarrierCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == radioRfEnbID) {
-        switch (type) {
-          case S_ACTIVE:
-              rfCarrierFlg = true;
-
-              if (fmRadioTestCode == FM_TEST_FAIL) {
-                  Log.errorln("rfCarrierCallback: RADIO MODULE FAILURE!");
-                  tempStr = "On, Warning: Radio Module Failure";
-                  ESPUI.print(homeOnAirID, RADIO_FAIL_STR); // Update homeTab panel.
-              }
-              else if (fmRadioTestCode == FM_TEST_VSWR) {
-                  Log.errorln("rfCarrierCallback: RADIO MODULE HAS HIGH VSWR!");
-                  tempStr = "On, Warning: Radio Module RF-Out has High VSWR";
-                  ESPUI.print(homeOnAirID, RADIO_VSWR_STR); // Update homeTab panel.
-              }
-              else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) {
-                  Log.errorln("rfCarrierCallback: RF PA HAS INCORRECT VOLTAGE!");
-                  tempStr = "On, Warning: RF PA has Incorrect Voltage";
-                  ESPUI.print(homeOnAirID, RADIO_VOLT_STR); // Update homeTab panel.
-              }
-              else {
-                  tempStr = "On";
-                  ESPUI.print(homeOnAirID, RADIO_ON_AIR_STR); // Update homeTab panel.
-              }
-              break;
-          case S_INACTIVE:
-              rfCarrierFlg = false;
-              tempStr      = "Off";
-              ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
-              break;
-          default:
-              tempStr = BAD_VALUE_STR;
-              sprintf(logBuff, "rfCarrierCallback: %s.", BAD_VALUE_STR);
-              Log.errorln(logBuff);
-              break;
-        }
-        newCarrierFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "RF Carrier Enable Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "rfCarrierCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// rfPower(): Sets RF Power.
-void rfPowerCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "rfPowerCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == radioPwrID) {
-        if (sender->value == RF_PWR_LOW_STR) {
-            rfPowerStr = RF_PWR_LOW_STR;
-            tempStr    = RF_PWR_LOW_STR;
-        }
-        else if (sender->value == RF_PWR_MED_STR) {
-            rfPowerStr = RF_PWR_MED_STR;
-            tempStr    = RF_PWR_MED_STR;
-        }
-        else if (sender->value == RF_PWR_HIGH_STR) {
-            rfPowerStr = RF_PWR_HIGH_STR;
-            tempStr    = RF_PWR_HIGH_STR;
-        }
-        else {
-            sprintf(logBuff, "rfPower: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-            tempStr = BAD_VALUE_STR;
-        }
-        newRfPowerFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "RF Power Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "rfPower: %s.", BAD_SENDER_STR);
-        Log.infoln(logBuff);
-    }
-}
-
 // ************************************************************************************************
 void saveSettingsCallback(Control *sender, int type)
 {
@@ -985,41 +649,6 @@ void setPtyCodeCallback(Control *sender, int type)
     }
     else {
         sprintf(logBuff, "setPtyCodeCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// testModeCallback(): Audio Test Tone Mode Control (true = Audio Test Mode On).
-void testModeCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "testModeCallback: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == adjTestModeID) {
-        if (type == S_ACTIVE) {
-            ESPUI.setElementStyle(adjTestModeID, "background: red;");
-            testModeFlg = true;
-            tempStr     = "On";
-            updateTestTones(true); // Reset Test Tone Elasped Timer.
-        }
-        else if (type == S_INACTIVE) {
-            ESPUI.setElementStyle(adjTestModeID, "background: #bebebe;");
-            testModeFlg = false;
-            tempStr     = "Off";
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "testModeCallback: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        sprintf(logBuff, "Test Mode Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "testModeCallback: %s.", BAD_SENDER_STR);
         Log.errorln(logBuff);
     }
 }

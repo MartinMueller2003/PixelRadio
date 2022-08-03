@@ -16,7 +16,7 @@
 */
 
 #include <Arduino.h>
-#include "../PixelRadio.h"
+#include "PixelRadio.h"
 #include <ESPAsyncWebServer.h>
 #include <AsyncUDP.h>
 #include <ArduinoJson.h>

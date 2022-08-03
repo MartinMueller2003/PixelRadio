@@ -18,11 +18,11 @@
 
 // *********************************************************************************************
 #include "ControllerCommon.h"
-#include "../Language.h"
+#include "Language.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerCommon
@@ -42,30 +42,7 @@ void c_ControllerCommon::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
-   if (true == config.containsKey(N_ControllerEnabled))
-   {
-      ControllerEnabled = config[N_ControllerEnabled];
-   }
-
-   if (true == config.containsKey(N_PiCode))
-   {
-      PiCode = config[N_PiCode];
-   }
-
-   if (true == config.containsKey(N_PtyCode))
-   {
-      PtyCode = config[N_PtyCode];
-   }
-
-   if (true == config.containsKey(N_ProgramServiceName))
-   {
-      ProgramServiceName = (const char *)config[N_ProgramServiceName];
-   }
-
-   if (true == config.containsKey(N_ProgramServiceName))
-   {
-      PayloadTest = (const char *)config[N_PayloadTest];
-   }
+   ReadFromJSON(ControllerEnabled, config, N_ControllerEnabled);
 
    // DEBUG_END;
 } // RestoreConfiguration
@@ -78,10 +55,6 @@ void c_ControllerCommon::saveConfiguration(ArduinoJson::JsonObject & config)
    config[N_name]                = Name;
    config[N_type]                = TypeId;
    config[N_ControllerEnabled]   = ControllerEnabled;
-   config[N_PiCode]              = PiCode;
-   config[N_PtyCode]             = PtyCode;
-   config[N_ProgramServiceName]  = ProgramServiceName;
-   config[N_PayloadTest]         = PayloadTest;
 
    // DEBUG_END;
 } // saveConfiguration

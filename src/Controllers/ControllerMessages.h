@@ -25,7 +25,7 @@
 #include <map>
 #include <ESPUI.h>
 #include "ControllerMessage.h"
-#include "../PixelRadio.h"
+#include "PixelRadio.h"
 #include "ControllerMessageSet.h"
 
 class c_ControllerMessages
@@ -50,13 +50,11 @@ public:
    void     CbTextChange(Control *sender, int type);
    void     clear() { MessageSets.clear(); }
    bool     empty() { return MessageSets.empty(); }
-   // void     SetActiveMsgSet(String & MsgSetName);
    void     SetShowFseqNameSelection(bool value);
-   // void     ShowMessageSet(String MsgSetName);
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) {}
 
 private:
-
-   uint16_t ParentElementId                = Control::noParent;
+   uint16_t ParentElementId = Control::noParent;
    uint16_t StatusMsgElementId             = Control::noParent;
    uint16_t TextEntryElementId             = Control::noParent;
    uint16_t DisplayFseqNameElementId       = Control::noParent;

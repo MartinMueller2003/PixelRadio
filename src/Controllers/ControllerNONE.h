@@ -27,7 +27,8 @@ public:
    virtual  ~c_ControllerNONE();
    void     saveConfiguration(ArduinoJson::JsonObject &config);
    void     restoreConfiguration(ArduinoJson::JsonObject &config);
-   
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) {}
+
 }; // c_ControllerNONE
 
 // *********************************************************************************************

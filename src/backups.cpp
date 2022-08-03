@@ -179,23 +179,9 @@ bool saveConfiguration(uint8_t saveMode, const char *fileName)
     ControllerMgr.saveConfiguration(root);
     WiFiDriver.saveConfiguration(root);
 
-    doc["RDS_PI_CODE"]        = ControllerMgr.GetPiCode(LocalControllerId); // Use radio.setPiCode() when restoring this hex value.
-    doc["RDS_PTY_CODE"]       = ControllerMgr.GetPtyCode(LocalControllerId);
-    doc["RDS_LOCAL_MSG_TIME"] = 0; // ControllerMgr.GetRdsMsgTime(LocalControllerId);
-    doc["RDS_PROG_SERV_STR"]  = ""; // ControllerMgr.GetRdsProgramServiceName(LocalControllerId);
-    doc["RADIO_FM_FREQ"]      = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
-    doc["RADIO_MUTE_FLAG"]    = muteFlg;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
-    doc["RADIO_AUTO_FLAG"]    = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
-    doc["RADIO_RF_CARR_FLAG"] = rfCarrierFlg;   // Use radio.RDS(0/1) when restoring this uint8 value. 1=CarrierOn.
-    doc["RADIO_STEREO_FLAG"]  = stereoEnbFlg;   // Use radio.MonoAudio(0/1) when restoring this uint8 value. 0=Stereo.
-    doc["RADIO_PRE_EMPH_STR"] = preEmphasisStr; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
-    doc["RADIO_POWER_STR"]    = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
-
-    doc["ANALOG_VOLUME"]    = analogVol;        // Requires custom function, not written yet.
-    doc["ANALOG_GAIN_STR"]  = vgaGainStr;       // Use radio.setTxInputBufferGain(0-5) when restoring this Int value.
+#ifdef OldWay
+#endif // def OldWay
     doc["USB_VOLUME"]       = usbVol;           // Use Serial Control, "VOL=0" to "VOL=30".
-    doc["DIGITAL_GAIN_STR"] = digitalGainStr;   // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
-    doc["INPUT_IMPED_STR"]  = inpImpedStr;      // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
 
 	doc["GPIO19_STR"] = gpio19BootStr;
 	doc["GPIO23_STR"] = gpio23BootStr;
@@ -311,6 +297,7 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
 //        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, Temp);
 //    }
 
+#ifdef OldWay
     if (doc.containsKey("RDS_PI_CODE")) {
         ControllerMgr.SetPiCode(LocalControllerId, doc["RDS_PI_CODE"]); // Use radio.setPiCode() when restoring this hex value.
     }
@@ -318,6 +305,7 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
     if (doc.containsKey("RDS_PTY_CODE")) {
         ControllerMgr.SetPtyCode(LocalControllerId, doc["RDS_PTY_CODE"]);
     }
+#endif // def OldWay
 /*
     if (doc.containsKey("RDS_LOCAL_MSG_TIME")) {
         ControllerMgr.SetRdsMsgTime(LocalControllerId, doc["RDS_LOCAL_MSG_TIME"]);
@@ -334,40 +322,9 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
         rfAutoFlg = doc["RADIO_AUTO_FLAG"]; // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     }
 */
-    if (doc.containsKey("RADIO_RF_CARR_FLAG")) {
-        rfCarrierFlg = doc["RADIO_RF_CARR_FLAG"]; // Use radio.RDS(0/1) when restoring this uint8 value. 1=CarrierOn.
-    }
-
-    if (doc.containsKey("RADIO_STEREO_FLAG")) {
-        stereoEnbFlg = doc["RADIO_STEREO_FLAG"]; // Use radio.MonoAudio(0/1) when restoring this uint8 value. 0=Stereo.
-    }
-
-    if ((const char *)doc["RADIO_PRE_EMPH_STR"] != NULL) {
-        preEmphasisStr = (const char *)doc["RADIO_PRE_EMPH_STR"]; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
-    }
-
-    if ((const char *)doc["RADIO_POWER_STR"] != NULL) {
-        rfPowerStr = (const char *)doc["RADIO_POWER_STR"]; // Use radio.setTxPower(20-75) when restoring this uint8 value.
-    }
-
-    if (doc.containsKey("ANALOG_VOLUME")) {
-        analogVol = doc["ANALOG_VOLUME"]; // Requires custom function, not written yet.
-    }
 
     if (doc.containsKey("USB_VOLUME")) {
         usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
-    }
-
-    if ((const char *)doc["ANALOG_GAIN_STR"] != NULL) {
-        vgaGainStr = (const char *)doc["ANALOG_GAIN_STR"]; // Use radio.setTxInputBufferGain(0-5) when restoring this Int value.
-    }
-
-    if ((const char *)doc["DIGITAL_GAIN_STR"] != NULL) {
-        digitalGainStr = (const char *)doc["DIGITAL_GAIN_STR"]; // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
-    }
-
-    if ((const char *)doc["INPUT_IMPED_STR"] != NULL) {
-        inpImpedStr = (const char *)doc["INPUT_IMPED_STR"]; // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
     }
 
     if ((const char *)doc["GPIO19_STR"] != NULL) {

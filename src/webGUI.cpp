@@ -78,7 +78,6 @@
     change <title>Control<title> section to <title>PixelRadio</title>
     This will report the device as "PixelRadio" on network scans.
     Note: If login is enabled then the device will report "Espressif, Inc."
-
  */
 
 // ************************************************************************************************
@@ -91,7 +90,6 @@
 #include <ESPUI.h>
 #include "Controllers/ControllerMgr.h"
 #include "memdebug.h"
-
 
 // ************************************************************************************************
 // Local Strings.
@@ -114,7 +112,6 @@ uint16_t aboutVersionID = Control::noParent;
 uint16_t adjAvolID     = Control::noParent;
 uint16_t adjFmDispID   = Control::noParent;
 uint16_t adjFreqID     = Control::noParent;
-uint16_t adjMuteID     = Control::noParent;
 uint16_t adjSaveID     = Control::noParent;
 uint16_t adjSaveMsgID  = Control::noParent;
 uint16_t radioSoundID  = Control::noParent;
@@ -156,20 +153,6 @@ uint16_t homeOnAirID   = Control::noParent;
 uint16_t homeRdsTextID = Control::noParent;
 uint16_t homeRdsTmrID  = Control::noParent;
 uint16_t homeTextMsgID = Control::noParent;
-
-uint16_t radioAudioID    = Control::noParent;
-uint16_t radioAudioMsgID = Control::noParent;
-uint16_t radioVgaGainID  = Control::noParent;
-uint16_t radioDgainID    = Control::noParent;
-uint16_t radioAutoID     = Control::noParent;
-uint16_t radioEmphID     = Control::noParent;
-uint16_t radioFreqID     = Control::noParent;
-uint16_t radioGainID     = Control::noParent;
-uint16_t radioImpID      = Control::noParent;
-uint16_t radioPwrID      = Control::noParent;
-uint16_t radioRfEnbID    = Control::noParent;
-uint16_t radioSaveID     = Control::noParent;
-uint16_t radioSaveMsgID  = Control::noParent;
 
 uint16_t rdsPiID       = Control::noParent;
 uint16_t rdsPtyID      = Control::noParent;
@@ -266,62 +249,7 @@ void initCustomCss(void)
     // END OF STYLES
 }
 
-// ************************************************************************************************
-// getAudioGain(): Compute the Audio Gain.
-// Radio Audio Gain in dB = ((Analog Input Gain Step + 1) * 3) - (Input Impedance Step * 3)
-// Please note that the formula has been modified based on real-world measurements.
-// The official formula uses 6dB Impedance steps vs the revised use of 3dB.
-int8_t getAudioGain(void)
-{
-    int8_t vgaGain;
-    int8_t impedance;
-    int8_t audioGain;
-
-    if (vgaGainStr == VGA_GAIN0_STR) {
-        vgaGain = 0;
-    }
-    else if (vgaGainStr == VGA_GAIN1_STR) {
-        vgaGain = 1;
-    }
-    else if (vgaGainStr == VGA_GAIN2_STR) {
-        vgaGain = 2;
-    }
-    else if (vgaGainStr == VGA_GAIN3_STR) {
-        vgaGain = 3;
-    }
-    else if (vgaGainStr == VGA_GAIN4_STR) {
-        vgaGain = 4;
-    }
-    else if (vgaGainStr == VGA_GAIN5_STR) {
-        vgaGain = 5;
-    }
-    else {
-        vgaGain = 0;
-        Log.errorln("displayAudioGain: Undefined vgaGainStr!");
-    }
-
-    if (inpImpedStr == INP_IMP05K_STR) {
-        impedance = 0;
-    }
-    else if (inpImpedStr == INP_IMP10K_STR) {
-        impedance = 1;
-    }
-    else if (inpImpedStr == INP_IMP20K_STR) {
-        impedance = 2;
-    }
-    else if (inpImpedStr == INP_IMP40K_STR) {
-        impedance = 3;
-    }
-    else {
-        impedance = 0;
-        Log.errorln(F("displayAudioGain: Undefined inpImpedStr!"));
-    }
-
-    audioGain = ((vgaGain + 1) * 3) - (impedance * 3);
-
-    return audioGain;
-}
-
+#ifdef OldWay
 // ************************************************************************************************
 // displayRdsText(): Check if any controllers are enabled and updated RDS with text or status message.
 void displayRdsText(void)
@@ -389,6 +317,7 @@ void displayRdsText(void)
 
     } while (false);
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // displaySaveWarning(): Show the "Save Required" Message on all configuration pages.
@@ -451,7 +380,7 @@ void StartESPUI()
     }
     // DEBUG_END;
 }
-
+#ifdef OldWay
 // ************************************************************************************************
 // updateUiAudioLevel(): Update the diagTab UI's Audio Level (mV).
 void updateUiAudioLevel(void)
@@ -496,6 +425,7 @@ void updateUiAudioMute(bool value)
     ESPUI.setElementStyle(adjMuteID, value ? F("background: red;") : F("background: #bebebe;"));
     ESPUI.updateControlValue(adjMuteID, value ? "1" : "0");
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
@@ -562,6 +492,7 @@ void updateUiFrequency(int fmFreqX10)
     ESPUI.print(radioFreqID, tempStr);
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
 //                    This is a companion function to displayRdsText(). May be used standalone too.
@@ -629,6 +560,7 @@ void updateUiRDSTmr(bool ClearDisplay)
 
     } while (false);
 }
+#endif // def OldWay
 
 // ************************************************************************************************
 // updateUiRfCarrier(): Updates the GUI's RF Carrier on homeTab and radiotab.
@@ -655,6 +587,7 @@ void updateUiRfCarrier(void)
     }
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // updateUiLocalPiCode() Update the PI Code on the Local RDS Tab.
 void updateUiLocalPiCode(void)
@@ -674,6 +607,7 @@ void updateUiLocalPtyCode(void)
     sprintf(ptyBuff, "%u", ControllerMgr.GetPtyCode(LocalControllerId));
     ESPUI.print(rdsPtyID, ptyBuff);
 }
+#endif // def OldWay
 
 // *********************************************************************************************
 // updateUiDiagTimer(): Update Elapsed Time on diagTab Page. Show Days + HH:MM:SS.
@@ -850,7 +784,7 @@ void buildGUI(void)
     // DEBUG_V();
     // ************
     // Radio Tab
-
+    Radio.addControls(radioTab);
     ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, "", ControlColor::None, radioTab);
 
     tempFloat   = float(fmFreqX10) / 10.0f;
@@ -893,6 +827,9 @@ void buildGUI(void)
        ESPUI.addControl(ControlType::Option,    RF_AUTO_DIS_STR,   RF_AUTO_DIS_STR, ControlColor::Emerald, radioAutoID);
        ESPUI.addControl(ControlType::Option,    RF_AUTO_ENB_STR,   RF_AUTO_ENB_STR, ControlColor::Emerald, radioAutoID);
      */
+
+#ifdef OldWay
+    Radio.addControls(radioTab);
 
     ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, "", ControlColor::None, radioTab);
 
@@ -971,6 +908,7 @@ void buildGUI(void)
                                    &saveSettingsCallback);
     radioSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Emerald, radioSaveID);
+#endif // def OldWay
 
     //
     // *****************
@@ -980,6 +918,7 @@ void buildGUI(void)
 
     tempStr = ""; // String(ControllerMgr.GetRdsMsgTime(LocalControllerId) / 1000);
 
+#ifdef OldWay
     rdsProgNameID =
         ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, ControllerMgr.GetRdsProgramServiceName(LocalControllerId), ControlColor::Alizarin, rdsTab,
                          &rdsTextCallback);
@@ -992,11 +931,12 @@ void buildGUI(void)
 
     sprintf(charBuff, "%u", ControllerMgr.GetPtyCode(LocalControllerId));
     rdsPtyID =
-        ESPUI.addControl(ControlType::Number, RDS_PTY_CODE_STR, charBuff, ControlColor::Alizarin, rdsTab,
+        ESPUI.addControl(ControlType::Number, RDS_PTY_CODE_STR, emptyString, ControlColor::Alizarin, rdsTab,
                          &setPtyCodeCallback);
     ESPUI.addControl(ControlType::Min,       "MIN",             String(RDS_PTY_CODE_MIN), ControlColor::None, rdsPtyID);
     ESPUI.addControl(ControlType::Max,       "MAX",             String(RDS_PTY_CODE_MAX), ControlColor::None, rdsPtyID);
 
+#endif // def OldWay
     ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, "",                       ControlColor::None, rdsTab);
 
     rdsRstID = ESPUI.addControl(ControlType::Button,
@@ -1182,9 +1122,10 @@ void buildGUI(void)
                      DIAG_LOG_VERB_STR,
                      ControlColor::None,
                      diagLogID);
-
+#ifdef OldWay
     tempStr      = ControllerMgr.GetControllerEnabledFlag(SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
     diagLogMsgID = ESPUI.addControl(ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
+#endif // def OldWay
 
     ESPUI.addControl(ControlType::Separator, DIAG_SYSTEM_SEP_STR, "", ControlColor::None, diagTab);
     // DEBUG_V();

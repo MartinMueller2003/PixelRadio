@@ -585,6 +585,7 @@ Typical Group send time is ~70mS. Equivalent bit rate is ~475 baud.
 */
 const uint8_t RDS_SEND_DELAY = 5;
 void QN8027Radio::waitForRDSSend(){
+#ifdef OldWay
     uint8_t status = rdsSentStatus;
     uint8_t timeout = 0;
     do{
@@ -597,6 +598,7 @@ void QN8027Radio::waitForRDSSend(){
         delay(RDS_SEND_DELAY); //This wait time allows the RDS buffer contents to be sent.
     }while(status==rdsSentStatus); // Wait for rdsSentStatus to toggle.
     rdsSentStatus = status;
+#endif // def OldWay
 }
 /*Sends Song Artist Album Name. RT must be maximum 64 Byte long*/
 //RadioText shorter than 64 bytes will contain a null termination. This tells the RDS Receiver when to end decoding.

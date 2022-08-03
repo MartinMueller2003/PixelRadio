@@ -18,24 +18,21 @@
 #include <EEPROM.h>
 #include <SPI.h>
 #include <Wire.h>
-#include "QN8027Radio.h"
+#include "radio.hpp"
 #include "PixelRadio.h"
 #include "globals.h"
 #include "language.h"
 
 // *********************************************************************************************
 
-extern QN8027Radio radio;
-
 // *********************************************************************************************
 // *********************************************************************************************
 uint8_t i2cScanner(void)
 {
-    char   logBuff[50];
     byte   count = 0;
     String devStr;
 
-    Log.infoln("Scanning i2c for Devices ...");
+    Log.infoln(String(F("Scanning i2c for Devices ...")).c_str());
 
     for (byte addr = 0x01; addr < 0x7f; addr++) {
         Wire.beginTransmission(addr);        // Begin I2C transmission Address (i)
@@ -50,17 +47,16 @@ uint8_t i2cScanner(void)
                   devStr = "Unknown";
             }
 
-            sprintf(logBuff, "-> Found i2c address: 0x%02X (%s)", addr, devStr.c_str());
-            Log.infoln(logBuff);
+            Log.infoln(String(F("-> Found i2c address: 0x%02X (%s)")).c_str(), addr, devStr.c_str());
             count++;
         }
     }
 
     if (count == 0) {
-        Log.errorln("-> No i2c Devices Found.");
+        Log.errorln(String(F("-> No i2c Devices Found.")).c_str());
     }
     else {
-        Log.infoln("-> Scanning Complete, Found %u i2c Devices.", count);
+        Log.infoln(String(F("-> Scanning Complete, Found %u i2c Devices.")).c_str(), count);
     }
     return count;
 }
@@ -78,12 +74,12 @@ void initEprom(void)
 
         // EEPROM.write(VOL_SET_ADDR, spkrVolSwitch);
         EEPROM.commit();
-        Log.warningln("Initialized Virgin EEPROM (detected first use).");
+        Log.warningln(String(F("Initialized Virgin EEPROM (detected first use).")).c_str());
     }
     else
     {
         // spkrVolSwitch = EEPROM.read(VOL_SET_ADDR);
-        Log.verboseln("Restored settings from EEPROM.");
+        Log.verboseln(String(F("Restored settings from EEPROM.")).c_str());
     }
 }
 
@@ -131,7 +127,7 @@ void setGpioBootPins(void)
         pinMode(GPIO19_PIN, INPUT_PULLDOWN);
     }
     else {
-        Log.errorln("-> setGpioBootPins: GPIO-19 Has Invalid Value.");
+        Log.errorln(String(F("-> setGpioBootPins: GPIO-19 Has Invalid Value.")).c_str());
     }
 
     if (gpio23BootStr == GPIO_OUT_LO_STR) {
@@ -152,7 +148,7 @@ void setGpioBootPins(void)
         pinMode(GPIO23_PIN, INPUT_PULLDOWN);
     }
     else {
-        Log.errorln("-> setGpioBootPins: GPIO-23 Has Invalid Value.");
+        Log.errorln(String(F("-> setGpioBootPins: GPIO-23 Has Invalid Value.")).c_str());
     }
 
     if (gpio33BootStr == GPIO_OUT_LO_STR) {
@@ -173,7 +169,7 @@ void setGpioBootPins(void)
         pinMode(GPIO33_PIN, INPUT_PULLDOWN);
     }
     else {
-        Log.errorln("-> setGpioBootPins: GPIO-33 Has Invalid Value.");
+        Log.errorln(String(F("-> setGpioBootPins: GPIO-33 Has Invalid Value.")).c_str());
     }
 }
 
@@ -230,7 +226,7 @@ void toneOff(uint8_t pin, uint8_t channel)
 void toneOn(uint8_t pin, uint16_t freq, uint8_t channel)
 {
     if (ledcRead(channel)) {
-        Log.warningln("Ignored Tone Request: Channel %u is already in-use", channel);
+        Log.warningln(String(F("Ignored Tone Request: Channel %u is already in-use")).c_str(), channel);
         return;
     }
     ledcAttachPin(pin, channel);
@@ -247,7 +243,7 @@ void updateGpioBootPins(void) {
         setGpioBootPins();
     }
 }
-
+#ifdef OldWay
 // *********************************************************************************************
 // updateTestTones(): Test Tone mode creates cascading audio tones for Radio Installation Tests.
 //                    On entry, true will Reset Tone Sequence.
@@ -335,11 +331,13 @@ void updateTestTones(bool resetTimerFlg)
                 state++;
                 sprintf(rdsBuff, "%s  [ %02u:%02u:%02u ]", AUDIO_TEST_STR, hours, minutes, seconds);
                 String tmpStr = rdsBuff;
-                radio.sendStationName(AUDIO_PSN_STR);
-                radio.sendRadioText(tmpStr);
+                Radio.sendStationName(AUDIO_PSN_STR);
+                Radio.sendRadioText(tmpStr);
+
                 updateUiRdsText(tmpStr);
                 updateUiRDSTmr(true);     // Clear Displayed Elapsed Timer.
-                Log.verboseln("New Test Tone Sequence, RadioText Sent.");
+
+                Log.verboseln(String(F("New Test Tone Sequence, RadioText Sent.")).c_str());
                 return;                // We will send the tones on next entry.
             }
 
@@ -356,3 +354,4 @@ void updateTestTones(bool resetTimerFlg)
         }
     }
 }
+#endif // def OldWay

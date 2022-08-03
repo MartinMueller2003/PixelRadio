@@ -18,11 +18,11 @@
 
 // *********************************************************************************************
 #include "ControllerLOCAL.h"
-#include "../language.h"
+#include "language.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerLOCAL : public c_ControllerCommon
@@ -78,7 +78,6 @@ void c_ControllerLOCAL::CbControllerEnabled(Control *sender, int type)
 
    // DEBUG_V();
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("LOCAL Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;

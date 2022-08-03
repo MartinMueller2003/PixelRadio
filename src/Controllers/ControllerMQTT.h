@@ -21,7 +21,8 @@
 #include "ControllerCommon.h"
 #include <PubSubClient.h>
 #include <WiFi.h>
-#include "../credentials.h"
+#include "credentials.h"
+#include "ControllerMessages.h"
 
 class c_ControllerMQTT : public c_ControllerCommon
 {
@@ -39,6 +40,7 @@ public:
    void     setRemoteIpAddrCallback(Control *sender, int type);
    void     CbControllerEnabled(Control *sender, int type);
    void     mqttClientCallback(const char *topic, byte *payload, unsigned int length);
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
 
 private:
    void     Init(void);
@@ -50,8 +52,10 @@ private:
    String   returnClientCode(int code);
    void     TestParameters();
 
-   WiFiClient     wifiClient;
-   PubSubClient   mqttClient;
+   WiFiClient           wifiClient;
+   PubSubClient         mqttClient;
+   bool                 OnlineFlag = false;
+   c_ControllerMessages Messages;
 
 #define MQTT_NAME_DEF_STR F("pixelradio") // Default MQTT Topic / Subscription Name.
 /* If you have an MQTT Broker then configure it here. */

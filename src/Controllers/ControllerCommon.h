@@ -22,10 +22,11 @@
 #pragma once
 
 #include "Arduino.h"
-#include "../PixelRadio.h"
+#include "PixelRadio.h"
 #include <ESPUI.h>
 #include <ArduinoJson.h>
 #include "ControllerMgr.h"
+#include "ControllerMessages.h"
 
 class c_ControllerCommon
 {
@@ -34,24 +35,13 @@ private:
 protected:
    // values stored in configuration file
    bool        ControllerEnabled                = false;
-   uint32_t    PiCode                           = 0;
-   uint32_t    PtyCode                          = 0;
-   String      ProgramServiceName;
-   String      PayloadTest;
-   // uint32_t    RdsMsgTime                       = 0;
 
    // operational data
    String      Name; // Name of this controller
    CtypeId     TypeId                           = NullControllerId;
-   bool        TextFlag                         = false;
-   bool        StopFlag                         = false;
-   // bool        activeTextFlag                   = false;
-   bool        OnlineFlag                       = false;
-   // uint32_t    RdsMsgTime                       = 0;
-
-   bool MsgHasBeenDisplayedFlag = false;
 
    // ESPUI control IDs
+   uint16_t    homeTab                          = Control::noParent;
    uint16_t    EspuiParentElementId             = Control::noParent;
    uint16_t    ControlerEnabledElementId        = Control::noParent;
    uint16_t    EspuiMsgId                       = Control::noParent;
@@ -65,41 +55,9 @@ public:
    virtual void      restoreConfiguration(ArduinoJson::JsonObject &config);
    virtual void      saveConfiguration(ArduinoJson::JsonObject &config);
    String &          GetName() { return Name; }
-
-   virtual void      Display(uint16_t msgId) { ESPUI.print(msgId, String(F("Source: ")) + Name + String(F(" Controller"))); }
-
-   virtual bool      GetNextRdsMsgToDisplay(c_ControllerMgr::CurrentRdsMsgInfo_t &RdsMsgInfo) { return false; }
-   virtual void      ClearMsgHasBeenDisplayedFlag() { MsgHasBeenDisplayedFlag = false; }
-
-   virtual void      SetPiCode(uint32_t value) { PiCode = value; }
-   virtual uint32_t  GetPiCode() { return PiCode; }
-
-   virtual void      SetPtyCode(uint32_t value) { PtyCode = value; }
-   virtual uint32_t  GetPtyCode() { return PtyCode; }
-
-   virtual void      SetRdsProgramServiceName(String &value) { ProgramServiceName = value; }
-   virtual String    GetRdsProgramServiceName() { return ProgramServiceName; }
-
-   // Start of to be deleted
-   virtual void      SetTextFlag(bool value) { TextFlag = value; }
-   virtual bool      GetTextFlag() { return TextFlag; }
-
-   virtual void      SetStopFlag(bool value) { StopFlag = value; }
-   virtual bool      GetStopFlag() { return StopFlag; }
-
-   virtual void      SetPayloadText(String &value) { PayloadTest = value; }
-   virtual String &  GetPayloadText() { return PayloadTest; }
-
-#ifdef NoLongerNeeded
-   virtual void      SetRdsMsgTime(uint32_t value) { RdsMsgTime = value; }
-   virtual uint32_t  GetRdsMsgTime() { return RdsMsgTime; }
-#endif // def NoLongerNeeded
-
+   virtual void      GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) = 0;
            bool      ControllerIsEnabled() { return ControllerEnabled; }
-
-   virtual bool      CheckRdsTextAvailable() { return false; }
-   // End of to be deleted
-
+           
 }; // c_ControllerCommon
 
 // *********************************************************************************************

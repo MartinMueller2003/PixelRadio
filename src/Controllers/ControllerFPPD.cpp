@@ -19,11 +19,11 @@
 // *********************************************************************************************
 #include "ControllerFPPD.h"
 #include "FPPDiscovery.h"
-#include "../language.h"
+#include "language.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 static const String DefaultSequenceMsg = "No Sequence";
 
@@ -138,7 +138,6 @@ void c_ControllerFPPD::CbControllerEnabled(Control *sender, int type)
 
    // DEBUG_V();
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;
@@ -153,7 +152,6 @@ void c_ControllerFPPD::CbSequenceLearningEnabled(Control *sender, int type)
    SequenceLearningEnabled = (S_ACTIVE == type);
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Controller Sequence Learning Set to: ")) + String(SequenceLearningEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;

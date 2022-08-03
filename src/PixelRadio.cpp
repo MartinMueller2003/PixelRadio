@@ -62,38 +62,21 @@
 #include "credentials.h"
 #include "PixelRadio.h"
 #include "language.h"
-#include "QN8027Radio.h"
-#include "Controllers/ControllerMgr.h"
-#include "Network/WiFiDriver.hpp"
+#include "Radio.hpp"
+#include "ControllerMgr.h"
+#include "WiFiDriver.hpp"
 
 // ************************************************************************************************
 // Global Section
 //
-QN8027Radio radio = QN8027Radio();           // FM Transmitter Module (QN8027 radio)
 
 // Global System Vars
 
-bool newAutoRfFlg    = false;                // new RF Auto Off Setting Avail Semaphore.
-bool newCarrierFlg   = false;                // New Carrier Settings Avail Semaphore.
-bool newDigGainFlg   = false;                // New Digital Audio Gain Setting Avail Semaphore.
 bool newGpio19Flg    = false;                // New GPIO Pin 19 State.
 bool newGpio23Flg    = false;                // New GPIO Pin 23 State.
 bool newGpio33Flg    = false;                // New GPIO Pin 33 State.
-bool newFreqFlg      = false;                // New Radio Frequency Setting Avail Semaphore.
-bool newInpImpFlg    = false;                // New Input Impedance Setting Avail Semaphore.
-bool newAudioModeFlg = false;                // New Mono/Stereo Audio Setting Avail Semaphore.
-bool newMuteFlg      = false;                // New Audio Mute Setting Avail Semaphore.
-bool newPreEmphFlg   = false;                // New Radio Pre-Emphasis Setting Avail Semaphore.
-bool newRfPowerFlg   = false;                // New RfPower Setting Avail Semaphore.
-bool newVgaGainFlg   = false;                // New Analog VGA Gain Setting Avail Semaphore.
 bool rebootFlg       = false;                // Reboot System if true;
-bool stopHttpFlg     = false;                // HTTP Controller Stop Command was sent if true.
-bool stopMqttFlg     = false;                // MQTT Controller Stop Command was sent if true.
-bool stopSerialFlg   = false;                // Serial Controller Stop Command was sent if true.
 bool testModeFlg     = false;                // Audio Test Tone Mode if true. Do NOT save in config file.
-
-uint8_t fmRadioTestCode = FM_TEST_OK;        // FM Radio Module Test Result Code.
-
 
 uint32_t rdsMsgTime       = RDS_DSP_TM_DEF;  // Global (Master) RDS Message Time. Set by RDS Controllers.
 float vbatVolts = 0.0f;                      // ESP32's Onboard "VBAT" Voltage. Typically 5V.
@@ -108,14 +91,9 @@ String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
 // Configuration Vars (Can be saved to LittleFS and SD Card)
 
 bool apFallBackFlg = AP_FALLBACK_DEF_FLG;                  // Control, Switch to AP mode if STA fails.
-bool muteFlg        = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
-bool rfAutoFlg      = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
-bool rfCarrierFlg   = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
-bool stereoEnbFlg   = STEREO_ENB_DEF_FLG;                  // Control, Enable Stereo FM if true (false = Mono).
 // bool wifiDhcpFlg    = CTRL_DHCP_DEF_FLG;                   // Control, Use DHCP if true, else static IP.
 // bool WiFiRebootFlg  = WIFI_REBOOT_DEF_FLG;                 // Control, Reboot if all connections fail.
 
-uint8_t analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
 uint8_t usbVol    = (atoi(USB_VOL_DEF_STR));               // Control. Unused, for future expansion.
 
 // uint8_t  rdsLocalPtyCode = RDS_PTY_CODE_DEF;               // Control. Local PTY Code, default for all controllers.
@@ -123,19 +101,12 @@ uint8_t usbVol    = (atoi(USB_VOL_DEF_STR));               // Control. Unused, f
 
 uint32_t baudRate = ESP_BAUD_DEF;                          // Control.
 
-uint16_t fmFreqX10 = FM_FREQ_DEF_X10;                      // Control. FM MHz Frequency X 10 (881 - 1079).
-
-String preEmphasisStr = PRE_EMPH_DEF_STR;                  // Control.
-String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
 String gpio19BootStr  = GPIO_DEF_STR;                      // Control.
 String gpio23BootStr  = GPIO_DEF_STR;                      // Control.
 String gpio33BootStr  = GPIO_DEF_STR;                      // Control.
-String inpImpedStr    = INP_IMP_DEF_STR;                   // Control.
 String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
-String rfPowerStr     = RF_PWR_DEF_STR;                    // Control.
 String userNameStr    = LOGIN_USER_NAME_STR;               // Control.
 String userPassStr    = LOGIN_USER_PW_STR;                 // Control.
-String vgaGainStr     = VGA_GAIN_DEF_STR;                  // Control.
 
 // *********************************************************************************************
 
@@ -195,32 +166,36 @@ void setup()
     // Setup the File System.
     littlefsInit();
     instalLogoImageFile();
+
+    if (checkEmergencyCredentials(CRED_FILE_NAME)) 
+    {        // Check for Emergency WiFi Credential File on SD Card.
+        saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
+    }
     WiFiDriver.Begin();
     ControllerMgr.begin();
 
     // Restore System Settings from File System.
     restoreConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME);
-    resetControllerRdsValues();                             // Must be called after restoreConfiguration().
-    setGpioBootPins();                                      // Must be called after restoreConfiguration().
 
-    if (checkEmergencyCredentials(CRED_FILE_NAME)) {        // Check for Emergency WiFi Credential File on SD Card.
-        saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
-    }
+#ifdef OldWay
+    resetControllerRdsValues();                             // Must be called after restoreConfiguration().
+
+    setGpioBootPins();                                      // Must be called after restoreConfiguration().
 
     digitalWrite(MUX_PIN, TONE_ON);                         // Turn off Music (Mux) LED.
 
     digitalWrite(MUX_PIN, TONE_OFF); // Turn on Music (Mux) LED, restore Line-In to external audio.
+#endif // def OldWay
 
     // Startup the I2C Devices).
     i2cScanner();                      // Scan the i2c bus and report all devices.
-    fmRadioTestCode = initRadioChip(); // If QN8027 fails we will warn user on UI homeTab.
-    Log.infoln(F("FM Radio RDS/RBDS Started."));
+    Radio.begin();
 
     // Startup the Web GUI. DO THIS LAST!
     Log.infoln(F("Initializing Web UI ..."));
     startGUI();
     Log.infoln(F("-> Web UI Loaded."));
-
+#ifdef OldWay
     // End of System Initialization. Report pass/fail message to Serial Log.
     if (successFlg && (fmRadioTestCode == FM_TEST_OK)) {
         Log.infoln("PixelRadio System Init Complete, Success!");
@@ -228,6 +203,7 @@ void setup()
     else {
         Log.fatalln("PixelRadio System Init Failed. Please Review Serial Log.");
     }
+#endif // def OldWay
 
     Log.infoln("Changing Log Level to %s", logLevelStr.c_str());
     initSerialLog(false);

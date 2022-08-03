@@ -19,11 +19,11 @@
 // *********************************************************************************************
 #include "ControllerMessages.h"
 #include <map>
-#include "../Language.h"
+#include "Language.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 static const String DefaultTextFieldValue = F("Type New RDS Message Text Here. 64 Char Max");
 static const String DefaultTextWarningMsg = F("WARN: Instruction text cannot be in the message");
@@ -530,7 +530,6 @@ void c_ControllerMessages::CbSwitchDisplayFseqName(Control *sender, int type)
    // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName))
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("FPPD Display fseq Name Set to: ")) + String(DisplayFseqName ? "On" : "Off")).c_str());
 
    // DEBUG_END;

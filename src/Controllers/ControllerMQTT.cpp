@@ -19,13 +19,13 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "../language.h"
+#include "language.h"
 #include "ControllerMQTT.h"
 #include "ControllerMgr.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerMQTT : public c_ControllerCommon
@@ -588,7 +588,6 @@ void c_ControllerMQTT::CbControllerEnabled (Control *sender, int type)
    // DEBUG_V();
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("MQTT Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
 
    // DEBUG_END;

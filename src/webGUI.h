@@ -39,7 +39,6 @@ extern uint16_t aboutVersionID;
 extern uint16_t adjAvolID;
 extern uint16_t adjFmDispID;
 extern uint16_t adjFreqID;
-extern uint16_t adjMuteID;
 extern uint16_t adjUvolID;
 extern uint16_t adjSaveID;
 extern uint16_t adjSaveMsgID;

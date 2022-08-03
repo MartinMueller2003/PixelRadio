@@ -12,7 +12,7 @@
     (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
 */
 
-#include "../PixelRadio.h"
+#include "PixelRadio.h"
 #include <DNSServer.h>
 #include <ESPmDNS.h>
 #include <WiFi.h>
@@ -27,9 +27,9 @@ public:
     virtual     ~c_WiFiDriver   ();
 
     void        Begin           ();
-    void        saveConfiguration (JsonObject & json);
     void        GetStatus       (JsonObject & json);
     bool        restoreConfiguration (JsonObject & json);
+    void        saveConfiguration (JsonObject & json);
 
     IPAddress   getIpAddress    () { return CurrentIpAddress; }
     void        setIpAddress    (IPAddress NewAddress ) { CurrentIpAddress = NewAddress; }

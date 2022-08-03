@@ -19,6 +19,7 @@
 // *********************************************************************************************
 #pragma once
 #include "ControllerCommon.h"
+#include "ControllerMessages.h"
 
 class c_ControllerHTTP : public c_ControllerCommon
 {
@@ -29,9 +30,11 @@ public:
    void     restoreConfiguration(ArduinoJson::JsonObject &config);
    void     AddControls(uint16_t ctrlTab);
    void     CbControllerEnabled(Control *sender, int type);
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
 
 private: 
    uint16_t EspuiControlID = 0;
+   c_ControllerMessages Messages;
 
 }; // c_ControllerHTTP
 

@@ -18,12 +18,12 @@
 
 // *********************************************************************************************
 #include "ControllerSERIAL.h"
-#include "../language.h"
+#include "language.h"
 #include <ArduinoLog.h>
 
-#if __has_include("../memdebug.h")
-#include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
        const PROGMEM char SERIAL_OFF_STR[] = "OFF";
 static const PROGMEM char SERIAL_096_STR[] = "9600 Baud";
@@ -173,7 +173,6 @@ void c_ControllerSERIAL::CbBaudrateControl(Control *sender, int type)
    // DEBUG_V();
 
    displaySaveWarning();
-   displayRdsText(); // Update RDS RadioText.
    Log.infoln((String(F("Serial Baudrate Set to: ")) + BaudRateStr).c_str());
 
    // DEBUG_END;

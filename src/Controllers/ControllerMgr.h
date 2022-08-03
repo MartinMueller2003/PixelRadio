@@ -49,15 +49,11 @@ public:
       ControllerIdStart = 0,
    };
 
-struct CurrentRdsMsgInfo_t
+struct RdsMsgInfo_t
 {
-   ControllerTypeId_t   ControllerId         = ControllerIdStart;
-   String               MsgText;
-   uint32_t             MsgStartTimeMillis   = 0;
-   uint32_t             MsgDurationMilliSec  = 0;
-   uint32_t             PiCode               = 0;
-   uint32_t             PtyCode              = 0;
-   String               ProgramServiceName;
+   String   ControllerName;
+   String   Text;
+   uint32_t DurationMilliSec = 0;
 };
 
 protected : 
@@ -70,55 +66,24 @@ struct ControllerInfo_t
 };
 
    ControllerInfo_t ListOfControllers[ControllerTypeId_t::NumControllerTypes];
-   CurrentRdsMsgInfo_t CurrentRdsMsgInfo;
+
+private:
+   ControllerTypeId_t CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
 
 public:
-                        c_ControllerMgr();
+   c_ControllerMgr();
    virtual              ~c_ControllerMgr();
    void                 poll();
    void                 begin();
    void                 AddControls(uint16_t ctrlTab);
    void                 Display(ControllerTypeId_t Id);
    c_ControllerCommon * GetControllerById(ControllerTypeId_t Id);
+   bool                 GetControllerEnabledFlag(ControllerTypeId_t Id);
+   uint16_t             getControllerStatusSummary();
    String               GetName(ControllerTypeId_t Id);
+   void                 GetNextRdsMessage(RdsMsgInfo_t &Response);
    void                 restoreConfiguration(ArduinoJson::JsonObject & config);
    void                 saveConfiguration(ArduinoJson::JsonObject & config);
-   uint16_t             getControllerStatusSummary();
-   void                 GetCurrentRdsMsgInfo(CurrentRdsMsgInfo_t &MsgInfo) { MsgInfo = CurrentRdsMsgInfo; }
-
-   bool                 GetNextRdsMsgToDisplay(CurrentRdsMsgInfo_t & CurrentMsgInfo);
-
-   void                 ClearMsgHasBeenDisplayedFlag();
-
-   void                 SetPiCode(ControllerTypeId_t Id, uint32_t value);
-   uint32_t             GetPiCode(ControllerTypeId_t Id);
-
-   void                 SetPtyCode(ControllerTypeId_t Id, uint32_t value);
-   uint32_t             GetPtyCode(ControllerTypeId_t Id);
-
-   void                 SetRdsProgramServiceName(ControllerTypeId_t Id, String value);
-   String               GetRdsProgramServiceName(ControllerTypeId_t Id);
-
-   // below are to be deleted
-   bool                 CheckAnyRdsControllerEnabled(bool IncludeLocalController);
-   bool                 CheckRdsTextAvailable(bool IncludeLocalController);
-   bool                 CheckAnyControllerIsDisplayingMessage(bool IncludeLocalController);
-
-   void                 SetTextFlag(ControllerTypeId_t Id, bool value);
-   bool                 GetTextFlag(ControllerTypeId_t Id);
-
-   void                 SetStopFlag(ControllerTypeId_t Id, bool value);
-   bool                 GetStopFlag(ControllerTypeId_t Id);
-
-   void                 SetPayloadText(ControllerTypeId_t Id, String value);
-   String               GetPayloadText(ControllerTypeId_t Id);
-
-#ifdef NoLongerNeeded
-   void                 SetRdsMsgTime(ControllerTypeId_t Id, int32_t value);
-   int32_t              GetRdsMsgTime(ControllerTypeId_t Id);
-#endif // def NoLongerNeeded
-
-   bool                 GetControllerEnabledFlag(ControllerTypeId_t Id);
 
 }; // c_ControllerMgr
 

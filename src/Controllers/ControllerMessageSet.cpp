@@ -19,11 +19,11 @@
 // *********************************************************************************************
 #include "ControllerMessageSet.h"
 #include <map>
-#include "../Language.h"
+#include "Language.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 c_ControllerMessageSet::c_ControllerMessageSet()

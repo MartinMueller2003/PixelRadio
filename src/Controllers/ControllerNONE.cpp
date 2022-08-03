@@ -19,9 +19,9 @@
 // *********************************************************************************************
 #include "ControllerNONE.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerNONE : public c_ControllerCommon

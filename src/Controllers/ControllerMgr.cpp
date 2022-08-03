@@ -26,11 +26,11 @@
 #include "ControllerLOCAL.h"
 #include "ControllerMQTT.h"
 #include "ControllerSERIAL.h"
-#include "../language.h"
+#include "language.h"
 
-#if __has_include("../memdebug.h")
-#  include "../memdebug.h"
-#endif //  __has_include("../memdebug.h")
+#if __has_include("memdebug.h")
+#  include "memdebug.h"
+#endif //  __has_include("memdebug.h")
 
 struct ControllerDefinition_t
 {
@@ -133,6 +133,15 @@ c_ControllerMgr::~c_ControllerMgr()
 }
 
 // *********************************************************************************************
+void c_ControllerMgr::AddControls(uint16_t ctrlTab)
+{
+   for (auto &currentController : ListOfControllers)
+   {
+      currentController.pController->AddControls(ctrlTab);
+   }
+} // AddControls
+
+// *********************************************************************************************
 void c_ControllerMgr::begin()
 {
    // DEBUG_START;
@@ -145,53 +154,37 @@ void c_ControllerMgr::begin()
 } // begin
 
 // *********************************************************************************************
-// Returns true if a new message is found
-bool c_ControllerMgr::GetNextRdsMsgToDisplay(CurrentRdsMsgInfo_t & MsgInfo)
+c_ControllerCommon * c_ControllerMgr::GetControllerById(ControllerTypeId_t Id)
 {
-   // DEBUG_START;
-
-   bool Response = false;
-
-   CurrentRdsMsgInfo.MsgText              = emptyString;
-   CurrentRdsMsgInfo.MsgStartTimeMillis   = 0;
-   CurrentRdsMsgInfo.MsgDurationMilliSec       = 0;
-   CurrentRdsMsgInfo.ControllerId         = ControllerTypeId_t::NO_CNTRL;
-
-   do // once
-   {
-      // pass through the controllers and grab the first message that is available to send.
-      for(auto & CurrentController : ListOfControllers)
-      {
-         if(CurrentController.pController->GetNextRdsMsgToDisplay(CurrentRdsMsgInfo))
-         {
-            CurrentRdsMsgInfo.MsgStartTimeMillis = millis();
-            CurrentRdsMsgInfo.ControllerId = CurrentController.ControllerId;
-
-            Response = true;
-            break;
-         }
-      }
-
-   } while (false);
-
-   // update the response
-   MsgInfo = CurrentRdsMsgInfo;
-
-   // DEBUG_END;
-   return Response;
-
-} // GetNextMsgToDisplay
+   return ListOfControllers[Id].pController;
+} // GetControllerById
 
 // *********************************************************************************************
-void c_ControllerMgr::ClearMsgHasBeenDisplayedFlag()
+void c_ControllerMgr::GetNextRdsMessage(RdsMsgInfo_t &Response)
 {
-   // DEBUG_START;
+   DEBUG_START;
+   Response.DurationMilliSec = 0;
+   CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
+
    for (auto &CurrentController : ListOfControllers)
    {
-      CurrentController.pController->ClearMsgHasBeenDisplayedFlag();
+      CurrentController.pController->GetNextRdsMessage(Response);
+
+      if(Response.DurationMilliSec)
+      {
+         DEBUG_V("Found a message to send");
+         
+         Response.ControllerName = CurrentController.pController->GetName();
+         CurrentSendingControllerId = CurrentController.ControllerId;
+
+         DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
+         DEBUG_V(String("           Text: ") + String(Response.Text));
+         DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
+         break;
+      }
    }
-   // DEBUG_END;
-} // ClearMsgHasBeenDisplayedFlag
+   DEBUG_END;
+}
 
 // *********************************************************************************************
 uint16_t c_ControllerMgr::getControllerStatusSummary()
@@ -207,7 +200,7 @@ uint16_t c_ControllerMgr::getControllerStatusSummary()
          Response |= CurrentController.ActiveBit;
       }
 
-      if(CurrentController.ControllerId == CurrentRdsMsgInfo.ControllerId)
+      if(CurrentController.ControllerId == CurrentSendingControllerId)
       {
          Response |= CurrentController.SendingBit;
       }
@@ -218,192 +211,10 @@ uint16_t c_ControllerMgr::getControllerStatusSummary()
 }
 
 // *********************************************************************************************
-// CheckAnyRdsControllerEnabled(): 
-// Determine if any (Local, HTTP, MQTT, Serial, FPPD) RDS Controller is Enabled.
-bool c_ControllerMgr::CheckAnyRdsControllerEnabled(bool IncludeLocalController)
-{
-   // DEBUG_START;
-
-   bool Response = false;
-   for (auto &currentController : ListOfControllers)
-   {
-      if((currentController.ControllerId == LocalControllerId) &&
-         (!IncludeLocalController))
-      {
-         continue;
-      }
-      Response |= currentController.pController->ControllerIsEnabled();
-   }
-
-   // DEBUG_END;
-   return Response;
-} // CheckAnyRdsControllerEnabled
-
-// *********************************************************************************************
-bool c_ControllerMgr::CheckRdsTextAvailable(bool IncludeLocalController)
-{
-   // DEBUG_START;
-
-   bool Response = false;
-   for (auto &currentController : ListOfControllers)
-   {
-      if((currentController.ControllerId == LocalControllerId) &&
-         (!IncludeLocalController))
-      {
-         continue;
-      }
-      Response |= currentController.pController->CheckRdsTextAvailable();
-   }
-
-   return Response;
-
-   // DEBUG_END;
-} // CheckRdsTextAvailable
-
-// *********************************************************************************************
-bool c_ControllerMgr::CheckAnyControllerIsDisplayingMessage(bool IncludeLocalController)
-{
-   // DEBUG_START;
-
-   bool Response = false;
-   for (auto &currentController : ListOfControllers)
-   {
-      if((currentController.ControllerId == LocalControllerId) &&
-         (!IncludeLocalController))
-      {
-         continue;
-      }
-      Response |= (currentController.ControllerId == CurrentRdsMsgInfo.ControllerId);
-   }
-
-   // DEBUG_END;
-   return Response;
-}
-
-// *********************************************************************************************
-c_ControllerCommon * c_ControllerMgr::GetControllerById(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController;
-} // GetControllerById
-
-// *********************************************************************************************
-void c_ControllerMgr::Display(ControllerTypeId_t Id)
-{
-   extern uint16_t homeTextMsgID;
-   ListOfControllers[Id].pController->Display(homeTextMsgID);
-} // Display
-
-#ifdef NoLongerNeeded
-// *********************************************************************************************
-void c_ControllerMgr::SetActiveTextFlag(ControllerTypeId_t Id, bool value)
-{
-   ListOfControllers[Id].pController->SetActiveTextFlag(value);
-} // SetActiveTextFlag
-
-// *********************************************************************************************
-bool c_ControllerMgr::GetActiveTextFlag(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetActiveTextFlag();
-} // GetActiveTextFlag
-#endif // def NoLongerNeeded
-
-// *********************************************************************************************
-bool c_ControllerMgr::GetControllerEnabledFlag(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->ControllerIsEnabled();
-} // GetControlEnabledFlag
-
-// *********************************************************************************************
 String c_ControllerMgr::GetName(ControllerTypeId_t Id)
 {
    return ListOfControllers[Id].pController->GetName();
 } // GetName
-
-// *********************************************************************************************
-void c_ControllerMgr::SetPiCode(ControllerTypeId_t Id, uint32_t NewPiCode)
-{
-   ListOfControllers[Id].pController->SetPiCode(NewPiCode);
-} // SetPiCode
-
-// *********************************************************************************************
-uint32_t c_ControllerMgr::GetPiCode(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetPiCode();
-} // SetPiCode
-
-// *********************************************************************************************
-void c_ControllerMgr::SetPtyCode(ControllerTypeId_t Id, uint32_t NewPiCode)
-{
-   ListOfControllers[Id].pController->SetPtyCode(NewPiCode);
-} // SetPtyCode
-
-// *********************************************************************************************
-uint32_t c_ControllerMgr::GetPtyCode(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetPtyCode();
-} // GetPtyCode
-
-// *********************************************************************************************
-void c_ControllerMgr::SetRdsProgramServiceName(ControllerTypeId_t Id, String value)
-{
-   ListOfControllers[Id].pController->SetRdsProgramServiceName(value);
-} // SetRdsProgramServiceName
-
-// *********************************************************************************************
-String c_ControllerMgr::GetRdsProgramServiceName(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetRdsProgramServiceName();
-} // GetRdsProgramServiceName
-
-// *********************************************************************************************
-void c_ControllerMgr::SetTextFlag(ControllerTypeId_t Id, bool value)
-{
-   ListOfControllers[Id].pController->SetTextFlag(value);
-} // SetTextFlag
-
-// *********************************************************************************************
-bool c_ControllerMgr::GetTextFlag(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetTextFlag();
-} // GetTextFlag
-
-// *********************************************************************************************
-void c_ControllerMgr::SetStopFlag(ControllerTypeId_t Id, bool value)
-{
-   ListOfControllers[Id].pController->SetStopFlag(value);
-} // SetTextFlag
-
-// *********************************************************************************************
-bool c_ControllerMgr::GetStopFlag(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetStopFlag();
-} // SetTextFlag
-
-// *********************************************************************************************
-void c_ControllerMgr::SetPayloadText(ControllerTypeId_t Id, String value)
-{
-   ListOfControllers[Id].pController->SetPayloadText(value);
-} // SetPayloadText
-
-// *********************************************************************************************
-String c_ControllerMgr::GetPayloadText(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetPayloadText();
-} // GetPayloadText
-
-#ifdef NoLongerNeeded
-// *********************************************************************************************
-void c_ControllerMgr::SetRdsMsgTime(ControllerTypeId_t Id, int32_t value)
-{
-   ListOfControllers[Id].pController->SetRdsMsgTime(value);
-} // SetRdsMsgTime
-
-// *********************************************************************************************
-int32_t c_ControllerMgr::GetRdsMsgTime(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetRdsMsgTime();
-} // GetRdsMsgTime
-#endif // def NoLongerNeeded
 
 // *********************************************************************************************
 void c_ControllerMgr::poll()
@@ -413,44 +224,6 @@ void c_ControllerMgr::poll()
       currentController.pController->poll();
    }
 } // poll
-
-// *********************************************************************************************
-void c_ControllerMgr::AddControls(uint16_t ctrlTab)
-{
-   for (auto &currentController : ListOfControllers)
-   {
-      currentController.pController->AddControls(ctrlTab);
-   }
-} // AddControls
-
-// *********************************************************************************************
-void c_ControllerMgr::saveConfiguration(ArduinoJson::JsonObject &config)
-{
-   // DEBUG_START;
-
-   do // once
-   {
-      if (!config.containsKey(N_controllers))
-      {
-         // DEBUG_V();
-         config.createNestedArray(N_controllers);
-      }
-      // DEBUG_V();
-
-      JsonArray ControllerConfigs = config[N_controllers];
-
-      for (auto &currentController : ListOfControllers)
-      {
-         JsonObject ControllerConfig = ControllerConfigs.createNestedObject();
-         currentController.pController->saveConfiguration(ControllerConfig);
-      }
-
-   } while (false);
-
-   serializeJsonPretty(config, Serial);
-
-   // DEBUG_END;
-} // saveConfiguration
 
 // *********************************************************************************************
 void c_ControllerMgr::restoreConfiguration(ArduinoJson::JsonObject &config)
@@ -491,6 +264,35 @@ void c_ControllerMgr::restoreConfiguration(ArduinoJson::JsonObject &config)
 
    // DEBUG_END;
 } // restoreConfiguration
+
+// *********************************************************************************************
+void c_ControllerMgr::saveConfiguration(ArduinoJson::JsonObject &config)
+{
+   // DEBUG_START;
+
+   do // once
+   {
+      if (!config.containsKey(N_controllers))
+      {
+         // DEBUG_V();
+         config.createNestedArray(N_controllers);
+      }
+      // DEBUG_V();
+
+      JsonArray ControllerConfigs = config[N_controllers];
+
+      for (auto &currentController : ListOfControllers)
+      {
+         JsonObject ControllerConfig = ControllerConfigs.createNestedObject();
+         currentController.pController->saveConfiguration(ControllerConfig);
+      }
+
+   } while (false);
+
+   serializeJsonPretty(config, Serial);
+
+   // DEBUG_END;
+} // saveConfiguration
 
 c_ControllerMgr ControllerMgr;
 
