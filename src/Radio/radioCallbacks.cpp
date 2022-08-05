@@ -26,6 +26,10 @@ void cRadio::CbAdjFmFreq(Control *sender, int type)
 {
     DEBUG_START;
 
+    DEBUG_V(String("    value: ") + String(sender->value));
+    DEBUG_V(String("     type: ") + String(type));
+    DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
+
     do // once
     {
         if(0 <= type)
@@ -35,19 +39,23 @@ void cRadio::CbAdjFmFreq(Control *sender, int type)
         }
 
         if (type == P_LEFT_DOWN) 
-        {       // Decr
+        {
+            DEBUG_V("Decr 100khz");
             fmFreqX10 -= FM_FREQ_SKP_KHZ;
         }
         else if (type == P_RIGHT_DOWN) 
-        { // Incr
+        {
+            DEBUG_V("Inc 100khz");
             fmFreqX10 += FM_FREQ_SKP_KHZ;
         }
         else if (type == P_BACK_DOWN) 
-        {  // Decr
+        {
+            DEBUG_V("Dec 1Mhz");
             fmFreqX10 -= FM_FREQ_SKP_MHZ;
         }
         else if (type == P_FOR_DOWN) 
-        {   // Incr
+        {
+            DEBUG_V("Inc 1Mhz");
             fmFreqX10 += FM_FREQ_SKP_MHZ;
         }
         else
@@ -55,22 +63,47 @@ void cRadio::CbAdjFmFreq(Control *sender, int type)
             Log.errorln(String(F("adjFmFreqCallback: %s.")).c_str(), BAD_VALUE_STR);
             break;
         }
+    
+        DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
 
         if (fmFreqX10 > FM_FREQ_MAX_X10) 
         {
+            DEBUG_V("Frequency is too high");
             fmFreqX10 = FM_FREQ_MAX_X10;
         }
         else if (fmFreqX10 < FM_FREQ_MIN_X10) 
         {
+            DEBUG_V("Frequency is too ;ow");
             fmFreqX10 = FM_FREQ_MIN_X10;
         }
 
+        DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
+
         setFrequency();
-        updateUiFrequency(true);
+        updateUiFrequency(fmFreqX10);
         displaySaveWarning();
         Log.infoln(String(F("FM Frequency Set to: %s.")).c_str(), (String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR)).c_str());
 
     } while (false);
+
+    DEBUG_END;
+}
+
+// ************************************************************************************************
+// audioCallback(): Update the Stereo / Mono Audio modes.
+void cRadio::CbAudioMode(Control *sender, int type)
+{
+    DEBUG_START;
+
+    DEBUG_V(String("value: ") + String(sender->value));
+    DEBUG_V(String(" type: ") + String(type));
+
+    stereoEnbFlg = (S_ACTIVE == type);
+
+    updateUiAudioMode(stereoEnbFlg);
+    setMonoAudio();
+    displaySaveWarning();
+    Log.infoln(String(F("Radio Audio Mode Set to: %s.")).c_str(), String(stereoEnbFlg ? F("Stereo") : F("Mono")).c_str());
 
     DEBUG_END;
 }
@@ -159,7 +192,7 @@ void cRadio::CbMute(Control *sender, int type)
 
     setAudioMute(); // Update QN8027 Mute Register.
     displaySaveWarning();
-    Log.infoln(String(F("Audio Mute Set to: %s.")), String(muteFlg ? F("On") : F("Off") ).c_str());
+    Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), String(muteFlg ? F("On") : F("Off") ).c_str());
 
     DEBUG_END;
 }
@@ -197,6 +230,8 @@ void cRadio::CbRfCarrier(Control *sender, int type)
     DEBUG_V(String("value: ") + String(sender->value));
     DEBUG_V(String(" type: ") + String(type));
 
+    extern float paVolts;
+    
     rfCarrierFlg = (S_ACTIVE == type);
     String tempStr;
 
@@ -206,30 +241,30 @@ void cRadio::CbRfCarrier(Control *sender, int type)
         {
             Log.errorln(String(F("rfCarrierCallback: RADIO MODULE FAILURE!")).c_str());
             tempStr = F("On, Warning: Radio Module Failure");
-            ESPUI.print(homeOnAirID, F(RADIO_FAIL_STR)); // Update homeTab panel.
+            ESPUI.print(homeOnAirID, RADIO_FAIL_STR); // Update homeTab panel.
         }
         else if (fmRadioTestCode == FM_TEST_VSWR)
         {
             Log.errorln(String(F("rfCarrierCallback: RADIO MODULE HAS HIGH VSWR!")).c_str());
             tempStr = F("On, Warning: Radio Module RF-Out has High VSWR");
-            ESPUI.print(homeOnAirID, F(RADIO_VSWR_STR)); // Update homeTab panel.
+            ESPUI.print(homeOnAirID, RADIO_VSWR_STR); // Update homeTab panel.
         }
         else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX))
         {
             Log.errorln(String(F("rfCarrierCallback: RF PA HAS INCORRECT VOLTAGE!")).c_str());
             tempStr = F("On, Warning: RF PA has Incorrect Voltage");
-            ESPUI.print(homeOnAirID, F(RADIO_VOLT_STR)); // Update homeTab panel.
+            ESPUI.print(homeOnAirID, RADIO_VOLT_STR); // Update homeTab panel.
         }
         else
         {
             tempStr = F("On");
-            ESPUI.print(homeOnAirID, F(RADIO_ON_AIR_STR)); // Update homeTab panel.
+            ESPUI.print(homeOnAirID, RADIO_ON_AIR_STR); // Update homeTab panel.
         }
     }
     else
     {
         tempStr = F("Off");
-        ESPUI.print(homeOnAirID, F(RADIO_OFF_AIR_STR)); // Update homeTab panel.
+        ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
     }
 
     setRfCarrier();

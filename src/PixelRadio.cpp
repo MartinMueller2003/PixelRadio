@@ -65,6 +65,7 @@
 #include "Radio.hpp"
 #include "ControllerMgr.h"
 #include "WiFiDriver.hpp"
+#include "radio.hpp"
 
 // ************************************************************************************************
 // Global Section
@@ -220,7 +221,9 @@ void loop()
     // Background tasks
     WiFiDriver.Poll();
     ControllerMgr.poll();
-#ifdef OldWay 
+    Radio.Poll();
+
+#ifdef OldWay
     processRDS();           // Send any available RadioText.
     processMeasurements();  // Measure the two system voltages.
 
@@ -231,7 +234,6 @@ void loop()
 
     updateRadioSettings();  // Update the QN8027 device registers.
     updateGpioBootPins();   // Update the User Programmable GPIO Pins.
-    updateTestTones(false); // Update the Test Tone, false=Don't Reset Tone Sequence.
     updateOnAirSign();      // Update the Optional "On Air" 12V LED Sign.
 
     rebootSystem();         // Check to see if Reboot has been requested.

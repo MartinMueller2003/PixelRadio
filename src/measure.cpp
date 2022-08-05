@@ -109,6 +109,7 @@ void measureVdcVoltage(void)
     avgIndex  = avgIndex >= E_AVG_SIZE ? 0 : avgIndex;
 
     voltage = totalVdc / E_AVG_SIZE;
+    extern uint32_t paVolts;
     paVolts = (voltage * VDC_SCALE) / 1000.0f; // Apply Attenuator Scaling, covert from mV to VDC.
     paVolts = constrain(paVolts, 0.0f, 99.0f);
 }

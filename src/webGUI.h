@@ -37,7 +37,6 @@ extern uint16_t aboutLogoID;
 extern uint16_t aboutVersionID;
 
 extern uint16_t adjAvolID;
-extern uint16_t adjFmDispID;
 extern uint16_t adjFreqID;
 extern uint16_t adjUvolID;
 extern uint16_t adjSaveID;
@@ -74,22 +73,11 @@ extern uint16_t gpio33MsgID;
 extern uint16_t gpioSaveID;
 extern uint16_t gpioSaveMsgID;
 
-extern uint16_t homeFreqID;
 extern uint16_t homeOnAirID;
 extern uint16_t homeRdsTextID;
 extern uint16_t homeRdsTmrID;
 
-extern uint16_t radioAudioID;
-extern uint16_t radioAudioMsgID;
-extern uint16_t radioVgaGainID;
-extern uint16_t radioDgainID;
-extern uint16_t radioAutoID;
-extern uint16_t radioEmphID;
-extern uint16_t radioFreqID;
-extern uint16_t radioGainID;
-extern uint16_t radioImpID;
-extern uint16_t radioPwrID;
-extern uint16_t radioRfEnbID;
+extern uint16_t radioSaveID;
 extern uint16_t radioSaveID;
 extern uint16_t radioSaveMsgID;
 

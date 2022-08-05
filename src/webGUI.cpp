@@ -88,8 +88,9 @@
 #include "globals.h"
 #include "language.h"
 #include <ESPUI.h>
-#include "Controllers/ControllerMgr.h"
+#include "ControllerMgr.h"
 #include "memdebug.h"
+#include "radio.hpp"
 
 // ************************************************************************************************
 // Local Strings.
@@ -109,11 +110,8 @@ uint16_t wifiTab   = Control::noParent;
 uint16_t aboutLogoID    = Control::noParent;
 uint16_t aboutVersionID = Control::noParent;
 
-uint16_t adjFmDispID   = Control::noParent;
-uint16_t adjFreqID     = Control::noParent;
 uint16_t adjSaveID     = Control::noParent;
 uint16_t adjSaveMsgID  = Control::noParent;
-uint16_t radioSoundID  = Control::noParent;
 uint16_t adjTestModeID = Control::noParent;
 uint16_t adjUvolID     = Control::noParent;
 
@@ -138,6 +136,9 @@ uint16_t diagTimerID   = Control::noParent;
 uint16_t diagVbatID    = Control::noParent;
 uint16_t diagVdcID     = Control::noParent;
 
+uint16_t radioSaveID    = Control::noParent;
+uint16_t radioSaveMsgID = Control::noParent;
+
 uint16_t gpio19ID      = Control::noParent;
 uint16_t gpio23ID      = Control::noParent;
 uint16_t gpio33ID      = Control::noParent;
@@ -147,7 +148,6 @@ uint16_t gpio33MsgID   = Control::noParent;
 uint16_t gpioSaveID    = Control::noParent;
 uint16_t gpioSaveMsgID = Control::noParent;
 
-uint16_t homeFreqID    = Control::noParent;
 uint16_t homeOnAirID   = Control::noParent;
 uint16_t homeRdsTextID = Control::noParent;
 uint16_t homeRdsTmrID  = Control::noParent;
@@ -171,7 +171,6 @@ void initCustomCss(void)
     // START OF PANEL INLINE STYLES
     ESPUI.setPanelStyle(aboutLogoID,    "background-color: white; color: black;");
 
-    ESPUI.setPanelStyle(adjFmDispID,    "font-size: 3.0em;");
 
     // ESPUI.setPanelStyle(ctrlMqttPortID, "font-size: 1.25em;");
 
@@ -182,13 +181,9 @@ void initCustomCss(void)
     ESPUI.setPanelStyle(diagVbatID,     "color: black; font-size: 1.25em;");
     ESPUI.setPanelStyle(diagVdcID,      "color: black; font-size: 1.25em;");
 
-    ESPUI.setPanelStyle(homeFreqID,     "font-size: 3.0em;");
     ESPUI.setPanelStyle(homeOnAirID,    "font-size: 3.0em;");
     ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
 
-    ESPUI.setPanelStyle(radioFreqID,    "font-size: 3.0em;");
-    ESPUI.setPanelStyle(radioGainID,    "font-size: 1.15em;");
-    ESPUI.setPanelStyle(radioSoundID,   "font-size: 1.25em;");
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
     ESPUI.setPanelStyle(rdsProgNameID,  "font-size: 1.35em;");
@@ -206,8 +201,6 @@ void initCustomCss(void)
 
     ESPUI.setElementStyle(aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
 
-    ESPUI.setElementStyle(adjFmDispID,        "max-width: 75%;");
-    ESPUI.setElementStyle(adjMuteID,          (muteFlg ? "background: red;" : "background: #bebebe;"));
     ESPUI.setElementStyle(adjSaveMsgID,       CSS_LABEL_STYLE_RED);
 
     ESPUI.setElementStyle(backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
@@ -228,17 +221,12 @@ void initCustomCss(void)
     ESPUI.setElementStyle(gpio33MsgID,        CSS_LABEL_STYLE_WHITE);
     ESPUI.setElementStyle(gpioSaveMsgID,      CSS_LABEL_STYLE_RED);
 
-    ESPUI.setElementStyle(homeFreqID,         "max-width: 80%;");
     ESPUI.setElementStyle(homeOnAirID,        "max-width: 80%;");
     ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
-    ESPUI.setElementStyle(radioFreqID,     "width: 75%;");
-    ESPUI.setElementStyle(radioGainID,     "width: 35%;");
-    ESPUI.setElementStyle(radioAudioMsgID, CSS_LABEL_STYLE_BLACK);
     ESPUI.setElementStyle(radioSaveMsgID,  CSS_LABEL_STYLE_RED);
-    ESPUI.setElementStyle(radioSoundID,    "max-width: 35%;");
     ESPUI.setElementStyle(rdsSaveMsgID,     CSS_LABEL_STYLE_BLACK);
 
     ESPUI.setElementStyle(rdsPiID,          "font-size: 1.25em;");
@@ -379,52 +367,6 @@ void StartESPUI()
     }
     // DEBUG_END;
 }
-#ifdef OldWay
-// ************************************************************************************************
-// updateUiAudioLevel(): Update the diagTab UI's Audio Level (mV).
-void updateUiAudioLevel(void)
-{
-    uint16_t mV;
-    static uint32_t previousMillis = 0;
-    char logBuff[60];
-
-    if (previousMillis == 0) {
-        previousMillis = millis(); // Initialize First entry;
-    }
-    else if (millis() - previousMillis >= AUDIO_MEAS_TIME) {
-        previousMillis = millis();
-        mV             = measureAudioLevel();
-
-        if (mV >= AUDIO_LEVEL_MAX) {
-            tempStr = ">";
-        }
-        else {
-            tempStr = "";
-        }
-        tempStr += String(mV);
-        tempStr += "mV";
-        ESPUI.print(radioSoundID, tempStr);
-        sprintf(logBuff, "Peak Audio Amplitude %03umV.", mV);
-        Log.verboseln(logBuff);
-    }
-}
-
-// ************************************************************************************************
-// updateUiAudioMode(): Update the Stereo/Mono Audio Mode shown on the UI radioTab.
-void updateUiAudioMode(bool stereoEnbFlg)
-{
-    ESPUI.print(radioAudioMsgID, stereoEnbFlg ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
-    ESPUI.updateControlValue(radioAudioID, stereoEnbFlg ? "1" : "0");
-}
-
-// ************************************************************************************************
-// updateUiAudioMute(): Update the Audio Mute Switch Position on the UI adjTab.
-void updateUiAudioMute(bool value)
-{
-    ESPUI.setElementStyle(adjMuteID, value ? F("background: red;") : F("background: #bebebe;"));
-    ESPUI.updateControlValue(adjMuteID, value ? "1" : "0");
-}
-#endif // def OldWay
 
 // ************************************************************************************************
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
@@ -477,24 +419,17 @@ void updateUiFreeMemory(void)
     }
 }
 
-
-#ifdef OldWay
 // ************************************************************************************************
 // updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
 //                    This is a companion function to displayRdsText(). May be used standalone too.
 void updateUiRdsText(String textStr)
 {
-    if (!rfCarrierFlg) 
+    if (!Radio.IsRfCarriorOn()) 
     {
         textStr = RDS_RF_DISABLED_STR;
     }
     else if (textStr.isEmpty())
     {
-        // Blank RadioText Message.
-        if (ControllerMgr.CheckAnyControllerIsDisplayingMessage(true))
-        {
-            textStr = RDS_BLANK_STR;
-        }
         Log.infoln((String(F("Timer Updated RadioText: ")) + textStr).c_str());
     }
 
@@ -512,19 +447,19 @@ void updateUiRDSTmr(bool ClearDisplay)
 
     do // once
     {
-        if (testModeFlg)
+        if (Radio.IsTestModeOn())
         {
             ESPUI.print(homeRdsTmrID, emptyString);
             break;
         }
 
-        if (!rfCarrierFlg || (0 == ControllerMgr.getControllerStatusSummary()))
+        if (!Radio.IsRfCarriorOn() || (0 == ControllerMgr.getControllerStatusSummary()))
         {
             // all controllers are disabled
             ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);
             break;
         }
-
+#ifdef OldWay
         c_ControllerMgr::CurrentRdsMsgInfo_t CurrentMsgInfo;
         ControllerMgr.GetCurrentRdsMsgInfo(CurrentMsgInfo);
         if (CurrentMsgInfo.MsgDurationMilliSec)
@@ -543,34 +478,8 @@ void updateUiRDSTmr(bool ClearDisplay)
             }
             break;
         }
-
-    } while (false);
-}
 #endif // def OldWay
-
-// ************************************************************************************************
-// updateUiRfCarrier(): Updates the GUI's RF Carrier on homeTab and radiotab.
-void updateUiRfCarrier(void)
-{
-    ESPUI.updateControlValue(radioRfEnbID, rfCarrierFlg ? "1" : "0");
-
-    if (rfCarrierFlg == true) {
-        if (fmRadioTestCode == FM_TEST_FAIL) {
-            ESPUI.print(homeOnAirID, RADIO_FAIL_STR);   // Update homeTab panel.
-        }
-        else if (fmRadioTestCode == FM_TEST_VSWR) {
-            ESPUI.print(homeOnAirID, RADIO_VSWR_STR);   // Update homeTab panel.
-        }
-        else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) {
-            ESPUI.print(homeOnAirID, RADIO_VOLT_STR);   // Update homeTab panel.
-        }
-        else {
-            ESPUI.print(homeOnAirID, RADIO_ON_AIR_STR); // Update homeTab panel.
-        }
-    }
-    else {
-        ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
-    }
+    } while (false);
 }
 
 #ifdef OldWay
@@ -633,6 +542,7 @@ void updateUiDiagTimer(void)
 // ************************************************************************************************
 void updateUiVolts(void)
 {
+    extern uint32_t paVolts;
     static uint32_t previousMillis = 0;
     char logBuff[60];
 
@@ -669,6 +579,8 @@ void buildGUI(void)
 {
     // DEBUG_START;
 
+    extern uint32_t paVolts;
+
     tempStr.reserve(125); // Avoid memory re-allocation fragments on the Global String.
     char  charBuff[25];
     float tempFloat;
@@ -691,28 +603,7 @@ void buildGUI(void)
     // Home Tab
     ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, "", ControlColor::None, homeTab);
 
-    if (fmRadioTestCode == FM_TEST_FAIL) {
-        tempStr = RADIO_FAIL_STR;
-    }
-    else if (fmRadioTestCode == FM_TEST_VSWR) {
-        tempStr = RADIO_VSWR_STR;
-    }
-    else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) {
-        tempStr = RADIO_VOLT_STR;
-    }
-    else {
-        tempStr = rfCarrierFlg ? RADIO_ON_AIR_STR : RADIO_OFF_AIR_STR;
-    }
-    homeOnAirID = ESPUI.addControl(ControlType::Label, HOME_RAD_STAT_STR, tempStr, ControlColor::Peterriver, homeTab);
-
-    tempFloat  = float(fmFreqX10) / 10.0f;
-    tempStr    = String(tempFloat, 1);
-    tempStr   += UNITS_MHZ_STR;
-    homeFreqID = ESPUI.addControl(ControlType::Label,
-                                  HOME_FREQ_STR,
-                                  tempStr,
-                                  ControlColor::Peterriver,
-                                  homeTab);
+    Radio.AddHomeControls(homeTab);
 
     ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, "", ControlColor::None, homeTab);
     tempStr       = HOME_RDS_WAIT_STR;
@@ -725,70 +616,32 @@ void buildGUI(void)
     
     // **************
     // Adjust Tab
-
-    ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, "", ControlColor::None, adjTab);
-
-    tempFloat   = float(fmFreqX10) / 10.0f;
-    tempStr     = String(tempFloat, 1);
-    tempStr    += UNITS_MHZ_STR;
-    adjFmDispID = ESPUI.addControl(ControlType::Label, ADJUST_FM_FRQ_STR, tempStr, ControlColor::Wetasphalt, adjTab);
-
-    adjFreqID = ESPUI.addControl(ControlType::Pad,
-                                 ADJUST_FRQ_ADJ_STR,
-                                 "",
-                                 ControlColor::Wetasphalt,
-                                 adjTab,
-                                 &adjFmFreqCallback);
-
-    ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, "", ControlColor::None, adjTab);
-
-    adjTestModeID = ESPUI.addControl(ControlType::Switcher,
-                                     ADJUST_TEST_STR,
-                                     testModeFlg ? "1" : "0",
-                                     ControlColor::Wetasphalt,
-                                     adjTab,
-                                     &testModeCallback);
-
-    adjMuteID = ESPUI.addControl(ControlType::Switcher,
-                                 ADJUST_MUTE_STR,
-                                 muteFlg ? "1" : "0",
-                                 ControlColor::Wetasphalt,
-                                 adjTab,
-                                 &muteCallback);
-
+    Radio.AddAdjControls(adjTab);
 
     ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, adjTab);
     adjSaveID = ESPUI.addControl(ControlType::Button,
-                                 SAVE_SETTINGS_STR,
-                                 SAVE_SETTINGS_STR,
-                                 ControlColor::Wetasphalt,
-                                 adjTab,
-                                 &saveSettingsCallback);
+                                SAVE_SETTINGS_STR,
+                                SAVE_SETTINGS_STR,
+                                ControlColor::Wetasphalt,
+                                adjTab,
+                                &saveSettingsCallback);
     adjSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Wetasphalt, adjSaveID);
 
     // DEBUG_V();
     // ************
     // Radio Tab
-    Radio.addControls(radioTab);
-    ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, "", ControlColor::None, radioTab);
+    Radio.AddRadioControls(radioTab);
 
-    tempFloat   = float(fmFreqX10) / 10.0f;
-    tempStr     = String(tempFloat, 1);
-    tempStr    += UNITS_MHZ_STR;
-    radioFreqID = ESPUI.addControl(ControlType::Label,
-                                   RADIO_FM_FRQ_STR,
-                                   tempStr,
-                                   ControlColor::Emerald,
-                                   radioTab);
-
-    radioRfEnbID = ESPUI.addControl(ControlType::Switcher,
-                                    RADIO_RF_CARRIER_STR,
-                                    rfCarrierFlg ? "1" : "0",
-                                    ControlColor::Emerald,
-                                    radioTab,
-                                    &rfCarrierCallback);
-    // DEBUG_V();
+    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, radioTab);
+    radioSaveID = ESPUI.addControl(ControlType::Button,
+                                SAVE_SETTINGS_STR,
+                                SAVE_SETTINGS_STR,
+                                ControlColor::Emerald,
+                                radioTab,
+                                &saveSettingsCallback);
+    radioSaveMsgID =
+        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Emerald, radioSaveID);
 
     // RF Power Control is not compatible with the RF Amp Circutry.
     // Low Power levels do not correctly excite the PA Transistor.
@@ -804,97 +657,6 @@ void buildGUI(void)
        ESPUI.addControl(ControlType::Option, RF_PWR_MED_STR,  RF_PWR_MED_STR,  ControlColor::Emerald, radioPwrID);
        ESPUI.addControl(ControlType::Option, RF_PWR_HIGH_STR, RF_PWR_HIGH_STR, ControlColor::Emerald, radioPwrID);
      */
-
-    /*
-       // RF Auto Off is NOT compatible with PixelRadio; Sending RDS Messages and/or using updateUiAudioLevel() will
-       // prevent 60S Turn Off. Which makes this a useless menu feature. Code remains as a reminder not to use it.
-       tempStr     =  rfAutoFlg ? RF_AUTO_ENB_STR : RF_AUTO_DIS_STR;
-       radioAutoID = ESPUI.addControl(ControlType::Select, RADIO_AUTO_OFF_STR, tempStr, ControlColor::Emerald, radioTab, &rfAutoCallback);
-       ESPUI.addControl(ControlType::Option,    RF_AUTO_DIS_STR,   RF_AUTO_DIS_STR, ControlColor::Emerald, radioAutoID);
-       ESPUI.addControl(ControlType::Option,    RF_AUTO_ENB_STR,   RF_AUTO_ENB_STR, ControlColor::Emerald, radioAutoID);
-     */
-
-#ifdef OldWay
-    Radio.addControls(radioTab);
-
-    ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, "", ControlColor::None, radioTab);
-
-    radioAudioID =
-        ESPUI.addControl(ControlType::Switcher, RADIO_AUDIO_MODE_STR, stereoEnbFlg ? "1" : "0",
-                         ControlColor::Emerald, radioTab, &audioCallback);
-
-    tempStr         = stereoEnbFlg ? RADIO_STEREO_STR : RADIO_MONO_STR;
-    radioAudioMsgID =
-        ESPUI.addControl(ControlType::Label, RADIO_AUDIO_MODE_STR, tempStr, ControlColor::Emerald, radioAudioID);
-    // DEBUG_V();
-
-    #ifdef ADV_RADIO_FEATURES
-    radioEmphID =
-        ESPUI.addControl(ControlType::Select,
-                         RADIO_PRE_EMPH_STR,
-                         preEmphasisStr,
-                         ControlColor::Emerald,
-                         radioTab,
-                         &radioEmphasisCallback);
-    ESPUI.addControl(ControlType::Option,    PRE_EMPH_USA_STR,    PRE_EMPH_USA_STR, ControlColor::Emerald, radioEmphID);
-    ESPUI.addControl(ControlType::Option,    PRE_EMPH_EUR_STR,    PRE_EMPH_EUR_STR, ControlColor::Emerald, radioEmphID);
-    #endif // ifdef ADV_RADIO_FEATURES
-
-    ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, "",               ControlColor::None,    radioTab);
-
-    radioVgaGainID =
-        ESPUI.addControl(ControlType::Select, RADIO_VGA_AUDIO_STR, vgaGainStr, ControlColor::Emerald, radioTab,
-                         &gainAdjustCallback);
-    ESPUI.addControl(ControlType::Option, VGA_GAIN0_STR, VGA_GAIN0_STR, ControlColor::Emerald, radioVgaGainID);
-    ESPUI.addControl(ControlType::Option, VGA_GAIN1_STR, VGA_GAIN1_STR, ControlColor::Emerald, radioVgaGainID);
-    ESPUI.addControl(ControlType::Option, VGA_GAIN2_STR, VGA_GAIN2_STR, ControlColor::Emerald, radioVgaGainID);
-    ESPUI.addControl(ControlType::Option, VGA_GAIN3_STR, VGA_GAIN3_STR, ControlColor::Emerald, radioVgaGainID);
-    ESPUI.addControl(ControlType::Option, VGA_GAIN4_STR, VGA_GAIN4_STR, ControlColor::Emerald, radioVgaGainID);
-    ESPUI.addControl(ControlType::Option, VGA_GAIN5_STR, VGA_GAIN5_STR, ControlColor::Emerald, radioVgaGainID);
-
-    radioImpID =
-        ESPUI.addControl(ControlType::Select, RADIO_INP_IMP_STR, inpImpedStr, ControlColor::Emerald, radioTab, &impAdjustCallback);
-    ESPUI.addControl(ControlType::Option, INP_IMP05K_STR, INP_IMP05K_STR, ControlColor::None, radioImpID);
-    ESPUI.addControl(ControlType::Option, INP_IMP10K_STR, INP_IMP10K_STR, ControlColor::None, radioImpID);
-    ESPUI.addControl(ControlType::Option, INP_IMP20K_STR, INP_IMP20K_STR, ControlColor::None, radioImpID);
-    ESPUI.addControl(ControlType::Option, INP_IMP40K_STR, INP_IMP40K_STR, ControlColor::None, radioImpID);
-    // DEBUG_V();
-
-    #ifdef ADV_RADIO_FEATURES
-    radioDgainID =
-        ESPUI.addControl(ControlType::Select,
-                         RADIO_DIG_AUDIO_STR,
-                         digitalGainStr,
-                         ControlColor::Emerald,
-                         radioTab,
-                         &gainAdjustCallback);
-    ESPUI.addControl(ControlType::Option,    DIG_GAIN0_STR,       DIG_GAIN0_STR, ControlColor::Emerald, radioDgainID);
-    ESPUI.addControl(ControlType::Option,    DIG_GAIN1_STR,       DIG_GAIN1_STR, ControlColor::Emerald, radioDgainID);
-    ESPUI.addControl(ControlType::Option,    DIG_GAIN2_STR,       DIG_GAIN2_STR, ControlColor::Emerald, radioDgainID);
-    #endif // ifdef ADV_RADIO_FEATURES
-
-    ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, "",            ControlColor::None,    radioTab);
-
-    tempStr      = "0%"; // Must use Variable & Update each second.
-    radioSoundID = ESPUI.addControl(ControlType::Label, RADIO_AUDLVL_STR, tempStr, ControlColor::Emerald, radioTab);
-
-    #ifdef ADV_RADIO_FEATURES
-    tempStr  = getAudioGain();
-    tempStr += " dB";
-    ESPUI.print(radioGainID, tempStr);
-    radioGainID = ESPUI.addControl(ControlType::Label, RADIO_AUDIO_GAIN_STR, tempStr, ControlColor::Emerald, radioTab);
-    #endif // ifdef ADV_RADIO_FEATURES
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, radioTab);
-    radioSaveID = ESPUI.addControl(ControlType::Button,
-                                   SAVE_SETTINGS_STR,
-                                   SAVE_SETTINGS_STR,
-                                   ControlColor::Emerald,
-                                   radioTab,
-                                   &saveSettingsCallback);
-    radioSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Emerald, radioSaveID);
-#endif // def OldWay
 
     //
     // *****************

@@ -22,13 +22,22 @@
 #include "radio.hpp"
 #include "memdebug.h"
 
+static const uint16_t toneList[] =
+{ TONE_NONE, TONE_NONE, TONE_NONE, TONE_A3, TONE_E4, TONE_A3, TONE_C4, TONE_C5, TONE_F4, TONE_F4, TONE_A4, TONE_NONE };
+static const uint8_t listSize = sizeof(toneList) / sizeof(uint16_t);
+
 // *********************************************************************************************
 void cRadio::begin()
 {
     DEBUG_START;
 
-    RadioSemaphore = xSemaphoreCreateBinary();
-
+    RadioSemaphore = xSemaphoreCreateRecursiveMutex();
+    DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));
+    if (NULL == RadioSemaphore)
+    {
+        Log.errorln(String(F("Could not allocate a semaphore for access to the radio hardware")).c_str());
+    }
+    DEBUG_V(String("fmRadioTestCode: 0x") + String(fmRadioTestCode, HEX))
     fmRadioTestCode = Radio.initRadioChip(); // If QN8027 fails we will warn user on UI homeTab.
     Log.infoln(String(F("FM Radio RDS/RBDS Started.")).c_str());
 
@@ -38,16 +47,23 @@ void cRadio::begin()
 
 // ************************************************************************************************
 // updateUiFrequency(): Update the FM Transmit Frequency on the UI's adjTab, homeTab, and radioTab.
-void updateUiFrequency(int fmFreqX10)
+void cRadio::updateUiFrequency(int fmFreqX10)
 {
-    float tempFloat = float(fmFreqX10) / 10.0f;
+    DEBUG_START;
 
-    tempStr  = String(tempFloat, 1);
-    tempStr += UNITS_MHZ_STR;
+    DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
+
+    float tempFloat = float(fmFreqX10) / 10.0f;
+    DEBUG_V(String("tempFloat: ") + String(tempFloat));
+
+    String tempStr = String(tempFloat, 1) + F(UNITS_MHZ_STR);
+    DEBUG_V(String("  tempStr: ") + String(tempStr));
 
     ESPUI.print(adjFmDispID, tempStr);
     ESPUI.print(homeFreqID,  tempStr);
     ESPUI.print(radioFreqID, tempStr);
+
+    DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -62,61 +78,65 @@ bool cRadio::calibrateAntenna(void)
     uint8_t regVal1;
     uint8_t regVal2;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    FmRadio.setFrequency(108.0F); // High end of FM tuning range.
-    waitForIdle(50);
-    FmRadio.Switch(OFF);
-    waitForIdle(15);
-    FmRadio.Switch(ON);
-    waitForIdle(50);
+    if(RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        FmRadio.setFrequency(108.0F); // High end of FM tuning range.
+        waitForIdle(50);
+        FmRadio.Switch(OFF);
+        waitForIdle(15);
+        FmRadio.Switch(ON);
+        waitForIdle(50);
 
-    FmRadio.reCalibrate();
-    waitForIdle(120);
+        FmRadio.reCalibrate();
+        waitForIdle(120);
 
-    regVal1 = FmRadio.read1Byte(ANT_REG);
+        regVal1 = FmRadio.read1Byte(ANT_REG);
 
-    FmRadio.setFrequency(85.0F); // Low end of FM tuning range.
-    waitForIdle(50);
-    FmRadio.Switch(OFF);
-    waitForIdle(15);
-    FmRadio.Switch(ON);
-    waitForIdle(50);
+        FmRadio.setFrequency(85.0F); // Low end of FM tuning range.
+        waitForIdle(50);
+        FmRadio.Switch(OFF);
+        waitForIdle(15);
+        FmRadio.Switch(ON);
+        waitForIdle(50);
 
-    FmRadio.reCalibrate();
-    waitForIdle(120);
+        FmRadio.reCalibrate();
+        waitForIdle(120);
 
-    regVal2 = FmRadio.read1Byte(ANT_REG);
+        regVal2 = FmRadio.read1Byte(ANT_REG);
 
-    Log.verboseln(String(F("-> QN8027 RF Port Test: Low RF Range= 0x%02X, High RF Range= 0x%02X")).c_str(), regVal1, regVal2);
+        Log.verboseln(String(F("-> QN8027 RF Port Test: Low RF Range= 0x%02X, High RF Range= 0x%02X")).c_str(), regVal1, regVal2);
 
-    if (regVal1 == 0x00 && regVal2 == 0x00) {
-        successFlg = false;
-        Log.errorln("-> QN8027 RF Port Calibration Failed, Possible Oscillator Failure.");
+        if (regVal1 == 0x00 && regVal2 == 0x00) {
+            successFlg = false;
+            Log.errorln("-> QN8027 RF Port Calibration Failed, Possible Oscillator Failure.");
+        }
+        else if ((regVal1 <= 0x01) || (regVal1 >= 0x1f) || (regVal2 <= 0x01) || (regVal2 >= 0x1f)) {
+            successFlg = false;
+            Log.errorln("-> QN8027 RF Port has Poor Calibration, RF Tuning Range Impaired.");
+        }
+        else {
+            successFlg = true;
+            Log.infoln("-> QN8027 RF Port Matching OK, Calibration Successful.");
+        }
+
+        /*
+        radio.setFrequency(103.0F); // Recalibrate at middle FM range.
+        waitForIdle(50);
+        radio.Switch(OFF);
+        waitForIdle(15);
+        radio.Switch(ON);
+        waitForIdle(50);
+        */
+
+        FmRadio.reCalibrate();
+        waitForIdle(120);
+
+        setRfCarrier();
+        waitForIdle(50);
+
+        xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    else if ((regVal1 <= 0x01) || (regVal1 >= 0x1f) || (regVal2 <= 0x01) || (regVal2 >= 0x1f)) {
-        successFlg = false;
-        Log.errorln("-> QN8027 RF Port has Poor Calibration, RF Tuning Range Impaired.");
-    }
-    else {
-        successFlg = true;
-        Log.infoln("-> QN8027 RF Port Matching OK, Calibration Successful.");
-    }
-
-    /*
-       radio.setFrequency(103.0F); // Recalibrate at middle FM range.
-       waitForIdle(50);
-       radio.Switch(OFF);
-       waitForIdle(15);
-       radio.Switch(ON);
-       waitForIdle(50);
-     */
-
-    FmRadio.reCalibrate();
-    waitForIdle(120);
-    xSemaphoreGive(RadioSemaphore);
-
-    setRfCarrier();
-    waitForIdle(50);
 
     DEBUG_END;
     return successFlg;
@@ -390,11 +410,16 @@ uint16_t cRadio::measureAudioLevel(void)
 {
     DEBUG_START;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    uint16_t mV = FmRadio.getStatus() >> 4;
-    mV = mV * 45; // Audio Peak is 45mV per count.
-    FmRadio.clearAudioPeak();
-    xSemaphoreGive(RadioSemaphore);
+    uint16_t mV = 0;
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        mV = FmRadio.getStatus() >> 4;
+        FmRadio.clearAudioPeak();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+
+        mV = mV * 45; // Audio Peak is 45mV per count.
+    }
 
     DEBUG_END;
     return mV;
@@ -467,11 +492,14 @@ void cRadio::setAudioImpedance(void)
         impedVal = 40;
     }
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    delay(5);
-    FmRadio.setAudioInpImp(impedVal);
-    delay(5);
-    xSemaphoreGive(RadioSemaphore);
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        delay(5);
+        FmRadio.setAudioInpImp(impedVal);
+        delay(5);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
 
     DEBUG_V(String("impedVal: ") + String(impedVal));
     
@@ -484,12 +512,14 @@ void cRadio::setAudioMute(void)
 {
     DEBUG_START;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    delay(5);
-    FmRadio.mute(muteFlg ? ON : OFF);
-    delay(5);
-    xSemaphoreGive(RadioSemaphore);
-
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        delay(5);
+        FmRadio.mute(muteFlg ? ON : OFF);
+        delay(5);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
     DEBUG_END;
 }
 
@@ -522,12 +552,14 @@ void cRadio::setDigitalGain(void)
         gainVal        = 0;
     }
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    delay(5);
-    FmRadio.setTxDigitalGain(gainVal);
-    delay(5);
-    xSemaphoreGive(RadioSemaphore);
-
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        delay(5);
+        FmRadio.setTxDigitalGain(gainVal);
+        delay(5);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
     DEBUG_END;
 }
 
@@ -537,16 +569,16 @@ void cRadio::setFrequency(void)
 {
     DEBUG_START;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    waitForIdle(5);
-    FmRadio.Switch(OFF); // Turn Off Carrier.
-    waitForIdle(5);
-    FmRadio.setFrequency((float(fmFreqX10)) / 10.0f);
-    waitForIdle(25);
-    FmRadio.Switch(rfCarrierFlg ? ON : OFF); // Restore Carrier to user's state.
-    waitForIdle(25);
-    xSemaphoreGive(RadioSemaphore);
-
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        waitForIdle(5);
+        FmRadio.Switch(OFF); // Turn Off Carrier.
+        waitForIdle(5);
+        FmRadio.setFrequency((float(fmFreqX10)) / 10.0f);
+        setRfCarrier();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
     DEBUG_END;
 }
 
@@ -556,12 +588,14 @@ void cRadio::setMonoAudio(void)
 {
     DEBUG_START;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    delay(5);
-    FmRadio.MonoAudio(stereoEnbFlg ? OFF : ON);
-    delay(5);
-    xSemaphoreGive(RadioSemaphore);
-
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        delay(5);
+        FmRadio.MonoAudio(stereoEnbFlg ? OFF : ON);
+        delay(5);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
     DEBUG_END;
 }
 
@@ -591,16 +625,16 @@ void cRadio::setPreEmphasis(void)
         emphVal        = OFF;
     }
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    delay(1);
-    FmRadio.Switch(OFF); // Turn Off Carrier.
-    delay(1);
-    FmRadio.setPreEmphTime50(emphVal);
-    waitForIdle(10);
-    FmRadio.Switch(rfCarrierFlg ? ON : OFF); // Restore Carrier to user's state.
-    waitForIdle(25);
-    xSemaphoreGive(RadioSemaphore);
-
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        delay(5);
+        FmRadio.Switch(OFF); // Turn Off Carrier.
+        delay(5);
+        FmRadio.setPreEmphTime50(emphVal);
+        setRfCarrier();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
     DEBUG_END;
 }
 
@@ -613,13 +647,15 @@ void cRadio::setRfAutoOff(void)
 {
     DEBUG_START;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    FmRadio.Switch(OFF); // Turn Off Carrier.
-    delay(5);
-    FmRadio.radioNoAudioAutoOFF(rfAutoFlg ? ON : OFF );
-    delay(5);
-    FmRadio.Switch(rfCarrierFlg ? ON : OFF ); // Restore Carrier to user's state.
-    xSemaphoreGive(RadioSemaphore);
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        FmRadio.Switch(OFF); // Turn Off Carrier.
+        delay(5);
+        FmRadio.radioNoAudioAutoOFF(rfAutoFlg ? ON : OFF );
+        setRfCarrier();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
 
     DEBUG_END;
 }
@@ -630,11 +666,15 @@ void cRadio::setRfCarrier(void)
 {
     DEBUG_START;
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    waitForIdle(10);
-    FmRadio.Switch(rfCarrierFlg ? ON : OFF ); // Update QN8027 Carrier.
-    waitForIdle(25);
-    xSemaphoreGive(RadioSemaphore);
+    if(RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        DEBUG_V();
+        waitForIdle(10);
+        FmRadio.Switch(rfCarrierFlg ? ON : OFF ); // Update QN8027 Carrier.
+        waitForIdle(25);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
 
     DEBUG_END;
 }
@@ -669,20 +709,21 @@ void cRadio::setRfPower(void)
         pwrVal     = RF_HIGH_POWER;
     }
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    waitForIdle(10);
-    FmRadio.setTxPower(pwrVal);
-    waitForIdle(10);
-
-    if (rfCarrierFlg)
+    if (RadioSemaphore)
     {
-        FmRadio.Switch(OFF); // Turn Off Carrier.
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
         waitForIdle(10);
-        FmRadio.Switch(ON); // Update QN8027 Carrier.
-        waitForIdle(25);
-    }
-    xSemaphoreGive(RadioSemaphore);
+        FmRadio.setTxPower(pwrVal);
+        waitForIdle(10);
 
+        if (rfCarrierFlg)
+        {
+            FmRadio.Switch(OFF); // Turn Off Carrier.
+            waitForIdle(10);
+            setRfCarrier();
+        }
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
     DEBUG_END;
 }
 
@@ -724,11 +765,74 @@ void cRadio::setVgaGain(void)
         gainVal    = 0x03;
     }
 
-    xSemaphoreTake(RadioSemaphore, portMAX_DELAY);
-    delay(5);
-    FmRadio.setTxInputBufferGain(gainVal);
-    delay(5);
-    xSemaphoreGive(RadioSemaphore);
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        delay(5);
+        FmRadio.setTxInputBufferGain(gainVal);
+        delay(5);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
+    DEBUG_END;
+}
+
+// ************************************************************************************************
+// updateUiAudioMode(): Update the Stereo/Mono Audio Mode shown on the UI radioTab.
+void cRadio::updateUiAudioMode(bool stereoEnbFlg)
+{
+    DEBUG_START;
+
+    ESPUI.print(radioAudioMsgID, stereoEnbFlg ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
+    ESPUI.updateControlValue(radioAudioID, stereoEnbFlg ? F("1") : F("0"));
+
+    DEBUG_END;
+}
+
+// ************************************************************************************************
+// updateUiAudioMute(): Update the Audio Mute Switch Position on the UI adjTab.
+void cRadio::updateUiAudioMute(bool value)
+{
+    DEBUG_START;
+
+    ESPUI.setElementStyle(adjMuteID, value ? F("background: red;") : F("background: #bebebe;"));
+    ESPUI.updateControlValue(adjMuteID, value ? F("1") : F("0"));
+    
+    DEBUG_END;
+}
+
+// ************************************************************************************************
+// updateUiRfCarrier(): Updates the GUI's RF Carrier on homeTab and radiotab.
+void cRadio::updateUiRfCarrier(void)
+{
+    DEBUG_START;
+
+    extern uint32_t paVolts;
+
+    ESPUI.updateControlValue(radioRfEnbID, String(rfCarrierFlg ? F("1") : F("0")));
+
+    if (rfCarrierFlg == true) 
+    {
+        if (fmRadioTestCode == FM_TEST_FAIL) 
+        {
+            ESPUI.print(homeOnAirID, RADIO_FAIL_STR);   // Update homeTab panel.
+        }
+        else if (fmRadioTestCode == FM_TEST_VSWR) 
+        {
+            ESPUI.print(homeOnAirID, RADIO_VSWR_STR);   // Update homeTab panel.
+        }
+        else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) 
+        {
+            ESPUI.print(homeOnAirID, RADIO_VOLT_STR);   // Update homeTab panel.
+        }
+        else 
+        {
+            ESPUI.print(homeOnAirID, RADIO_ON_AIR_STR); // Update homeTab panel.
+        }
+    }
+    else 
+    {
+        ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
+    }
 
     DEBUG_END;
 }
@@ -752,6 +856,136 @@ new way: call GPIO and tell it to update the output and the UI.
 #endif // def OldWay
 
     DEBUG_END;
+}
+
+// *********************************************************************************************
+// updateTestTones(): Test Tone mode creates cascading audio tones for Radio Installation Tests.
+//                    On entry, true will Reset Tone Sequence.
+//                    The tone sequence is sent every five seconds.
+//                    Also Sends Special RadioText message with approximate Elapsed Time.
+void cRadio::updateTestTones(bool resetTimerFlg)
+{
+    /// DEBUG_START;
+    
+    char rdsBuff[sizeof(AUDIO_TEST_STR) + 25];
+    static bool rstFlg          = false; // Reset State Machine FLag.
+    static bool goFlg           = false; // Go Flag, send new tone sequence if true.
+    static bool toneFlg         = false; // Tone Generator is On Flag.
+    static uint8_t  hours       = 0;
+    static uint8_t  minutes     = 0;
+    static uint8_t  seconds     = 0;
+    static uint8_t  state       = 0;
+    static uint32_t clockMillis = millis();
+    static uint32_t timerMillis = millis();
+    uint32_t currentMillis      = millis();
+
+    do // once
+    {
+        if (resetTimerFlg)
+        { // Caller requests a full state machine reset on next Test Tone.
+            rstFlg = true;
+            break;
+        }
+
+        if (!testModeFlg) 
+        {
+            goFlg = false;
+            state = 0;
+            digitalWrite(MUX_PIN, TONE_OFF); // Switch Audio Mux chip to Line-In.
+
+            if (toneFlg == true) {           // Kill active tone generator.
+                toneFlg = false;
+                toneOff(TONE_PIN, TEST_TONE_CHNL);
+            }
+            break;
+        }
+
+        digitalWrite(MUX_PIN, TONE_ON); // Switch Audio Mux chip to Test Tones.
+
+        if (rstFlg == true) 
+        {           // State machine reset was requested.
+            rstFlg      = false;
+            goFlg       = true;         // Request tone sequence now.
+            clockMillis = millis();
+            timerMillis = clockMillis;
+            hours       = 0;
+            minutes     = 0;
+            seconds     = 0;
+            state       = 0;
+        }
+
+        // Update the test tone clock. HH:MM:SS will be sent as RadioText.
+        if ((currentMillis - clockMillis) >= 1000) 
+        {
+            clockMillis = millis() - ((currentMillis - clockMillis) - 1000);
+            seconds++;
+
+            if (seconds >= 60) 
+            {
+                seconds = 0;
+                minutes++;
+
+                if (minutes >= 60) 
+                {
+                    minutes = 0;
+                    hours++;
+
+                    if (hours >= 100) 
+                    { // Clock wraps at 99:59:59.
+                        hours = 0;
+                    }
+                }
+            }
+        }
+
+        if (seconds % 5 == 0) 
+        { // Send new tone sequence every five seconds.
+            goFlg = true;
+        }
+
+        if (goFlg && (millis() >= timerMillis + TEST_TONE_TIME)) 
+        {
+            timerMillis = millis();
+            toneFlg     = false;
+            toneOff(TONE_PIN, TEST_TONE_CHNL);
+            delay(5);               // Allow a bit of time for tone channel to shutdown.
+
+            if (state < listSize) 
+            { // Cycle through the tone table.
+                if (state == 0) 
+                {   // Time to send RadioText message.
+                    state++;
+                    sprintf(rdsBuff, "%s  [ %02u:%02u:%02u ]", AUDIO_TEST_STR, hours, minutes, seconds);
+                    String tmpStr = rdsBuff;
+                    Radio.sendStationName(AUDIO_PSN_STR);
+                    Radio.sendRadioText(tmpStr);
+
+                    extern void updateUiRdsText(String);
+                    extern void updateUiRDSTmr(bool);
+                    updateUiRdsText(tmpStr);
+                    updateUiRDSTmr(true);     // Clear Displayed Elapsed Timer.
+
+                    Log.verboseln(String(F("New Test Tone Sequence, RadioText Sent.")).c_str());
+                    break;                // We will send the tones on next entry.
+                }
+
+                if (toneList[state] > 0) 
+                { // Time to send tones from toneList[] table).
+                    toneFlg = true;
+                    toneOn(TONE_PIN, toneList[state], TEST_TONE_CHNL);
+                }
+
+                state++;
+            }
+            else 
+            { // At end of Tone table, done with this sequence.
+                state = 0;
+                goFlg = false;
+            }
+        }
+    } while (false);
+
+    /// DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -798,7 +1032,6 @@ void cRadio::waitForIdle(uint16_t waitMs)
     DEBUG_END;
 }
 
-
 #ifdef OldWay
 // *********************************************************************************************
 // updateRadioSettings(): Update Any Radio Setting that has changed by the Web UI.
@@ -813,12 +1046,6 @@ void cRadio::updateRadioSettings(void)
     {
         newAutoRfFlg = false;
         setRfAutoOff();
-    }
-
-    if (newAudioModeFlg) 
-    {
-        newAudioModeFlg = false;
-        setMonoAudio();
     }
 
     if (newPreEmphFlg) 

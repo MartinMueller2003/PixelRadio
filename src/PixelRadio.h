@@ -331,20 +331,10 @@ void   gainAdjustCallback(Control *sender,
                           int      type);
 void   gpioCallback(Control *sender,
                     int      type);
-void   impAdjustCallback(Control *sender,
-                         int      type);
-void   muteCallback(Control *sender,
-                    int      type);
-void   radioEmphasisCallback(Control *sender,
-                             int      type);
 void   rdsRstCallback(Control *sender,
                       int      type);
 void   rdsTextCallback(Control *sender,
                        int      type);
-void   rfAutoCallback(Control *sender,
-                      int      type);
-void   rfCarrierCallback(Control *sender,
-                         int      type);
 void   rfPowerCallback(Control *sender,
                        int      type);
 void   saveSettingsCallback(Control *sender,
@@ -394,7 +384,6 @@ void         toneOn(uint8_t  pin,
 void         toneOff(uint8_t pin,
                      uint8_t channel);
 void         updateGpioBootPins(void);
-void         updateTestTones(bool resetTimerFlg);
 
 const String returnClientCode(int code);
 

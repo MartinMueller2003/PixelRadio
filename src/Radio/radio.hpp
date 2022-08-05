@@ -1,3 +1,4 @@
+#pragma once
 /*
    File: radio.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
@@ -24,18 +25,20 @@ public:
                 cRadio () {}
     virtual     ~cRadio() {}
 
-    void        AddControls (uint16_t ctrlTab);
+    void        AddAdjControls (uint16_t Tab);
+    void        AddDiagControls (uint16_t Tab);
+    void        AddHomeControls (uint16_t Tab);
+    void        AddRadioControls (uint16_t Tab);
     void        begin ();
+    bool        IsRfCarriorOn() { return rfCarrierFlg; }
+    bool        IsTestModeOn() { return testModeFlg; }
+    void        Poll() { updateTestTones(false); }
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
 
-#ifdef OldWay
-    void        updateRadioSettings(void);
-#endif // def OldWay
-
-private:
-    bool        calibrateAntenna(void);
+// Callbacks need to be public 
     void        CbAdjFmFreq(Control *sender, int type);
+    void        CbAudioMode(Control *sender, int type);
     void        CbDigitalGainAdjust(Control *sender, int type);
     void        CbImpedanceAdjust(Control *sender, int type);
     void        CbMute(Control *sender, int type);
@@ -44,6 +47,13 @@ private:
     void        CbRfPowerCallback(Control *sender, int type);
     void        CbTestMode(Control *sender, int type);
     void        CbVgaGainAdjust(Control *sender, int type);
+
+#ifdef OldWay
+    void        updateRadioSettings(void);
+#endif // def OldWay
+
+private:
+    bool        calibrateAntenna(void);
     bool        checkRadioIsPresent(void);
     int8_t      getAudioGain(void);
     uint8_t     initRadioChip(void);
@@ -59,7 +69,15 @@ private:
     void        setRfPower(void);
     void        setVgaGain(void);
     void        updateOnAirSign(void);
+    void        updateUiAudioLevel(void);
+    void        updateUiAudioMode(bool stereoEnbFlg);
+    void        updateUiAudioMute(bool value);
+    void        updateUiRfCarrier(void);
+    void        updateTestTones(bool resetTimerFlg);
     void        waitForIdle(uint16_t waitMs);
+
+// UI declarations
+    void        updateUiFrequency(int fmFreqX10);
 
 
 
@@ -70,6 +88,11 @@ private:
 
     QN8027Radio FmRadio;
     SemaphoreHandle_t RadioSemaphore = NULL;
+
+    uint16_t    adjTab          = Control::noParent;
+    uint16_t    diagTab         = Control::noParent;
+    uint16_t    homeTab         = Control::noParent;
+    uint16_t    radioTab        = Control::noParent;
 
     uint16_t    radioAudioID    = Control::noParent;
     uint16_t    radioAudioMsgID = Control::noParent;
@@ -82,11 +105,13 @@ private:
     uint16_t    radioImpID      = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
     uint16_t    radioRfEnbID    = Control::noParent;
-    uint16_t    radioSaveID     = Control::noParent;
-    uint16_t    radioSaveMsgID  = Control::noParent;
     uint16_t    adjMuteID       = Control::noParent;
     uint16_t    homeOnAirID     = Control::noParent;
     uint16_t    adjTestModeID   = Control::noParent;
+    uint16_t    adjFmDispID     = Control::noParent;
+    uint16_t    homeFreqID      = Control::noParent;
+    uint16_t    radioSoundID    = Control::noParent;
+    uint16_t    adjFreqID       = Control::noParent;
 
     bool        testModeFlg;
     bool        muteFlg         = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
@@ -108,36 +133,36 @@ private:
 #define  FM_TEST_FAIL 2          // QN8027 Chip Bad or missing.
     uint8_t     fmRadioTestCode = FM_TEST_OK;        // FM Radio Module Test Result Code.
 
-#define PRE_EMPH_USA_STR     F("North America (75uS)") // North America / Japan.
-#define PRE_EMPH_EUR_STR     F("Europe (50uS)")        // Europe, Australia, China.
+#define PRE_EMPH_USA_STR     "North America (75uS)" // North America / Japan.
+#define PRE_EMPH_EUR_STR     "Europe (50uS)"        // Europe, Australia, China.
 #define PRE_EMPH_DEF_STR     PRE_EMPH_USA_STR;
     String preEmphasisStr = PRE_EMPH_DEF_STR;                  // Control.
 
-#define DIG_GAIN0_STR     F("0 dB (default)")
-#define DIG_GAIN1_STR     F("1 dB")
-#define DIG_GAIN2_STR     F("2 dB")
+#define DIG_GAIN0_STR     "0 dB (default)"
+#define DIG_GAIN1_STR     "1 dB"
+#define DIG_GAIN2_STR     "2 dB"
 #define DIG_GAIN_DEF_STR  DIG_GAIN0_STR;
     String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
     
-#define INP_IMP05K_STR   F("5K Ohms")
-#define INP_IMP10K_STR   F("10K Ohms")
-#define INP_IMP20K_STR   F("20K Ohms (default)")
-#define INP_IMP40K_STR   F("40K Ohms")
+#define INP_IMP05K_STR   "5K Ohms"
+#define INP_IMP10K_STR   "10K Ohms"
+#define INP_IMP20K_STR   "20K Ohms (default)"
+#define INP_IMP40K_STR   "40K Ohms"
 #define INP_IMP_DEF_STR  INP_IMP20K_STR;
     String inpImpedStr = INP_IMP_DEF_STR;                   // Control.
     
-#define VGA_GAIN0_STR     F("3dB")
-#define VGA_GAIN1_STR     F("6dB")
-#define VGA_GAIN2_STR     F("9dB")
-#define VGA_GAIN3_STR     F("12dB (default)")
-#define VGA_GAIN4_STR     F("15dB")
-#define VGA_GAIN5_STR     F("18dB")
+#define VGA_GAIN0_STR     "3dB"
+#define VGA_GAIN1_STR     "6dB"
+#define VGA_GAIN2_STR     "9dB"
+#define VGA_GAIN3_STR     "12dB (default)"
+#define VGA_GAIN4_STR     "15dB"
+#define VGA_GAIN5_STR     "18dB"
 #define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
     String vgaGainStr = VGA_GAIN_DEF_STR;                  // Control.
     
-#define RF_PWR_LOW_STR   F("Low")
-#define RF_PWR_MED_STR   F("Med")
-#define RF_PWR_HIGH_STR  F("High (default)")
+#define RF_PWR_LOW_STR   "Low"
+#define RF_PWR_MED_STR   "Med"
+#define RF_PWR_HIGH_STR  "High (default)"
 #define RF_PWR_DEF_STR   RF_PWR_HIGH_STR;
     String rfPowerStr = RF_PWR_DEF_STR;                    // Control.
 

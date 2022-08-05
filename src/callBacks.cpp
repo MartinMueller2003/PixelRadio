@@ -25,47 +25,6 @@
 #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-#ifdef OldWay
-// ************************************************************************************************
-// audioCallback(): Update the Stereo / Mono Audio modes.
-void audioCallback(Control *sender, int type)
-{
-    char logBuff[60];
-
-    // sprintf(logBuff, "audioCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == radioAudioID) {
-        switch (type) {
-          case S_ACTIVE:
-              stereoEnbFlg = true;
-              tempStr      = "Stereo";
-
-              // ESPUI.print(radioAudioMsgID, RADIO_STEREO_STR);
-              updateUiAudioMode(true);
-              break;
-          case S_INACTIVE:
-              stereoEnbFlg = false;
-              tempStr      = "Mono";
-
-              // ESPUI.print(radioAudioMsgID, RADIO_MONO_STR);
-              updateUiAudioMode(false);
-              break;
-          default:
-              tempStr = BAD_VALUE_STR;
-              break;
-        }
-        newAudioModeFlg = true; // Tell Main Loop we Have new Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "Radio Audio Mode Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "audioCallback: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-}
-#endif // def OldWay
 
 // ************************************************************************************************
 void backupCallback(Control *sender, int type)
@@ -458,42 +417,6 @@ void rdsTextCallback(Control *sender, int type)
 #endif // def OldWay
 
 // ************************************************************************************************
-// rfAutoOff(): Control Sound Activated RF Carrier Shutdown Feature. Sets Boolean.
-
-/*
-   void rfAutoCallback(Control *sender, int type)
-   {
-    char logBuff[70];
-
-    // sprintf(logBuff, "rdAutoCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == radioAutoID) {
-        if (sender->value == RF_AUTO_DIS_STR) {
-            rfAutoFlg = false;
-            tempStr   = RF_AUTO_DIS_STR;
-        }
-        else if (sender->value == RF_AUTO_ENB_STR) {
-            rfAutoFlg = true;
-            tempStr   = RF_AUTO_ENB_STR;
-        }
-        else {
-            tempStr = BAD_VALUE_STR;
-            sprintf(logBuff, "rfAutoOff: %s.", BAD_VALUE_STR);
-            Log.errorln(logBuff);
-        }
-        newAutoRfFlg = true; // Tell Main Loop we Have New Setting to Update.
-        displaySaveWarning();
-        sprintf(logBuff, "RF Carrier Auto Shutdown Set to: %s.", tempStr.c_str());
-        Log.infoln(logBuff);
-    }
-    else {
-        sprintf(logBuff, "rfAutoOff: %s.", BAD_SENDER_STR);
-        Log.errorln(logBuff);
-    }
-   }
- */
-// ************************************************************************************************
 void saveSettingsCallback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -582,7 +505,7 @@ void setPiCodeCallback(Control *sender, int type)
     if (sender->id == rdsPiID) {
         piStr = sender->value;
         piStr.trim();
-
+#ifdef OldWay
         if (piStr.length() == 0) {                 // Missing Data Entry.
             tempPiCode = RDS_PI_CODE_DEF;          // Use default PI Code.
         }
@@ -598,6 +521,7 @@ void setPiCodeCallback(Control *sender, int type)
         }
 
         ControllerMgr.SetPiCode(LocalControllerId, tempPiCode);
+#endif // def OldWay
         sprintf(piBuff, "0x%04X", tempPiCode);
         ESPUI.print(rdsPiID, piBuff);
         displaySaveWarning();
@@ -632,8 +556,11 @@ void setPtyCodeCallback(Control *sender, int type)
 
         if ((tempPtyCode < RDS_PTY_CODE_MIN) ||
             (tempPtyCode > RDS_PTY_CODE_MAX) ||
-            (ptyStr.length() == 0)) {
+            (ptyStr.length() == 0)) 
+            {
+#ifdef OldWay
             tempPtyCode = ControllerMgr.GetPtyCode(LocalControllerId); // Error, Use old value.
+#endif // def OldWay
             sprintf(ptyBuff, "%0u", tempPtyCode);
             ESPUI.print(rdsPtyID, ptyBuff);
             sprintf(logBuff, "setPtyCodeCallback: %s.", BAD_VALUE_STR);
@@ -641,7 +568,9 @@ void setPtyCodeCallback(Control *sender, int type)
             return;
         }
 
+#ifdef OldWay
         ControllerMgr.SetPtyCode(LocalControllerId, tempPtyCode);
+#endif // def OldWay
         displaySaveWarning();
 
         sprintf(logBuff, "RDS PTY Code Set to: %u", tempPtyCode);
