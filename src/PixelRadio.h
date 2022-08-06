@@ -283,32 +283,28 @@ bool    stopCmd(String  payloadStr,
 
 // ESPUI (WebGUI) Prototypes
 void   buildGUI(void);
-void   displayActiveController(uint8_t controller);
 #ifdef OldWay
+void   displayActiveController(uint8_t controller);
 void   displayRdsText(void);
 #endif // def OldWay
 void   displaySaveWarning(void);
 void   initCustomCss(void);
 void   startGUI(void);
+void   updateUiFreeMemory(void);
+bool   updateUiGpioMsg(gpio_num_t pin, String & ControllerName, bool PinState);
+void   updateUiIpaddress(String ipStr);
+#ifdef OldWay
 void   updateUiAudioLevel(void);
 void   updateUiAudioMode(bool SteroMode);
 void   updateUiAudioMute(bool value);
-void   updateUiFreeMemory(void);
 void   updateUiFrequency(int Freq10x);
-bool   updateUiGpioMsg(gpio_num_t pin, String & ControllerName, bool PinState);
-void   updateUiIpaddress(String ipStr);
-void   updateUiLocalPtyCode(void);
-#ifdef OldWay
-void   updateUiRdsText(String textStr);
 void   updateUiRDSTmr(bool ClearDisplay);
-#endif // def OldWay
 void   updateUiRfCarrier(void);
+#endif // def OldWay
 void   updateUiDiagTimer(void);
 void   updateUiVolts(void);
 
 // ESPUI Callbacks
-void   adjFmFreqCallback(Control *sender,
-                         int      type);
 void   apBootCallback(Control *sender,
                       int      type);
 void   apFallBkCallback(Control *sender,
@@ -331,21 +327,10 @@ void   gainAdjustCallback(Control *sender,
                           int      type);
 void   gpioCallback(Control *sender,
                     int      type);
-void   rdsRstCallback(Control *sender,
-                      int      type);
-void   rdsTextCallback(Control *sender,
-                       int      type);
-void   rfPowerCallback(Control *sender,
-                       int      type);
 void   saveSettingsCallback(Control *sender,
                             int      type);
 void   setLoginCallback(Control *sender,
                         int      type);
-void testModeCallback(Control *sender,
-                      int      type);
-
-void volAdjustCallback(Control *sender,
-                       int      type);
 
 // File System (LITTLEFS) prototypes
 void         instalLogoImageFile(void);

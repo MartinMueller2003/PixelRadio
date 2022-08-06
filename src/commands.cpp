@@ -67,7 +67,7 @@ bool CommandProcessor::audioMode(String & payloadStr, String & ControllerName)
     DEBUG_START;
     bool response = true;
     bool stereoEnbFlg = true;
-
+#ifdef OldWay
     do // once
     {
         if (payloadStr.equals(CMD_MODE_STER_STR))
@@ -94,6 +94,7 @@ bool CommandProcessor::audioMode(String & payloadStr, String & ControllerName)
             ((stereoEnbFlg) ? F("'STEREO'") : F("'MONO'") )).c_str());
 
     } while (false);
+#endif // def OldWay
 
     DEBUG_END;
 
@@ -105,6 +106,7 @@ bool CommandProcessor::frequency(String & payloadStr, String & ControllerName)
 {
     DEBUG_START;
     bool response = true;
+#ifdef OldWay
 
     do // once
     {
@@ -128,6 +130,7 @@ bool CommandProcessor::frequency(String & payloadStr, String & ControllerName)
         Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Transmit Frequency Set to ") + String(((float(freq)) / 10.0f), 1) + F("Mhz")).c_str());
 
     } while (false);
+#endif // def OldWay
 
     DEBUG_END;
     return response;
@@ -267,6 +270,7 @@ bool CommandProcessor::mute(String & payloadStr, String & ControllerName)
     DEBUG_START;
 
     bool response = true;
+#ifdef OldWay
 
     do // once
     {
@@ -295,6 +299,7 @@ bool CommandProcessor::mute(String & payloadStr, String & ControllerName)
         response = false;
 
     } while (false);
+#endif // def OldWay
 
     DEBUG_END;
     return response;
@@ -528,6 +533,7 @@ bool CommandProcessor::rfCarrier(String & payloadStr, String & ControllerName)
     DEBUG_START;
 
     bool response = true;
+#ifdef OldWay
 
     do // once
     {
@@ -557,6 +563,7 @@ bool CommandProcessor::rfCarrier(String & payloadStr, String & ControllerName)
         response = false;
 
     } while (false);
+#endif // def OldWay
 
     DEBUG_END;
     return response;

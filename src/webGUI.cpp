@@ -153,13 +153,9 @@ uint16_t homeRdsTextID = Control::noParent;
 uint16_t homeRdsTmrID  = Control::noParent;
 uint16_t homeTextMsgID = Control::noParent;
 
-uint16_t rdsPiID       = Control::noParent;
-uint16_t rdsPtyID      = Control::noParent;
-uint16_t rdsProgNameID = Control::noParent;
 uint16_t rdsSaveID     = Control::noParent;
 uint16_t rdsSaveMsgID  = Control::noParent;
 uint16_t rdsSnameID    = Control::noParent;
-uint16_t rdsRstID      = Control::noParent;
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
@@ -186,14 +182,7 @@ void initCustomCss(void)
 
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
-    ESPUI.setPanelStyle(rdsProgNameID,  "font-size: 1.35em;");
-    ESPUI.setPanelStyle(rdsPiID,        "font-size: 1.35em;");
-    ESPUI.setPanelStyle(rdsPtyID,       "font-size: 1.15em;");
-
-    ESPUI.setPanelStyle(rdsProgNameID,  "width: 45%; font-size: 1.5em;"); // Bug? See
     //  https://github.com/s00500/ESPUI/pull/147#issuecomment-1009821269.
-    ESPUI.setPanelStyle(rdsPiID,        "width: 30%; font-size: 1.25em;"); // Only valid if wide panel is used.
-    ESPUI.setPanelStyle(rdsPiID,        "max-width: 40%;"); // Does not work. Too bad.
 
     // END OF PANEL INLINE STYLES.
 
@@ -228,9 +217,6 @@ void initCustomCss(void)
 
     ESPUI.setElementStyle(radioSaveMsgID,  CSS_LABEL_STYLE_RED);
     ESPUI.setElementStyle(rdsSaveMsgID,     CSS_LABEL_STYLE_BLACK);
-
-    ESPUI.setElementStyle(rdsPiID,          "font-size: 1.25em;");
-    ESPUI.setElementStyle(rdsProgNameID,    "color: black;");
 
     // DEBUG_END;
     // END OF STYLES
@@ -662,39 +648,11 @@ void buildGUI(void)
     // *****************
     // Local RDS Tab
 
-    ESPUI.addControl(ControlType::Separator, RDS_GENERAL_SET_STR, "", ControlColor::None, rdsTab);
+    ESPUI.addControl(ControlType::Separator, RDS_GENERAL_SET_STR, emptyString, ControlColor::None, rdsTab);
 
-    tempStr = ""; // String(ControllerMgr.GetRdsMsgTime(LocalControllerId) / 1000);
+    Radio.AddRdsControls(rdsTab);
 
-#ifdef OldWay
-    rdsProgNameID =
-        ESPUI.addControl(ControlType::Text, RDS_PROG_SERV_NM_STR, ControllerMgr.GetRdsProgramServiceName(LocalControllerId), ControlColor::Alizarin, rdsTab,
-                         &rdsTextCallback);
-    // DEBUG_V();
-
-    sprintf(charBuff, "0x%04X", ControllerMgr.GetPiCode(LocalControllerId));
-    rdsPiID =
-        ESPUI.addControl(ControlType::Text, RDS_PI_CODE_STR, charBuff, ControlColor::Alizarin, rdsTab,
-                         &setPiCodeCallback);
-
-    sprintf(charBuff, "%u", ControllerMgr.GetPtyCode(LocalControllerId));
-    rdsPtyID =
-        ESPUI.addControl(ControlType::Number, RDS_PTY_CODE_STR, emptyString, ControlColor::Alizarin, rdsTab,
-                         &setPtyCodeCallback);
-    ESPUI.addControl(ControlType::Min,       "MIN",             String(RDS_PTY_CODE_MIN), ControlColor::None, rdsPtyID);
-    ESPUI.addControl(ControlType::Max,       "MAX",             String(RDS_PTY_CODE_MAX), ControlColor::None, rdsPtyID);
-
-#endif // def OldWay
-    ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, "",                       ControlColor::None, rdsTab);
-
-    rdsRstID = ESPUI.addControl(ControlType::Button,
-                                RDS_RESET_STR,
-                                RDS_RESTORE_STR,
-                                ControlColor::Alizarin,
-                                rdsTab,
-                                &rdsRstCallback);
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, rdsTab);
+    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, rdsTab);
     rdsSaveID = ESPUI.addControl(ControlType::Button,
                                  SAVE_SETTINGS_STR,
                                  SAVE_SETTINGS_STR,
@@ -702,7 +660,7 @@ void buildGUI(void)
                                  rdsTab,
                                  &saveSettingsCallback);
     rdsSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Alizarin, rdsSaveID);
+        ESPUI.addControl(ControlType::Label, emptyString.c_str(), emptyString, ControlColor::Alizarin, rdsSaveID);
 
     //
     // *************
@@ -712,7 +670,7 @@ void buildGUI(void)
     WiFiDriver.addControls(wifiTab);
     // DEBUG_V();
 
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, wifiTab);
+    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, wifiTab);
     wifiSaveID = ESPUI.addControl(ControlType::Button,
                                   SAVE_SETTINGS_STR,
                                   SAVE_SETTINGS_STR,
@@ -720,7 +678,7 @@ void buildGUI(void)
                                   wifiTab,
                                   &saveSettingsCallback);
     wifiSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Carrot, wifiSaveID);
+        ESPUI.addControl(ControlType::Label, emptyString.c_str(), emptyString, ControlColor::Carrot, wifiSaveID);
 
     // DEBUG_V();
 
@@ -730,7 +688,7 @@ void buildGUI(void)
     ControllerMgr.AddControls(ctrlTab);
     // ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, "", ControlColor::None, ctrlTab);
 
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, ctrlTab);
+    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, ctrlTab);
     ctrlSaveID = ESPUI.addControl(ControlType::Button,
                                   SAVE_SETTINGS_STR,
                                   SAVE_SETTINGS_STR,
@@ -738,7 +696,7 @@ void buildGUI(void)
                                   ctrlTab,
                                   &saveSettingsCallback);
     ctrlSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Turquoise, ctrlSaveID);
+        ESPUI.addControl(ControlType::Label, emptyString.c_str(), emptyString, ControlColor::Turquoise, ctrlSaveID);
     // DEBUG_V();
 
     //

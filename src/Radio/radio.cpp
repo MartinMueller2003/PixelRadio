@@ -382,7 +382,7 @@ uint8_t cRadio::initRadioChip(void)
     Log.infoln(String(F("-> Radio Status: %02X")).c_str(), (FmRadio.getStatus() & 0x07));
 
     FmRadio.setPiCode(PiCode);
-    FmRadio.setPtyCode(PtyCode);
+    setPtyCode();
 
     if (successFlg) 
     {
@@ -572,8 +572,7 @@ void cRadio::setFrequency(void)
     if (RadioSemaphore)
     {
         xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        waitForIdle(5);
-        FmRadio.Switch(OFF); // Turn Off Carrier.
+        setRfCarrier(OFF);
         waitForIdle(5);
         FmRadio.setFrequency((float(fmFreqX10)) / 10.0f);
         setRfCarrier();
@@ -600,42 +599,87 @@ void cRadio::setMonoAudio(void)
 }
 
 // *********************************************************************************************
+void cRadio::setPiCode()
+{
+    DEBUG_START;
+
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        setRfCarrier(OFF);
+        FmRadio.setPiCode(PiCode);
+        setRfCarrier();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
+
+    DEBUG_END;
+}
+
+// *********************************************************************************************
 // ssetPreEmphasis(): Set the QN8027 chip's pre-Emphasis.
 // ON = 50uS (Eur/UK/Australia), OFF = 75uS (North America/Japan).
 void cRadio::setPreEmphasis(void)
 {
-    DEBUG_START;
-
-    uint8_t emphVal;
-
-    // Log.verboseln(String(F( "-> Pre-Emphasis Set to: %s.")).c_str(), preEmphasisStr.c_str());
+    // DEBUG_START;
 
     if (preEmphasisStr.equals(PRE_EMPH_EUR_STR))
     {
-        emphVal = ON;
+        emphVal = PRE_EMPH_EUR_VAL;
     }
     else if (preEmphasisStr.equals(PRE_EMPH_USA_STR))
     {
-        emphVal = OFF;
+        emphVal = PRE_EMPH_USA_VAL;
     }
     else 
     {
         Log.errorln("setPreEmphasis: Invalid Value, Using Default");
-        preEmphasisStr = PRE_EMPH_USA_STR;
-        emphVal        = OFF;
+        preEmphasisStr = PRE_EMPH_DEF_STR;
+        emphVal        = PRE_EMPH_DEF_VAL;
     }
 
     if (RadioSemaphore)
     {
         xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        delay(5);
-        FmRadio.Switch(OFF); // Turn Off Carrier.
-        delay(5);
+        setRfCarrier(OFF);
         FmRadio.setPreEmphTime50(emphVal);
         setRfCarrier();
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cRadio::setProgramServiceName()
+{
+    DEBUG_START;
+
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        setRfCarrier(OFF);
+        FmRadio.sendStationName(ProgramServiceName);
+        setRfCarrier();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
+
     DEBUG_END;
+}
+
+// *********************************************************************************************
+void cRadio::setPtyCode()
+{
+    // DEBUG_START;
+
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        setRfCarrier(OFF);
+        FmRadio.setPtyCode(PtyCode);
+        setRfCarrier();
+        xSemaphoreGiveRecursive(RadioSemaphore);
+    }
+
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -650,8 +694,7 @@ void cRadio::setRfAutoOff(void)
     if (RadioSemaphore)
     {
         xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        FmRadio.Switch(OFF); // Turn Off Carrier.
-        delay(5);
+        setRfCarrier(OFF);
         FmRadio.radioNoAudioAutoOFF(rfAutoFlg ? ON : OFF );
         setRfCarrier();
         xSemaphoreGiveRecursive(RadioSemaphore);
@@ -664,19 +707,30 @@ void cRadio::setRfAutoOff(void)
 // setRfCarrier(): Set the QN8027 chip's RF Carrier Output (On/Off).
 void cRadio::setRfCarrier(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    if(RadioSemaphore)
+    setRfCarrier(rfCarrierFlg);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+// setRfCarrier(): Set the QN8027 chip's RF Carrier Output (On/Off).
+void cRadio::setRfCarrier(bool value)
+{
+    // DEBUG_START;
+    // DEBUG_V(String("value: ") + String(value));
+
+    if (RadioSemaphore)
     {
         xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        DEBUG_V();
         waitForIdle(10);
-        FmRadio.Switch(rfCarrierFlg ? ON : OFF ); // Update QN8027 Carrier.
+        FmRadio.Switch(value ? ON : OFF ); // Update QN8027 Carrier.
         waitForIdle(25);
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -718,8 +772,7 @@ void cRadio::setRfPower(void)
 
         if (rfCarrierFlg)
         {
-            FmRadio.Switch(OFF); // Turn Off Carrier.
-            waitForIdle(10);
+            setRfCarrier(OFF);
             setRfCarrier();
         }
         xSemaphoreGiveRecursive(RadioSemaphore);
@@ -992,7 +1045,7 @@ void cRadio::updateTestTones(bool resetTimerFlg)
 // waitForIdle(): Wait for QN8027 to enter Idle State. This means register command has executed.
 void cRadio::waitForIdle(uint16_t waitMs) 
 {
-    DEBUG_START;
+    // DEBUG_START;
 #ifdef OldWay
     uint8_t stateCode1;
     uint8_t stateCode2;
@@ -1029,7 +1082,7 @@ void cRadio::waitForIdle(uint16_t waitMs)
 
     DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
 #endif // def OldWay
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 #ifdef OldWay
@@ -1046,10 +1099,6 @@ void cRadio::updateRadioSettings(void)
     {
         newAutoRfFlg = false;
         setRfAutoOff();
-    }
-
-    if (newPreEmphFlg) 
-    {
     }
 
     DEBUG_END;

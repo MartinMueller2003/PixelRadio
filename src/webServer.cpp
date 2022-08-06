@@ -404,6 +404,7 @@ void processWebClient(void)
                             client.println(HTML_CLOSE_STR);
                         }
 
+#ifdef OldWay
                         // ************* PTY CODE COMMAND ****************
                         else if (requestLcStr.indexOf(makeHttpCmdStr(CMD_PTYCODE_STR)) >= 0) {
                             Log.infoln("-> HTTP CMD: PTY CODE");
@@ -453,6 +454,7 @@ void processWebClient(void)
                             }
                             client.println(HTML_CLOSE_STR);
                         }
+#endif // def OldWay
 
                         // ************ RT COMMAND ***************
                         // To clear RadioText display send %20 as payload.

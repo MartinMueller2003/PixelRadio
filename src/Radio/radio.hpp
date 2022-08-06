@@ -29,6 +29,8 @@ public:
     void        AddDiagControls (uint16_t Tab);
     void        AddHomeControls (uint16_t Tab);
     void        AddRadioControls (uint16_t Tab);
+    void        AddRdsControls(uint16_t Tab);
+
     void        begin ();
     bool        IsRfCarriorOn() { return rfCarrierFlg; }
     bool        IsTestModeOn() { return testModeFlg; }
@@ -42,9 +44,13 @@ public:
     void        CbDigitalGainAdjust(Control *sender, int type);
     void        CbImpedanceAdjust(Control *sender, int type);
     void        CbMute(Control *sender, int type);
+    void        CbProgramServiceName(Control *sender, int type);
     void        CbRadioEmphasis(Control *sender, int type);
     void        CbRfCarrier(Control *sender, int type);
     void        CbRfPowerCallback(Control *sender, int type);
+    void        CbRdsRst(Control *sender, int type);
+    void        CbSetPiCode(Control *sender, int type);
+    void        CbSetPtyCode(Control *sender, int type);
     void        CbTestMode(Control *sender, int type);
     void        CbVgaGainAdjust(Control *sender, int type);
 
@@ -63,12 +69,19 @@ private:
     void        setDigitalGain(void);
     void        setFrequency(void);
     void        setMonoAudio(void);
+    void        setPiCode();
     void        setPreEmphasis(void);
+    void        setProgramServiceName();
+    void        setPtyCode();
+    void        setPtyCode(String & ptyStr);
+    void        setPtyCodeOptionValues ();
     void        setRfAutoOff(void);
     void        setRfCarrier(void);
+    void        setRfCarrier(bool value);
     void        setRfPower(void);
     void        setVgaGain(void);
     void        updateOnAirSign(void);
+    void        updateUiPtyCode();
     void        updateUiAudioLevel(void);
     void        updateUiAudioMode(bool stereoEnbFlg);
     void        updateUiAudioMute(bool value);
@@ -93,6 +106,7 @@ private:
     uint16_t    diagTab         = Control::noParent;
     uint16_t    homeTab         = Control::noParent;
     uint16_t    radioTab        = Control::noParent;
+    uint16_t    rdsTab          = Control::noParent;
 
     uint16_t    radioAudioID    = Control::noParent;
     uint16_t    radioAudioMsgID = Control::noParent;
@@ -112,6 +126,10 @@ private:
     uint16_t    homeFreqID      = Control::noParent;
     uint16_t    radioSoundID    = Control::noParent;
     uint16_t    adjFreqID       = Control::noParent;
+    uint16_t    rdsPiID         = Control::noParent;
+    uint16_t    rdsPtyID        = Control::noParent;
+    uint16_t    rdsProgNameID   = Control::noParent;
+    uint16_t    rdsRstID        = Control::noParent;
 
     bool        testModeFlg;
     bool        muteFlg         = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
@@ -121,11 +139,11 @@ private:
 
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
     uint32_t    rdsMsgTime = 0;
-    uint16_t    PiCode = 0;
-    uint16_t    PtyCode = 0;
     uint16_t    fmFreqX10 = FM_FREQ_DEF_X10;                        // Control. FM MHz Frequency X 10 (881 - 1079).
     bool        successFlg  = true;
-    String      ProgramServiceName;
+    uint16_t    PiCode = 0x6400;
+    uint16_t    PtyCode = 0;
+    String      ProgramServiceName = F("PixeyFM");
 
 // FM Radio: QN8027 Test Codes
 #define  FM_TEST_OK   0          // QN8027 Is Ok.
@@ -133,10 +151,14 @@ private:
 #define  FM_TEST_FAIL 2          // QN8027 Chip Bad or missing.
     uint8_t     fmRadioTestCode = FM_TEST_OK;        // FM Radio Module Test Result Code.
 
-#define PRE_EMPH_USA_STR     "North America (75uS)" // North America / Japan.
-#define PRE_EMPH_EUR_STR     "Europe (50uS)"        // Europe, Australia, China.
-#define PRE_EMPH_DEF_STR     PRE_EMPH_USA_STR;
-    String preEmphasisStr = PRE_EMPH_DEF_STR;                  // Control.
+#define PRE_EMPH_USA_STR    "North America (75uS)" // North America / Japan.
+#define PRE_EMPH_EUR_STR    "Europe (50uS)"        // Europe, Australia, China.
+#define PRE_EMPH_DEF_STR    PRE_EMPH_USA_STR;
+#define PRE_EMPH_USA_VAL    OFF
+#define PRE_EMPH_EUR_VAL    ON
+#define PRE_EMPH_DEF_VAL    PRE_EMPH_USA_VAL
+    String  preEmphasisStr  = PRE_EMPH_DEF_STR; // Control.
+    uint8_t emphVal         = PRE_EMPH_DEF_VAL;
 
 #define DIG_GAIN0_STR     "0 dB (default)"
 #define DIG_GAIN1_STR     "1 dB"

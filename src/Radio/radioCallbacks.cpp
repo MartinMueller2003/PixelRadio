@@ -60,7 +60,7 @@ void cRadio::CbAdjFmFreq(Control *sender, int type)
         }
         else
         {
-            Log.errorln(String(F("adjFmFreqCallback: %s.")).c_str(), BAD_VALUE_STR);
+            Log.errorln(String(F("CbAdjFmFreq: %s.")).c_str(), BAD_VALUE_STR);
             break;
         }
     
@@ -130,6 +130,9 @@ void cRadio::CbDigitalGainAdjust(Control *sender, int type)
     }
 
     setDigitalGain(); // Update setting on QN8027 FM Radio Chip.
+    String tempStr  = String(getAudioGain()) + F(" dB");
+    ESPUI.print(radioGainID, tempStr);
+
     displaySaveWarning();
     Log.infoln(String("Digital Gain Set to: %s.").c_str(), digitalGainStr.c_str());
 
@@ -198,13 +201,37 @@ void cRadio::CbMute(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// radioEmphasisCallback(): Set Radio pre-emphasis to North America or European. Sets String.
-void cRadio::CbRadioEmphasis(Control *sender, int type)
+void cRadio::CbProgramServiceName(Control *sender, int type)
 {
     DEBUG_START;
 
     DEBUG_V(String("value: ") + String(sender->value));
     DEBUG_V(String(" type: ") + String(type));
+
+    if(sender->value.length() < 4)
+    {
+        Log.infoln(String(F("Program Service Name: '%s' is too short.")).c_str(), sender->value.c_str());
+        sender->value = ProgramServiceName;
+        ESPUI.updateControl(sender);
+    }
+
+    ProgramServiceName = sender->value;
+
+    setProgramServiceName(); // Update QN8027 Radio Chip's setting.
+    displaySaveWarning();
+    Log.infoln(String(F("Program Service Name: '%s'.")).c_str(), ProgramServiceName.c_str());
+
+    DEBUG_END;
+}
+
+// ************************************************************************************************
+// radioEmphasisCallback(): Set Radio pre-emphasis to North America or European. Sets String.
+void cRadio::CbRadioEmphasis(Control *sender, int type)
+{
+    // DEBUG_START;
+
+    // DEBUG_V(String("value: ") + String(sender->value));
+    // DEBUG_V(String(" type: ") + String(type));
 
     preEmphasisStr = sender->value;
     if( !preEmphasisStr.equals(PRE_EMPH_USA_STR) &&
@@ -215,8 +242,35 @@ void cRadio::CbRadioEmphasis(Control *sender, int type)
     }
 
     setPreEmphasis(); // Update QN8027 Radio Chip's setting.
+    setPtyCodeOptionValues();
     displaySaveWarning();
     Log.infoln(String(F("Pre-Emphasis Set to: %s.")).c_str(), preEmphasisStr.c_str());
+
+    // DEBUG_END;
+}
+
+// ************************************************************************************************
+void cRadio::CbRdsRst(Control *sender, int type)
+{
+    DEBUG_START;
+
+    DEBUG_V(String("value: ") + String(sender->value));
+    DEBUG_V(String(" type: ") + String(type));
+  
+    if(B_DOWN == type)
+    {
+        PiCode = 0x6400;
+        PtyCode = 0;
+        ProgramServiceName = F("PixeyFM");
+
+        setProgramServiceName();
+        setPiCode();
+        setPtyCode();
+        updateUiPtyCode();
+
+        displaySaveWarning();
+        Log.infoln(String(F("Reset RDS Settings to defaults.")).c_str());
+    }
 
     DEBUG_END;
 }
@@ -301,6 +355,22 @@ void cRadio::CbRfPowerCallback(Control *sender, int type)
 }
 
 // ************************************************************************************************
+void cRadio::CbSetPtyCode(Control *sender, int type)
+{
+    // DEBUG_START;
+
+    // DEBUG_V(String("value: ") + String(sender->value));
+    // DEBUG_V(String(" type: ") + String(type));
+
+    setPtyCode(sender->value);
+    displaySaveWarning();
+
+    Log.infoln(String(F("RDS PTY Code Set to: '%s'")).c_str(), sender->value.c_str());
+
+    // DEBUG_END;
+}
+
+// ************************************************************************************************
 // testModeCallback(): Audio Test Tone Mode Control (true = Audio Test Mode On).
 void cRadio::CbTestMode(Control *sender, int type)
 {
@@ -318,6 +388,44 @@ void cRadio::CbTestMode(Control *sender, int type)
     Log.infoln(String(F("Test Mode Set to: %s.")).c_str(), String(testModeFlg ? F("On") : F("Off")).c_str());
 
     DEBUG_END;
+}
+
+// ************************************************************************************************
+void cRadio::CbSetPiCode(Control *sender, int type)
+{
+    DEBUG_START;
+    
+    DEBUG_V(String("value: ") + String(sender->value));
+    DEBUG_V(String(" type: ") + String(type));
+
+    uint16_t tempPiCode = PiCode;
+    String piStr;
+
+    piStr.reserve(20);
+
+    piStr = sender->value;
+    piStr.trim();
+    if (piStr.isEmpty()) 
+    {
+        tempPiCode = RDS_PI_CODE_DEF; // Use default PI Code.
+    }
+    else 
+    {
+        tempPiCode = strtol(piStr.c_str(), NULL, HEX);
+    }
+
+    if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX))
+    { // Value Out of Range.
+        tempPiCode = PiCode;
+    }
+
+    PiCode = tempPiCode;
+    String Response = String(F("0x")) + String(PiCode, HEX);
+    ESPUI.print(rdsPiID, Response);
+    displaySaveWarning();
+    setPiCode();
+
+    Log.infoln(String(F("RDS PI Code Set to: \"%s\"")).c_str(), Response);
 }
 
 // ************************************************************************************************
