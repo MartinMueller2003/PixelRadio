@@ -34,7 +34,7 @@ public:
     void        begin ();
     bool        IsRfCarriorOn() { return rfCarrierFlg; }
     bool        IsTestModeOn() { return testModeFlg; }
-    void        Poll() { updateTestTones(false); }
+    void        Poll();
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
 
@@ -75,12 +75,15 @@ private:
     void        setPtyCode();
     void        setPtyCode(String & ptyStr);
     void        setPtyCodeOptionValues ();
+    void        setRdsMessage();
     void        setRfAutoOff(void);
     void        setRfCarrier(void);
     void        setRfCarrier(bool value);
     void        setRfPower(void);
     void        setVgaGain(void);
     void        updateOnAirSign(void);
+    void        updateRdsMsgRemainingTime(unsigned long now);
+    void        updateUiRdsText(String & Text);
     void        updateUiPtyCode();
     void        updateUiAudioLevel(void);
     void        updateUiAudioMode(bool stereoEnbFlg);
@@ -120,16 +123,20 @@ private:
     uint16_t    radioPwrID      = Control::noParent;
     uint16_t    radioRfEnbID    = Control::noParent;
     uint16_t    adjMuteID       = Control::noParent;
-    uint16_t    homeOnAirID     = Control::noParent;
     uint16_t    adjTestModeID   = Control::noParent;
     uint16_t    adjFmDispID     = Control::noParent;
-    uint16_t    homeFreqID      = Control::noParent;
     uint16_t    radioSoundID    = Control::noParent;
     uint16_t    adjFreqID       = Control::noParent;
     uint16_t    rdsPiID         = Control::noParent;
     uint16_t    rdsPtyID        = Control::noParent;
     uint16_t    rdsProgNameID   = Control::noParent;
     uint16_t    rdsRstID        = Control::noParent;
+
+    uint16_t    homeRdsTextID   = Control::noParent;
+    uint16_t    homeRdsTmrID    = Control::noParent;
+    uint16_t    homeTextMsgID   = Control::noParent;
+    uint16_t    homeOnAirID     = Control::noParent;
+    uint16_t    homeFreqID      = Control::noParent;
 
     bool        testModeFlg;
     bool        muteFlg         = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
@@ -144,6 +151,10 @@ private:
     uint16_t    PiCode = 0x6400;
     uint16_t    PtyCode = 0;
     String      ProgramServiceName = F("PixeyFM");
+
+    c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
+    unsigned long CurrentMsgEndTime = 0;
+    unsigned long CurrentMsgLastUpdateTime = 0;
 
 // FM Radio: QN8027 Test Codes
 #define  FM_TEST_OK   0          // QN8027 Is Ok.

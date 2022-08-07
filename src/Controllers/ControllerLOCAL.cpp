@@ -67,6 +67,8 @@ void c_ControllerLOCAL::AddControls(uint16_t ParentElementId)
    // Messages.SetTitle(Name + " " + N_Messages);
    Messages.AddControls(EspuiParentElementId);
    Messages.ActivateMessageSet(Name);
+
+   // DEBUG_END;
 }
 
 // ************************************************************************************************
@@ -93,6 +95,18 @@ void c_ControllerLOCAL::CreateDefaultMsgSet()
    Messages.AddMessage(F("LOCAL"), F("For Safety Keep Automobile Running Lights On"));
    Messages.AddMessage(F("LOCAL"), F("Please Drive Slowly and Watch Out for Children and Pets"));
 
+   // DEBUG_END;
+}
+
+// *********************************************************************************************
+void c_ControllerLOCAL::GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+   // DEBUG_START;
+
+   if (ControllerEnabled)
+   {
+      Messages.GetNextRdsMessage(Response);
+   }
    // DEBUG_END;
 }
 

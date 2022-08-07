@@ -189,6 +189,17 @@ void c_ControllerMessage::CbEnabled(Control *sender, int type)
 } // EnabledCb
 
 // *********************************************************************************************
+void c_ControllerMessage::GetMessage(c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+   // DEBUG_START;
+
+   Response.Text = MessageText;
+   Response.DurationMilliSec = DurationSec * 1000;
+
+   // DEBUG_END;
+}
+ 
+// *********************************************************************************************
 void c_ControllerMessage::RestoreConfig(ArduinoJson::JsonObject config)
 {
    // DEBUG_START;

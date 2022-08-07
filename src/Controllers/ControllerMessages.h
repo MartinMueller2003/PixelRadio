@@ -51,7 +51,7 @@ public:
    void     clear() { MessageSets.clear(); }
    bool     empty() { return MessageSets.empty(); }
    void     SetShowFseqNameSelection(bool value);
-   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) {}
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
    uint16_t ParentElementId = Control::noParent;
@@ -72,7 +72,8 @@ private:
    bool     DisplayFseqName         = false;
 
    std::map<String, c_ControllerMessageSet> MessageSets;
-   
+   SemaphoreHandle_t MessageSetsSemaphore = NULL;
+
 }; // c_ControllerMessages
 
 // *********************************************************************************************

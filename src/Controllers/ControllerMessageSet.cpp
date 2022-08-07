@@ -30,6 +30,8 @@ c_ControllerMessageSet::c_ControllerMessageSet()
 {
    // DEBUG_START;
 
+   MessagesSemaphore = xSemaphoreCreateMutex();
+
    // DEBUG_END;
 } // c_ControllerMessageSet
 
@@ -156,10 +158,15 @@ void c_ControllerMessageSet::AddMessage(String MsgText)
          break;
       }
 
-      // DEBUG_V("Create the message");
-      Messages[MsgText].SetMessage(MsgText);
-      CurrentMsgName = MsgText;
       
+      // DEBUG_V("Create the message");
+      xSemaphoreTake(MessagesSemaphore, portMAX_DELAY);
+      Messages[MsgText].SetMessage(MsgText);
+      MessagesIterator = nullMessagesIterator;
+      xSemaphoreGive(MessagesSemaphore);
+
+      CurrentMsgName = MsgText;
+
       if(Control::noParent == MessageElementIds.ActiveChoiceListElementId)
       {
          // DEBUG_V("Defer setting up UI");
@@ -191,7 +198,10 @@ void c_ControllerMessageSet::EraseMsg(String MsgTxt)
          break;
       }
 
+      xSemaphoreTake(MessagesSemaphore, portMAX_DELAY);
       Messages.erase(MsgTxt);
+      MessagesIterator = nullMessagesIterator;
+      xSemaphoreGive(MessagesSemaphore);
 
       if(!MsgTxt.equals(CurrentMsgName))
       {
@@ -210,6 +220,55 @@ void c_ControllerMessageSet::EraseMsg(String MsgTxt)
       Messages.begin()->second.Activate(true);
       CurrentMsgName = Messages.begin()->first;
       ShowMsgDetailsPane(true);
+
+   } while (false);
+
+   // DEBUG_END;
+}
+
+// ************************************************************************************************
+void c_ControllerMessageSet::GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+   // DEBUG_START;
+
+   do // once
+   {
+      if(0 == Messages.size())
+      {
+         // DEBUG_V("No messages to send");
+         break;
+      }
+
+      xSemaphoreTake(MessagesSemaphore, portMAX_DELAY);
+
+      for (uint32_t count = Messages.size(); 0 < count; --count)
+      {
+         if(nullMessagesIterator == MessagesIterator)
+         {
+            MessagesIterator = Messages.begin();
+         }
+         else
+         {
+            // Advance to the next message
+            ++MessagesIterator;
+            if (MessagesIterator == Messages.end())
+            {
+               MessagesIterator = Messages.begin();
+            }
+         }
+
+         if(!MessagesIterator->second.IsEnabled())
+         {
+            continue;
+         }
+
+         // DEBUG_V("Found a message");
+         MessagesIterator->second.GetMessage(Response);
+         // DEBUG_V();
+         break;
+      }
+
+      xSemaphoreGive(MessagesSemaphore);
 
    } while (false);
 

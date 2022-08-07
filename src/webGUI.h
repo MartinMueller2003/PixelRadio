@@ -74,8 +74,6 @@ extern uint16_t gpioSaveID;
 extern uint16_t gpioSaveMsgID;
 
 extern uint16_t homeOnAirID;
-extern uint16_t homeRdsTextID;
-extern uint16_t homeRdsTmrID;
 
 extern uint16_t radioSaveID;
 extern uint16_t radioSaveID;

@@ -22,6 +22,7 @@
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <ESPUI.h>
+#include "ControllerMgr.h"
 
 class c_ControllerMessage
 {
@@ -43,7 +44,9 @@ public:
    void     CbDuration(Control* sender, int type);
    void     CbEnabled(Control* sender, int type);
    uint16_t GetElementId() { return MessageElementId; }
-   String & GetMessage() { return MessageText; }
+   void     GetMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
+   uint32_t GetDuration() { return DurationSec; }
+   bool     IsEnabled() { return Enabled; }
    void     RestoreConfig(ArduinoJson::JsonObject config);
    void     SaveConfig(ArduinoJson::JsonObject config);
    void     SelectMessage();

@@ -67,13 +67,13 @@ static PtyCodeEntry_t ListOfPtyCodes[] =
 // *********************************************************************************************
 void cRadio::AddAdjControls(uint16_t _adjTab)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     do // once
     {
         if(Control::noParent != diagTab)
         {
-            DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Controls have already been set up");
             break;
         }
 
@@ -140,19 +140,19 @@ void cRadio::AddAdjControls(uint16_t _adjTab)
     ESPUI.setElementStyle(adjMuteID, (muteFlg ? F("background: red;") : F("background: #bebebe;")));
     } while (false);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cRadio::AddDiagControls (uint16_t _diagTab)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     do // once
     {
         if(Control::noParent != diagTab)
         {
-            DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Controls have already been set up");
             break;
         }
 
@@ -160,7 +160,7 @@ void cRadio::AddDiagControls (uint16_t _diagTab)
 
         
     } while (false);
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -175,7 +175,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
     {
         if(Control::noParent != homeTab)
         {
-            DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Controls have already been set up");
             break;
         }
 
@@ -208,6 +208,16 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
         ESPUI.setPanelStyle(homeFreqID, "font-size: 3.0em;");
         ESPUI.setElementStyle(homeFreqID, "max-width: 80%;");
 
+
+        ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
+
+    tempStr       = HOME_RDS_WAIT_STR;
+    homeRdsTextID = ESPUI.addControl(ControlType::Label, HOME_CUR_TEXT_STR, tempStr, ControlColor::Peterriver, homeTab);
+    homeTextMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), tempStr, ControlColor::Peterriver, homeRdsTextID);
+    homeRdsTmrID  = ESPUI.addControl(ControlType::Label, HOME_RDS_TIMER_STR, tempStr, ControlColor::Peterriver, homeTab);
+    ESPUI.setPanelStyle(homeRdsTmrID, String(F("font-size: 1.25em;")));
+    ESPUI.setElementStyle(homeRdsTmrID, String(F("max-width: 30%;")));
+
     } while (false);
     // DEBUG_END;
 }
@@ -215,13 +225,13 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
 // *********************************************************************************************
 void cRadio::AddRadioControls (uint16_t _radioTab)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     do // once
     {
         if(Control::noParent != radioTab)
         {
-            DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Controls have already been set up");
             break;
         }
 
@@ -377,7 +387,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
 
     } while (false);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -389,7 +399,7 @@ void cRadio::AddRdsControls (uint16_t _rdsTab)
     {
         if(Control::noParent != rdsTab)
         {
-            DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Controls have already been set up");
             break;
         }
 
@@ -536,6 +546,67 @@ void cRadio::setPtyCode(String & ptyStr)
 }
 
 // ************************************************************************************************
+// updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
+void cRadio::updateUiRdsText(String & Text)
+{
+    // DEBUG_START;
+
+    ESPUI.print(homeRdsTextID, String(rfCarrierFlg ? Text : RDS_RF_DISABLED_STR));
+    ESPUI.print(homeTextMsgID, String(String(RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
+
+    // DEBUG_END;
+}
+
+// ************************************************************************************************
+// updateRdsMsgRemainingTime(): Updates the GUI's RDS time on homeTab.
+//                    Test mode clears the time field.
+void cRadio::updateRdsMsgRemainingTime(unsigned long now)
+{
+    // DEBUG_START;
+
+    uint32_t timeCnt = 0;
+
+    do // once
+    {
+        if (IsTestModeOn())
+        {
+            // DEBUG_V("Test Mode");
+            ESPUI.print(homeRdsTmrID, String(F("Test Mode")));
+            break;
+        }
+
+        if (!rfCarrierFlg)
+        {
+            // DEBUG_V("No Carrier");
+            ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);
+            break;
+        }
+
+        if(0 == RdsMsgInfo.DurationMilliSec)
+        {
+            // DEBUG_V("No Message to send");
+            ESPUI.print(homeRdsTmrID, HOME_RDS_WAIT_STR);
+            break;
+        }
+
+        if(now > CurrentMsgEndTime)
+        {
+            // DEBUG_V("Timed Out");
+            ESPUI.print(homeRdsTmrID, RDS_EXPIRED_STR);
+            break;
+        }
+
+
+        unsigned long TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
+        // DEBUG_V(String("Update Timer: ") + String(TimeRemaining));
+        ESPUI.print(homeRdsTmrID, String(TimeRemaining) + F(" Secs"));
+
+    } while (false);
+
+    // DEBUG_END;
+}
+
+// ************************************************************************************************
 void cRadio::updateUiPtyCode()
 {
     // DEBUG_START;
@@ -549,7 +620,7 @@ void cRadio::updateUiPtyCode()
 // updateUiAudioLevel(): Update the diagTab UI's Audio Level (mV).
 void cRadio::updateUiAudioLevel(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     uint16_t mV;
     static uint32_t previousMillis = 0;
@@ -575,7 +646,7 @@ void cRadio::updateUiAudioLevel(void)
         Log.verboseln(String(F("Peak Audio Amplitude %03umV.")).c_str(), mV);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

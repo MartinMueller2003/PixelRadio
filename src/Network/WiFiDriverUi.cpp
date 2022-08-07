@@ -332,14 +332,6 @@ void c_WiFiDriverUi::addControls(uint16_t _WiFiTabID)
                                                 }
                                             },
                                             this);
-#ifdef OldWay
-        ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
-
-        ESPUI.setPanelStyle(homeTextMsgID,      "font-size: 1.15em;");
-        ESPUI.setElementStyle(homeTextMsgID,    CSS_LABEL_STYLE_WHITE);
-
-#endif // def OldWay
-
     } while (false);
 
     ValidateStaticSettings();
@@ -869,8 +861,8 @@ void c_WiFiDriverUi::UpdateStatusFields()
     ESPUI.updateControlValue(wifiStatusIpAddrID, String(CurrentIpAddress.toString()));
 
     ESPUI.updateControlValue(homeRssiID,   String(getRSSI()) + UNITS_DBM_STR);
-    ESPUI.updateControlValue(homeStaMsgID, ConnectionStatusMessage);
-    ESPUI.updateControlValue(homeStaID,    String(CurrentIpAddress.toString()));
+    ESPUI.updateControlValue(homeStaID,    ConnectionStatusMessage);
+    ESPUI.updateControlValue(homeStaMsgID, CurrentIpAddress.toString());
 
     // DEBUG_END;
 }

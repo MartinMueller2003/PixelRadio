@@ -298,7 +298,6 @@ void   updateUiAudioLevel(void);
 void   updateUiAudioMode(bool SteroMode);
 void   updateUiAudioMute(bool value);
 void   updateUiFrequency(int Freq10x);
-void   updateUiRDSTmr(bool ClearDisplay);
 void   updateUiRfCarrier(void);
 #endif // def OldWay
 void   updateUiDiagTimer(void);
@@ -315,10 +314,12 @@ void   audioCallback(Control *sender,
 #endif // def OldWay
 void   backupCallback(Control *sender,
                       int      type);
+#ifdef OldWay
 void   dhcpCallback(Control *sender,
                     int      type);
 void   controllerCallback(Control *sender,
                           int      type);
+#endif // def OldWay
 void   diagBootCallback(Control *sender,
                         int      type);
 void   diagLogCallback(Control *sender,

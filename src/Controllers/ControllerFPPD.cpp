@@ -159,6 +159,19 @@ void c_ControllerFPPD::CbSequenceLearningEnabled(Control *sender, int type)
 } // SequenceLearningEnabledCb
 
 // *********************************************************************************************
+void c_ControllerFPPD::GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+   // DEBUG_START;
+
+   if(!CurrentPlayingSequence.isEmpty())
+   { 
+      Sequences.GetNextRdsMessage(Response); 
+   }
+
+   // DEBUG_END;
+}
+
+// *********************************************************************************************
 void c_ControllerFPPD::ProcessFppdFile(String & FppdFileName)
 {
    // DEBUG_START;

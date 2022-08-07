@@ -29,41 +29,40 @@ static const uint8_t listSize = sizeof(toneList) / sizeof(uint16_t);
 // *********************************************************************************************
 void cRadio::begin()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     RadioSemaphore = xSemaphoreCreateRecursiveMutex();
-    DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));
+    // DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));
     if (NULL == RadioSemaphore)
     {
         Log.errorln(String(F("Could not allocate a semaphore for access to the radio hardware")).c_str());
     }
-    DEBUG_V(String("fmRadioTestCode: 0x") + String(fmRadioTestCode, HEX))
+    // DEBUG_V(String("fmRadioTestCode: 0x") + String(fmRadioTestCode, HEX))
     fmRadioTestCode = Radio.initRadioChip(); // If QN8027 fails we will warn user on UI homeTab.
     Log.infoln(String(F("FM Radio RDS/RBDS Started.")).c_str());
 
-    DEBUG_END;
+    // DEBUG_END;
 }
-
 
 // ************************************************************************************************
 // updateUiFrequency(): Update the FM Transmit Frequency on the UI's adjTab, homeTab, and radioTab.
 void cRadio::updateUiFrequency(int fmFreqX10)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
+    // DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
 
     float tempFloat = float(fmFreqX10) / 10.0f;
-    DEBUG_V(String("tempFloat: ") + String(tempFloat));
+    // DEBUG_V(String("tempFloat: ") + String(tempFloat));
 
     String tempStr = String(tempFloat, 1) + F(UNITS_MHZ_STR);
-    DEBUG_V(String("  tempStr: ") + String(tempStr));
+    // DEBUG_V(String("  tempStr: ") + String(tempStr));
 
     ESPUI.print(adjFmDispID, tempStr);
     ESPUI.print(homeFreqID,  tempStr);
     ESPUI.print(radioFreqID, tempStr);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -72,7 +71,7 @@ void cRadio::updateUiFrequency(int fmFreqX10)
 // This routine is called once during startup(). Takes about 2 Secs to execute.
 bool cRadio::calibrateAntenna(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     bool successFlg = true;
     uint8_t regVal1;
@@ -138,7 +137,7 @@ bool cRadio::calibrateAntenna(void)
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
     return successFlg;
 }
 
@@ -147,7 +146,7 @@ bool cRadio::calibrateAntenna(void)
 // checkRadioIsPresent(): Check to see if QN8027 FM Radio Chip is installed. Return true if Ok.
 bool cRadio::checkRadioIsPresent(void) 
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     bool response = false;
     Wire.beginTransmission(QN8027_I2C_ADDR);
@@ -157,7 +156,7 @@ bool cRadio::checkRadioIsPresent(void)
         response = true;
     }
 
-    DEBUG_END;
+    // DEBUG_END;
     return false;
 }
 
@@ -168,7 +167,7 @@ bool cRadio::checkRadioIsPresent(void)
 // The official formula uses 6dB Impedance steps vs the revised use of 3dB.
 int8_t cRadio::getAudioGain(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     int8_t vgaGain;
     int8_t impedance;
@@ -228,7 +227,7 @@ int8_t cRadio::getAudioGain(void)
 
     audioGain = ((vgaGain + 1) * 3) - (impedance * 3);
 
-    DEBUG_END;
+    // DEBUG_END;
     return audioGain;
 }
 
@@ -236,7 +235,7 @@ int8_t cRadio::getAudioGain(void)
 // initRadioChip(); Initialize the QN8027 FM Radio Chip. Returns Test Result Code.
 uint8_t cRadio::initRadioChip(void) 
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     uint8_t testCode = FM_TEST_OK;
     uint8_t regVal;
@@ -400,7 +399,7 @@ uint8_t cRadio::initRadioChip(void)
         }
      */
 
-    DEBUG_END;
+    // DEBUG_END;
     return testCode;
 }
 
@@ -408,7 +407,7 @@ uint8_t cRadio::initRadioChip(void)
 // measureAudioLevel(): Measure the Peak Audio Level. Max 675mV.
 uint16_t cRadio::measureAudioLevel(void) 
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     uint16_t mV = 0;
     if (RadioSemaphore)
@@ -421,14 +420,55 @@ uint16_t cRadio::measureAudioLevel(void)
         mV = mV * 45; // Audio Peak is 45mV per count.
     }
 
-    DEBUG_END;
+    // DEBUG_END;
     return mV;
+}
+
+// *********************************************************************************************
+void cRadio::Poll()
+{
+    /// DEBUG_START;
+
+    updateTestTones(false);
+
+    unsigned long now = millis();
+
+    do // once
+    {
+        // has it been one second since the last update?
+        if (1000 > (now - CurrentMsgLastUpdateTime))
+        {
+            // need to wait a bit longer
+            break;
+        }
+        CurrentMsgLastUpdateTime = now;
+        /// DEBUG_V("One second later");
+
+        // has the current message output expired?
+        if(now < CurrentMsgEndTime)
+        {
+            // DEBUG_V("still waiting");
+            updateRdsMsgRemainingTime(now);
+            break;
+        }
+
+        // DEBUG_V("time for a new message");
+        ControllerMgr.GetNextRdsMessage(RdsMsgInfo);
+        CurrentMsgEndTime = now + RdsMsgInfo.DurationMilliSec;
+        // DEBUG_V("Display the new message");
+        setRdsMessage();
+        updateUiRdsText(RdsMsgInfo.Text);
+        updateRdsMsgRemainingTime(now);
+
+    } while (false);
+
+    /// DEBUG_END;
 }
 
 // *********************************************************************************************
 void cRadio::restoreConfiguration(JsonObject & config)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     ReadFromJSON(rfCarrierFlg,      config, F("RADIO_RF_CARR_FLAG"));
     ReadFromJSON(stereoEnbFlg,      config, F("RADIO_STEREO_FLAG"));
@@ -438,13 +478,13 @@ void cRadio::restoreConfiguration(JsonObject & config)
     ReadFromJSON(digitalGainStr,    config, F("DIGITAL_GAIN_STR"));
     ReadFromJSON(inpImpedStr,       config, F("INPUT_IMPED_STR"));
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cRadio::saveConfiguration(JsonObject & config)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     config[F("RADIO_FM_FREQ")]          = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
     config[F("RADIO_MUTE_FLAG")]        = muteFlg;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
@@ -464,14 +504,14 @@ void cRadio::saveConfiguration(JsonObject & config)
     config[F("DIGITAL_GAIN_STR")]       = digitalGainStr;   // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
     config[F("INPUT_IMPED_STR")]        = inpImpedStr;      // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // setAudioImpedance(): Set the Audio Input Impedance on the QN8027 chip.
 void cRadio::setAudioImpedance(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     uint8_t impedVal = 0;
 
@@ -501,16 +541,16 @@ void cRadio::setAudioImpedance(void)
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_V(String("impedVal: ") + String(impedVal));
+    // DEBUG_V(String("impedVal: ") + String(impedVal));
     
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // setAudioMute(): Control the Audio Mute on the QN8027 chip.
 void cRadio::setAudioMute(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -520,14 +560,14 @@ void cRadio::setAudioMute(void)
         delay(5);
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // setDigitalGain(): Set the Tx Digital Gain on the QN8027 chip.
 void cRadio::setDigitalGain(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     uint8_t gainVal = 0;
 
@@ -560,14 +600,14 @@ void cRadio::setDigitalGain(void)
         delay(5);
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // setFrequency(): Set the Radio Frequency on the QN8027.
 void cRadio::setFrequency(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -578,14 +618,14 @@ void cRadio::setFrequency(void)
         setRfCarrier();
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // setMonoAudio(): Control the Audio Stereo/Mono mode on the QN8027 chip.
 void cRadio::setMonoAudio(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -595,13 +635,13 @@ void cRadio::setMonoAudio(void)
         delay(5);
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cRadio::setPiCode()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -612,7 +652,7 @@ void cRadio::setPiCode()
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -651,7 +691,7 @@ void cRadio::setPreEmphasis(void)
 // *********************************************************************************************
 void cRadio::setProgramServiceName()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -662,7 +702,7 @@ void cRadio::setProgramServiceName()
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -683,13 +723,31 @@ void cRadio::setPtyCode()
 }
 
 // *********************************************************************************************
+void cRadio::setRdsMessage()
+{
+    // DEBUG_START;
+
+    if (RadioSemaphore)
+    {
+        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
+        waitForIdle(50);
+        FmRadio.sendRadioText(RdsMsgInfo.Text);
+        xSemaphoreGiveRecursive(RadioSemaphore);
+
+        Log.traceln(String(F("Refreshing RDS RadioText Message: %s")).c_str(), RdsMsgInfo.Text.c_str());
+    }
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 // setRfAutoOff():
 // IMPORTANT: Sending RDS Messages and/or using updateUiAudioLevel() Will prevent 60S Turn Off.
 // rfAutoOff = true: Turn-off RF Carrier if Audio is missing for > 60 seconds.
 // rfAutoOff = false: Never turn off.
 void cRadio::setRfAutoOff(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -700,7 +758,7 @@ void cRadio::setRfAutoOff(void)
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -738,7 +796,7 @@ void cRadio::setRfCarrier(bool value)
 // Note: Power is not changed until RF Carrier is toggled Off then On.
 void cRadio::setRfPower(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     uint8_t pwrVal = RF_HIGH_POWER;
 
@@ -777,14 +835,14 @@ void cRadio::setRfPower(void)
         }
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // setVgaGain(): Set the Tx Input Buffer Gain (Analog Gain) on the QN8027 chip.
 void cRadio::setVgaGain(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
     uint8_t gainVal = 0;
 
     if (vgaGainStr.equals(VGA_GAIN0_STR))
@@ -826,38 +884,38 @@ void cRadio::setVgaGain(void)
         delay(5);
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************
 // updateUiAudioMode(): Update the Stereo/Mono Audio Mode shown on the UI radioTab.
 void cRadio::updateUiAudioMode(bool stereoEnbFlg)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     ESPUI.print(radioAudioMsgID, stereoEnbFlg ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
     ESPUI.updateControlValue(radioAudioID, stereoEnbFlg ? F("1") : F("0"));
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************
 // updateUiAudioMute(): Update the Audio Mute Switch Position on the UI adjTab.
 void cRadio::updateUiAudioMute(bool value)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     ESPUI.setElementStyle(adjMuteID, value ? F("background: red;") : F("background: #bebebe;"));
     ESPUI.updateControlValue(adjMuteID, value ? F("1") : F("0"));
     
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************
 // updateUiRfCarrier(): Updates the GUI's RF Carrier on homeTab and radiotab.
 void cRadio::updateUiRfCarrier(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     extern uint32_t paVolts;
 
@@ -887,14 +945,14 @@ void cRadio::updateUiRfCarrier(void)
         ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // updateOnAirSign(): Turn on the "On Air" LED Sign if RF Carrier is present.
 void cRadio::updateOnAirSign(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 #ifdef OldWay
 new way: call GPIO and tell it to update the output and the UI.
 
@@ -908,7 +966,7 @@ new way: call GPIO and tell it to update the output and the UI.
     }
 #endif // def OldWay
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -1010,13 +1068,10 @@ void cRadio::updateTestTones(bool resetTimerFlg)
                     state++;
                     sprintf(rdsBuff, "%s  [ %02u:%02u:%02u ]", AUDIO_TEST_STR, hours, minutes, seconds);
                     String tmpStr = rdsBuff;
-                    Radio.sendStationName(AUDIO_PSN_STR);
-                    Radio.sendRadioText(tmpStr);
+                    sendStationName(AUDIO_PSN_STR);
+                    sendRadioText(tmpStr);
 
-                    extern void updateUiRdsText(String);
-                    extern void updateUiRDSTmr(bool);
                     updateUiRdsText(tmpStr);
-                    updateUiRDSTmr(true);     // Clear Displayed Elapsed Timer.
 
                     Log.verboseln(String(F("New Test Tone Sequence, RadioText Sent.")).c_str());
                     break;                // We will send the tones on next entry.
@@ -1053,7 +1108,7 @@ void cRadio::waitForIdle(uint16_t waitMs)
     do // once
     {
         stateCode1 = FmRadio.getStatus() & 0x07;
-        DEBUG_V(String("stateCode1: 0x") + String(stateCode1, HEX));
+        // DEBUG_V(String("stateCode1: 0x") + String(stateCode1, HEX));
 
         // make sure the delay is a minimum of 5ms
         if(5 > waitMs) {waitMs = 5;}
@@ -1065,7 +1120,7 @@ void cRadio::waitForIdle(uint16_t waitMs)
             delay(5);
 
             stateCode2 = FmRadio.getStatus() & 0x07;
-            DEBUG_V(String("stateCode2: 0x") + String(stateCode2, HEX));
+            // DEBUG_V(String("stateCode2: 0x") + String(stateCode2, HEX));
 
             if ((stateCode2 == 0x02) || (stateCode2 == 0x05))
             {
@@ -1080,7 +1135,7 @@ void cRadio::waitForIdle(uint16_t waitMs)
 
     } while (false);
 
-    DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
+    // DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
 #endif // def OldWay
     // DEBUG_END;
 }
@@ -1093,7 +1148,7 @@ void cRadio::waitForIdle(uint16_t waitMs)
 // limitations. So instead the callbacks set a flag that tells this routine to perform the action.
 void cRadio::updateRadioSettings(void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (newAutoRfFlg) 
     {
@@ -1101,7 +1156,7 @@ void cRadio::updateRadioSettings(void)
         setRfAutoOff();
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 #endif // def OldWay
 

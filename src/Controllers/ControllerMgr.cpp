@@ -162,28 +162,37 @@ c_ControllerCommon * c_ControllerMgr::GetControllerById(ControllerTypeId_t Id)
 // *********************************************************************************************
 void c_ControllerMgr::GetNextRdsMessage(RdsMsgInfo_t &Response)
 {
-   DEBUG_START;
+   // DEBUG_START;
+
    Response.DurationMilliSec = 0;
+   Response.Text = F("No Controllers Available");
    CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
 
    for (auto &CurrentController : ListOfControllers)
    {
+      if(!CurrentController.pController->ControllerIsEnabled())
+      {
+         continue;
+      }
+
+      Response.Text = F("No Messages Available");
       CurrentController.pController->GetNextRdsMessage(Response);
 
       if(Response.DurationMilliSec)
       {
-         DEBUG_V("Found a message to send");
+         // DEBUG_V("Found a message to send");
          
          Response.ControllerName = CurrentController.pController->GetName();
          CurrentSendingControllerId = CurrentController.ControllerId;
 
-         DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
-         DEBUG_V(String("           Text: ") + String(Response.Text));
-         DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
+         // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
+         // DEBUG_V(String("           Text: ") + String(Response.Text));
+         // DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
          break;
       }
    }
-   DEBUG_END;
+
+   // DEBUG_END;
 }
 
 // *********************************************************************************************

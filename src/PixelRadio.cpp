@@ -224,7 +224,6 @@ void loop()
     Radio.Poll();
 
 #ifdef OldWay
-    processRDS();           // Send any available RadioText.
     processMeasurements();  // Measure the two system voltages.
 
     updateUiFreeMemory();   // Update the Memory value on UI diagTab.

@@ -34,6 +34,8 @@ c_ControllerMessages::c_ControllerMessages()
 {
    // DEBUG_START;
 
+   MessageSetsSemaphore = xSemaphoreCreateMutex();
+
    // DEBUG_END;
 } // c_ControllerMessages
 
@@ -336,7 +338,10 @@ void c_ControllerMessages::AddMessage(String MsgSetName, String MsgText)
       }
 
       // DEBUG_V(String(" Add '" + MsgText + "' to message set: '") + MsgSetName + "'");
+      xSemaphoreTake(MessageSetsSemaphore, portMAX_DELAY);
       MessageSets[MsgSetName].AddMessage(MsgText);
+      xSemaphoreGive(MessageSetsSemaphore);
+
       MessageSets[MsgSetName].ActivateMessage(MsgText);
 
       if(Control::noParent == ParentElementId)
@@ -378,7 +383,11 @@ bool c_ControllerMessages::AddMessageSet(String MsgSetName)
 
       // DEBUG_V("Add new message set entry");
       c_ControllerMessageSet temp;
+
+      xSemaphoreTake(MessageSetsSemaphore, portMAX_DELAY);
       MessageSets[MsgSetName] = temp;
+      xSemaphoreGive(MessageSetsSemaphore);
+
       MessageSets[MsgSetName].SetName(MsgSetName);
 
       if (CurrentMsgSetName.isEmpty())
@@ -443,7 +452,9 @@ void c_ControllerMessages::CbButtonDelete(Control *sender, int type)
       }
 
       // DEBUG_V("Erase message from the set of messages");
+      xSemaphoreTake(MessageSetsSemaphore, portMAX_DELAY);
       MessageSets[CurrentMsgSetName].EraseMsg(SelectedMsgName);
+      xSemaphoreGive(MessageSetsSemaphore);
 
       // DEBUG_V();
       CbTextChange(nullptr, 0);
@@ -620,6 +631,34 @@ void c_ControllerMessages::CbTextChange(Control *, int)
    // DEBUG_END;
 
 } // TextChangeCb
+
+// ************************************************************************************************
+void c_ControllerMessages::GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+   // DEBUG_START;
+
+   do // once
+   {
+      if(0 == MessageSets.size())
+      {
+         // DEBUG_V("No messages to send");
+         break;
+      }
+
+      if(MessageSets.end() == MessageSets.find(CurrentMsgSetName))
+      {
+         // no such message set
+         break;
+      }
+
+      xSemaphoreTake(MessageSetsSemaphore, portMAX_DELAY);
+      MessageSets[CurrentMsgSetName].GetNextRdsMessage(Response);
+      xSemaphoreGive(MessageSetsSemaphore);
+
+   } while (false);
+
+   // DEBUG_END;
+}
 
 // *********************************************************************************************
 void c_ControllerMessages::RestoreConfig(ArduinoJson::JsonObject &config)

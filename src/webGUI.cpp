@@ -149,9 +149,6 @@ uint16_t gpioSaveID    = Control::noParent;
 uint16_t gpioSaveMsgID = Control::noParent;
 
 uint16_t homeOnAirID   = Control::noParent;
-uint16_t homeRdsTextID = Control::noParent;
-uint16_t homeRdsTmrID  = Control::noParent;
-uint16_t homeTextMsgID = Control::noParent;
 
 uint16_t rdsSaveID     = Control::noParent;
 uint16_t rdsSaveMsgID  = Control::noParent;
@@ -178,7 +175,6 @@ void initCustomCss(void)
     ESPUI.setPanelStyle(diagVdcID,      "color: black; font-size: 1.25em;");
 
     ESPUI.setPanelStyle(homeOnAirID,    "font-size: 3.0em;");
-    ESPUI.setPanelStyle(homeRdsTmrID,   "font-size: 1.25em;");
 
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
@@ -211,12 +207,18 @@ void initCustomCss(void)
     ESPUI.setElementStyle(gpioSaveMsgID,      CSS_LABEL_STYLE_RED);
 
     ESPUI.setElementStyle(homeOnAirID,        "max-width: 80%;");
-    ESPUI.setElementStyle(homeRdsTmrID,       "max-width: 30%;");
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
     ESPUI.setElementStyle(radioSaveMsgID,  CSS_LABEL_STYLE_RED);
     ESPUI.setElementStyle(rdsSaveMsgID,     CSS_LABEL_STYLE_BLACK);
+
+    ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
+#ifdef OldWay
+    ESPUI.setPanelStyle(homeTextMsgID,      "font-size: 1.15em;");
+    ESPUI.setElementStyle(homeTextMsgID,    CSS_LABEL_STYLE_WHITE);
+#endif // def OldWay
+
 
     // DEBUG_END;
     // END OF STYLES
@@ -405,68 +407,6 @@ void updateUiFreeMemory(void)
     }
 }
 
-// ************************************************************************************************
-// updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
-//                    This is a companion function to displayRdsText(). May be used standalone too.
-void updateUiRdsText(String textStr)
-{
-    if (!Radio.IsRfCarriorOn()) 
-    {
-        textStr = RDS_RF_DISABLED_STR;
-    }
-    else if (textStr.isEmpty())
-    {
-        Log.infoln((String(F("Timer Updated RadioText: ")) + textStr).c_str());
-    }
-
-    ESPUI.print(homeRdsTextID, textStr); // Update homeTab RDS Message Panel.
-}
-
-// ************************************************************************************************
-// updateUiRDSTmr(): Updates the GUI's RDS time on homeTab.
-//                    On Entry rdsMillis=snapshot time for countdown calc.
-//                    Or pass 0 to force "Expired" message.
-//                    Test mode clears the time field.
-void updateUiRDSTmr(bool ClearDisplay)
-{
-    uint32_t timeCnt = 0;
-
-    do // once
-    {
-        if (Radio.IsTestModeOn())
-        {
-            ESPUI.print(homeRdsTmrID, emptyString);
-            break;
-        }
-
-        if (!Radio.IsRfCarriorOn() || (0 == ControllerMgr.getControllerStatusSummary()))
-        {
-            // all controllers are disabled
-            ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);
-            break;
-        }
-#ifdef OldWay
-        c_ControllerMgr::CurrentRdsMsgInfo_t CurrentMsgInfo;
-        ControllerMgr.GetCurrentRdsMsgInfo(CurrentMsgInfo);
-        if (CurrentMsgInfo.MsgDurationMilliSec)
-        {
-            timeCnt =  millis() - CurrentMsgInfo.MsgStartTimeMillis; // Calculate Elasped time.
-            timeCnt = CurrentMsgInfo.MsgDurationMilliSec - timeCnt;  // Now we have Countdown time.
-            timeCnt = timeCnt / 1000;        // Coverted to Secs.
-
-            if (!ClearDisplay && (timeCnt > 0 && timeCnt <= RDS_DSP_TM_MAX))
-            {
-                ESPUI.print(homeRdsTmrID, String(timeCnt) + F(" Secs"));
-            }
-            else
-            {
-                ESPUI.print(homeRdsTmrID, RDS_EXPIRED_STR);
-            }
-            break;
-        }
-#endif // def OldWay
-    } while (false);
-}
 
 #ifdef OldWay
 // ************************************************************************************************
@@ -587,24 +527,18 @@ void buildGUI(void)
     // DEBUG_V();
     // ************
     // Home Tab
-    ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, "", ControlColor::None, homeTab);
+    ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, emptyString, ControlColor::None, homeTab);
 
     Radio.AddHomeControls(homeTab);
-
-    ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, "", ControlColor::None, homeTab);
-    tempStr       = HOME_RDS_WAIT_STR;
-    homeRdsTextID = ESPUI.addControl(ControlType::Label, HOME_CUR_TEXT_STR, tempStr, ControlColor::Peterriver, homeTab);
-    homeTextMsgID = ESPUI.addControl(ControlType::Label, "", tempStr, ControlColor::Peterriver, homeRdsTextID);
-    homeRdsTmrID = ESPUI.addControl(ControlType::Label, HOME_RDS_TIMER_STR, tempStr, ControlColor::Peterriver, homeTab);
-
     WiFiDriver.addHomeControls(homeTab);
+
     // DEBUG_V();
     
     // **************
     // Adjust Tab
     Radio.AddAdjControls(adjTab);
 
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, adjTab);
+    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, adjTab);
     adjSaveID = ESPUI.addControl(ControlType::Button,
                                 SAVE_SETTINGS_STR,
                                 SAVE_SETTINGS_STR,
@@ -612,14 +546,14 @@ void buildGUI(void)
                                 adjTab,
                                 &saveSettingsCallback);
     adjSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Wetasphalt, adjSaveID);
+        ESPUI.addControl(ControlType::Label, "SAVE", emptyString, ControlColor::Wetasphalt, adjSaveID);
 
     // DEBUG_V();
     // ************
     // Radio Tab
     Radio.AddRadioControls(radioTab);
 
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, radioTab);
+    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, radioTab);
     radioSaveID = ESPUI.addControl(ControlType::Button,
                                 SAVE_SETTINGS_STR,
                                 SAVE_SETTINGS_STR,
@@ -627,7 +561,7 @@ void buildGUI(void)
                                 radioTab,
                                 &saveSettingsCallback);
     radioSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Emerald, radioSaveID);
+        ESPUI.addControl(ControlType::Label, "SAVE", emptyString, ControlColor::Emerald, radioSaveID);
 
     // RF Power Control is not compatible with the RF Amp Circutry.
     // Low Power levels do not correctly excite the PA Transistor.

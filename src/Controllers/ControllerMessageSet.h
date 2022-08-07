@@ -44,7 +44,7 @@ public:
    bool     HasMsg(String & MsgTxt) { return (Messages.end() != Messages.find(MsgTxt)); }
    void     SetName(String & value) { MsgSetName = value; }
    void     UpdateMsgText(String& OriginalMessageText, String& NewMessageText);
-   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) {}
+   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
    void     ShowMsgDetailsPane(bool value);
@@ -55,6 +55,9 @@ private:
    String CurrentMsgName;
 
    std::map < String, c_ControllerMessage > Messages;
+   #define nullMessagesIterator static_cast<std::map < String, c_ControllerMessage >::iterator>(nullptr) 
+   std::map < String, c_ControllerMessage >::iterator MessagesIterator = nullMessagesIterator;
+   SemaphoreHandle_t MessagesSemaphore = NULL;
 
 }; // c_ControllerMessageSet
 
