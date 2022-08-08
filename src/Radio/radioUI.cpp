@@ -198,6 +198,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
             tempStr = rfCarrierFlg ? RADIO_ON_AIR_STR : RADIO_OFF_AIR_STR;
         }
         homeOnAirID = ESPUI.addControl(ControlType::Label, HOME_RAD_STAT_STR, tempStr, ControlColor::Peterriver, homeTab);
+        ESPUI.setPanelStyle(homeOnAirID, "font-size: 3.0em;");
 
         tempStr    = String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR);
         homeFreqID = ESPUI.addControl(ControlType::Label,
@@ -208,15 +209,18 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
         ESPUI.setPanelStyle(homeFreqID, "font-size: 3.0em;");
         ESPUI.setElementStyle(homeFreqID, "max-width: 80%;");
 
-
         ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
 
-    tempStr       = HOME_RDS_WAIT_STR;
-    homeRdsTextID = ESPUI.addControl(ControlType::Label, HOME_CUR_TEXT_STR, tempStr, ControlColor::Peterriver, homeTab);
-    homeTextMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), tempStr, ControlColor::Peterriver, homeRdsTextID);
-    homeRdsTmrID  = ESPUI.addControl(ControlType::Label, HOME_RDS_TIMER_STR, tempStr, ControlColor::Peterriver, homeTab);
-    ESPUI.setPanelStyle(homeRdsTmrID, String(F("font-size: 1.25em;")));
-    ESPUI.setElementStyle(homeRdsTmrID, String(F("max-width: 30%;")));
+        tempStr       = HOME_RDS_WAIT_STR;
+        homeRdsTextID = ESPUI.addControl(ControlType::Label, HOME_CUR_TEXT_STR, tempStr, ControlColor::Peterriver, homeTab);
+        ESPUI.setPanelStyle(homeRdsTextID, String(F("font-size: 1.25em;")));
+
+        homeTextMsgID = ESPUI.addControl(ControlType::Label, emptyString.c_str(), tempStr, ControlColor::Peterriver, homeRdsTextID);
+        ESPUI.setPanelStyle(homeTextMsgID, String(F("font-size: 1.25em;")));
+
+        homeRdsTmrID  = ESPUI.addControl(ControlType::Label, HOME_RDS_TIMER_STR, tempStr, ControlColor::Peterriver, homeTab);
+        ESPUI.setPanelStyle(homeRdsTmrID, String(F("font-size: 1.25em;")));
+        // ESPUI.setElementStyle(homeRdsTmrID, String(F("max-width: 30%;")));
 
     } while (false);
     // DEBUG_END;
