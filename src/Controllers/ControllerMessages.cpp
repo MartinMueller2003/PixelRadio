@@ -69,7 +69,7 @@ void c_ControllerMessages::ActivateMessageSet(String MsgSetName)
          AddMessageSet(MsgSetName);
       }
 
-      // DEBUG_V("Activate the desired message set");
+      // DEBUG_V(String("Activate the desired message set: ") + MsgSetName);
       MessageSets[MsgSetName].Activate(true);
 
       if (Control::noParent == MessageElementIds.ActiveChoiceListElementId)
@@ -82,7 +82,7 @@ void c_ControllerMessages::ActivateMessageSet(String MsgSetName)
       Control * control = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
       if(control)
       {
-         Title = MsgSetName + " " + N_Messages;
+         Title = MsgSetName + F(" ") + N_Messages;
          control->label = Title.c_str();
          ESPUI.updateControl(control);
       }
@@ -94,7 +94,7 @@ void c_ControllerMessages::ActivateMessageSet(String MsgSetName)
 
    // DEBUG_END;
 
-} // Activate
+}
 
 // ************************************************************************************************
 void c_ControllerMessages::AddControls(uint16_t ctrlTab)
@@ -255,7 +255,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
              nullptr);
       }
 
-      // DEBUG_V("Add msg configuration pane");
+      // DEBUG_V("Add msg details configuration pane");
       // DEBUG_V(String("Add Title"));
       MessageElementIds.MessageDetailsElementId = ESPUI.addControl(
           ControlType::Label,
@@ -264,7 +264,9 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
           ControlColor::Turquoise,
           ctrlTab);
       ESPUI.setElementStyle(MessageElementIds.MessageDetailsElementId, CSS_LABEL_STYLE_BLACK);
-         
+      // DEBUG_V(String("MessageElementIds: 0x") + String(uint32_t(&MessageElementIds), HEX));
+      // DEBUG_V(String("MessageDetailsElementId: 0x") + String(MessageElementIds.MessageDetailsElementId, HEX));
+
       // DEBUG_V(String("Add Enabled field"));
       MessageElementIds.EnabledElementId = ESPUI.addControl(
           ControlType::Switcher,
@@ -301,7 +303,7 @@ void c_ControllerMessages::AddControls(uint16_t ctrlTab)
    for (auto &CurrentMessageSet : MessageSets)
    {
       // DEBUG_V();
-      CurrentMessageSet.second.AddControls(MessageElementIds);
+      CurrentMessageSet.second.AddControls(&MessageElementIds);
    }
    
    if(MessageSets.empty())
@@ -370,7 +372,7 @@ bool c_ControllerMessages::AddMessageSet(String MsgSetName)
    {
       if(MsgSetName.isEmpty())
       {
-         // DEBUG_V("Message set name is empty");
+         // DEBUG_V("Message set name is empty. Abort");
          Response = false;
          break;
       }
@@ -388,6 +390,7 @@ bool c_ControllerMessages::AddMessageSet(String MsgSetName)
       MessageSets[MsgSetName] = temp;
       xSemaphoreGive(MessageSetsSemaphore);
 
+      MessageSets[MsgSetName].AddControls(&MessageElementIds);
       MessageSets[MsgSetName].SetName(MsgSetName);
 
       if (CurrentMsgSetName.isEmpty())
@@ -413,11 +416,6 @@ void c_ControllerMessages::CbButtonCreate(Control *sender, int type)
    {
       if (type != B_DOWN)
       {
-         Control * control = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
-         if(control)
-         {
-            // DEBUG_V(String("Active List: '") + control->value + "'");
-         }
          // DEBUG_V("Ignore unwanted button action");
          break;
       }
@@ -427,6 +425,8 @@ void c_ControllerMessages::CbButtonCreate(Control *sender, int type)
 
       displaySaveWarning();
 
+      // refresh the UI
+      ESPUI.jsonDom(0);
    } while (false);
 
    // DEBUG_END;
@@ -461,6 +461,8 @@ void c_ControllerMessages::CbButtonDelete(Control *sender, int type)
       // DEBUG_V();
       displaySaveWarning();
 
+      // refresh the UI
+      ESPUI.jsonDom(0);
    } while (false);
 
    // DEBUG_END;

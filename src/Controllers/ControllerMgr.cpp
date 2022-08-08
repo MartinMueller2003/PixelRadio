@@ -135,10 +135,14 @@ c_ControllerMgr::~c_ControllerMgr()
 // *********************************************************************************************
 void c_ControllerMgr::AddControls(uint16_t ctrlTab)
 {
-   for (auto &currentController : ListOfControllers)
+   // DEBUG_START;
+
+   for (auto &CurrentController : ListOfControllers)
    {
-      currentController.pController->AddControls(ctrlTab);
+      // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
+      CurrentController.pController->AddControls(ctrlTab);
    }
+   // DEBUG_END;
 } // AddControls
 
 // *********************************************************************************************
@@ -147,6 +151,7 @@ void c_ControllerMgr::begin()
    // DEBUG_START;
    for (auto &CurrentController : ListOfControllers)
    {
+      // DEBUG_V(String("Begin: ") + CurrentController.pController->GetName());
       // DEBUG_V(String("pController: 0x") + String(uint32_t(CurrentController.pController), HEX));
       CurrentController.pController->begin();
    }
@@ -228,9 +233,9 @@ String c_ControllerMgr::GetName(ControllerTypeId_t Id)
 // *********************************************************************************************
 void c_ControllerMgr::poll()
 {
-   for (auto & currentController : ListOfControllers)
+   for (auto & CurrentController : ListOfControllers)
    {
-      currentController.pController->poll();
+      CurrentController.pController->poll();
    }
 } // poll
 
@@ -290,10 +295,10 @@ void c_ControllerMgr::saveConfiguration(ArduinoJson::JsonObject &config)
 
       JsonArray ControllerConfigs = config[N_controllers];
 
-      for (auto &currentController : ListOfControllers)
+      for (auto &CurrentController : ListOfControllers)
       {
          JsonObject ControllerConfig = ControllerConfigs.createNestedObject();
-         currentController.pController->saveConfiguration(ControllerConfig);
+         CurrentController.pController->saveConfiguration(ControllerConfig);
       }
 
    } while (false);

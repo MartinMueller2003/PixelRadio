@@ -56,11 +56,17 @@ void c_ControllerMessage::Activate(bool value)
    // DEBUG_START;
 
    // DEBUG_V(String("            MessageText: ") + MessageText);
-   // DEBUG_V(String("  ActiveParentElementId: ") + String(MessageElementIds.ActiveChoiceListElementId));
-   // DEBUG_V(String("  HiddenParentElementId: ") + String(MessageElementIds.HiddenChoiceListElementId));
+   // DEBUG_V(String("  ActiveParentElementId: ") + String(MessageElementIds->ActiveChoiceListElementId));
+   // DEBUG_V(String("  HiddenParentElementId: ") + String(MessageElementIds->HiddenChoiceListElementId));
 
    do // once
    {
+      if(nullptr == MessageElementIds)
+      {
+         // DEBUG_V("No control structure defined yet");
+         break;
+      }
+
       Control *MsgSelectControl = ESPUI.getControl(MessageElementId);
       if(!MsgSelectControl)
       {
@@ -71,12 +77,12 @@ void c_ControllerMessage::Activate(bool value)
       if(!value)
       {
          // DEBUG_V("Add message to the hidden choice list");
-         MsgSelectControl->parentControl = MessageElementIds.HiddenChoiceListElementId;
+         MsgSelectControl->parentControl = MessageElementIds->HiddenChoiceListElementId;
       }
       else
       {
          // DEBUG_V("Add message to the active choice list");
-         MsgSelectControl->parentControl = MessageElementIds.ActiveChoiceListElementId;
+         MsgSelectControl->parentControl = MessageElementIds->ActiveChoiceListElementId;
       }
 
       ESPUI.updateControl(MsgSelectControl);
@@ -91,21 +97,27 @@ void c_ControllerMessage::Activate(bool value)
 } // Activate
 
 // ************************************************************************************************
-void c_ControllerMessage::AddControls(MessageElementIds_t _MessageElementIds)
+void c_ControllerMessage::AddControls(MessageElementIds_t * _MessageElementIds)
 {
    // DEBUG_START;
 
    MessageElementIds = _MessageElementIds;
 
    // DEBUG_V(String("                  Message: '") + MessageText + "'");
-   // DEBUG_V(String("ActiveChoiceListElementId: '") + String(MessageElementIds.ActiveChoiceListElementId) + "'");
-   // DEBUG_V(String("HiddenChoiceListElementId: '") + String(MessageElementIds.HiddenChoiceListElementId) + "'");
-   // DEBUG_V(String("         EnabledElementId: '") + String(MessageElementIds.EnabledElementId) + "'");
-   // DEBUG_V(String(" DisplayDurationElementId: '") + String(MessageElementIds.DisplayDurationElementId) + "'");
+   // DEBUG_V(String("ActiveChoiceListElementId: '") + String(MessageElementIds->ActiveChoiceListElementId) + "'");
+   // DEBUG_V(String("HiddenChoiceListElementId: '") + String(MessageElementIds->HiddenChoiceListElementId) + "'");
+   // DEBUG_V(String("         EnabledElementId: '") + String(MessageElementIds->EnabledElementId) + "'");
+   // DEBUG_V(String(" DisplayDurationElementId: '") + String(MessageElementIds->DisplayDurationElementId) + "'");
 
    do // once
    {
-      if(Control::noParent == MessageElementIds.ActiveChoiceListElementId)
+      if(nullptr == MessageElementIds)
+      {
+         // DEBUG_V("No control structure defined yet");
+         break;
+      }
+
+      if(Control::noParent == MessageElementIds->ActiveChoiceListElementId)
       {
          // DEBUG_V("UI is not set up yet");
          break;
@@ -119,12 +131,12 @@ void c_ControllerMessage::AddControls(MessageElementIds_t _MessageElementIds)
                MessageText.c_str(),
                MessageText,
                ControlColor::Turquoise,
-               MessageElementIds.ActiveChoiceListElementId);
+               MessageElementIds->ActiveChoiceListElementId);
       }
       // DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
 
       // DEBUG_V("Attach callbacks to the Message Details Pane.");
-      Control *DurationControl = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
+      Control *DurationControl = ESPUI.getControl(MessageElementIds->DisplayDurationElementId);
       if (DurationControl)
       {
          DurationControl->user = nullptr;
@@ -140,7 +152,7 @@ void c_ControllerMessage::AddControls(MessageElementIds_t _MessageElementIds)
          ESPUI.updateControl(DurationControl);
       }
 
-      Control *MsgEnabledControl = ESPUI.getControl(MessageElementIds.EnabledElementId);
+      Control *MsgEnabledControl = ESPUI.getControl(MessageElementIds->EnabledElementId);
       if (MsgEnabledControl)
       {
          MsgEnabledControl->user = nullptr;
@@ -247,9 +259,15 @@ void c_ControllerMessage::SelectMessage()
 
    do // once
    {
+      if(nullptr == MessageElementIds)
+      {
+         // DEBUG_V("No control structure defined yet");
+         break;
+      }
+
       Activate(true);
 
-      Control * control = ESPUI.getControl(MessageElementIds.ActiveChoiceListElementId);
+      Control * control = ESPUI.getControl(MessageElementIds->ActiveChoiceListElementId);
       if(control)
       {
          // DEBUG_V("Update Selected item");
@@ -259,22 +277,22 @@ void c_ControllerMessage::SelectMessage()
 
       // DEBUG_V(String("Active List: '") + control->value + "'");
 
-      control = ESPUI.getControl(MessageElementIds.DisplayDurationElementId);
+      control = ESPUI.getControl(MessageElementIds->DisplayDurationElementId);
       if (control)
       {
          // DEBUG_V("Set up Duration");
          control->value = String(DurationSec);
          control->user = this;
-         ESPUI.updateControl(MessageElementIds.DisplayDurationElementId);
+         ESPUI.updateControl(MessageElementIds->DisplayDurationElementId);
       }
 
-      control = ESPUI.getControl(MessageElementIds.EnabledElementId);
+      control = ESPUI.getControl(MessageElementIds->EnabledElementId);
       if (control)
       {
          // DEBUG_V("Set up enabled CB");
          control->value = String(Enabled ? "1" : "0");
          control->user = this;
-         ESPUI.updateControl(MessageElementIds.EnabledElementId);
+         ESPUI.updateControl(MessageElementIds->EnabledElementId);
       }
    } while (false);
 

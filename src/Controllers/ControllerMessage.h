@@ -40,7 +40,7 @@ public:
             c_ControllerMessage(const c_ControllerMessage& source) {} // Empty Copy constructor
    virtual  ~c_ControllerMessage();
    void     Activate(bool value);
-   void     AddControls(MessageElementIds_t _MessageElementIds);
+   void     AddControls(MessageElementIds_t * _MessageElementIds);
    void     CbDuration(Control* sender, int type);
    void     CbEnabled(Control* sender, int type);
    uint16_t GetElementId() { return MessageElementId; }
@@ -58,7 +58,7 @@ private:
    String      MessageText;
    uint32_t    DurationSec                = 5;
    bool        Enabled                    = true;
-   MessageElementIds_t MessageElementIds;
+   MessageElementIds_t * MessageElementIds = nullptr;
 
 }; // c_ControllerMessage
 

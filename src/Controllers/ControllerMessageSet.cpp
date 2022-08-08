@@ -57,13 +57,14 @@ void c_ControllerMessageSet::Activate(bool Activating)
    {
       if(Messages.empty())
       {
-         // DEBUG_V("No messages");
+         // DEBUG_V("No messages. Do not show message details pane");
          ShowMsgDetailsPane(false);
       }
       else
       {
          // DEBUG_V("Activate first message");
          ActivateMessage(Messages.begin()->first);
+         ShowMsgDetailsPane(true);
       }
    }
 
@@ -79,15 +80,9 @@ void c_ControllerMessageSet::ActivateMessage(String MsgName)
 
    do // once
    {
-      if (Control::noParent == MessageElementIds.ActiveChoiceListElementId)
-      {
-         // DEBUG_V("No Element IDs available. Not setting the messages");
-         break;
-      }
-
       if(Messages.end() == Messages.find(MsgName))
       {
-         // DEBUG_V("Desired message not found");
+         // DEBUG_V("Desired message not found. Add it.");
          AddMessage(MsgName);
       }
 
@@ -107,31 +102,41 @@ void c_ControllerMessageSet::ActivateMessage(String MsgName)
 } // ActivateMessage
 
 // ************************************************************************************************
-void c_ControllerMessageSet::AddControls(c_ControllerMessage::MessageElementIds_t  _MessageElementIds)
+void c_ControllerMessageSet::AddControls(c_ControllerMessage::MessageElementIds_t * _MessageElementIds)
 {
    // DEBUG_START;
 
    MessageElementIds = _MessageElementIds;
 
-   // DEBUG_V();
-   for(auto& CurrentMessage : Messages)
+   do // once
    {
-      CurrentMessage.second.AddControls(MessageElementIds);
-   }
-   
-   if(Messages.empty())
-   {
-      // DEBUG_V("Turn off msg details control");
-      ShowMsgDetailsPane(false);
-   }
-   else
-   {
+     if (nullptr == MessageElementIds)
+      {
+         // DEBUG_V("No control structure defined yet");
+         break;
+      }
+ 
+      // DEBUG_V();
+      for(auto& CurrentMessage : Messages)
+      {
+         CurrentMessage.second.AddControls(MessageElementIds);
+      }
+      // DEBUG_V();
+
+      if(Messages.empty())
+      {
+         // DEBUG_V("Turn off msg details control");
+         ShowMsgDetailsPane(false);
+         break;
+      }
+
       // DEBUG_V("Select the default message set.");
       Messages.begin()->second.Activate(true);
       // DEBUG_V("Turn on msg details control");
       CurrentMsgName = Messages.begin()->first;
       ShowMsgDetailsPane(true);
-   }
+
+   } while (false);
 
    // DEBUG_END;
 
@@ -157,7 +162,6 @@ void c_ControllerMessageSet::AddMessage(String MsgText)
          // DEBUG_V("Cant add a duplicate message.");
          break;
       }
-
       
       // DEBUG_V("Create the message");
       xSemaphoreTake(MessagesSemaphore, portMAX_DELAY);
@@ -167,7 +171,7 @@ void c_ControllerMessageSet::AddMessage(String MsgText)
 
       CurrentMsgName = MsgText;
 
-      if(Control::noParent == MessageElementIds.ActiveChoiceListElementId)
+      if(Control::noParent == MessageElementIds->ActiveChoiceListElementId)
       {
          // DEBUG_V("Defer setting up UI");
          break;
@@ -349,14 +353,32 @@ void c_ControllerMessageSet::ShowMsgDetailsPane(bool value)
 
    // DEBUG_V(String("CurrentMsgName: '") + CurrentMsgName + "'");
    // DEBUG_V(String("         value: '") + String(value) + "'");
-   
-   Control *control = ESPUI.getControl(MessageElementIds.MessageDetailsElementId);
-   if(control)
+
+   do // once
    {
-      control->visible = value;
-      control->label = CurrentMsgName.c_str();
-      ESPUI.updateControl(control);
-   }
+      // DEBUG_V(String("      MessageElementIds: 0x") + String(uint32_t(MessageElementIds), HEX));
+
+      // have the controls been added yet?
+      if(nullptr == MessageElementIds)
+      {
+         // DEBUG_V("Controls not added yet");
+         break;
+      }
+
+      // DEBUG_V(String("MessageDetailsElementId: 0x") + String(MessageElementIds->MessageDetailsElementId, HEX));
+
+      Control *control = ESPUI.getControl(MessageElementIds->MessageDetailsElementId);
+      if(control)
+      {
+         control->visible = value;
+         control->label = CurrentMsgName.c_str();
+         ESPUI.updateControl(control);
+      }
+      else
+      {
+         // DEBUG_V("ERROR: No such control.");
+      }
+   } while (false);
 
    // DEBUG_END;
 }

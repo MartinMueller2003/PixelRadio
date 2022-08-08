@@ -38,7 +38,7 @@ public:
    void     Activate(bool value);
    void     ActivateMessage(String MsgName);
    void     AddMessage(String MsgText);
-   void     AddControls(c_ControllerMessage::MessageElementIds_t MessageElementIds);
+   void     AddControls(c_ControllerMessage::MessageElementIds_t * MessageElementIds);
    bool     empty() { return Messages.empty(); }
    void     EraseMsg(String MsgTxt);
    bool     HasMsg(String & MsgTxt) { return (Messages.end() != Messages.find(MsgTxt)); }
@@ -49,7 +49,7 @@ public:
 private:
    void     ShowMsgDetailsPane(bool value);
 
-   c_ControllerMessage::MessageElementIds_t MessageElementIds;
+   c_ControllerMessage::MessageElementIds_t * MessageElementIds = nullptr;
 
    String MsgSetName;
    String CurrentMsgName;

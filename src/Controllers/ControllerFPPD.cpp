@@ -40,65 +40,75 @@ void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
 {
    // DEBUG_START;
 
+   uint16_t LabelId;
+ 
    ESPUI.addControl(
-       ControlType::Separator,
-       "FPPD CONTROL SETTINGS",
-       emptyString,
-       ControlColor::None,
-       ParentElementId);
+                     ControlType::Separator,
+                     "FPPD CONTROL SETTINGS",
+                     emptyString,
+                     ControlColor::None,
+                     ParentElementId);
+ 
+    uint16_t ControlLabelElementId = ESPUI.addControl(
+                     ControlType::Label,
+                     "FPPD CONTROL",
+                     "ENABLE",
+                     ControlColor::Turquoise,
+                     ParentElementId);
+   ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_WHITE);
 
    ControlerEnabledElementId = ESPUI.addControl(
-      ControlType::Switcher,
-      "FPPD CONTROL",
-      ControllerEnabled ? "1" : "0",
-      ControlColor::Turquoise,
-      ParentElementId,
-      [](Control *sender, int type, void *param)
-      {
-         if(param)
-         {
-            reinterpret_cast<c_ControllerFPPD*>(param)->CbControllerEnabled(sender, type);
-         }
-      },
-      this);
+                     ControlType::Switcher,
+                     "Enable",
+                     String(ControllerEnabled ? F("1") : F("0")),
+                     ControlColor::Turquoise,
+                     ControlLabelElementId,
+                     [](Control *sender, int type, void *param)
+                     {
+                        if(param)
+                        {
+                           reinterpret_cast<c_ControllerFPPD*>(param)->CbControllerEnabled(sender, type);
+                        }
+                     },
+                     this);
 
-   uint16_t LabelId = ESPUI.addControl(
-      ControlType::Label,
-      "Sequence Learning",
-      "Sequence Learning",
-      ControlColor::Turquoise,
-      ControlerEnabledElementId);
+   LabelId = ESPUI.addControl(
+                     ControlType::Label,
+                     "Sequence Learning",
+                     "Sequence Learning",
+                     ControlColor::Turquoise,
+                     ControlLabelElementId);
    ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_BLACK);
 
    SequenceLearningEnabledElementId = ESPUI.addControl(
-      ControlType::Switcher,
-      "Sequence Learning",
-      SequenceLearningEnabled ? "1" : "0",
-      ControlColor::Turquoise,
-      ControlerEnabledElementId,
-      [](Control *sender, int type, void *param)
-      {
-         if(param)
-         {
-            reinterpret_cast<c_ControllerFPPD*>(param)->CbSequenceLearningEnabled(sender, type);
-         }
-      },
-      this);
+                     ControlType::Switcher,
+                     "Sequence Learning",
+                     String(SequenceLearningEnabled ? F("1") : F("0")),
+                     ControlColor::Turquoise,
+                     ControlLabelElementId,
+                     [](Control *sender, int type, void *param)
+                     {
+                        if(param)
+                        {
+                           reinterpret_cast<c_ControllerFPPD*>(param)->CbSequenceLearningEnabled(sender, type);
+                        }
+                     },
+                     this);
 
    LabelId = ESPUI.addControl(
-      ControlType::Label,
-      "Current Sequence",
-      "Current Sequence",
-      ControlColor::Turquoise,
-      ControlerEnabledElementId);
+                     ControlType::Label,
+                     emptyString.c_str(),
+                     "Cuurent Sequence", // String("Current Sequence"),
+                     ControlColor::Turquoise,
+                     ControlLabelElementId);
    ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_BLACK);
 
    CurrentSequenceElementId = ESPUI.addControl(
-      ControlType::Label,
-      "",
-      DefaultSequenceMsg.c_str(),
-      ControlColor::Turquoise,
-      ControlerEnabledElementId);
+                     ControlType::Label,
+                     emptyString.c_str(),
+                     DefaultSequenceMsg,
+                     ControlColor::Turquoise,
+                     ControlLabelElementId);
    ESPUI.setElementStyle(CurrentSequenceElementId, CSS_LABEL_STYLE_WHITE);
 
    Sequences.AddControls(ParentElementId);
