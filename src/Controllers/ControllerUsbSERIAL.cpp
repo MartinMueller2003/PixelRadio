@@ -25,18 +25,15 @@
 #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-// const PROGMEM char SERIAL_OFF_STR[] = "OFF";
-const PROGMEM char SERIAL_096_STR[] = "9600 Baud";
-const PROGMEM char SERIAL_192_STR[] = "19.2K Baud";
-const PROGMEM char SERIAL_576_STR[] = "57.6K Baud";
-const PROGMEM char SERIAL_115_STR[] = "115.2K Baud";
-
 // ================================================================================================
 c_ControllerUsbSERIAL::c_ControllerUsbSERIAL() : c_ControllerCommon("USB SERIAL", c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {
 } // c_ControllerUsbSERIAL
+
 // ================================================================================================
-c_ControllerUsbSERIAL::~c_ControllerUsbSERIAL() {}
+c_ControllerUsbSERIAL::~c_ControllerUsbSERIAL() 
+{
+}
 
 // ************************************************************************************************
 void c_ControllerUsbSERIAL::AddControls(uint16_t ctrlTab)

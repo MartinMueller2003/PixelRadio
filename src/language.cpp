@@ -22,6 +22,11 @@
 // ************************************************************************************************
 #include "Language.h"
 
+const PROGMEM char SERIAL_096_STR             [] = "9600 Baud";
+const PROGMEM char SERIAL_192_STR             [] = "19.2K Baud";
+const PROGMEM char SERIAL_576_STR             [] = "57.6K Baud";
+const PROGMEM char SERIAL_115_STR             [] = "115.2K Baud";
+
 const PROGMEM char N_About                    [] = "About";
 const PROGMEM char N_About_PixelRadio         [] = "About PixelRadio";
 const PROGMEM char N_Baudrate                 [] = "Baudrate";

@@ -1,3 +1,4 @@
+#pragma once
 /*
    File: ControllerUsbSERIAL.h
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
@@ -17,13 +18,10 @@
  */
 
 // *********************************************************************************************
-#pragma once
 #include "ControllerCommon.h"
 #include "RBD_SerialManager.h"
 #include "ControllerMessages.h"
-
-#define SERIAL_DEF_STR SERIAL_115_STR;
-extern const PROGMEM char SERIAL_115_STR[];
+#include "language.h"
 
 class c_ControllerUsbSERIAL : public c_ControllerCommon
 {
@@ -39,7 +37,6 @@ public:
    void     AddControls(uint16_t ctrlTab);
    uint16_t GetMsgId() { return EspuiMsgId; }
    void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
-   void     CbControllerEnabled(Control *sender, int type);
 
 private:
    void     initSerialControl(void);
@@ -52,6 +49,7 @@ private:
    String   cmdStr;   // Serial Port Commands from user (CLI).
    String   paramStr;
 
+   #define  SERIAL_DEF_STR SERIAL_115_STR
    String   BaudRateStr = SERIAL_DEF_STR; // Parameter string.
    uint32_t BaudRate = 115200;
    c_ControllerMessages Messages;
