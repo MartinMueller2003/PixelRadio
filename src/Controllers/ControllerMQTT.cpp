@@ -138,29 +138,9 @@ void c_ControllerMQTT::Init (void)
 void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
 {
    // DEBUG_START;
+
+   c_ControllerCommon::AddControls(ctrlTab);
    String tempStr;
-
-   ESPUI.addControl(
-      ControlType::Separator,
-      CTRL_MQTT_SEP_STR, 
-      emptyString,
-      ControlColor::None,
-      ctrlTab);
-
-   ControlerEnabledElementId = ESPUI.addControl (
-      ControlType::Switcher,
-      CTRL_MQTT_STR,
-      ControllerEnabled ? "1" : "0",
-      ControlColor::Turquoise,
-      ctrlTab,
-      [](Control *sender, int type, void* param)
-      {
-         if(param)
-         {
-            reinterpret_cast<c_ControllerMQTT*>(param)->CbControllerEnabled(sender, type);
-         }
-      },
-      this);
 
    if ((ControllerEnabled == true) &&
        ((INADDR_NONE != RemoteIp) || (!mqttNameStr.length()) ||
@@ -567,32 +547,6 @@ void c_ControllerMQTT::mqttReconnect(bool resetFlg)
    } while (false);
    // DEBUG_END;
 } // mqttReconnect
-
-// ************************************************************************************************
-void c_ControllerMQTT::CbControllerEnabled (Control *sender, int type)
-{
-   // DEBUG_START;
-
-   if (type == S_ACTIVE)
-   {
-      // DEBUG_V();
-      TestParameters();
-   }
-   else
-   {
-      // DEBUG_V();
-      ControllerEnabled = false; // Must set flag BEFORE mqqtReconnect!
-      mqttReconnect (true); // Reset MQTT Reconnect values when ControllerEnabled is false.
-      OnlineFlag ? updateUiMqttMsg (MQTT_DISCONNECT_STR) : updateUiMqttMsg (emptyString);
-   }
-   // DEBUG_V();
-
-   displaySaveWarning();
-   Log.infoln((String(F("MQTT Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
-
-   // DEBUG_END;
-
-} // controllerCallback
 
 // ************************************************************************************************
 void c_ControllerMQTT::TestParameters()

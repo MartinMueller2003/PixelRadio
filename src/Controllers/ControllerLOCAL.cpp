@@ -37,32 +37,11 @@ c_ControllerLOCAL::c_ControllerLOCAL() : c_ControllerCommon("LOCAL", c_Controlle
 c_ControllerLOCAL::~c_ControllerLOCAL() {}
 
 // *********************************************************************************************
-void c_ControllerLOCAL::AddControls(uint16_t ParentElementId)
+void c_ControllerLOCAL::AddControls(uint16_t ctrlTab)
 {
    // DEBUG_START;
 
-   EspuiParentElementId = ParentElementId;
-
-   ESPUI.addControl(ControlType::Separator,
-                    "LOCAL CONTROL SETTINGS",
-                    emptyString,
-                    ControlColor::None,
-                    EspuiParentElementId);
-
-   ControlerEnabledElementId = ESPUI.addControl(
-      ControlType::Switcher,
-      "LOCAL CONTROL",
-      ControllerEnabled ? "1" : "0",
-      ControlColor::Turquoise,
-      EspuiParentElementId,
-      [](Control *sender, int type, void *param)
-      {
-         if(param)
-         {
-            reinterpret_cast<c_ControllerLOCAL*>(param)->CbControllerEnabled(sender, type);
-         }
-      },
-      this);
+   c_ControllerCommon::AddControls(ctrlTab);
 
    // Messages.SetTitle(Name + " " + N_Messages);
    Messages.AddControls(EspuiParentElementId);
@@ -70,20 +49,6 @@ void c_ControllerLOCAL::AddControls(uint16_t ParentElementId)
 
    // DEBUG_END;
 }
-
-// ************************************************************************************************
-void c_ControllerLOCAL::CbControllerEnabled(Control *sender, int type)
-{
-   // DEBUG_START;
-
-   ControllerEnabled = (type == S_ACTIVE);
-
-   // DEBUG_V();
-   displaySaveWarning();
-   Log.infoln((String(F("LOCAL Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
-
-   // DEBUG_END;
-} // CbControllerEnabled
 
 // *********************************************************************************************
 void c_ControllerLOCAL::CreateDefaultMsgSet()

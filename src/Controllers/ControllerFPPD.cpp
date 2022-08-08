@@ -36,41 +36,13 @@ c_ControllerFPPD::c_ControllerFPPD() : c_ControllerCommon("FPPD", c_ControllerMg
 c_ControllerFPPD::~c_ControllerFPPD(){}
 
 // ************************************************************************************************
-void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
+void c_ControllerFPPD::AddControls(uint16_t ctrlTab)
 {
    // DEBUG_START;
 
-   uint16_t LabelId;
- 
-   ESPUI.addControl(
-                     ControlType::Separator,
-                     "FPPD CONTROL SETTINGS",
-                     emptyString,
-                     ControlColor::None,
-                     ParentElementId);
- 
-    uint16_t ControlLabelElementId = ESPUI.addControl(
-                     ControlType::Label,
-                     "FPPD CONTROL",
-                     "ENABLE",
-                     ControlColor::Turquoise,
-                     ParentElementId);
-   ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_WHITE);
+   c_ControllerCommon::AddControls(ctrlTab);
 
-   ControlerEnabledElementId = ESPUI.addControl(
-                     ControlType::Switcher,
-                     "Enable",
-                     String(ControllerEnabled ? F("1") : F("0")),
-                     ControlColor::Turquoise,
-                     ControlLabelElementId,
-                     [](Control *sender, int type, void *param)
-                     {
-                        if(param)
-                        {
-                           reinterpret_cast<c_ControllerFPPD*>(param)->CbControllerEnabled(sender, type);
-                        }
-                     },
-                     this);
+   uint16_t LabelId;
 
    LabelId = ESPUI.addControl(
                      ControlType::Label,
@@ -111,7 +83,7 @@ void c_ControllerFPPD::AddControls(uint16_t ParentElementId)
                      ControlLabelElementId);
    ESPUI.setElementStyle(CurrentSequenceElementId, CSS_LABEL_STYLE_WHITE);
 
-   Sequences.AddControls(ParentElementId);
+   Sequences.AddControls(EspuiParentElementId);
 
    ControlsHaveBeenAdded = true;
    
@@ -138,21 +110,6 @@ void c_ControllerFPPD::begin()
 
    // DEBUG_END;
 } // begin
-
-// ************************************************************************************************
-void c_ControllerFPPD::CbControllerEnabled(Control *sender, int type)
-{
-   // DEBUG_START;
-
-   ControllerEnabled = (type == S_ACTIVE);
-
-   // DEBUG_V();
-   displaySaveWarning();
-   Log.infoln((String(F("FPPD Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
-
-   // DEBUG_END;
-
-} // CbControllerEnabled
 
 // ************************************************************************************************
 void c_ControllerFPPD::CbSequenceLearningEnabled(Control *sender, int type)

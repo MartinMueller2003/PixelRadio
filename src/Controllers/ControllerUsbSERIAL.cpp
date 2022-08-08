@@ -1,5 +1,5 @@
 /*
-   File: ControllerSERIAL.cpp
+   File: ControllerUsbSERIAL.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.0
    Creation: Dec-16-2021
@@ -17,7 +17,7 @@
  */
 
 // *********************************************************************************************
-#include "ControllerSERIAL.h"
+#include "ControllerUsbSERIAL.h"
 #include "language.h"
 #include <ArduinoLog.h>
 
@@ -25,43 +25,52 @@
 #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-       const PROGMEM char SERIAL_OFF_STR[] = "OFF";
-static const PROGMEM char SERIAL_096_STR[] = "9600 Baud";
-static const PROGMEM char SERIAL_192_STR[] = "19.2K Baud";
-static const PROGMEM char SERIAL_576_STR[] = "57.6K Baud";
-       const PROGMEM char SERIAL_115_STR[] = "115.2K Baud";
+// const PROGMEM char SERIAL_OFF_STR[] = "OFF";
+const PROGMEM char SERIAL_096_STR[] = "9600 Baud";
+const PROGMEM char SERIAL_192_STR[] = "19.2K Baud";
+const PROGMEM char SERIAL_576_STR[] = "57.6K Baud";
+const PROGMEM char SERIAL_115_STR[] = "115.2K Baud";
 
 // ================================================================================================
-c_ControllerSERIAL::c_ControllerSERIAL() : c_ControllerCommon("SERIAL", c_ControllerMgr::ControllerTypeId_t::SERIAL_CNTRL)
+c_ControllerUsbSERIAL::c_ControllerUsbSERIAL() : c_ControllerCommon("USB SERIAL", c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {
-} // c_ControllerSERIAL
+} // c_ControllerUsbSERIAL
 // ================================================================================================
-c_ControllerSERIAL::~c_ControllerSERIAL() {}
+c_ControllerUsbSERIAL::~c_ControllerUsbSERIAL() {}
 
 // ************************************************************************************************
-void c_ControllerSERIAL::AddControls(uint16_t ctrlTab)
+void c_ControllerUsbSERIAL::AddControls(uint16_t ctrlTab)
 {
    // DEBUG_START;
 
-   EspuiParentElementId = ctrlTab;
+   c_ControllerCommon::AddControls(ctrlTab);
+
+   uint16_t LabelId;
+   LabelId = ESPUI.addControl(
+                     ControlType::Label,
+                     emptyString.c_str(),
+                     String(F("BAUDRATE")), // String("Current Sequence"),
+                     ControlColor::Turquoise,
+                     ControlLabelElementId);
+   ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_BLACK);
 
    ControlerEnabledElementId = ESPUI.addControl(
-       ControlType::Select,
-       CTRL_SERIAL_STR,
-       BaudRateStr,
-       ControlColor::Turquoise,
-       ctrlTab,
-       [](Control *sender, int type, void *param)
-       {
-         if(param)
-         {
-            reinterpret_cast<c_ControllerSERIAL *>(param)->CbBaudrateControl(sender, type);
-         }
-       },
-       this);
+                     ControlType::Select,
+                     CTRL_SERIAL_STR,
+                     BaudRateStr,
+                     ControlColor::Turquoise,
+                     ControlLabelElementId,
+                     [](Control *sender, int type, void *param)
+                     {
+                        if(param)
+                        {
+                           reinterpret_cast<c_ControllerUsbSERIAL *>(param)->CbBaudrateControl(sender, type);
+                        }
+                     },
+                     this);
 
    // DEBUG_V(String("ControlerEnabledElementId: ") + String(ControlerEnabledElementId));
-   ESPUI.addControl(ControlType::Option, SERIAL_OFF_STR, SERIAL_OFF_STR, ControlColor::None, ControlerEnabledElementId);
+   // ESPUI.addControl(ControlType::Option, SERIAL_OFF_STR, SERIAL_OFF_STR, ControlColor::None, ControlerEnabledElementId);
    ESPUI.addControl(ControlType::Option, SERIAL_096_STR, SERIAL_096_STR, ControlColor::None, ControlerEnabledElementId);
    ESPUI.addControl(ControlType::Option, SERIAL_192_STR, SERIAL_192_STR, ControlColor::None, ControlerEnabledElementId);
    ESPUI.addControl(ControlType::Option, SERIAL_576_STR, SERIAL_576_STR, ControlColor::None, ControlerEnabledElementId);
@@ -70,25 +79,18 @@ void c_ControllerSERIAL::AddControls(uint16_t ctrlTab)
 
    extern String logLevelStr;
    EspuiMsgId = ESPUI.addControl(
-      ControlType::Label, 
-      "SERIAL_MSG", 
-      (logLevelStr.equals(F(DIAG_LOG_SILENT_STR))) ? F(CTLR_SERIAL_MSG_STR) : emptyString,
-      ControlColor::Turquoise, 
-      ControlerEnabledElementId);
+                     ControlType::Label, 
+                     "SERIAL_MSG", 
+                     (logLevelStr.equals(F(DIAG_LOG_SILENT_STR))) ? F(CTLR_SERIAL_MSG_STR) : emptyString,
+                     ControlColor::Turquoise, 
+                     ControlLabelElementId);
    ESPUI.setElementStyle(EspuiMsgId, CSS_LABEL_STYLE_BLACK);
 
    // DEBUG_END;
 } // AddControls
 
 // ================================================================================================
-// ctrlSerialFlg(): Return true if Serial Controller is Enabled, else false;
-bool c_ControllerSERIAL::ctrlSerialFlg(void)
-{
-   return ControllerEnabled;
-} // ctrlSerialFlg
-
-// ================================================================================================
-void c_ControllerSERIAL::initSerialControl(void)
+void c_ControllerUsbSERIAL::initSerialControl(void)
 {
    // DEBUG_START;
 
@@ -101,14 +103,14 @@ void c_ControllerSERIAL::initSerialControl(void)
    serial_manager.setFlag(CMD_EOL_TERM); // EOL Termination character.
    serial_manager.setDelimiter('=');     // Parameter delimiter character.
    Serial.flush();                       // Repeat the flushing.
-   Log.infoln(String(F("Serial Controller CLI is Enabled.")).c_str());
+   // Log.infoln(String(F("Serial Controller CLI is Enabled.")).c_str());
 
    // DEBUG_END;
 }
 
 // ================================================================================================
 // gpioSerialControl(): Serial handler for GPIO Commands.
-void c_ControllerSERIAL::gpioSerialControl(String paramStr, uint8_t pin)
+void c_ControllerUsbSERIAL::gpioSerialControl(String paramStr, uint8_t pin)
 {
    bool successFlg = false;
    String Response;
@@ -138,7 +140,7 @@ void c_ControllerSERIAL::gpioSerialControl(String paramStr, uint8_t pin)
 // ************************************************************************************************
 // CbBaudrateControl(): Set the Baud Rate for the Serial Controller. 
 // The "Off" setting disables the controller.
-void c_ControllerSERIAL::CbBaudrateControl(Control *sender, int type)
+void c_ControllerUsbSERIAL::CbBaudrateControl(Control *sender, int type)
 {
    // DEBUG_START;
    uint32_t OriginalBaudrate = BaudRate;
@@ -158,20 +160,6 @@ void c_ControllerSERIAL::CbBaudrateControl(Control *sender, int type)
    } while (false);
    // DEBUG_V();
 
-   if ((OriginalBaudrate != BaudRate) && (0 != BaudRate))
-   {
-      // DEBUG_V();
-      Serial.end(); // Flush all characters in queue.
-      Serial.begin(BaudRate);
-
-      while (!Serial && !Serial.available())
-      {
-      }                 // Wait for Serial Port to be available.
-      Serial.println(); // Push out any corrupted data due to baud change.
-      // DEBUG_V();
-   }
-   // DEBUG_V();
-
    displaySaveWarning();
    Log.infoln((String(F("Serial Baudrate Set to: ")) + BaudRateStr).c_str());
 
@@ -181,7 +169,7 @@ void c_ControllerSERIAL::CbBaudrateControl(Control *sender, int type)
 // ================================================================================================
 // serialCommands(): Process the commands sent through the serial port.
 // This is the Command Line Interface (CLI).
-void c_ControllerSERIAL::serialCommands(void)
+void c_ControllerUsbSERIAL::serialCommands(void)
 {
    // DEBUG_START;
 #ifdef OldWay
@@ -403,7 +391,7 @@ void c_ControllerSERIAL::serialCommands(void)
 }
 
 // ************************************************************************************************
-bool c_ControllerSERIAL::SetBaudrate(String NewRate)
+bool c_ControllerUsbSERIAL::SetBaudrate(String NewRate)
 {
    // DEBUG_START;
    bool Response = true;
@@ -411,19 +399,9 @@ bool c_ControllerSERIAL::SetBaudrate(String NewRate)
 
    do // once
    {
-      if (NewRate == SERIAL_OFF_STR)
-      {
-         // DEBUG_V(SERIAL_OFF_STR);
-         ControllerEnabled = false;
-         BaudRateStr = SERIAL_OFF_STR;
-         BaudRate = ESP_BAUD_DEF;
-         break;
-      }
-
       if (NewRate == SERIAL_096_STR)
       {
          // DEBUG_V(SERIAL_096_STR);
-         ControllerEnabled = true;
          BaudRateStr = SERIAL_096_STR;
          BaudRate = 9600;
          break;
@@ -432,7 +410,6 @@ bool c_ControllerSERIAL::SetBaudrate(String NewRate)
       if (NewRate == SERIAL_192_STR)
       {
          // DEBUG_V(SERIAL_192_STR);
-         ControllerEnabled = true;
          BaudRateStr = SERIAL_192_STR;
          BaudRate = 19200;
          break;
@@ -441,7 +418,6 @@ bool c_ControllerSERIAL::SetBaudrate(String NewRate)
       if (NewRate == SERIAL_576_STR)
       {
          // DEBUG_V(SERIAL_576_STR);
-         ControllerEnabled = true;
          BaudRateStr = SERIAL_576_STR;
          BaudRate = 57600;
          break;
@@ -450,7 +426,6 @@ bool c_ControllerSERIAL::SetBaudrate(String NewRate)
       if (NewRate == SERIAL_115_STR)
       {
          // DEBUG_V(SERIAL_115_STR);
-         ControllerEnabled = true;
          BaudRateStr = SERIAL_115_STR;
          BaudRate = 115200;
          break;
@@ -484,7 +459,7 @@ bool c_ControllerSERIAL::SetBaudrate(String NewRate)
 } // SetBaudrate
 
 // *********************************************************************************************
-void c_ControllerSERIAL::restoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerUsbSERIAL::restoreConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 
@@ -500,7 +475,7 @@ void c_ControllerSERIAL::restoreConfiguration(ArduinoJson::JsonObject &config)
 } // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerSERIAL::saveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerUsbSERIAL::saveConfiguration(ArduinoJson::JsonObject &config)
 {
    // DEBUG_START;
 

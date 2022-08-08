@@ -25,7 +25,7 @@
 #include "ControllerHTTP.h"
 #include "ControllerLOCAL.h"
 #include "ControllerMQTT.h"
-#include "ControllerSERIAL.h"
+#include "ControllerUsbSERIAL.h"
 #include "language.h"
 
 #if __has_include("memdebug.h")
@@ -41,12 +41,12 @@ struct ControllerDefinition_t
 
 static const ControllerDefinition_t ControllerDefinitions[] = 
 {
-   {c_ControllerMgr::ControllerTypeId_t::SERIAL_CNTRL, SERIAL_CONTROLLER_ACTIVE_FLAG, 0x0008 },
-   {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,   MQTT_CONTROLLER_ACTIVE_FLAG,   0x0004 },
-   {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,   FPPD_CONTROLLER_ACTIVE_FLAG,   0x1000 },
-   {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,   HTTP_CONTROLLER_ACTIVE_FLAG,   0x0002 },
-   {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,  LOCAL_CONTROLLER_ACTIVE_FLAG,  0x0001 },
-   {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,     0,                             0x0000 },
+   {c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL, SERIAL_CONTROLLER_ACTIVE_FLAG, 0x0008 },
+   {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,       MQTT_CONTROLLER_ACTIVE_FLAG,   0x0004 },
+   {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,       FPPD_CONTROLLER_ACTIVE_FLAG,   0x1000 },
+   {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,       HTTP_CONTROLLER_ACTIVE_FLAG,   0x0002 },
+   {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,      LOCAL_CONTROLLER_ACTIVE_FLAG,  0x0001 },
+   {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,         0,                             0x0000 },
 };
 
 // *********************************************************************************************
@@ -70,10 +70,10 @@ c_ControllerMgr::c_ControllerMgr()
             break;
          }
 
-         case ControllerTypeId_t::SERIAL_CNTRL:
+         case ControllerTypeId_t::USB_SERIAL_CNTRL:
          {
             // DEBUG_V("SERIAL_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerSERIAL();
+            ListOfControllers[index].pController = new c_ControllerUsbSERIAL();
             break;
          }
 

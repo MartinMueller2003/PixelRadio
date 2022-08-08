@@ -39,7 +39,7 @@ class c_ControllerMgr
 public:
    enum ControllerTypeId_t
    {
-      SERIAL_CNTRL = 0,
+      USB_SERIAL_CNTRL = 0,
       MQTT_CNTRL,
       FPPD_CNTRL,
       HTTP_CNTRL,
@@ -88,12 +88,12 @@ public:
 }; // c_ControllerMgr
 
 #define CtypeId c_ControllerMgr::ControllerTypeId_t
-#define LocalControllerId  CtypeId::LOCAL_CNTRL
-#define HttpControllerId   CtypeId::HTTP_CNTRL
-#define MqttControllerId   CtypeId::MQTT_CNTRL
-#define FppdControllerId   CtypeId::FPPD_CNTRL
-#define SerialControllerId CtypeId::SERIAL_CNTRL
-#define NullControllerId   CtypeId::NO_CNTRL
+#define LocalControllerId     CtypeId::LOCAL_CNTRL
+#define HttpControllerId      CtypeId::HTTP_CNTRL
+#define MqttControllerId      CtypeId::MQTT_CNTRL
+#define FppdControllerId      CtypeId::FPPD_CNTRL
+#define UsbSerialControllerId CtypeId::USB_SERIAL_CNTRL
+#define NullControllerId      CtypeId::NO_CNTRL
 
 extern c_ControllerMgr ControllerMgr;
 

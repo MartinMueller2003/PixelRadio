@@ -34,7 +34,6 @@ public:
    void GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
-   void CbControllerEnabled(Control *sender, int type);
 
    c_ControllerMessages Messages;
 

@@ -33,7 +33,10 @@ c_ControllerNONE::c_ControllerNONE() : c_ControllerCommon("NONE", c_ControllerMg
 } // c_ControllerNONE
 
 // *********************************************************************************************
-c_ControllerNONE::~c_ControllerNONE() {}
+c_ControllerNONE::~c_ControllerNONE() 
+{
+   
+}
 
 // *********************************************************************************************
 void c_ControllerNONE::restoreConfiguration(ArduinoJson::JsonObject &config)

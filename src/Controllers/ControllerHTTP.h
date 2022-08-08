@@ -28,8 +28,6 @@ public:
    virtual  ~c_ControllerHTTP();
    void     saveConfiguration(ArduinoJson::JsonObject &config);
    void     restoreConfiguration(ArduinoJson::JsonObject &config);
-   void     AddControls(uint16_t ctrlTab);
-   void     CbControllerEnabled(Control *sender, int type);
    void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
 
 private: 

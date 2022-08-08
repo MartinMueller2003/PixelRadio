@@ -33,7 +33,6 @@ public:
    void     AddControls(uint16_t ctrlTab);
    void     restoreConfiguration(ArduinoJson::JsonObject & config);
    void     saveConfiguration(ArduinoJson::JsonObject & config);
-   void     CbControllerEnabled(Control *sender, int type);
    void     CbSequenceLearningEnabled(Control *sender, int type);
    void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
 

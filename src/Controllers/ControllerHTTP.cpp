@@ -33,49 +33,12 @@ c_ControllerHTTP::c_ControllerHTTP() : c_ControllerCommon("HTTP", c_ControllerMg
 {
 
 } // c_ControllerHTTP
-// *********************************************************************************************
-c_ControllerHTTP::~c_ControllerHTTP() {}
 
 // *********************************************************************************************
-void c_ControllerHTTP::CbControllerEnabled(Control *sender, int type)
+c_ControllerHTTP::~c_ControllerHTTP() 
 {
-   // DEBUG_START;
 
-   ControllerEnabled = (type == S_ACTIVE);
-
-   displaySaveWarning();
-   Log.infoln((String(F("HTTP Controller Set to: ")) + String(ControllerEnabled ? "On" : "Off")).c_str());
-
-   // DEBUG_END;
-
-} // httpCallback
-
-// ************************************************************************************************
-void c_ControllerHTTP::AddControls(uint16_t ctrlTab)
-{
-   // DEBUG_START;
-   
-   ESPUI.addControl(
-      ControlType::Separator, 
-      CTRL_HTPP_SET_STR,
-      emptyString, 
-      ControlColor::None, 
-      ctrlTab);
-   
-   EspuiControlID = ESPUI.addControl(
-      ControlType::Switcher,
-      CTRL_HTTP_STR,
-      ControllerEnabled ? "1" : "0", 
-      ControlColor::Turquoise,
-      ctrlTab,
-      [](Control *sender, int type, void* param)
-      {
-         reinterpret_cast<c_ControllerHTTP*>(param)->CbControllerEnabled(sender, type);
-      },
-      this);
-      
-   // DEBUG_END;
-} // AddControls
+}
 
 // *********************************************************************************************
 void c_ControllerHTTP::restoreConfiguration(ArduinoJson::JsonObject &config)

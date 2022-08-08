@@ -1,5 +1,5 @@
 /*
-   File: ControllerSERIAL.h
+   File: ControllerUsbSERIAL.h
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.0
    Creation: Dec-16-2021
@@ -23,27 +23,25 @@
 #include "ControllerMessages.h"
 
 #define SERIAL_DEF_STR SERIAL_115_STR;
-extern const PROGMEM char SERIAL_OFF_STR[];
 extern const PROGMEM char SERIAL_115_STR[];
 
-class c_ControllerSERIAL : public c_ControllerCommon
+class c_ControllerUsbSERIAL : public c_ControllerCommon
 {
 public:
-            c_ControllerSERIAL();
-   virtual  ~c_ControllerSERIAL();
+            c_ControllerUsbSERIAL();
+   virtual  ~c_ControllerUsbSERIAL();
    void     begin() { initSerialControl(); }
    void     poll() { serialCommands(); }
    void     saveConfiguration(ArduinoJson::JsonObject &config);
    void     restoreConfiguration(ArduinoJson::JsonObject &config);
-   bool     GetControlFlag() { return ctrlSerialFlg(); }
 
    void     gpioSerialControl(String paramStr, uint8_t pin); // Serial handler for GPIO Commands.
    void     AddControls(uint16_t ctrlTab);
    uint16_t GetMsgId() { return EspuiMsgId; }
    void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
+   void     CbControllerEnabled(Control *sender, int type);
 
 private:
-   bool     ctrlSerialFlg(void); // Return true if Serial Controller is Enabled, else false;
    void     initSerialControl(void);
    void     CbBaudrateControl(Control *sender, int type);
    void     serialCommands(void);
@@ -53,11 +51,12 @@ private:
 
    String   cmdStr;   // Serial Port Commands from user (CLI).
    String   paramStr;
+
    String   BaudRateStr = SERIAL_DEF_STR; // Parameter string.
-   uint32_t BaudRate = 0;
+   uint32_t BaudRate = 115200;
    c_ControllerMessages Messages;
 
-}; // c_ControllerSERIAL
+}; // c_ControllerUsbSERIAL
 
 // *********************************************************************************************
 // EOF
