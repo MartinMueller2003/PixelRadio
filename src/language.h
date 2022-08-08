@@ -60,11 +60,8 @@
 #define CTRL_MQTT_STR        "MQTT CONTROL"
 #define CTRL_MQTT_SEP_STR    "MQTT CONTROL SETTINGS"
 #define CTRL_MQTT_USER_STR   "BROKER USERNAME"
-#define CTRL_SERIAL_STR      "SERIAL CONTROL"
 #define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
 #define CTRL_USB_SERIAL_STR  "USB SERIAL CONTROL SETTINGS"
-
-
 
 #define DIAG_BOOT_MSG1_STR   "WARNING: SYSTEM WILL REBOOT<br>** RELEASE NOW TO ABORT **"
 #define DIAG_BOOT_MSG2_STR   "** SYSTEM REBOOTING **<br>WAIT 30 SECONDS BEFORE ACCESSING WEB PAGE."
@@ -240,8 +237,14 @@ extern const PROGMEM char SERIAL_192_STR[];
 extern const PROGMEM char SERIAL_576_STR[];
 extern const PROGMEM char SERIAL_115_STR[];
 
+extern const PROGMEM char CSS_LABEL_STYLE_RED[];
+extern const PROGMEM char CSS_LABEL_STYLE_BLACK[];
+extern const PROGMEM char CSS_LABEL_STYLE_WHITE[];
+extern const PROGMEM char CSS_LABEL_STYLE_MAROON[];
+
 extern const PROGMEM char N_About[];
 extern const PROGMEM char N_About_PixelRadio[];
+extern const PROGMEM char N_BAUDRATE[];
 extern const PROGMEM char N_Baudrate[];
 extern const PROGMEM char N_br[];
 extern const PROGMEM char N_ControllerEnabled[];

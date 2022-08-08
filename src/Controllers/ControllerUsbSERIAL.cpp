@@ -46,14 +46,14 @@ void c_ControllerUsbSERIAL::AddControls(uint16_t ctrlTab)
    LabelId = ESPUI.addControl(
                      ControlType::Label,
                      emptyString.c_str(),
-                     String(F("BAUDRATE")), // String("Current Sequence"),
+                     String(N_BAUDRATE),
                      ControlColor::Turquoise,
                      ControlLabelElementId);
    ESPUI.setElementStyle(LabelId, CSS_LABEL_STYLE_BLACK);
 
    ControlerEnabledElementId = ESPUI.addControl(
                      ControlType::Select,
-                     CTRL_SERIAL_STR,
+                     emptyString.c_str(),
                      BaudRateStr,
                      ControlColor::Turquoise,
                      ControlLabelElementId,
@@ -73,7 +73,7 @@ void c_ControllerUsbSERIAL::AddControls(uint16_t ctrlTab)
    ESPUI.addControl(ControlType::Option, SERIAL_576_STR, SERIAL_576_STR, ControlColor::None, ControlerEnabledElementId);
    ESPUI.addControl(ControlType::Option, SERIAL_115_STR, SERIAL_115_STR, ControlColor::None, ControlerEnabledElementId);
    // DEBUG_V();
-
+#ifdef OldWay
    extern String logLevelStr;
    EspuiMsgId = ESPUI.addControl(
                      ControlType::Label, 
@@ -82,6 +82,7 @@ void c_ControllerUsbSERIAL::AddControls(uint16_t ctrlTab)
                      ControlColor::Turquoise, 
                      ControlLabelElementId);
    ESPUI.setElementStyle(EspuiMsgId, CSS_LABEL_STYLE_BLACK);
+#endif // def OldWay
 
    // DEBUG_END;
 } // AddControls
@@ -109,29 +110,33 @@ void c_ControllerUsbSERIAL::initSerialControl(void)
 // gpioSerialControl(): Serial handler for GPIO Commands.
 void c_ControllerUsbSERIAL::gpioSerialControl(String paramStr, uint8_t pin)
 {
+   DEBUG_START;
+
    bool successFlg = false;
    String Response;
 
-   // sprintf(charBuff, "Serial Controller: Received GPIO Pin-%d Command", pin);
+   DEBUG_V(String("Serial Controller: Received GPIO Pin-") + String(pin) + " Command");
    // Log.infoln(charBuff);
 
 #ifdef OldWay
    successFlg = gpioCmd(paramStr, TypeId, pin);
 #endif // def OldWay
 
+   Response = String(F("{\"")) + CMD_GPIO_STR + String(pin) + F("\": \"");
    if (!successFlg)
    {
-      Response = String(F("{\"")) + CMD_GPIO_STR + String(pin) + F("\": \"fail\"}");
+      Response += F("fail\"}");
    }
    else if (paramStr == CMD_GPIO_READ_STR)
    {
-      Response = String(F("{\"")) + CMD_GPIO_STR + String(pin) + F("\": \"") + String(digitalRead(pin)) + F("\"}");
+      Response += String(digitalRead(pin)) + F("\"}");
    }
    else
    {
-      Response = String(F("{\"")) + CMD_GPIO_STR + String(pin) + F("\": \"ok\"}");
+      Response += F("ok\"}");
    }
    serial_manager.println(Response.c_str());
+   DEBUG_END;
 }
 
 // ************************************************************************************************
@@ -158,7 +163,7 @@ void c_ControllerUsbSERIAL::CbBaudrateControl(Control *sender, int type)
    // DEBUG_V();
 
    displaySaveWarning();
-   Log.infoln((String(F("Serial Baudrate Set to: ")) + BaudRateStr).c_str());
+   Log.infoln((Name + F(": Baudrate Set to: ") + BaudRateStr).c_str());
 
    // DEBUG_END;
 } // CbBaudrateControl
@@ -168,223 +173,222 @@ void c_ControllerUsbSERIAL::CbBaudrateControl(Control *sender, int type)
 // This is the Command Line Interface (CLI).
 void c_ControllerUsbSERIAL::serialCommands(void)
 {
-   // DEBUG_START;
-#ifdef OldWay
+   /// DEBUG_START;
 
-   String HostName;
-   WiFiDriver.GetHostName(HostName);
-
-   char printBuff[140 + sizeof(VERSION_STR) + STA_NAME_MAX_SZ];
-
-   if (!ControllerEnabled)
+   do // once
    {
-      // DEBUG_V("Serial Controller disabled, nothing to do. Exit.");
-      return;
-   }
+      if (!ControllerEnabled)
+      {
+         // DEBUG_V("Serial Controller disabled, nothing to do. Exit.");
+         break;
+      }
 
-   while (serial_manager.onReceive())
-   { // Process any serial commands from user (CLI).
-      cmdStr = serial_manager.getCmd();
-      cmdStr.trim();
-      cmdStr.toLowerCase();
-      serial_manager.println((String(F("Raw CMD Parameter: '")) + cmdStr + "'").c_str());
+      while (serial_manager.onReceive())
+      { // Process any serial commands from user (CLI).
+         cmdStr = serial_manager.getCmd();
+         cmdStr.trim();
+         cmdStr.toLowerCase();
+         serial_manager.println((String(F("Raw CMD Parameter: '")) + cmdStr + "'").c_str());
 
-      paramStr = serial_manager.getParam();
-      paramStr.trim();
-      serial_manager.println((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
+         paramStr = serial_manager.getParam();
+         paramStr.trim();
+         serial_manager.println((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
+   #ifdef OldWay
 
-      if ((cmdStr == "?") || (cmdStr == "h") || (cmdStr == "help")) {
-         serial_manager.println(emptyString);
-         serial_manager.println(F("========================================="));
-         serial_manager.println(F("**  SERIAL CONTROLLER COMMAND SUMMARY  **"));
-         serial_manager.println(F("========================================="));
-         serial_manager.println(F(" AUDIO MODE      : aud=mono : stereo"));
+         if ((cmdStr == "?") || (cmdStr == "h") || (cmdStr == "help")) {
+            serial_manager.println(emptyString);
+            serial_manager.println(F("========================================="));
+            serial_manager.println(F("**  SERIAL CONTROLLER COMMAND SUMMARY  **"));
+            serial_manager.println(F("========================================="));
+            serial_manager.println(F(" AUDIO MODE      : aud=mono : stereo"));
 
-         sprintf(printBuff, " FREQUENCY X10   : freq=%d <-> %d", FM_FREQ_MIN_X10, FM_FREQ_MAX_X10);
-         serial_manager.println(printBuff);
+            sprintf(printBuff, " FREQUENCY X10   : freq=%d <-> %d", FM_FREQ_MIN_X10, FM_FREQ_MAX_X10);
+            serial_manager.println(printBuff);
 
-         serial_manager.println(F(" GPIO-19 CONTROL : gpio19=read : outhigh : outlow"));
-         serial_manager.println(F(" GPIO-23 CONTROL : gpio23=read : outhigh : outlow"));
-         serial_manager.println(F(" GPIO-33 CONTROL : gpio33=read : outhigh : outlow"));
+            serial_manager.println(F(" GPIO-19 CONTROL : gpio19=read : outhigh : outlow"));
+            serial_manager.println(F(" GPIO-23 CONTROL : gpio23=read : outhigh : outlow"));
+            serial_manager.println(F(" GPIO-33 CONTROL : gpio33=read : outhigh : outlow"));
 
-         serial_manager.println(F(" INFORMATION     : info=system"));
-         serial_manager.println(F(" MUTE AUDIO      : mute=on : off"));
+            serial_manager.println(F(" INFORMATION     : info=system"));
+            serial_manager.println(F(" MUTE AUDIO      : mute=on : off"));
 
-         sprintf(printBuff, " PROG ID CODE    : pic=0x%04X <-> 0x%04X", RDS_PI_CODE_MIN, RDS_PI_CODE_MAX);
-         serial_manager.println(printBuff);
+            sprintf(printBuff, " PROG ID CODE    : pic=0x%04X <-> 0x%04X", RDS_PI_CODE_MIN, RDS_PI_CODE_MAX);
+            serial_manager.println(printBuff);
 
-         sprintf(printBuff, " PROG SERV NAME  : psn=[%d char name]", CMD_PSN_MAX_SZ);
-         serial_manager.println(printBuff);
+            sprintf(printBuff, " PROG SERV NAME  : psn=[%d char name]", CMD_PSN_MAX_SZ);
+            serial_manager.println(printBuff);
 
-         sprintf(printBuff, " RADIOTXT MSG    : rtm=[%d char message]", CMD_RT_MAX_SZ);
-         serial_manager.println(printBuff);
+            sprintf(printBuff, " RADIOTXT MSG    : rtm=[%d char message]", CMD_RT_MAX_SZ);
+            serial_manager.println(printBuff);
 
-         sprintf(printBuff, " RADIOTXT PERIOD : rtper=5 <-> %d secs", RDS_DSP_TM_MAX);
-         serial_manager.println(printBuff);
+            sprintf(printBuff, " RADIOTXT PERIOD : rtper=5 <-> %d secs", RDS_DSP_TM_MAX);
+            serial_manager.println(printBuff);
 
-         serial_manager.println(F(" REBOOT SYSTEM   : reboot=system"));
-         serial_manager.println(F(" START RDS       : start=rds"));
-         serial_manager.println(F(" STOP RDS        : stop=rds"));
-         serial_manager.println(F(" LOG CONTROL     : log=silent : restore"));
-         serial_manager.println(F("========================================="));
-         serial_manager.println(emptyString);
-      }
-      else if (cmdStr == CMD_AUDMODE_STR) {
-         if (audioModeCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_AUDMODE_STR);
+            serial_manager.println(F(" REBOOT SYSTEM   : reboot=system"));
+            serial_manager.println(F(" START RDS       : start=rds"));
+            serial_manager.println(F(" STOP RDS        : stop=rds"));
+            serial_manager.println(F(" LOG CONTROL     : log=silent : restore"));
+            serial_manager.println(F("========================================="));
+            serial_manager.println(emptyString);
+         }
+         else if (cmdStr == CMD_AUDMODE_STR) {
+            if (audioModeCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_AUDMODE_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_AUDMODE_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_FREQ_STR) {
+            if (frequencyCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_FREQ_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_FREQ_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_GPIO19_STR) {
+            gpioSerialControl(paramStr, GPIO19_PIN);
+         }
+         else if (cmdStr == CMD_GPIO23_STR) {
+            gpioSerialControl(paramStr, GPIO23_PIN);
+         }
+         else if (cmdStr == CMD_GPIO33_STR) {
+            gpioSerialControl(paramStr, GPIO33_PIN);
+         }
+         else if (cmdStr == CMD_INFO_STR) {
+            if (infoCmd(paramStr, TypeId)) {
+                  sprintf(printBuff,
+                        "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}",
+                        CMD_INFO_STR,
+                        VERSION_STR,
+                        HostName.c_str(),
+                        WiFi.localIP().toString().c_str(),
+                        WiFi.RSSI(),
+                        ControllerMgr.getControllerStatusSummary());
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_INFO_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == SERIAL_LOG_STR) {
+            if (logCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", SERIAL_LOG_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", SERIAL_LOG_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_MUTE_STR) {
+            if (muteCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_MUTE_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_MUTE_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_PICODE_STR) {
+            if (piCodeCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PICODE_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PICODE_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_PTYCODE_STR) {
+            if (ptyCodeCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PTYCODE_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PTYCODE_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_PSN_STR) {
+            if (programServiceNameCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PSN_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PSN_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_RADIOTEXT_STR) {
+            if (radioTextCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_RADIOTEXT_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_RADIOTEXT_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_RF_CARRIER_STR) {
+            if (rfCarrierCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_RF_CARRIER_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_RF_CARRIER_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_START_STR) {
+            if (startCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_START_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_START_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_STOP_STR) {
+            if (stopCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_STOP_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_STOP_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_PERIOD_STR) {
+            if (rdsTimePeriodCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PERIOD_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PERIOD_STR);
+            }
+            serial_manager.println(printBuff);
+         }
+         else if (cmdStr == CMD_REBOOT_STR) {
+            if (rebootCmd(paramStr, TypeId)) {
+                  sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_REBOOT_STR);
+            }
+            else {
+                  sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_REBOOT_STR);
+            }
+            serial_manager.println(printBuff);
          }
          else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_AUDMODE_STR);
+            if (cmdStr == "") {                                 // Just a CR, no Text.
+                  sprintf(printBuff, "{\"cmd\": \"ready\"}");     // JSON Fmt.
+            }
+            else {
+                  sprintf(printBuff, "{\"cmd\": \"undefined\"}"); // JSON Fmt.
+            }
+            serial_manager.println(printBuff);
          }
-         serial_manager.println(printBuff);
+         Serial.flush(); // Purge the serial controller to prevent conflicts with serialLog.
+   #endif // def OldWay
       }
-      else if (cmdStr == CMD_FREQ_STR) {
-         if (frequencyCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_FREQ_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_FREQ_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_GPIO19_STR) {
-         gpioSerialControl(paramStr, GPIO19_PIN);
-      }
-      else if (cmdStr == CMD_GPIO23_STR) {
-         gpioSerialControl(paramStr, GPIO23_PIN);
-      }
-      else if (cmdStr == CMD_GPIO33_STR) {
-         gpioSerialControl(paramStr, GPIO33_PIN);
-      }
-      else if (cmdStr == CMD_INFO_STR) {
-         if (infoCmd(paramStr, TypeId)) {
-               sprintf(printBuff,
-                     "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}",
-                     CMD_INFO_STR,
-                     VERSION_STR,
-                     HostName.c_str(),
-                     WiFi.localIP().toString().c_str(),
-                     WiFi.RSSI(),
-                     ControllerMgr.getControllerStatusSummary());
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_INFO_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == SERIAL_LOG_STR) {
-         if (logCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", SERIAL_LOG_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", SERIAL_LOG_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_MUTE_STR) {
-         if (muteCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_MUTE_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_MUTE_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_PICODE_STR) {
-         if (piCodeCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PICODE_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PICODE_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_PTYCODE_STR) {
-         if (ptyCodeCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PTYCODE_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PTYCODE_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_PSN_STR) {
-         if (programServiceNameCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PSN_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PSN_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_RADIOTEXT_STR) {
-         if (radioTextCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_RADIOTEXT_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_RADIOTEXT_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_RF_CARRIER_STR) {
-         if (rfCarrierCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_RF_CARRIER_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_RF_CARRIER_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_START_STR) {
-         if (startCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_START_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_START_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_STOP_STR) {
-         if (stopCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_STOP_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_STOP_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_PERIOD_STR) {
-         if (rdsTimePeriodCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_PERIOD_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_PERIOD_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else if (cmdStr == CMD_REBOOT_STR) {
-         if (rebootCmd(paramStr, TypeId)) {
-               sprintf(printBuff, "{\"%s\": \"ok\"}", CMD_REBOOT_STR);
-         }
-         else {
-               sprintf(printBuff, "{\"%s\": \"fail\"}", CMD_REBOOT_STR);
-         }
-         serial_manager.println(printBuff);
-      }
-      else {
-         if (cmdStr == "") {                                 // Just a CR, no Text.
-               sprintf(printBuff, "{\"cmd\": \"ready\"}");     // JSON Fmt.
-         }
-         else {
-               sprintf(printBuff, "{\"cmd\": \"undefined\"}"); // JSON Fmt.
-         }
-         serial_manager.println(printBuff);
-      }
-      Serial.flush(); // Purge the serial controller to prevent conflicts with serialLog.
-   }
-#endif // def OldWay
 
-   // DEBUG_END;
+   } while (false);
+
+   /// DEBUG_END;
 }
 
 // ************************************************************************************************

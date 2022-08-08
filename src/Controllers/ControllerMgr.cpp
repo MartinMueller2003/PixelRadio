@@ -233,10 +233,12 @@ String c_ControllerMgr::GetName(ControllerTypeId_t Id)
 // *********************************************************************************************
 void c_ControllerMgr::poll()
 {
-   for (auto & CurrentController : ListOfControllers)
+   /// DEBUG_START;
+   for (auto &CurrentController : ListOfControllers)
    {
       CurrentController.pController->poll();
    }
+   /// DEBUG_END;
 } // poll
 
 // *********************************************************************************************

@@ -94,11 +94,6 @@ private:
 
 // UI declarations
     void        updateUiFrequency(int fmFreqX10);
-
-
-
-
-
     void        sendStationName(String value) { FmRadio.sendStationName(value); }
     void        sendRadioText(String value)   { FmRadio.sendRadioText(value); }
 
@@ -138,7 +133,7 @@ private:
     uint16_t    homeOnAirID     = Control::noParent;
     uint16_t    homeFreqID      = Control::noParent;
 
-    bool        testModeFlg;
+    bool        testModeFlg     = false;
     bool        muteFlg         = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
     bool        rfCarrierFlg    = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
@@ -151,7 +146,8 @@ private:
     uint16_t    PiCode = 0x6400;
     uint16_t    PtyCode = 0;
     String      ProgramServiceName = F("PixeyFM");
-
+    String      LastMessageSent;
+    
     c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
     unsigned long CurrentMsgEndTime = 0;
     unsigned long CurrentMsgLastUpdateTime = 0;

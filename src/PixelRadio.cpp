@@ -66,6 +66,7 @@
 #include "ControllerMgr.h"
 #include "WiFiDriver.hpp"
 #include "radio.hpp"
+#include "memdebug.h"
 
 // ************************************************************************************************
 // Global Section
@@ -216,12 +217,18 @@ void setup()
 // Main Loop.
 void loop()
 {
+    /// DEBUG_START;
+
     Log.setLevel(LOG_LEVEL_INFO);
 
     // Background tasks
+    /// DEBUG_V("WiFiDriver");
     WiFiDriver.Poll();
+    /// DEBUG_V("ControllerMgr");
     ControllerMgr.poll();
+    /// DEBUG_V("Radio");
     Radio.Poll();
+
 
 #ifdef OldWay
     processMeasurements();  // Measure the two system voltages.
@@ -242,7 +249,7 @@ void loop()
     #endif // ifdef HTTP_ENB
 
 #endif // def OldWay 
-
+    /// DEBUG_END;
 }
 
 // *********************************************************************************************

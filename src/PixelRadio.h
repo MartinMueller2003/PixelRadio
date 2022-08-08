@@ -108,10 +108,6 @@ const uint32_t ELAPSED_TMR_TIME = 1000;   // RDS Elapsed Time Update period, in 
 #define COLOR_BLK_STR   "#000000"
 #define COLOR_WHT_STR   "#FFFFFF"
 #define COLOR_GRY_STR   "#bfbfbf"
-#define CSS_LABEL_STYLE_RED    "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;"
-#define CSS_LABEL_STYLE_BLACK  "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;"
-#define CSS_LABEL_STYLE_WHITE  "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;"
-#define CSS_LABEL_STYLE_MAROON "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;"
 
 #define USB_VOL_MIN_STR "0"
 #define USB_VOL_MAX_STR "30"

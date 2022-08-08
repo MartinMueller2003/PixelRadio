@@ -447,17 +447,21 @@ void cRadio::Poll()
         // has the current message output expired?
         if(now < CurrentMsgEndTime)
         {
-            // DEBUG_V("still waiting");
+            /// DEBUG_V("still waiting");
             updateRdsMsgRemainingTime(now);
             break;
         }
 
-        // DEBUG_V("time for a new message");
+        /// DEBUG_V("time for a new message");
         ControllerMgr.GetNextRdsMessage(RdsMsgInfo);
         CurrentMsgEndTime = now + RdsMsgInfo.DurationMilliSec;
-        // DEBUG_V("Display the new message");
-        setRdsMessage();
-        updateUiRdsText(RdsMsgInfo.Text);
+        if(!LastMessageSent.equals(RdsMsgInfo.Text))
+        {
+            /// DEBUG_V("Display the new message");
+            LastMessageSent = RdsMsgInfo.Text;
+            setRdsMessage();
+            updateUiRdsText(RdsMsgInfo.Text);
+        }
         updateRdsMsgRemainingTime(now);
 
     } while (false);
@@ -987,8 +991,8 @@ void cRadio::updateTestTones(bool resetTimerFlg)
     static uint8_t  seconds     = 0;
     static uint8_t  state       = 0;
     static uint32_t clockMillis = millis();
-    static uint32_t timerMillis = millis();
-    uint32_t currentMillis      = millis();
+    static uint32_t timerMillis = clockMillis;
+    uint32_t currentMillis      = clockMillis;
 
     do // once
     {
@@ -1000,17 +1004,21 @@ void cRadio::updateTestTones(bool resetTimerFlg)
 
         if (!testModeFlg) 
         {
+            /// DEBUG_V("Not In Test Mode")
             goFlg = false;
             state = 0;
             digitalWrite(MUX_PIN, TONE_OFF); // Switch Audio Mux chip to Line-In.
 
-            if (toneFlg == true) {           // Kill active tone generator.
+            if (toneFlg == true) 
+            {
+                /// DEBUG_V("Kill active tone generator.");
                 toneFlg = false;
                 toneOff(TONE_PIN, TEST_TONE_CHNL);
             }
             break;
         }
 
+        /// DEBUG_V();
         digitalWrite(MUX_PIN, TONE_ON); // Switch Audio Mux chip to Test Tones.
 
         if (rstFlg == true) 
