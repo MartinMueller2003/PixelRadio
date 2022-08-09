@@ -155,7 +155,6 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
     // DEBUG_START;
 
     String tempStr;
-    extern uint32_t paVolts;
     
     do // once
     {
@@ -167,26 +166,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
 
         homeTab = _homeTab;
 
-#ifdef OldWay
-        if (fmRadioTestCode == FM_TEST_FAIL)
-        {
-            tempStr = RADIO_FAIL_STR;
-        }
-        else if (fmRadioTestCode == FM_TEST_VSWR) 
-        {
-            tempStr = RADIO_VSWR_STR;
-        }
-        else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) 
-        {
-            tempStr = RADIO_VOLT_STR;
-        }
-        else 
-        {
-            tempStr = rfCarrierFlg ? RADIO_ON_AIR_STR : RADIO_OFF_AIR_STR;
-        }
-        homeOnAirID = ESPUI.addControl(ControlType::Label, HOME_RAD_STAT_STR, tempStr, ControlColor::Peterriver, homeTab);
-        ESPUI.setPanelStyle(homeOnAirID, "font-size: 3.0em;");
-#endif // def OldWay
+        RfCarrier.AddHomeControls(homeTab);
 
         tempStr    = String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR);
         homeFreqID = ESPUI.addControl(ControlType::Label,
@@ -239,20 +219,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         ESPUI.setPanelStyle(radioFreqID, F("font-size: 3.0em;"));
         ESPUI.setElementStyle(radioFreqID, F("width: 75%;"));
 
-        radioRfEnbID = ESPUI.addControl(
-                                ControlType::Switcher,
-                                RADIO_RF_CARRIER_STR,
-                                rfCarrierFlg ? F("1") : F("0"),
-                                ControlColor::Emerald,
-                                radioTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbRfCarrier(sender, type);
-                                    }
-                                },
-                                this);
+        RfCarrier.AddControls(radioTab);
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
 
@@ -525,7 +492,7 @@ void cRadio::updateUiRdsText(String & Text)
 {
     // DEBUG_START;
 
-    ESPUI.print(homeRdsTextID, String(rfCarrierFlg ? Text : RDS_RF_DISABLED_STR));
+    ESPUI.print(homeRdsTextID, String(RfCarrier.get() ? Text : RDS_RF_DISABLED_STR));
     ESPUI.print(homeTextMsgID, String(String(RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
 
     // DEBUG_END;
@@ -549,7 +516,7 @@ void cRadio::updateRdsMsgRemainingTime(unsigned long now)
             break;
         }
 
-        if (!rfCarrierFlg)
+        if (!RfCarrier.get())
         {
             // DEBUG_V("No Carrier");
             ESPUI.print(homeRdsTmrID, RDS_DISABLED_STR);

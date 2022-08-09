@@ -263,8 +263,6 @@ bool    rdsTimePeriodCmd(String  payloadStr,
                          ControllerTypeId controller);
 bool    rebootCmd(String  payloadStr,
                   ControllerTypeId controller);
-bool    rfCarrierCmd(String  payloadStr,
-                  ControllerTypeId controller);
 bool    startCmd(String  payloadStr,
                  ControllerTypeId controller);
 bool    stopCmd(String  payloadStr,
@@ -285,10 +283,7 @@ bool   updateUiGpioMsg(gpio_num_t pin, String & ControllerName, bool PinState);
 void   updateUiIpaddress(String ipStr);
 #ifdef OldWay
 void   updateUiAudioLevel(void);
-void   updateUiAudioMode(bool SteroMode);
-void   updateUiAudioMute(bool value);
 void   updateUiFrequency(int Freq10x);
-void   updateUiRfCarrier(void);
 #endif // def OldWay
 void   updateUiDiagTimer(void);
 void   updateUiVolts(void);

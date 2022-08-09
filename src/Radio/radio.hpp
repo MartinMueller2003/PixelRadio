@@ -22,6 +22,7 @@
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
+#include "RfCarrier.hpp"
 
 // *********************************************************************************************
 class cRadio
@@ -37,7 +38,6 @@ public:
     void        AddRdsControls(uint16_t Tab);
 
     void        begin ();
-    bool        IsRfCarriorOn() { return rfCarrierFlg; }
     bool        IsTestModeOn() { return testModeFlg; }
     void        Poll();
     void        restoreConfiguration(JsonObject &json);
@@ -49,7 +49,6 @@ public:
     void        CbImpedanceAdjust(Control *sender, int type);
     void        CbProgramServiceName(Control *sender, int type);
     void        CbRadioEmphasis(Control *sender, int type);
-    void        CbRfCarrier(Control *sender, int type);
     void        CbRfPowerCallback(Control *sender, int type);
     void        CbRdsRst(Control *sender, int type);
     void        CbSetPiCode(Control *sender, int type);
@@ -75,8 +74,6 @@ private:
     void        setPtyCodeOptionValues ();
     void        setRdsMessage();
     void        setRfAutoOff(void);
-    void        setRfCarrier(void);
-    void        setRfCarrier(bool value);
     void        setRfPower(void);
     void        setVgaGain(void);
     void        updateOnAirSign(void);
@@ -84,7 +81,6 @@ private:
     void        updateUiAudioLevel(void);
     void        updateUiPtyCode();
     void        updateUiRdsText(String & Text);
-    void        updateUiRfCarrier(void);
     void        updateTestTones(bool resetTimerFlg);
     void        waitForIdle(uint16_t waitMs);
 
@@ -129,7 +125,6 @@ private:
 
     bool        testModeFlg     = false;
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
-    bool        rfCarrierFlg    = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
 
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
     uint32_t    rdsMsgTime = 0;

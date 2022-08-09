@@ -160,7 +160,6 @@ void cRadio::restoreConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    ReadFromJSON(rfCarrierFlg,      config, F("RADIO_RF_CARR_FLAG"));
     ReadFromJSON(preEmphasisStr,    config, F("RADIO_PRE_EMPH_STR"));
     ReadFromJSON(rfPowerStr,        config, F("RADIO_POWER_STR"));
     ReadFromJSON(vgaGainStr,        config, F("ANALOG_GAIN_STR"));
@@ -169,6 +168,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     AudioInputImpedance.restoreConfiguration(config);
     AudioMute.restoreConfiguration(config);
     AudioMode.restoreConfiguration(config);
+    RfCarrier.restoreConfiguration(config);
 
     // DEBUG_END;
 }
@@ -181,10 +181,10 @@ void cRadio::saveConfiguration(JsonObject & config)
     AudioInputImpedance.restoreConfiguration(config);
     AudioMute.saveConfiguration(config);
     AudioMode.saveConfiguration(config);
+    RfCarrier.restoreConfiguration(config);
 
     config[F("RADIO_FM_FREQ")]          = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
-    config[F("RADIO_RF_CARR_FLAG")]     = rfCarrierFlg;   // Use radio.RDS(0/1) when restoring this uint8 value. 1=CarrierOn.
     config[F("RADIO_PRE_EMPH_STR")]     = preEmphasisStr; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
 
@@ -425,38 +425,6 @@ void cRadio::setRfAutoOff(void)
 }
 
 // *********************************************************************************************
-// setRfCarrier(): Set the QN8027 chip's RF Carrier Output (On/Off).
-void cRadio::setRfCarrier(void)
-{
-    // DEBUG_START;
-
-    setRfCarrier(rfCarrierFlg);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setRfCarrier(): Set the QN8027 chip's RF Carrier Output (On/Off).
-void cRadio::setRfCarrier(bool value)
-{
-    // DEBUG_START;
-    // DEBUG_V(String("value: ") + String(value));
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        waitForIdle(10);
-        FmRadio.Switch(value ? ON : OFF ); // Update QN8027 Carrier.
-        waitForIdle(25);
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
 // setRfPower(): Set the QN8027 chip's RF Power Output. Max 121dBuVp.
 // Note: Power is not changed until RF Carrier is toggled Off then On.
 void cRadio::setRfPower(void)
@@ -553,45 +521,6 @@ void cRadio::setVgaGain(void)
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 #endif // def OldWay
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiRfCarrier(): Updates the GUI's RF Carrier on homeTab and radiotab.
-void cRadio::updateUiRfCarrier(void)
-{
-    // DEBUG_START;
-#ifdef OldWay
-
-    extern uint32_t paVolts;
-
-    ESPUI.updateControlValue(radioRfEnbID, String(rfCarrierFlg ? F("1") : F("0")));
-
-    if (rfCarrierFlg == true) 
-    {
-        if (fmRadioTestCode == FM_TEST_FAIL) 
-        {
-            ESPUI.print(homeOnAirID, RADIO_FAIL_STR);   // Update homeTab panel.
-        }
-        else if (fmRadioTestCode == FM_TEST_VSWR) 
-        {
-            ESPUI.print(homeOnAirID, RADIO_VSWR_STR);   // Update homeTab panel.
-        }
-        else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) 
-        {
-            ESPUI.print(homeOnAirID, RADIO_VOLT_STR);   // Update homeTab panel.
-        }
-        else 
-        {
-            ESPUI.print(homeOnAirID, RADIO_ON_AIR_STR); // Update homeTab panel.
-        }
-    }
-    else 
-    {
-        ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
-    }
-#endif // def OldWay
-
     // DEBUG_END;
 }
 

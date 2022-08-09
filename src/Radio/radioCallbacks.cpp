@@ -195,60 +195,6 @@ void cRadio::CbRdsRst(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// rfCarrierCallback(): Controls RF Carrier, On/Off.
-void cRadio::CbRfCarrier(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    extern float paVolts;
-    
-    rfCarrierFlg = (S_ACTIVE == type);
-    String tempStr;
-#ifdef OldWay
-    if (type == S_ACTIVE)
-    {
-        if (fmRadioTestCode == FM_TEST_FAIL)
-        {
-            Log.errorln(String(F("rfCarrierCallback: RADIO MODULE FAILURE!")).c_str());
-            tempStr = F("On, Warning: Radio Module Failure");
-            ESPUI.print(homeOnAirID, RADIO_FAIL_STR); // Update homeTab panel.
-        }
-        else if (fmRadioTestCode == FM_TEST_VSWR)
-        {
-            Log.errorln(String(F("rfCarrierCallback: RADIO MODULE HAS HIGH VSWR!")).c_str());
-            tempStr = F("On, Warning: Radio Module RF-Out has High VSWR");
-            ESPUI.print(homeOnAirID, RADIO_VSWR_STR); // Update homeTab panel.
-        }
-        else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX))
-        {
-            Log.errorln(String(F("rfCarrierCallback: RF PA HAS INCORRECT VOLTAGE!")).c_str());
-            tempStr = F("On, Warning: RF PA has Incorrect Voltage");
-            ESPUI.print(homeOnAirID, RADIO_VOLT_STR); // Update homeTab panel.
-        }
-        else
-        {
-            tempStr = F("On");
-            ESPUI.print(homeOnAirID, RADIO_ON_AIR_STR); // Update homeTab panel.
-        }
-    }
-    else
-    {
-        tempStr = F("Off");
-        ESPUI.print(homeOnAirID, RADIO_OFF_AIR_STR); // Update homeTab panel.
-    }
-
-    setRfCarrier();
-    displaySaveWarning();
-    Log.infoln(String(F("RF Carrier Enable Set to: %s.")).c_str(), tempStr.c_str());
-#endif // def OldWay
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 // rfPower(): Sets RF Power.
 void cRadio::CbRfPowerCallback(Control *sender, int type)
 {
