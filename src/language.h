@@ -1,3 +1,4 @@
+#pragma once
 /*
    File: language.h
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
@@ -17,7 +18,6 @@
  */
 
 // ************************************************************************************************
-#pragma once
 #include <Arduino.h>
 #include "config.h"
 
@@ -148,7 +148,6 @@
 #define RADIO_DIG_AUDIO_STR   "DIGITAL AUDIO GAIN"
 #define RADIO_FAIL_STR        "<font color=\"" + String(COLOR_RED_STR) + "\">-FAIL-</font>"
 #define RADIO_FM_FRQ_STR      "FM FREQUENCY"
-#define RADIO_INP_IMP_STR     "INPUT IMPEDANCE"
 #define RADIO_MONO_STR        "MONO AUDIO"
 #define RADIO_OFF_AIR_STR     "<font color=\"" + String(COLOR_RED_STR) + "\">OFF AIR</font>"
 #define RADIO_ON_AIR_STR      "<font color=\"" + String(COLOR_GRN_STR) + "\">ON AIR</font>"

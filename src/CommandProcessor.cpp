@@ -1,5 +1,5 @@
 /*
-   File: commands.cpp
+   File: CommandProcessor.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -17,43 +17,83 @@
  */
 
 // *************************************************************************************************************************
-#include "Commands.h"
+#include "CommandProcessor.hpp"
 #include "memdebug.h"
 #include "language.h"
 #include "radio.hpp"
+#include <map>
+
+typedef bool (cCommandProcessor::*CmdHandler)(String &, String &, String &);
+std::map<String, CmdHandler> ListOfCommands
+{
+    {"aud",     &cCommandProcessor::audioMode},
+    {"freq",    &cCommandProcessor::frequency},
+    {"gpio19",  &cCommandProcessor::gpio19},
+    {"gpio23",  &cCommandProcessor::gpio23},
+    {"gpio33",  &cCommandProcessor::gpio33},
+    {"mute",    &cCommandProcessor::mute},
+    {"pic",     &cCommandProcessor::piCode},
+    {"rtper",   &cCommandProcessor::rdsTimePeriod},
+    {"psn",     &cCommandProcessor::programServiceName},
+    {"pty",     &cCommandProcessor::ptyCode},
+    {"rfc",     &cCommandProcessor::rfCarrier},
+    {"rtm",     &cCommandProcessor::radioText},
+    {"start",   &cCommandProcessor::start},
+    {"stop",    &cCommandProcessor::stop},
+    {"?",       &cCommandProcessor::HelpCommand},
+    {"h",       &cCommandProcessor::HelpCommand},
+    {"help",    &cCommandProcessor::HelpCommand},
+};
 
 // *************************************************************************************************************************
-CommandProcessor::CommandProcessor()
+cCommandProcessor::cCommandProcessor()
 {
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::ProcessCommand(String &RawCommand, String & ControllerName)
+bool cCommandProcessor::ProcessCommand(String & RawCommand, 
+                                       String & ControllerName,
+                                       String & Response)
+{
+    DEBUG_START;
+
+    String Command;
+    String Parameter;
+
+    bool response = ProcessCommand(Command, Parameter, ControllerName, Response);
+
+    DEBUG_END;
+    return response;
+}
+
+// *************************************************************************************************************************
+bool cCommandProcessor::ProcessCommand(String & Command, 
+                                       String & Parameter,
+                                       String & ControllerName,
+                                       String & Response)
 {
     DEBUG_START;
     bool response = false;
+    Response.reserve(1000);
 
-    String cmd;
-    String payloadStr;
-    payloadStr.trim();
-    payloadStr.toLowerCase();
+    Command.trim();
+    Command.toLowerCase();
+
+    Parameter.trim();
 
     do // once
     {
-        if(cmd.equals(F("aud")))    {response = audioMode           (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("freq")))   {response = frequency           (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("gpio19"))) {response = gpio19              (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("gpio23"))) {response = gpio23              (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("gpio33"))) {response = gpio33              (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("mute")))   {response = mute                (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("pic")))    {response = piCode              (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("rtper")))  {response = rdsTimePeriod       (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("psn")))    {response = programServiceName  (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("pty")))    {response = ptyCode             (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("rfc")))    {response = rfCarrier           (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("rtm")))    {response = radioText           (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("start")))  {response = start               (payloadStr, ControllerName); break;}
-        if(cmd.equals(F("stop")))   {response = stop                (payloadStr, ControllerName); break;}
+        if(ListOfCommands.end() == ListOfCommands.find(Command))
+        {
+            Response = (String(F("->ERROR: Unknown Command: '")) + Command + F("'\n"));
+            HelpCommand(Parameter, ControllerName, Response);
+            response = false;
+            break;
+        }
+
+        DEBUG_V();
+        Response += String(F("->")) + ControllerName;
+        (this->*ListOfCommands[Command])(Parameter, ControllerName, Response);
     } while (false);
 
     DEBUG_END;
@@ -62,39 +102,35 @@ bool CommandProcessor::ProcessCommand(String &RawCommand, String & ControllerNam
 
 // *************************************************************************************************************************
 // AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
-bool CommandProcessor::audioMode(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::audioMode(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
     bool response = true;
     bool stereoEnbFlg = true;
-#ifdef OldWay
+
+    payloadStr.toLowerCase();
+
     do // once
     {
         if (payloadStr.equals(CMD_MODE_STER_STR))
         {
-            stereoEnbFlg = true;
-        }
-        else if (payloadStr.equals(CMD_MODE_MONO_STR))
-        {
-            stereoEnbFlg = false;
-        }
-        else 
-        {
-            Log.errorln((String(F("->")) + ControllerName + F(": Invalid Audio Mode Payload '") + payloadStr + F("'")).c_str());
-            response = false;
+            Response += F(": Audio Mode Set to 'STEREO'\n");
+            Radio.setMonoAudio(false);
             break;
         }
-        updateUiAudioMode(stereoEnbFlg);
-        // updateRadioAudioMode(stereoEnbFlg);
 
-        Log.verboseln(
-            (String(F("->")) + 
-            ControllerName + 
-            F(": Audio Mode Set to ") + 
-            ((stereoEnbFlg) ? F("'STEREO'") : F("'MONO'") )).c_str());
+        if (payloadStr.equals(CMD_MODE_MONO_STR))
+        {
+            Response += F(": Audio Mode Set to 'MONO'\n");
+            Radio.setMonoAudio(true);
+            break;
+        }
+
+        Response += String(F(": Invalid Audio Mode Parameter '")) + payloadStr + F("'\n");
+        response = false;
+        break;
 
     } while (false);
-#endif // def OldWay
 
     DEBUG_END;
 
@@ -102,11 +138,10 @@ bool CommandProcessor::audioMode(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::frequency(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::frequency(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
     bool response = true;
-#ifdef OldWay
 
     do // once
     {
@@ -121,42 +156,42 @@ bool CommandProcessor::frequency(String & payloadStr, String & ControllerName)
             (freq < FM_FREQ_MIN_X10) || 
             (freq > FM_FREQ_MAX_X10)) 
         {
-            Log.errorln((String(F("-> ")) + ControllerName + F(" Controller: Invalid Radio Frequency Payload (") + payloadStr + F("'")).c_str());
+            Response += String(F(": Invalid Radio Frequency Parameter ")) + payloadStr + F("'\n");
             response = false;
             break;
         }
-
-        updateUiFrequency(freq);
-        Log.verboseln((String(F("-> ")) + ControllerName + F(" Controller: Transmit Frequency Set to ") + String(((float(freq)) / 10.0f), 1) + F("Mhz")).c_str());
+#ifdef OldWay
+        setFrequency(freq);
+#endif // def OldWay
+        Response += String(F(": Transmit Frequency Set to ")) + String(((float(freq)) / 10.0f), 1) + F("Mhz\n");
 
     } while (false);
-#endif // def OldWay
 
     DEBUG_END;
     return response;
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::gpio19(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::gpio19(String & payloadStr, String & ControllerName, String & Response)
 {
-    return gpio(payloadStr, ControllerName, GPIO19_PIN);
+    return gpio(payloadStr, ControllerName, GPIO19_PIN, Response);
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::gpio23(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::gpio23(String & payloadStr, String & ControllerName, String & Response)
 {
-    return gpio(payloadStr, ControllerName, GPIO23_PIN);
+    return gpio(payloadStr, ControllerName, GPIO23_PIN, Response);
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::gpio33(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::gpio33(String & payloadStr, String & ControllerName, String & Response)
 {
-    return gpio(payloadStr, ControllerName, GPIO33_PIN);
+    return gpio(payloadStr, ControllerName, GPIO33_PIN, Response);
 }
 
 // *************************************************************************************************************************
 // gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
-bool CommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_num_t pin)
+bool cCommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_num_t pin, String & Response)
 {
     DEBUG_START;
 
@@ -186,7 +221,9 @@ bool CommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_n
         bool NewPinState = payloadStr.equals(CMD_GPIO_OUT_HIGH_STR) ? HIGH : LOW;
         digitalWrite(pin, NewPinState);
         Log.infoln((String(F("-> ")) + ControllerName + F(" Controller: Setting GPIO Pin-") + String(pin) + F(" to ") + ((pin) ? F(CMD_GPIO_OUT_HIGH_STR) : F(CMD_GPIO_OUT_LOW_STR))).c_str());
+#ifdef OldWay
         updateUiGpioMsg(pin, ControllerName, NewPinState);
+#endif // def OldWay
 
     } while (false);
 
@@ -194,8 +231,41 @@ bool CommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_n
     return response;
 }
 
+// ================================================================================================
+// CommandError(): Create an error response.
+bool cCommandProcessor::HelpCommand(String & payloadStr, String & ControllerName, String & Response)
+{
+    DEBUG_START;
+
+    Response += ("\n");
+    Response += ("=========================================\n");
+    Response += ("**      CONTROLLER COMMAND SUMMARY     **\n");
+    Response += ("=========================================\n");
+    Response += (" AUDIO MODE      : aud=mono : stereo\n");
+    Response += String(F(" FREQUENCY X10   : freq=")) + String(FM_FREQ_MIN_X10) + F("<->") + String(FM_FREQ_MAX_X10) + F("\n");
+    Response += (" GPIO-19 CONTROL : gpio19=read : outhigh : outlow\n");
+    Response += (" GPIO-23 CONTROL : gpio23=read : outhigh : outlow\n");
+    Response += (" GPIO-33 CONTROL : gpio33=read : outhigh : outlow\n");
+    Response += (" INFORMATION     : info=system\n");
+    Response += (" MUTE AUDIO      : mute=on : off\n");
+    Response += String(" PROG ID CODE    : pic=0x") + String(RDS_PI_CODE_MIN,HEX) + " <-> 0x" + String(RDS_PI_CODE_MAX, HEX) + F("\n");
+    Response += String(" PROG SERV NAME  : psn=[") + String(CMD_PSN_MAX_SZ) + F(" char name]\n");
+    Response += String(" RADIOTXT MSG    : rtm=[") + String(CMD_RT_MAX_SZ) + F(" char message]\n");
+    Response += String(" RADIOTXT PERIOD : rtper=5 <-> ") + String(RDS_DSP_TM_MAX) + F(" secs\n");
+    Response += (" REBOOT SYSTEM   : reboot=system\n");
+    Response += (" START RDS       : start=rds\n");
+    Response += (" STOP RDS        : stop=rds\n");
+    Response += (" LOG CONTROL     : log=silent : restore\n");
+    Response += (" HELP            : ?  h  help\n");
+    Response += ("=========================================\n");
+    Response += ("\n");
+
+    DEBUG_END;
+    return true;
+}
+
 // *************************************************************************************************************************
-bool CommandProcessor::info(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::info(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
     bool response = true;
@@ -222,7 +292,7 @@ bool CommandProcessor::info(String & payloadStr, String & ControllerName)
 // *************************************************************************************************************************
 // logCmd(): Set the Serial Log Level to Silent or reset back to system (Web UI) setting.
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
-bool CommandProcessor::log(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::log(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
 
@@ -265,7 +335,7 @@ bool CommandProcessor::log(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::mute(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::mute(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
 
@@ -306,7 +376,7 @@ bool CommandProcessor::mute(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::piCode(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::piCode(String & payloadStr, String & ControllerName, String & Response)
 {
    DEBUG_START;
 
@@ -350,7 +420,7 @@ bool CommandProcessor::piCode(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::ptyCode(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::ptyCode(String & payloadStr, String & ControllerName, String & Response)
 {
    DEBUG_START;
 
@@ -395,7 +465,7 @@ bool CommandProcessor::ptyCode(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::programServiceName(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::programServiceName(String & payloadStr, String & ControllerName, String & Response)
 {
    DEBUG_START;
 
@@ -421,7 +491,7 @@ bool CommandProcessor::programServiceName(String & payloadStr, String & Controll
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::radioText(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::radioText(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
 
@@ -448,7 +518,7 @@ bool CommandProcessor::radioText(String & payloadStr, String & ControllerName)
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
-bool CommandProcessor::rdsTimePeriod(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::rdsTimePeriod(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
     bool response = true;
@@ -502,7 +572,7 @@ bool CommandProcessor::rdsTimePeriod(String & payloadStr, String & ControllerNam
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::reboot(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::reboot(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START
     bool response = true;
@@ -528,7 +598,7 @@ bool CommandProcessor::reboot(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::rfCarrier(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::rfCarrier(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
 
@@ -570,7 +640,7 @@ bool CommandProcessor::rfCarrier(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::start(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::start(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
     bool response = true;
@@ -596,7 +666,7 @@ bool CommandProcessor::start(String & payloadStr, String & ControllerName)
 }
 
 // *************************************************************************************************************************
-bool CommandProcessor::stop(String & payloadStr, String & ControllerName)
+bool cCommandProcessor::stop(String & payloadStr, String & ControllerName, String & Response)
 {
     DEBUG_START;
     bool response = true;

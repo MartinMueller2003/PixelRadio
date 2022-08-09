@@ -79,8 +79,7 @@ void cRadio::CbAdjFmFreq(Control *sender, int type)
 
         DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
 
-        setFrequency();
-        updateUiFrequency(fmFreqX10);
+        setFrequency(fmFreqX10);
         displaySaveWarning();
         Log.infoln(String(F("FM Frequency Set to: %s.")).c_str(), (String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR)).c_str());
 
@@ -140,40 +139,6 @@ void cRadio::CbDigitalGainAdjust(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// impAdjustCallback(): Adjust Audio Input Impedance. Sets String.
-void cRadio::CbImpedanceAdjust(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    do // once
-    {
-        inpImpedStr = sender->value;
-        if (!inpImpedStr.equals(INP_IMP05K_STR) &&
-            !inpImpedStr.equals(INP_IMP10K_STR) &&
-            !inpImpedStr.equals(INP_IMP20K_STR) &&
-            !inpImpedStr.equals(INP_IMP40K_STR) )
-        {
-            Log.errorln((String(F("impAdjust: BAD_VALUE: ")) + inpImpedStr).c_str());
-            inpImpedStr = INP_IMP_DEF_STR;
-            ESPUI.updateControlValue(sender, inpImpedStr);
-        }
-
-        setAudioImpedance(); // Update Impednace setting on QN8027 FM Radio Chip.
-
-        ESPUI.print(radioGainID, String(getAudioGain()) + F(" dB"));
-        Log.infoln(String(F("Input Impedance Set to: %s.")).c_str(), inpImpedStr.c_str());
-
-        displaySaveWarning();
-
-    } while (false);
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 // muteCallback(): Turn audio on/off (true = Mute the audio).
 void cRadio::CbMute(Control *sender, int type)
 {
@@ -184,16 +149,13 @@ void cRadio::CbMute(Control *sender, int type)
 
     if (type == S_ACTIVE) 
     {
-        ESPUI.setElementStyle(adjMuteID, "background: red;");
-        muteFlg = true;
+        setAudioMute(true); // Update QN8027 Mute Register.
     }
     else if (type == S_INACTIVE) 
     {
-        ESPUI.setElementStyle(adjMuteID, "background: #bebebe;");
-        muteFlg = false;
+        setAudioMute(false); // Update QN8027 Mute Register.
     }
 
-    setAudioMute(); // Update QN8027 Mute Register.
     displaySaveWarning();
     Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), String(muteFlg ? F("On") : F("Off") ).c_str());
 
@@ -288,7 +250,7 @@ void cRadio::CbRfCarrier(Control *sender, int type)
     
     rfCarrierFlg = (S_ACTIVE == type);
     String tempStr;
-
+#ifdef OldWay
     if (type == S_ACTIVE)
     {
         if (fmRadioTestCode == FM_TEST_FAIL)
@@ -324,6 +286,7 @@ void cRadio::CbRfCarrier(Control *sender, int type)
     setRfCarrier();
     displaySaveWarning();
     Log.infoln(String(F("RF Carrier Enable Set to: %s.")).c_str(), tempStr.c_str());
+#endif // def OldWay
 
     DEBUG_END;
 }

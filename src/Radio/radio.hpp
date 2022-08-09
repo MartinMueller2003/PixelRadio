@@ -18,6 +18,8 @@
 #include <ArduinoLog.h>
 #include "QN8027Radio.h"
 
+#include "AudioInputImpedance.hpp"
+
 // *********************************************************************************************
 class cRadio
 {
@@ -37,7 +39,7 @@ public:
     void        Poll();
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
-
+    
 // Callbacks need to be public 
     void        CbAdjFmFreq(Control *sender, int type);
     void        CbAudioMode(Control *sender, int type);
@@ -54,21 +56,19 @@ public:
     void        CbTestMode(Control *sender, int type);
     void        CbVgaGainAdjust(Control *sender, int type);
 
-#ifdef OldWay
-    void        updateRadioSettings(void);
-#endif // def OldWay
+    void        setFrequency(uint32_t value);
+    void        setMonoAudio(bool value);
 
 private:
-    bool        calibrateAntenna(void);
-    bool        checkRadioIsPresent(void);
     int8_t      getAudioGain(void);
-    uint8_t     initRadioChip(void);
-    uint16_t    measureAudioLevel(void);
-    void        setAudioImpedance(void);
+
+    void        setAudioMute(bool value);
     void        setAudioMute(void);
+
     void        setDigitalGain(void);
     void        setFrequency(void);
     void        setMonoAudio(void);
+    void        setPiCode(uint16_t value);
     void        setPiCode();
     void        setPreEmphasis(void);
     void        setProgramServiceName();
@@ -83,22 +83,23 @@ private:
     void        setVgaGain(void);
     void        updateOnAirSign(void);
     void        updateRdsMsgRemainingTime(unsigned long now);
-    void        updateUiRdsText(String & Text);
-    void        updateUiPtyCode();
     void        updateUiAudioLevel(void);
     void        updateUiAudioMode(bool stereoEnbFlg);
     void        updateUiAudioMute(bool value);
+    void        updateUiPtyCode();
+    void        updateUiRdsText(String & Text);
     void        updateUiRfCarrier(void);
     void        updateTestTones(bool resetTimerFlg);
     void        waitForIdle(uint16_t waitMs);
 
 // UI declarations
     void        updateUiFrequency(int fmFreqX10);
+#ifdef OldWay
     void        sendStationName(String value) { FmRadio.sendStationName(value); }
     void        sendRadioText(String value)   { FmRadio.sendRadioText(value); }
-
-    QN8027Radio FmRadio;
-    SemaphoreHandle_t RadioSemaphore = NULL;
+#endif // def OldWay
+    void        sendStationName(String value) { }
+    void        sendRadioText(String value)   { }
 
     uint16_t    adjTab          = Control::noParent;
     uint16_t    diagTab         = Control::noParent;
@@ -152,12 +153,6 @@ private:
     unsigned long CurrentMsgEndTime = 0;
     unsigned long CurrentMsgLastUpdateTime = 0;
 
-// FM Radio: QN8027 Test Codes
-#define  FM_TEST_OK   0          // QN8027 Is Ok.
-#define  FM_TEST_VSWR 1          // QN8027 RF Out has Bad VSWR.
-#define  FM_TEST_FAIL 2          // QN8027 Chip Bad or missing.
-    uint8_t     fmRadioTestCode = FM_TEST_OK;        // FM Radio Module Test Result Code.
-
 #define PRE_EMPH_USA_STR    "North America (75uS)" // North America / Japan.
 #define PRE_EMPH_EUR_STR    "Europe (50uS)"        // Europe, Australia, China.
 #define PRE_EMPH_DEF_STR    PRE_EMPH_USA_STR;
@@ -172,14 +167,9 @@ private:
 #define DIG_GAIN2_STR     "2 dB"
 #define DIG_GAIN_DEF_STR  DIG_GAIN0_STR;
     String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
-    
-#define INP_IMP05K_STR   "5K Ohms"
-#define INP_IMP10K_STR   "10K Ohms"
-#define INP_IMP20K_STR   "20K Ohms (default)"
-#define INP_IMP40K_STR   "40K Ohms"
-#define INP_IMP_DEF_STR  INP_IMP20K_STR;
-    String inpImpedStr = INP_IMP_DEF_STR;                   // Control.
-    
+
+    cAudioInputImpedance AudioInputImpedance;
+
 #define VGA_GAIN0_STR     "3dB"
 #define VGA_GAIN1_STR     "6dB"
 #define VGA_GAIN2_STR     "9dB"

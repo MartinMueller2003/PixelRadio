@@ -181,6 +181,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
 
         homeTab = _homeTab;
 
+#ifdef OldWay
         if (fmRadioTestCode == FM_TEST_FAIL)
         {
             tempStr = RADIO_FAIL_STR;
@@ -199,6 +200,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
         }
         homeOnAirID = ESPUI.addControl(ControlType::Label, HOME_RAD_STAT_STR, tempStr, ControlColor::Peterriver, homeTab);
         ESPUI.setPanelStyle(homeOnAirID, "font-size: 3.0em;");
+#endif // def OldWay
 
         tempStr    = String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR);
         homeFreqID = ESPUI.addControl(ControlType::Label,
@@ -333,25 +335,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         ESPUI.addControl(ControlType::Option, VGA_GAIN4_STR, VGA_GAIN4_STR, ControlColor::Emerald, radioVgaGainID);
         ESPUI.addControl(ControlType::Option, VGA_GAIN5_STR, VGA_GAIN5_STR, ControlColor::Emerald, radioVgaGainID);
 
-        radioImpID = ESPUI.addControl(
-                                ControlType::Select, 
-                                RADIO_INP_IMP_STR, 
-                                inpImpedStr, 
-                                ControlColor::Emerald, 
-                                radioTab, 
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbImpedanceAdjust(sender, type);
-                                    }
-                                },
-                                this);
-        ESPUI.addControl(ControlType::Option, INP_IMP05K_STR, INP_IMP05K_STR, ControlColor::None, radioImpID);
-        ESPUI.addControl(ControlType::Option, INP_IMP10K_STR, INP_IMP10K_STR, ControlColor::None, radioImpID);
-        ESPUI.addControl(ControlType::Option, INP_IMP20K_STR, INP_IMP20K_STR, ControlColor::None, radioImpID);
-        ESPUI.addControl(ControlType::Option, INP_IMP40K_STR, INP_IMP40K_STR, ControlColor::None, radioImpID);
-        // DEBUG_V();
+        AudioInputImpedance.AddRadioControls(radioTab);
 
         #ifdef ADV_RADIO_FEATURES
         radioDgainID = ESPUI.addControl(
@@ -550,6 +534,27 @@ void cRadio::setPtyCode(String & ptyStr)
 }
 
 // ************************************************************************************************
+// updateUiFrequency(): Update the FM Transmit Frequency on the UI's adjTab, homeTab, and radioTab.
+void cRadio::updateUiFrequency(int fmFreqX10)
+{
+    // DEBUG_START;
+
+    // DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
+
+    float tempFloat = float(fmFreqX10) / 10.0f;
+    // DEBUG_V(String("tempFloat: ") + String(tempFloat));
+
+    String tempStr = String(tempFloat, 1) + F(UNITS_MHZ_STR);
+    // DEBUG_V(String("  tempStr: ") + String(tempStr));
+
+    ESPUI.print(adjFmDispID, tempStr);
+    ESPUI.print(homeFreqID,  tempStr);
+    ESPUI.print(radioFreqID, tempStr);
+
+    // DEBUG_END;
+}
+
+// ************************************************************************************************
 // updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
 void cRadio::updateUiRdsText(String & Text)
 {
@@ -637,7 +642,9 @@ void cRadio::updateUiAudioLevel(void)
     else if (millis() - previousMillis >= AUDIO_MEAS_TIME) 
     {
         previousMillis = millis();
+#ifdef OldWay
         mV             = measureAudioLevel();
+#endif // def OldWay
 
         if (mV >= AUDIO_LEVEL_MAX) 
         {

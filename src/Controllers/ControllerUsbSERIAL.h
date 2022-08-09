@@ -22,6 +22,7 @@
 #include "RBD_SerialManager.h"
 #include "ControllerMessages.h"
 #include "language.h"
+#include "CommandProcessor.hpp"
 
 class c_ControllerUsbSERIAL : public c_ControllerCommon
 {
@@ -45,6 +46,7 @@ private:
    bool     SetBaudrate(String NewRate);
 
    RBD::SerialManager serial_manager;
+   cCommandProcessor  CommandProcessor;
 
    String   cmdStr;   // Serial Port Commands from user (CLI).
    String   paramStr;
