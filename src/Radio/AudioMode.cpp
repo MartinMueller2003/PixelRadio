@@ -1,5 +1,5 @@
 /*
-   File: AudioMute.cpp
+   File: AudioMode.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,17 +15,18 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include <map>
-#include "radio.hpp"
-#include "AudioMute.hpp"
+#include "language.h"
+#include "AudioMode.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char RADIO_MUTE_FLAG [] = "RADIO_MUTE_FLAG";
-static const PROGMEM char ADJUST_MUTE_STR [] = "AUDIO MUTE";
+static const PROGMEM char RADIO_STEREO_FLAG     [] = "RADIO_STEREO_FLAG";
+static const PROGMEM char RADIO_MONO_STR        [] = "MONO AUDIO";
+static const PROGMEM char RADIO_STEREO_STR      [] = "STEREO AUDIO";
+static const PROGMEM char RADIO_AUDIO_MODE_STR  [] = "AUDIO MODE";
 
 // *********************************************************************************************
-cAudioMute::cAudioMute()
+cAudioMode::cAudioMode()
 {
     /// DEBUG_START;
 
@@ -33,7 +34,7 @@ cAudioMute::cAudioMute()
 }
 
 // *********************************************************************************************
-void cAudioMute::AddControls (uint16_t value)
+void cAudioMode::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
@@ -49,20 +50,30 @@ void cAudioMute::AddControls (uint16_t value)
 
         ControlId = ESPUI.addControl(
                                 ControlType::Switcher,
-                                ADJUST_MUTE_STR,
+                                RADIO_AUDIO_MODE_STR,
                                 emptyString,
-                                ControlColor::Wetasphalt,
+                                ControlColor::Emerald,
                                 TabId,
                                 [](Control* sender, int type, void* UserInfo)
                                 {
                                     if(UserInfo)
                                     {
-                                        static_cast<cAudioMute *>(UserInfo)->Callback(sender, type);
+                                        static_cast<cAudioMode *>(UserInfo)->Callback(sender, type);
                                     }
                                 },
                                 this);
-        Mute = !Mute; // force a UI Update
-        set(!Mute);
+
+        MessageID = ESPUI.addControl(
+                                ControlType::Label, 
+                                RADIO_AUDIO_MODE_STR, 
+                                emptyString, 
+                                ControlColor::Emerald, 
+                                ControlId);
+        ESPUI.setElementStyle(MessageID, CSS_LABEL_STYLE_BLACK);
+
+        // force a UI Update
+        Mode = !Mode; 
+        set(!Mode);
 
         // DEBUG_V();
 
@@ -73,7 +84,7 @@ void cAudioMute::AddControls (uint16_t value)
 
 // ************************************************************************************************
 // Callback(): Adjust Audio Input Impedance.
-void cAudioMute::Callback(Control *sender, int type)
+void cAudioMode::Callback(Control *sender, int type)
 {
     // DEBUG_START;
 
@@ -86,41 +97,42 @@ void cAudioMute::Callback(Control *sender, int type)
 }
 
 // *********************************************************************************************
-void cAudioMute::restoreConfiguration(JsonObject & config)
+void cAudioMode::restoreConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    ReadFromJSON(Mute, config, RADIO_MUTE_FLAG);
-    set(Mute);
+    ReadFromJSON(Mode, config, RADIO_STEREO_FLAG);
+    set(Mode);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cAudioMute::saveConfiguration(JsonObject & config)
+void cAudioMode::saveConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    config[RADIO_MUTE_FLAG] = Mute;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
+    // Use radio.Mode(0/1) when restoring this uint8 value. 1=ModeOn
+    config[RADIO_STEREO_FLAG] = Mode;
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
 // set(): Set the Audio Input Impedance on the QN8027 chip.
-void cAudioMute::set(bool value)
+void cAudioMode::set(bool value)
 {
     // DEBUG_START;
 
-    if(value != Mute)
+    if(value != Mode)
     {
-        Mute = value;
-        QN8027RadioApi.setAudioMute(Mute);
+        Mode = value;
+        QN8027RadioApi.setMonoAudio(value);
 
-        ESPUI.setElementStyle(ControlId, Mute ? F("background: red;") : F("background: #bebebe;"));
-        ESPUI.updateControlValue(ControlId, Mute ? F("1") : F("0"));
+        ESPUI.print(MessageID, value ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
+        ESPUI.updateControlValue(ControlId, value ? F("1") : F("0"));
 
-        Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), String(Mute ? F("On") : F("Off") ).c_str());
+        Log.infoln(String(F("Radio Audio Mode Set to: %s.")).c_str(), String(value ? F("Stereo") : F("Mono")).c_str());
         displaySaveWarning();
     }
 
@@ -128,7 +140,7 @@ void cAudioMute::set(bool value)
 }
 
 // *********************************************************************************************
-cAudioMute AudioMute;
+cAudioMode AudioMode;
 
 // *********************************************************************************************
 // OEF

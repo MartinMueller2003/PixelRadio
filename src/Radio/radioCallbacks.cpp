@@ -89,25 +89,6 @@ void cRadio::CbAdjFmFreq(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// audioCallback(): Update the Stereo / Mono Audio modes.
-void cRadio::CbAudioMode(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    stereoEnbFlg = (S_ACTIVE == type);
-
-    updateUiAudioMode(stereoEnbFlg);
-    setMonoAudio();
-    displaySaveWarning();
-    Log.infoln(String(F("Radio Audio Mode Set to: %s.")).c_str(), String(stereoEnbFlg ? F("Stereo") : F("Mono")).c_str());
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 // gainAdjust(): Adjust Digital (USB) or Analog Input Gain. Sets String.
 void cRadio::CbDigitalGainAdjust(Control *sender, int type)
 {

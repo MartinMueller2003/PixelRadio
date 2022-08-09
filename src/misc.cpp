@@ -29,6 +29,7 @@
 // *********************************************************************************************
 uint8_t i2cScanner(void)
 {
+#ifdef OldWay
     byte   count = 0;
     String devStr;
 
@@ -59,6 +60,8 @@ uint8_t i2cScanner(void)
         Log.infoln(String(F("-> Scanning Complete, Found %u i2c Devices.")).c_str(), count);
     }
     return count;
+#endif // def OldWay
+    return 0;
 }
 
 // *********************************************************************************************

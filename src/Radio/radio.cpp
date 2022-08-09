@@ -161,7 +161,6 @@ void cRadio::restoreConfiguration(JsonObject & config)
     // DEBUG_START;
 
     ReadFromJSON(rfCarrierFlg,      config, F("RADIO_RF_CARR_FLAG"));
-    ReadFromJSON(stereoEnbFlg,      config, F("RADIO_STEREO_FLAG"));
     ReadFromJSON(preEmphasisStr,    config, F("RADIO_PRE_EMPH_STR"));
     ReadFromJSON(rfPowerStr,        config, F("RADIO_POWER_STR"));
     ReadFromJSON(vgaGainStr,        config, F("ANALOG_GAIN_STR"));
@@ -169,6 +168,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
 
     AudioInputImpedance.restoreConfiguration(config);
     AudioMute.restoreConfiguration(config);
+    AudioMode.restoreConfiguration(config);
 
     // DEBUG_END;
 }
@@ -180,11 +180,11 @@ void cRadio::saveConfiguration(JsonObject & config)
 
     AudioInputImpedance.restoreConfiguration(config);
     AudioMute.saveConfiguration(config);
+    AudioMode.saveConfiguration(config);
 
     config[F("RADIO_FM_FREQ")]          = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_RF_CARR_FLAG")]     = rfCarrierFlg;   // Use radio.RDS(0/1) when restoring this uint8 value. 1=CarrierOn.
-    config[F("RADIO_STEREO_FLAG")]      = stereoEnbFlg;   // Use radio.MonoAudio(0/1) when restoring this uint8 value. 0=Stereo.
     config[F("RADIO_PRE_EMPH_STR")]     = preEmphasisStr; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
 
@@ -273,38 +273,6 @@ void cRadio::setFrequency(void)
     }
 #endif // def OldWay
     // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setMonoAudio(): Control the Audio Stereo/Mono mode on the QN8027 chip.
-void cRadio::setMonoAudio(bool value)
-{
-    DEBUG_START;
-
-    stereoEnbFlg = !value;
-    setMonoAudio();
-    updateUiAudioMode(stereoEnbFlg);
-
-    DEBUG_END;
-}
-
-// *********************************************************************************************
-// setMonoAudio(): Control the Audio Stereo/Mono mode on the QN8027 chip.
-void cRadio::setMonoAudio(void)
-{
-    DEBUG_START;
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        delay(5);
-        FmRadio.MonoAudio(stereoEnbFlg ? OFF : ON);
-        delay(5);
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
-    DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -586,18 +554,6 @@ void cRadio::setVgaGain(void)
     }
 #endif // def OldWay
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiAudioMode(): Update the Stereo/Mono Audio Mode shown on the UI radioTab.
-void cRadio::updateUiAudioMode(bool value)
-{
-    DEBUG_START;
-
-    ESPUI.print(radioAudioMsgID, value ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
-    ESPUI.updateControlValue(radioAudioID, value ? F("1") : F("0"));
-
-    DEBUG_END;
 }
 
 // ************************************************************************************************

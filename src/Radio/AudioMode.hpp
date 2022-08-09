@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: AudioMute.cpp
+   File: AudioMode.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -19,15 +19,15 @@
 #include <ESPUI.h>
 
 // *********************************************************************************************
-class cAudioMute
+class cAudioMode
 {
 public:
-                cAudioMute ();
-    virtual     ~cAudioMute() {}
+                cAudioMode ();
+    virtual     ~cAudioMode() {}
 
     void        AddControls (uint16_t TabId);
 
-    bool        get() { return Mute; }
+    bool        get() { return Mode; }
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
     void        set(bool value);
@@ -38,11 +38,12 @@ public:
 private:
     uint16_t    TabId       = Control::noParent;
     uint16_t    ControlId   = Control::noParent;
+    uint16_t    MessageID   = Control::noParent;
 
-    bool        Mute = false;
+    bool        Mode = false;
 };
 
-extern cAudioMute AudioMute;
+extern cAudioMode AudioMode;
 
 // *********************************************************************************************
 // OEF

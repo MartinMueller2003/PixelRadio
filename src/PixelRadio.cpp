@@ -132,10 +132,6 @@ void setup()
     // Initialize Tone Generator.
     toneInit();
 
-    // Initialize i2c.
-    Wire.begin(SDA_PIN, SCL_PIN);
-    Wire.setClock(I2C_FREQ_HZ);     // 100KHz i2c speed.
-    pinMode(SCL_PIN, INPUT_PULLUP); // I2C Clock Pin.
 
     // delay(3000);                 // DEBUG ONLY, wait for Platformio's monitor terminal.
 

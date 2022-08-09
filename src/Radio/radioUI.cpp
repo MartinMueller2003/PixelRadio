@@ -256,28 +256,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
 
-        radioAudioID = ESPUI.addControl(
-                                ControlType::Switcher, 
-                                RADIO_AUDIO_MODE_STR, 
-                                stereoEnbFlg ? F("1") : F("0"),
-                                ControlColor::Emerald, 
-                                radioTab, 
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbAudioMode(sender, type);
-                                    }
-                                },
-                                this);
-
-        radioAudioMsgID = ESPUI.addControl(
-                                    ControlType::Label, 
-                                    RADIO_AUDIO_MODE_STR, 
-                                    stereoEnbFlg ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR), 
-                                    ControlColor::Emerald, 
-                                    radioAudioID);
-        ESPUI.setElementStyle(radioAudioMsgID, CSS_LABEL_STYLE_BLACK);
+        AudioMode.AddControls(radioTab);
 
         #ifdef ADV_RADIO_FEATURES
         radioEmphID = ESPUI.addControl(

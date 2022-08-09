@@ -43,5 +43,7 @@ private:
     uint8_t     InputImpedanceValue = 0;
 };
 
+extern cAudioInputImpedance AudioInputImpedance;
+
 // *********************************************************************************************
 // OEF

@@ -16,9 +16,11 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "QN8027Radio.h"
+#include "PixelRadio.h"
+#include "language.h"
 
 #include "AudioInputImpedance.hpp"
+#include "AudioMode.hpp"
 #include "AudioMute.hpp"
 
 // *********************************************************************************************
@@ -43,7 +45,6 @@ public:
     
 // Callbacks need to be public 
     void        CbAdjFmFreq(Control *sender, int type);
-    void        CbAudioMode(Control *sender, int type);
     void        CbDigitalGainAdjust(Control *sender, int type);
     void        CbImpedanceAdjust(Control *sender, int type);
     void        CbProgramServiceName(Control *sender, int type);
@@ -81,7 +82,6 @@ private:
     void        updateOnAirSign(void);
     void        updateRdsMsgRemainingTime(unsigned long now);
     void        updateUiAudioLevel(void);
-    void        updateUiAudioMode(bool stereoEnbFlg);
     void        updateUiPtyCode();
     void        updateUiRdsText(String & Text);
     void        updateUiRfCarrier(void);
@@ -103,8 +103,6 @@ private:
     uint16_t    radioTab        = Control::noParent;
     uint16_t    rdsTab          = Control::noParent;
 
-    uint16_t    radioAudioID    = Control::noParent;
-    uint16_t    radioAudioMsgID = Control::noParent;
     uint16_t    radioVgaGainID  = Control::noParent;
     uint16_t    radioDgainID    = Control::noParent;
     uint16_t    radioAutoID     = Control::noParent;
@@ -129,13 +127,9 @@ private:
     uint16_t    homeOnAirID     = Control::noParent;
     uint16_t    homeFreqID      = Control::noParent;
 
-    cAudioInputImpedance    AudioInputImpedance;
-    cAudioMute              AudioMute;
-
     bool        testModeFlg     = false;
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
     bool        rfCarrierFlg    = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
-    bool        stereoEnbFlg    = STEREO_ENB_DEF_FLG;                  // Control, Enable Stereo FM if true (false = Mono).
 
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
     uint32_t    rdsMsgTime = 0;
@@ -150,6 +144,8 @@ private:
     unsigned long CurrentMsgEndTime = 0;
     unsigned long CurrentMsgLastUpdateTime = 0;
 
+#define OFF 0x00
+#define ON 0x01
 #define PRE_EMPH_USA_STR    "North America (75uS)" // North America / Japan.
 #define PRE_EMPH_EUR_STR    "Europe (50uS)"        // Europe, Australia, China.
 #define PRE_EMPH_DEF_STR    PRE_EMPH_USA_STR;

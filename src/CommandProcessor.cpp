@@ -104,6 +104,7 @@ bool cCommandProcessor::ProcessCommand(String & Command,
 // AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
 bool cCommandProcessor::audioMode(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
     bool response = true;
     bool stereoEnbFlg = true;
@@ -112,14 +113,14 @@ bool cCommandProcessor::audioMode(String & payloadStr, String & ControllerName, 
 
     do // once
     {
-        if (payloadStr.equals(CMD_MODE_STER_STR))
+        if (payloadStr.equals(F("stereo")))
         {
             Response += F(": Audio Mode Set to 'STEREO'\n");
             Radio.setMonoAudio(false);
             break;
         }
 
-        if (payloadStr.equals(CMD_MODE_MONO_STR))
+        if (payloadStr.equals(F("mono")))
         {
             Response += F(": Audio Mode Set to 'MONO'\n");
             Radio.setMonoAudio(true);
@@ -135,21 +136,19 @@ bool cCommandProcessor::audioMode(String & payloadStr, String & ControllerName, 
     DEBUG_END;
 
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::frequency(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
     bool response = true;
 
     do // once
     {
-        if (payloadStr.length() > CMD_FREQ_MAX_SZ) 
-        {
-            payloadStr = payloadStr.substring(0, CMD_FREQ_MAX_SZ);
-        }
-
         int freq = payloadStr.toInt();
 
         if ((!strIsUint(payloadStr)) ||
@@ -160,39 +159,51 @@ bool cCommandProcessor::frequency(String & payloadStr, String & ControllerName, 
             response = false;
             break;
         }
-#ifdef OldWay
+
         setFrequency(freq);
-#endif // def OldWay
+
         Response += String(F(": Transmit Frequency Set to ")) + String(((float(freq)) / 10.0f), 1) + F("Mhz\n");
 
     } while (false);
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::gpio19(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     return gpio(payloadStr, ControllerName, GPIO19_PIN, Response);
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::gpio23(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     return gpio(payloadStr, ControllerName, GPIO23_PIN, Response);
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::gpio33(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     return gpio(payloadStr, ControllerName, GPIO33_PIN, Response);
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 // gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
 bool cCommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_num_t pin, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
 
     bool response = true;
@@ -229,12 +240,15 @@ bool cCommandProcessor::gpio(String & payloadStr, String & ControllerName, gpio_
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // ================================================================================================
 // CommandError(): Create an error response.
 bool cCommandProcessor::HelpCommand(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
 
     Response += ("\n");
@@ -262,11 +276,14 @@ bool cCommandProcessor::HelpCommand(String & payloadStr, String & ControllerName
 
     DEBUG_END;
     return true;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::info(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
     bool response = true;
 
@@ -287,6 +304,8 @@ bool cCommandProcessor::info(String & payloadStr, String & ControllerName, Strin
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
@@ -294,6 +313,7 @@ bool cCommandProcessor::info(String & payloadStr, String & ControllerName, Strin
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
 bool cCommandProcessor::log(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
 
     bool response = true;
@@ -332,15 +352,17 @@ bool cCommandProcessor::log(String & payloadStr, String & ControllerName, String
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::mute(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
 
     bool response = true;
-#ifdef OldWay
 
     do // once
     {
@@ -369,15 +391,17 @@ bool cCommandProcessor::mute(String & payloadStr, String & ControllerName, Strin
         response = false;
 
     } while (false);
-#endif // def OldWay
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::piCode(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
    DEBUG_START;
 
     bool response = true;
@@ -417,11 +441,14 @@ bool cCommandProcessor::piCode(String & payloadStr, String & ControllerName, Str
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ptyCode(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
    DEBUG_START;
 
     bool response = true;
@@ -462,13 +489,15 @@ bool cCommandProcessor::ptyCode(String & payloadStr, String & ControllerName, St
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::programServiceName(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
    DEBUG_START;
-
     bool response = true;
 
     do // once
@@ -488,11 +517,14 @@ bool cCommandProcessor::programServiceName(String & payloadStr, String & Control
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::radioText(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
 
     bool response = true;
@@ -514,12 +546,15 @@ bool cCommandProcessor::radioText(String & payloadStr, String & ControllerName, 
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
 bool cCommandProcessor::rdsTimePeriod(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
     bool response = true;
     bool capFlg = false;
@@ -569,11 +604,15 @@ bool cCommandProcessor::rdsTimePeriod(String & payloadStr, String & ControllerNa
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
+
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::reboot(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START
     bool response = true;
 
@@ -595,15 +634,17 @@ bool cCommandProcessor::reboot(String & payloadStr, String & ControllerName, Str
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::rfCarrier(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
 
     bool response = true;
-#ifdef OldWay
 
     do // once
     {
@@ -633,15 +674,17 @@ bool cCommandProcessor::rfCarrier(String & payloadStr, String & ControllerName, 
         response = false;
 
     } while (false);
-#endif // def OldWay
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::start(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
     bool response = true;
 
@@ -663,11 +706,14 @@ bool cCommandProcessor::start(String & payloadStr, String & ControllerName, Stri
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::stop(String & payloadStr, String & ControllerName, String & Response)
 {
+#ifdef OldWay
     DEBUG_START;
     bool response = true;
 
@@ -688,6 +734,8 @@ bool cCommandProcessor::stop(String & payloadStr, String & ControllerName, Strin
 
     DEBUG_END;
     return response;
+#endif // def OldWay
+    return false;
 }
 
 // *************************************************************************************************************************

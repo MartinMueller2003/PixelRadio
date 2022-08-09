@@ -20,10 +20,20 @@
 #include "language.h"
 #include "memdebug.h"
 
+// I2C:
+static const uint8_t  I2C_QN8027_ADDR = 0x2c;            // I2C Address of QN8027 FM Radio Chip.
+static const uint8_t  I2C_DEV_CNT     = 1;               // Number of expected i2c devices on bus.
+static const uint32_t I2C_FREQ_HZ     = 100000;          // I2C master clock frequency
+
 // *********************************************************************************************
 void cQN8027RadioApi::begin()
 {
     // DEBUG_START;
+
+    // Initialize i2c.
+    Wire.begin(SDA_PIN, SCL_PIN);
+    Wire.setClock(I2C_FREQ_HZ);     // 100KHz i2c speed.
+    pinMode(SCL_PIN, INPUT_PULLUP); // I2C Clock Pin.
 
     RadioSemaphore = xSemaphoreCreateRecursiveMutex();
     // DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));

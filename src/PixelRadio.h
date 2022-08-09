@@ -164,11 +164,6 @@ const int TONE_ON  = 0;
 
 const uint16_t HTTP_RESPONSE_MAX_SZ = 225;        // Maximum Chars Allowed in HTTP client response.
 
-// I2C:
-const uint8_t  I2C_QN8027_ADDR = 0x2c;            // I2C Address of QN8027 FM Radio Chip.
-const uint8_t  I2C_DEV_CNT     = 1;               // Number of expected i2c devices on bus.
-const uint32_t I2C_FREQ_HZ     = 100000;          // I2C master clock frequency
-
 // Measurement:
 const int32_t MEAS_TIME = 50;                     // Measurement Refresh Time, in mS.
 
