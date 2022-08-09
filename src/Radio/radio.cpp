@@ -168,6 +168,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     ReadFromJSON(digitalGainStr,    config, F("DIGITAL_GAIN_STR"));
 
     AudioInputImpedance.restoreConfiguration(config);
+    AudioMute.restoreConfiguration(config);
 
     // DEBUG_END;
 }
@@ -177,8 +178,10 @@ void cRadio::saveConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
+    AudioInputImpedance.restoreConfiguration(config);
+    AudioMute.saveConfiguration(config);
+
     config[F("RADIO_FM_FREQ")]          = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
-    config[F("RADIO_MUTE_FLAG")]        = muteFlg;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_RF_CARR_FLAG")]     = rfCarrierFlg;   // Use radio.RDS(0/1) when restoring this uint8 value. 1=CarrierOn.
     config[F("RADIO_STEREO_FLAG")]      = stereoEnbFlg;   // Use radio.MonoAudio(0/1) when restoring this uint8 value. 0=Stereo.
@@ -193,49 +196,6 @@ void cRadio::saveConfiguration(JsonObject & config)
     config[F("RDS_PROG_SERV_STR")]      = ProgramServiceName;
 
     config[F("DIGITAL_GAIN_STR")]       = digitalGainStr;   // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
-
-    AudioInputImpedance.saveConfiguration(config);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setAudioMute(): Control the Audio Mute on the QN8027 chip.
-void cRadio::setAudioMute(bool value)
-{
-    // DEBUG_START;
-    muteFlg = value;
-    setAudioMute();
-
-    ESPUI.updateControlValue(adjMuteID, String(muteFlg ? F("1") : F("0")));
-
-    if (muteFlg)
-    {
-        ESPUI.setElementStyle(adjMuteID, String(F("background: red;")));
-    }
-    else
-    {
-        ESPUI.setElementStyle(adjMuteID, String(F("background: #bebebe;")));
-    }
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setAudioMute(): Control the Audio Mute on the QN8027 chip.
-void cRadio::setAudioMute(void)
-{
-    // DEBUG_START;
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        delay(5);
-        FmRadio.mute(muteFlg ? ON : OFF);
-        delay(5);
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
 
     // DEBUG_END;
 }
@@ -638,18 +598,6 @@ void cRadio::updateUiAudioMode(bool value)
     ESPUI.updateControlValue(radioAudioID, value ? F("1") : F("0"));
 
     DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiAudioMute(): Update the Audio Mute Switch Position on the UI adjTab.
-void cRadio::updateUiAudioMute(bool value)
-{
-    // DEBUG_START;
-
-    ESPUI.setElementStyle(adjMuteID, value ? F("background: red;") : F("background: #bebebe;"));
-    ESPUI.updateControlValue(adjMuteID, value ? F("1") : F("0"));
-    
-    // DEBUG_END;
 }
 
 // ************************************************************************************************

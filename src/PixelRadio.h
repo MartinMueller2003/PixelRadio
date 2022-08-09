@@ -81,7 +81,6 @@ const bool AP_FALLBACK_DEF_FLG = true;
 const bool CTRL_DHCP_DEF_FLG   = true;
 
 // const bool CTRL_SERIAL_DEF_FLG = true;
-const bool RADIO_MUTE_DEF_FLG  = false;
 const bool RDS_TEXTX_DEF_FLG   = true;
 const bool RF_AUTO_OFF_DEF_FLG = false;
 const bool RF_CARRIER_DEF_FLG  = true;

@@ -123,21 +123,7 @@ void cRadio::AddAdjControls(uint16_t _adjTab)
                                 },
                                 this);
 
-        adjMuteID = ESPUI.addControl(
-                                ControlType::Switcher,
-                                ADJUST_MUTE_STR,
-                                muteFlg ? F("1") : F("0"),
-                                ControlColor::Wetasphalt,
-                                adjTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbMute(sender, type);
-                                    }
-                                },
-                                this);
-    ESPUI.setElementStyle(adjMuteID, (muteFlg ? F("background: red;") : F("background: #bebebe;")));
+        AudioMute.AddControls(adjTab);
     } while (false);
 
     // DEBUG_END;
@@ -335,7 +321,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         ESPUI.addControl(ControlType::Option, VGA_GAIN4_STR, VGA_GAIN4_STR, ControlColor::Emerald, radioVgaGainID);
         ESPUI.addControl(ControlType::Option, VGA_GAIN5_STR, VGA_GAIN5_STR, ControlColor::Emerald, radioVgaGainID);
 
-        AudioInputImpedance.AddRadioControls(radioTab);
+        AudioInputImpedance.AddControls(radioTab);
 
         #ifdef ADV_RADIO_FEATURES
         radioDgainID = ESPUI.addControl(

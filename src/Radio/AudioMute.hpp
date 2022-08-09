@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: AudioInputImpedance.cpp
+   File: AudioMute.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -19,18 +19,18 @@
 #include <ESPUI.h>
 
 // *********************************************************************************************
-class cAudioInputImpedance
+class cAudioMute
 {
 public:
-                cAudioInputImpedance ();
-    virtual     ~cAudioInputImpedance() {}
+                cAudioMute ();
+    virtual     ~cAudioMute() {}
 
-    void        AddControls (uint16_t Tab);
+    void        AddControls (uint16_t TabId);
 
-    String &    get() { return InputImpedanceStr; }
+    bool        get() { return Mute; }
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
-    void        set(String & value);
+    void        set(bool value);
     
 // Callbacks need to be public 
     void        Callback(Control *sender, int type);
@@ -39,8 +39,7 @@ private:
     uint16_t    TabId       = Control::noParent;
     uint16_t    ControlId   = Control::noParent;
 
-    String      InputImpedanceStr;
-    uint8_t     InputImpedanceValue = 0;
+    bool        Mute = false;
 };
 
 // *********************************************************************************************

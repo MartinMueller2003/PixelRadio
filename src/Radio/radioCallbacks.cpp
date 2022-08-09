@@ -139,30 +139,6 @@ void cRadio::CbDigitalGainAdjust(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// muteCallback(): Turn audio on/off (true = Mute the audio).
-void cRadio::CbMute(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    if (type == S_ACTIVE) 
-    {
-        setAudioMute(true); // Update QN8027 Mute Register.
-    }
-    else if (type == S_INACTIVE) 
-    {
-        setAudioMute(false); // Update QN8027 Mute Register.
-    }
-
-    displaySaveWarning();
-    Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), String(muteFlg ? F("On") : F("Off") ).c_str());
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 void cRadio::CbProgramServiceName(Control *sender, int type)
 {
     DEBUG_START;

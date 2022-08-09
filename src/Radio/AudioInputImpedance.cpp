@@ -49,31 +49,31 @@ cAudioInputImpedance::cAudioInputImpedance()
 }
 
 // *********************************************************************************************
-void cAudioInputImpedance::AddRadioControls (uint16_t _radioTab)
+void cAudioInputImpedance::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
     do // once
     {
-        if(Control::noParent != radioTab)
+        if(Control::noParent != TabId)
         {
             // DEBUG_V("Controls have already been set up");
             break;
         }
 
-        radioTab = _radioTab;
+        TabId = value;
 
-        SelectID = ESPUI.addControl(
+        ControlId = ESPUI.addControl(
                             ControlType::Select, 
                             RADIO_INP_IMP_STR, 
                             InputImpedanceStr, 
                             ControlColor::Emerald, 
-                            radioTab, 
+                            TabId, 
                             [](Control* sender, int type, void* UserInfo)
                             {
                                 if(UserInfo)
                                 {
-                                    static_cast<cAudioInputImpedance *>(UserInfo)->CbImpedanceAdjust(sender, type);
+                                    static_cast<cAudioInputImpedance *>(UserInfo)->Callback(sender, type);
                                 }
                             },
                             this);
@@ -84,7 +84,7 @@ void cAudioInputImpedance::AddRadioControls (uint16_t _radioTab)
                             CurrentOption.first.c_str(), 
                             CurrentOption.first, 
                             ControlColor::None, 
-                            SelectID);
+                            ControlId);
         }
         // DEBUG_V();
 
@@ -94,21 +94,17 @@ void cAudioInputImpedance::AddRadioControls (uint16_t _radioTab)
 }
 
 // ************************************************************************************************
-// CbImpedanceAdjust(): Adjust Audio Input Impedance.
-void cAudioInputImpedance::CbImpedanceAdjust(Control *sender, int type)
+// Callback(): Adjust Audio Input Impedance.
+void cAudioInputImpedance::Callback(Control *sender, int type)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
+    // DEBUG_V(String("value: ") + String(sender->value));
+    // DEBUG_V(String(" type: ") + String(type));
 
-    do // once
-    {
-        set(sender->value);
+    set(sender->value);
 
-    } while (false);
-
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -151,7 +147,7 @@ void cAudioInputImpedance::set(String & value)
 
     QN8027RadioApi.setAudioImpedance(InputImpedanceValue);
 
-    ESPUI.updateControlValue(SelectID, InputImpedanceStr);
+    ESPUI.updateControlValue(ControlId, InputImpedanceStr);
 
 #ifdef OldWay
     ESPUI.print(radioGainID, String(getAudioGain()) + F(" dB"));

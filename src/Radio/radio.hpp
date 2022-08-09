@@ -19,6 +19,7 @@
 #include "QN8027Radio.h"
 
 #include "AudioInputImpedance.hpp"
+#include "AudioMute.hpp"
 
 // *********************************************************************************************
 class cRadio
@@ -45,7 +46,6 @@ public:
     void        CbAudioMode(Control *sender, int type);
     void        CbDigitalGainAdjust(Control *sender, int type);
     void        CbImpedanceAdjust(Control *sender, int type);
-    void        CbMute(Control *sender, int type);
     void        CbProgramServiceName(Control *sender, int type);
     void        CbRadioEmphasis(Control *sender, int type);
     void        CbRfCarrier(Control *sender, int type);
@@ -61,9 +61,6 @@ public:
 
 private:
     int8_t      getAudioGain(void);
-
-    void        setAudioMute(bool value);
-    void        setAudioMute(void);
 
     void        setDigitalGain(void);
     void        setFrequency(void);
@@ -85,7 +82,6 @@ private:
     void        updateRdsMsgRemainingTime(unsigned long now);
     void        updateUiAudioLevel(void);
     void        updateUiAudioMode(bool stereoEnbFlg);
-    void        updateUiAudioMute(bool value);
     void        updateUiPtyCode();
     void        updateUiRdsText(String & Text);
     void        updateUiRfCarrier(void);
@@ -118,7 +114,6 @@ private:
     uint16_t    radioImpID      = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
     uint16_t    radioRfEnbID    = Control::noParent;
-    uint16_t    adjMuteID       = Control::noParent;
     uint16_t    adjTestModeID   = Control::noParent;
     uint16_t    adjFmDispID     = Control::noParent;
     uint16_t    radioSoundID    = Control::noParent;
@@ -134,8 +129,10 @@ private:
     uint16_t    homeOnAirID     = Control::noParent;
     uint16_t    homeFreqID      = Control::noParent;
 
+    cAudioInputImpedance    AudioInputImpedance;
+    cAudioMute              AudioMute;
+
     bool        testModeFlg     = false;
-    bool        muteFlg         = RADIO_MUTE_DEF_FLG;                  // Control, Mute audio if true.
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
     bool        rfCarrierFlg    = RF_CARRIER_DEF_FLG;                  // Control, Turn off RF if false.
     bool        stereoEnbFlg    = STEREO_ENB_DEF_FLG;                  // Control, Enable Stereo FM if true (false = Mono).
@@ -168,7 +165,6 @@ private:
 #define DIG_GAIN_DEF_STR  DIG_GAIN0_STR;
     String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
 
-    cAudioInputImpedance AudioInputImpedance;
 
 #define VGA_GAIN0_STR     "3dB"
 #define VGA_GAIN1_STR     "6dB"
