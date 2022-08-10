@@ -66,6 +66,7 @@
 #include "ControllerMgr.h"
 #include "WiFiDriver.hpp"
 #include "radio.hpp"
+#include "TestTone.hpp"
 #include "memdebug.h"
 
 // ************************************************************************************************
@@ -78,16 +79,13 @@ bool newGpio19Flg    = false;                // New GPIO Pin 19 State.
 bool newGpio23Flg    = false;                // New GPIO Pin 23 State.
 bool newGpio33Flg    = false;                // New GPIO Pin 33 State.
 bool rebootFlg       = false;                // Reboot System if true;
-bool testModeFlg     = false;                // Audio Test Tone Mode if true. Do NOT save in config file.
 
-uint32_t rdsMsgTime       = RDS_DSP_TM_DEF;  // Global (Master) RDS Message Time. Set by RDS Controllers.
 float vbatVolts = 0.0f;                      // ESP32's Onboard "VBAT" Voltage. Typically 5V.
 float paVolts   = 0.0f;                      // RF Power Amp's Power Supply Voltage. Typically 9V.
 
 String gpio19CtrlStr    = "";                // GPIO-19 State if Changed by Serial/MQTT/HTTP Controller.
 String gpio23CtrlStr    = "";                // GPIO-23 State if Changed by Serial/MQTT/HTTP Controller.
 String gpio33CtrlStr    = "";                // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
-String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
 
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
@@ -114,16 +112,13 @@ void setup()
     pinMode(MISO_PIN,   INPUT_PULLUP); // MISO Requires Internal Pull-up.
     pinMode(SCL_PIN,    INPUT_PULLUP); // I2C Clock Pin.
     pinMode(SDA_PIN,    INPUT);        // I2C Data Pin. Do NOT Enable Internal Pullup.
-    pinMode(MUX_PIN,    OUTPUT);       // Audio MUX Control (Line-In:Tone-In), Output.
     pinMode(TONE_PIN,   OUTPUT);       // PWM Audio Test Tone, Output.
     pinMode(SD_CS_PIN,  OUTPUT);       // SD Card Chip Select, Output.
 
-    digitalWrite(MUX_PIN,   TONE_OFF); // Init Audio Mux, Enable Audio Line-In Jack, Music LED On.
     digitalWrite(SD_CS_PIN, HIGH);
 
     // Initialize Tone Generator.
-    toneInit();
-
+    TestTone.Init();
 
     // delay(3000);                 // DEBUG ONLY, wait for Platformio's monitor terminal.
 
@@ -185,15 +180,6 @@ void setup()
     Log.infoln(F("Initializing Web UI ..."));
     startGUI();
     Log.infoln(F("-> Web UI Loaded."));
-#ifdef OldWay
-    // End of System Initialization. Report pass/fail message to Serial Log.
-    if (successFlg && (fmRadioTestCode == FM_TEST_OK)) {
-        Log.infoln("PixelRadio System Init Complete, Success!");
-    }
-    else {
-        Log.fatalln("PixelRadio System Init Failed. Please Review Serial Log.");
-    }
-#endif // def OldWay
 
     Log.infoln("Changing Log Level to %s", logLevelStr.c_str());
     initSerialLog(false);

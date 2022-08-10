@@ -25,6 +25,7 @@
 #include "FrequencyAdjust.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
+#include "TestTone.hpp"
 
 
 typedef struct 
@@ -78,7 +79,7 @@ void cRadio::AddAdjControls(uint16_t _adjTab)
 
     do // once
     {
-        if(Control::noParent != diagTab)
+        if(Control::noParent != adjTab)
         {
             // DEBUG_V("Controls have already been set up");
             break;
@@ -87,27 +88,12 @@ void cRadio::AddAdjControls(uint16_t _adjTab)
         adjTab = _adjTab;
 
         ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
-
         FrequencyAdjust.AddAdjustControls(adjTab);
 
-        ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, "", ControlColor::None, adjTab);
-
-        adjTestModeID = ESPUI.addControl(
-                                ControlType::Switcher,
-                                ADJUST_TEST_STR,
-                                testModeFlg ? F("1") : F("0"),
-                                ControlColor::Wetasphalt,
-                                adjTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbTestMode(sender, type);
-                                    }
-                                },
-                                this);
-
+        ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, emptyString, ControlColor::None, adjTab);
+        TestTone.AddControls(adjTab);
         AudioMute.AddControls(adjTab);
+
     } while (false);
 
     // DEBUG_END;
@@ -419,16 +405,6 @@ void cRadio::setPtyCode(String & ptyStr)
             updateUiPtyCode();
         }
     }
-
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiRdsText(): Update the currently playing RDS RadioText shown in the Home tab's RDS text element.
-void cRadio::updateUiRdsText(String & Text)
-{
-    // DEBUG_START;
-
 
     // DEBUG_END;
 }

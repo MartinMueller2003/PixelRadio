@@ -170,26 +170,6 @@ void cRadio::CbSetPtyCode(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// testModeCallback(): Audio Test Tone Mode Control (true = Audio Test Mode On).
-void cRadio::CbTestMode(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    testModeFlg = type == S_ACTIVE;
-
-    ESPUI.setElementStyle(adjTestModeID, String(testModeFlg ? F("background: red;") : F("background: #bebebe;")));
-
-    updateTestTones(testModeFlg); // Reset Test Tone Elasped Timer.
-
-    Log.infoln(String(F("Test Mode Set to: %s.")).c_str(), String(testModeFlg ? F("On") : F("Off")).c_str());
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 void cRadio::CbSetPiCode(Control *sender, int type)
 {
     DEBUG_START;

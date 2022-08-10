@@ -33,7 +33,6 @@ public:
     void        AddRdsControls(uint16_t Tab);
 
     void        begin ();
-    bool        IsTestModeOn() { return testModeFlg; }
     void        Poll();
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
@@ -47,7 +46,6 @@ public:
     void        CbRdsRst(Control *sender, int type);
     void        CbSetPiCode(Control *sender, int type);
     void        CbSetPtyCode(Control *sender, int type);
-    void        CbTestMode(Control *sender, int type);
     void        CbVgaGainAdjust(Control *sender, int type);
 
 private:
@@ -69,7 +67,6 @@ private:
     void        updateUiAudioLevel(void);
     void        updateUiPtyCode();
     void        updateUiRdsText(String & Text);
-    void        updateTestTones(bool resetTimerFlg);
     void        waitForIdle(uint16_t waitMs);
 
 // UI declarations
@@ -94,7 +91,6 @@ private:
     uint16_t    radioImpID      = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
     uint16_t    radioRfEnbID    = Control::noParent;
-    uint16_t    adjTestModeID   = Control::noParent;
     uint16_t    adjFmDispID     = Control::noParent;
     uint16_t    radioSoundID    = Control::noParent;
     uint16_t    rdsPiID         = Control::noParent;
@@ -102,7 +98,6 @@ private:
     uint16_t    rdsProgNameID   = Control::noParent;
     uint16_t    rdsRstID        = Control::noParent;
 
-    bool        testModeFlg     = false;
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
 
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.

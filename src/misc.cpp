@@ -208,33 +208,7 @@ bool strIsUint(String intStr) {
     return true;
 }
 
-// *********************************************************************************************
-// toneInit(): Initialize the test tone generator (ESP32 led write) hardware.
-//             This function should be called in setup().
-void toneInit(void)
-{
-    ledcSetup(TEST_TONE_CHNL, 1000, 8);
-}
 
-// *********************************************************************************************
-// toneOff(): Turn off the test tone generator.
-void toneOff(uint8_t pin, uint8_t channel)
-{
-    ledcDetachPin(pin);
-    ledcWrite(channel, 0);
-}
-
-// *********************************************************************************************
-// toneOn(): Turn on the test tone generator.
-void toneOn(uint8_t pin, uint16_t freq, uint8_t channel)
-{
-    if (ledcRead(channel)) {
-        Log.warningln(String(F("Ignored Tone Request: Channel %u is already in-use")).c_str(), channel);
-        return;
-    }
-    ledcAttachPin(pin, channel);
-    ledcWriteTone(channel, freq);
-}
 
 // *********************************************************************************************
 // updateGpioBootPins(): Update the GPIO Boot Pins if the Web UI has changed GPIO settings.

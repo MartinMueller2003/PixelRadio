@@ -112,7 +112,6 @@ uint16_t aboutVersionID = Control::noParent;
 
 uint16_t adjSaveID     = Control::noParent;
 uint16_t adjSaveMsgID  = Control::noParent;
-uint16_t adjTestModeID = Control::noParent;
 uint16_t adjUvolID     = Control::noParent;
 
 uint16_t backupRestoreID    = Control::noParent;
@@ -148,8 +147,6 @@ uint16_t gpio33MsgID   = Control::noParent;
 uint16_t gpioSaveID    = Control::noParent;
 uint16_t gpioSaveMsgID = Control::noParent;
 
-uint16_t homeOnAirID   = Control::noParent;
-
 uint16_t rdsSaveID     = Control::noParent;
 uint16_t rdsSaveMsgID  = Control::noParent;
 uint16_t rdsSnameID    = Control::noParent;
@@ -164,8 +161,9 @@ void initCustomCss(void)
     // START OF PANEL INLINE STYLES
     ESPUI.setPanelStyle(aboutLogoID,    "background-color: white; color: black;");
 
-
-    // ESPUI.setPanelStyle(ctrlMqttPortID, "font-size: 1.25em;");
+#ifdef OldWay
+    ESPUI.setPanelStyle(ctrlMqttPortID, "font-size: 1.25em;");
+#endif // def OldWay
 
     ESPUI.setPanelStyle(diagBootID,     "color: black;");
     ESPUI.setPanelStyle(diagLogID,      "color: black;");
@@ -174,7 +172,9 @@ void initCustomCss(void)
     ESPUI.setPanelStyle(diagVbatID,     "color: black; font-size: 1.25em;");
     ESPUI.setPanelStyle(diagVdcID,      "color: black; font-size: 1.25em;");
 
+#ifdef OldWay
     ESPUI.setPanelStyle(homeOnAirID,    "font-size: 3.0em;");
+#endif // def OldWay
 
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
@@ -206,7 +206,9 @@ void initCustomCss(void)
     ESPUI.setElementStyle(gpio33MsgID,        CSS_LABEL_STYLE_WHITE);
     ESPUI.setElementStyle(gpioSaveMsgID,      CSS_LABEL_STYLE_RED);
 
+#ifdef OldWay
     ESPUI.setElementStyle(homeOnAirID,        "max-width: 80%;");
+#endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
@@ -214,85 +216,11 @@ void initCustomCss(void)
     ESPUI.setElementStyle(rdsSaveMsgID,     CSS_LABEL_STYLE_BLACK);
 
     ESPUI.setElementStyle(wifiSaveMsgID,    CSS_LABEL_STYLE_MAROON);
-#ifdef OldWay
-    ESPUI.setPanelStyle(homeTextMsgID,      "font-size: 1.15em;");
-    ESPUI.setElementStyle(homeTextMsgID,    CSS_LABEL_STYLE_WHITE);
-#endif // def OldWay
-
 
     // DEBUG_END;
     // END OF STYLES
 }
 
-#ifdef OldWay
-// ************************************************************************************************
-// displayRdsText(): Check if any controllers are enabled and updated RDS with text or status message.
-void displayRdsText(void)
-{
-    char logBuff[RDS_TEXT_MAX_SZ + 35];
-
-    do // once
-    {
-        if (!rfCarrierFlg) 
-        {
-            updateUiRdsText(String(RDS_RF_DISABLED_STR));
-            sprintf(logBuff, "displayRdsText: Warning %s.", RDS_RF_DISABLED_STR);
-            Log.warningln(logBuff);
-            break;
-        }
-
-        if (testModeFlg) 
-        {
-            break;
-        }
-
-        // do we have an output message?
-        c_ControllerMgr::CurrentRdsMsgInfo_t CurrentRdsMsgInfo;
-        if(ControllerMgr.GetNextRdsMsgToDisplay(CurrentRdsMsgInfo))
-        {
-            updateUiRdsText(CurrentRdsMsgInfo.MsgText);
-            if(ControllerTypeId::LOCAL_CNTRL == CurrentRdsMsgInfo.ControllerId)
-            {
-                sprintf(logBuff, "Local RadioText: %s.", CurrentRdsMsgInfo.MsgText.c_str());
-            }
-            else
-            {
-                sprintf(logBuff, "Remote RadioText: %s.", CurrentRdsMsgInfo.MsgText.c_str());
-            }
-            Log.traceln(logBuff);
-            break;
-        }
-        
-        // no controller has any message to send. 
-        // Are any controllers enabled
-        uint16_t ControllerStatusSummary = ControllerMgr.getControllerStatusSummary();
-        if(!ControllerStatusSummary)
-        {
-            updateUiRdsText(String(RDS_CTRLS_DIS_STR));
-            sprintf(logBuff, "displayRdsText: Warning %s.", RDS_CTRLS_DIS_STR);
-            Log.warningln(logBuff);
-            break;
-        }
-
-        // is the local controller active?
-        if(ControllerStatusSummary & LOCAL_CONTROLLER_ACTIVE_FLAG)
-        {
-            updateUiRdsText(String(RDS_LOCAL_BLANK_STR));
-            sprintf(logBuff, "displayRdsText: %s.", RDS_LOCAL_BLANK_STR);
-            Log.warningln(logBuff);
-            break;
-        }
-
-        // That leaves the remote controllers as the only active 
-        // controllers and they doe not have a message to send to 
-        // the radio
-        updateUiRdsText(String(RDS_LOCAL_DIS_STR));
-        sprintf(logBuff, "displayRdsText: %s.", RDS_LOCAL_DIS_STR);
-        Log.warningln(logBuff);
-
-    } while (false);
-}
-#endif // def OldWay
 
 // ************************************************************************************************
 // displaySaveWarning(): Show the "Save Required" Message on all configuration pages.

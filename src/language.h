@@ -27,11 +27,8 @@
 #define ADJUST_FRQ_CTRL_STR   "FM TRANSMIT FREQUENCY"
 #define ADJUST_AUDIO_SEP_STR  "AUDIO CONTROLS"
 #define ADJUST_TAB_STR        "Adjust"
-#define ADJUST_TEST_STR       "TEST TONES"
 #define ADJUST_USB_VOL_STR    "USB VOLUME"
 
-#define AUDIO_TEST_STR    "PIXELRADIO AUDIO TEST"
-#define AUDIO_PSN_STR     "TestTone"  // RDS PSN for Audio Test Tone mode, Max 8 Chars.
 
 
 #define APP_NAME_STR  N_PixelRadio

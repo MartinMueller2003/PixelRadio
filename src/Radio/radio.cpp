@@ -29,11 +29,7 @@
 #include "FrequencyAdjust.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
-
-
-static const uint16_t toneList[] =
-{ TONE_NONE, TONE_NONE, TONE_NONE, TONE_A3, TONE_E4, TONE_A3, TONE_C4, TONE_C5, TONE_F4, TONE_F4, TONE_A4, TONE_NONE };
-static const uint8_t listSize = sizeof(toneList) / sizeof(uint16_t);
+#include "TestTone.hpp"
 
 // *********************************************************************************************
 void cRadio::begin()
@@ -123,8 +119,7 @@ void cRadio::Poll()
 {
     /// DEBUG_START;
 
-    updateTestTones(false);
-
+    TestTone.poll();
     RdsText.poll();
 
     /// DEBUG_END;
@@ -466,137 +461,6 @@ new way: call GPIO and tell it to update the output and the UI.
 #endif // def OldWay
 
     // DEBUG_END;
-}
-
-// *********************************************************************************************
-// updateTestTones(): Test Tone mode creates cascading audio tones for Radio Installation Tests.
-//                    On entry, true will Reset Tone Sequence.
-//                    The tone sequence is sent every five seconds.
-//                    Also Sends Special RadioText message with approximate Elapsed Time.
-void cRadio::updateTestTones(bool resetTimerFlg)
-{
-    /// DEBUG_START;
-    
-    char rdsBuff[sizeof(AUDIO_TEST_STR) + 25];
-    static bool rstFlg          = false; // Reset State Machine FLag.
-    static bool goFlg           = false; // Go Flag, send new tone sequence if true.
-    static bool toneFlg         = false; // Tone Generator is On Flag.
-    static uint8_t  hours       = 0;
-    static uint8_t  minutes     = 0;
-    static uint8_t  seconds     = 0;
-    static uint8_t  state       = 0;
-    static uint32_t clockMillis = millis();
-    static uint32_t timerMillis = clockMillis;
-    uint32_t currentMillis      = clockMillis;
-
-    do // once
-    {
-        if (resetTimerFlg)
-        { // Caller requests a full state machine reset on next Test Tone.
-            rstFlg = true;
-            break;
-        }
-
-        if (!testModeFlg) 
-        {
-            /// DEBUG_V("Not In Test Mode")
-            goFlg = false;
-            state = 0;
-            digitalWrite(MUX_PIN, TONE_OFF); // Switch Audio Mux chip to Line-In.
-
-            if (toneFlg == true) 
-            {
-                /// DEBUG_V("Kill active tone generator.");
-                toneFlg = false;
-                toneOff(TONE_PIN, TEST_TONE_CHNL);
-            }
-            break;
-        }
-
-        /// DEBUG_V();
-        digitalWrite(MUX_PIN, TONE_ON); // Switch Audio Mux chip to Test Tones.
-
-        if (rstFlg == true) 
-        {           // State machine reset was requested.
-            rstFlg      = false;
-            goFlg       = true;         // Request tone sequence now.
-            clockMillis = millis();
-            timerMillis = clockMillis;
-            hours       = 0;
-            minutes     = 0;
-            seconds     = 0;
-            state       = 0;
-        }
-
-        // Update the test tone clock. HH:MM:SS will be sent as RadioText.
-        if ((currentMillis - clockMillis) >= 1000) 
-        {
-            clockMillis = millis() - ((currentMillis - clockMillis) - 1000);
-            seconds++;
-
-            if (seconds >= 60) 
-            {
-                seconds = 0;
-                minutes++;
-
-                if (minutes >= 60) 
-                {
-                    minutes = 0;
-                    hours++;
-
-                    if (hours >= 100) 
-                    { // Clock wraps at 99:59:59.
-                        hours = 0;
-                    }
-                }
-            }
-        }
-
-        if (seconds % 5 == 0) 
-        { // Send new tone sequence every five seconds.
-            goFlg = true;
-        }
-
-        if (goFlg && (millis() >= timerMillis + TEST_TONE_TIME)) 
-        {
-            timerMillis = millis();
-            toneFlg     = false;
-            toneOff(TONE_PIN, TEST_TONE_CHNL);
-            delay(5);               // Allow a bit of time for tone channel to shutdown.
-
-            if (state < listSize) 
-            { // Cycle through the tone table.
-                if (state == 0) 
-                {   // Time to send RadioText message.
-                    state++;
-                    sprintf(rdsBuff, "%s  [ %02u:%02u:%02u ]", AUDIO_TEST_STR, hours, minutes, seconds);
-                    String tmpStr = rdsBuff;
-                    sendStationName(AUDIO_PSN_STR);
-                    sendRadioText(tmpStr);
-
-                    RdsText.set(tmpStr);
-
-                    Log.verboseln(String(F("New Test Tone Sequence, RadioText Sent.")).c_str());
-                    break;                // We will send the tones on next entry.
-                }
-
-                if (toneList[state] > 0) 
-                { // Time to send tones from toneList[] table).
-                    toneFlg = true;
-                    toneOn(TONE_PIN, toneList[state], TEST_TONE_CHNL);
-                }
-
-                state++;
-            }
-            else 
-            { // At end of Tone table, done with this sequence.
-                state = 0;
-                goFlg = false;
-            }
-        }
-    } while (false);
-
-    /// DEBUG_END;
 }
 
 // *********************************************************************************************

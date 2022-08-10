@@ -152,8 +152,6 @@ const gpio_num_t TONE_PIN     = gpio_num_t::GPIO_NUM_25; // PWM Test Tone Pin, O
 // GPIO Pin States
 const int SIGN_OFF = 0;
 const int SIGN_ON  = 1;
-const int TONE_OFF = 1;
-const int TONE_ON  = 0;
 
 // HTTP Controller
 #define  HTTP_CMD_STR         "/cmd?"             // Command preamble.
@@ -195,17 +193,6 @@ const uint16_t RSSI_UPD_TIME = 2500;              // RSSI GUI Update time (on ho
 
 // Serial Controller
 #define SERIAL_LOG_STR       "log"                // Serial Log Command Keyword.
-
-// Test Tone
-const uint8_t  TEST_TONE_CHNL = 0;                // Test Tone PWM Channel.
-const uint32_t TEST_TONE_TIME = 300;              // Test Tone Sequence Time, in mS.
-const uint16_t TONE_A3        = 220;              // 220Hz Audio Tone.
-const uint16_t TONE_A4        = 440;
-const uint16_t TONE_C4        = 262;
-const uint16_t TONE_C5        = 523;
-const uint16_t TONE_E4        = 330;
-const uint16_t TONE_F4        = 349;
-const uint16_t TONE_NONE      = 0;
 
 // Time Conversion
 const uint32_t MSECS_PER_SEC = 1000UL;
@@ -348,12 +335,6 @@ void         rebootSystem(void);
 void         setGpioBootPins(void);
 void         spiSdCardShutDown(void);
 bool         strIsUint(String intStr);
-void         toneInit(void);
-void         toneOn(uint8_t  pin,
-                    uint16_t freq,
-                    uint8_t  channel);
-void         toneOff(uint8_t pin,
-                     uint8_t channel);
 void         updateGpioBootPins(void);
 
 const String returnClientCode(int code);
