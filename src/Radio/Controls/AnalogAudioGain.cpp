@@ -16,7 +16,6 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "radio.hpp"
 #include "AnalogAudioGain.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
@@ -41,8 +40,6 @@ static std::map<String, uint8_t> MapOfGainValues
 
 static const PROGMEM char RADIO_VGA_AUDIO_STR   [] = "ANALOG (VGA) AUDIO GAIN";
 static const PROGMEM char ANALOG_GAIN_STR       [] = "ANALOG_GAIN_STR";
-
-static const PROGMEM char RADIO_INP_IMP_STR [] = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
 cAnalogAudioGain::cAnalogAudioGain()
@@ -151,7 +148,7 @@ void cAnalogAudioGain::set(String & value)
     {
         if(vgaGainStr.equals(value))
         {
-            DEBUG_V("Ignore duplicate setting");
+            // DEBUG_V("Ignore duplicate setting");
             break;
         }
 
@@ -162,7 +159,7 @@ void cAnalogAudioGain::set(String & value)
             break;
         }
 
-        DEBUG_V("Update the radio")
+        // DEBUG_V("Update the radio")
         vgaGainValue = MapOfGainValues[vgaGainStr];
         QN8027RadioApi.setVgaGain(vgaGainValue);
 
