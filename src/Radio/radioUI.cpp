@@ -26,6 +26,7 @@
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
+#include "PreEmphasis.hpp"
 
 
 typedef struct 
@@ -161,31 +162,13 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         radioTab = _radioTab;
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
-
         FrequencyAdjust.AddRadioControls(radioTab);
         RfCarrier.AddControls(radioTab);
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
-
         AudioMode.AddControls(radioTab);
-
         #ifdef ADV_RADIO_FEATURES
-        radioEmphID = ESPUI.addControl(
-                                ControlType::Select,
-                                RADIO_PRE_EMPH_STR,
-                                preEmphasisStr,
-                                ControlColor::Emerald,
-                                radioTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbRadioEmphasis(sender, type);
-                                    }
-                                },
-                                this);
-        ESPUI.addControl(ControlType::Option, PRE_EMPH_USA_STR, PRE_EMPH_USA_STR, ControlColor::Emerald, radioEmphID);
-        ESPUI.addControl(ControlType::Option, PRE_EMPH_EUR_STR, PRE_EMPH_EUR_STR, ControlColor::Emerald, radioEmphID);
+        PreEmphasis.AddControls(radioTab);
         #endif // ifdef ADV_RADIO_FEATURES
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString,               ControlColor::None,    radioTab);
@@ -374,8 +357,8 @@ void cRadio::setPtyCodeOptionValues ()
         if(control)
         {
             // DEBUG_V("Update control fields");
-            control->value = CurrentEntry.name[emphVal];
-            control->label = CurrentEntry.name[emphVal].c_str();
+            control->value = CurrentEntry.name[PreEmphasis.get()];
+            control->label = CurrentEntry.name[PreEmphasis.get()].c_str();
             ESPUI.updateControl(control);
             // DEBUG_V(String("label: ") + String(control->label));
         }
@@ -398,7 +381,7 @@ void cRadio::setPtyCode(String & ptyStr)
 
     for (auto &CurrentEntry : ListOfPtyCodes)
     {
-        if(ptyStr.equals(CurrentEntry.name[emphVal]))
+        if(ptyStr.equals(CurrentEntry.name[PreEmphasis.get()]))
         {
             PtyCode = CurrentEntry.code;
             setPtyCode();
@@ -414,7 +397,7 @@ void cRadio::updateUiPtyCode()
 {
     // DEBUG_START;
 
-    ESPUI.updateControlValue(rdsPtyID, ListOfPtyCodes[PtyCode].name[emphVal]);
+    ESPUI.updateControlValue(rdsPtyID, ListOfPtyCodes[PtyCode].name[PreEmphasis.get()]);
 
     // DEBUG_END;
 }

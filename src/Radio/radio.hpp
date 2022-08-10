@@ -54,7 +54,6 @@ private:
     void        setDigitalGain(void);
     void        setPiCode(uint16_t value);
     void        setPiCode();
-    void        setPreEmphasis(void);
     void        setProgramServiceName();
     void        setPtyCode();
     void        setPtyCode(String & ptyStr);
@@ -86,9 +85,7 @@ private:
     uint16_t    radioVgaGainID  = Control::noParent;
     uint16_t    radioDgainID    = Control::noParent;
     uint16_t    radioAutoID     = Control::noParent;
-    uint16_t    radioEmphID     = Control::noParent;
     uint16_t    radioGainID     = Control::noParent;
-    uint16_t    radioImpID      = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
     uint16_t    radioRfEnbID    = Control::noParent;
     uint16_t    adjFmDispID     = Control::noParent;
@@ -110,14 +107,6 @@ private:
     
 #define OFF 0x00
 #define ON 0x01
-#define PRE_EMPH_USA_STR    "North America (75uS)" // North America / Japan.
-#define PRE_EMPH_EUR_STR    "Europe (50uS)"        // Europe, Australia, China.
-#define PRE_EMPH_DEF_STR    PRE_EMPH_USA_STR;
-#define PRE_EMPH_USA_VAL    OFF
-#define PRE_EMPH_EUR_VAL    ON
-#define PRE_EMPH_DEF_VAL    PRE_EMPH_USA_VAL
-    String  preEmphasisStr  = PRE_EMPH_DEF_STR; // Control.
-    uint8_t emphVal         = PRE_EMPH_DEF_VAL;
 
 #define DIG_GAIN0_STR     "0 dB (default)"
 #define DIG_GAIN1_STR     "1 dB"

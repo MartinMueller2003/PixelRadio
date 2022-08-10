@@ -77,31 +77,6 @@ void cRadio::CbProgramServiceName(Control *sender, int type)
 }
 
 // ************************************************************************************************
-// radioEmphasisCallback(): Set Radio pre-emphasis to North America or European. Sets String.
-void cRadio::CbRadioEmphasis(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    preEmphasisStr = sender->value;
-    if( !preEmphasisStr.equals(PRE_EMPH_USA_STR) &&
-        !preEmphasisStr.equals(PRE_EMPH_EUR_STR) )
-    {
-        preEmphasisStr = PRE_EMPH_DEF_STR;
-        Log.errorln(String(F("radioEmphasisCallback: %s.")).c_str(), BAD_VALUE_STR);
-    }
-
-    setPreEmphasis(); // Update QN8027 Radio Chip's setting.
-    setPtyCodeOptionValues();
-    displaySaveWarning();
-    Log.infoln(String(F("Pre-Emphasis Set to: %s.")).c_str(), preEmphasisStr.c_str());
-
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
 void cRadio::CbRdsRst(Control *sender, int type)
 {
     DEBUG_START;

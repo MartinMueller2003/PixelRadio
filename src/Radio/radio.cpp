@@ -30,6 +30,7 @@
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
+#include "PreEmphasis.hpp"
 
 // *********************************************************************************************
 void cRadio::begin()
@@ -130,7 +131,6 @@ void cRadio::restoreConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    ReadFromJSON(preEmphasisStr,    config, F("RADIO_PRE_EMPH_STR"));
     ReadFromJSON(rfPowerStr,        config, F("RADIO_POWER_STR"));
     ReadFromJSON(vgaGainStr,        config, F("ANALOG_GAIN_STR"));
     ReadFromJSON(digitalGainStr,    config, F("DIGITAL_GAIN_STR"));
@@ -140,7 +140,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     AudioMode.restoreConfiguration(config);
     RfCarrier.restoreConfiguration(config);
     FrequencyAdjust.restoreConfiguration(config);
-
+    PreEmphasis.restoreConfiguration(config);
     // DEBUG_END;
 }
 
@@ -149,14 +149,14 @@ void cRadio::saveConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    AudioInputImpedance.restoreConfiguration(config);
+    AudioInputImpedance.saveConfiguration(config);
     AudioMute.saveConfiguration(config);
     AudioMode.saveConfiguration(config);
-    RfCarrier.restoreConfiguration(config);
-    FrequencyAdjust.restoreConfiguration(config);
+    RfCarrier.saveConfiguration(config);
+    FrequencyAdjust.saveConfiguration(config);
+    PreEmphasis.saveConfiguration(config);
 
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
-    config[F("RADIO_PRE_EMPH_STR")]     = preEmphasisStr; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
 
     config[F("ANALOG_VOLUME")]          = analogVol;        // Requires custom function, not written yet.
@@ -242,42 +242,6 @@ void cRadio::setPiCode()
     }
 #endif // def OldWay
 
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// ssetPreEmphasis(): Set the QN8027 chip's pre-Emphasis.
-// ON = 50uS (Eur/UK/Australia), OFF = 75uS (North America/Japan).
-void cRadio::setPreEmphasis(void)
-{
-    // DEBUG_START;
-#ifdef OldWay
-
-    if (preEmphasisStr.equals(PRE_EMPH_EUR_STR))
-    {
-        emphVal = PRE_EMPH_EUR_VAL;
-    }
-    else if (preEmphasisStr.equals(PRE_EMPH_USA_STR))
-    {
-        emphVal = PRE_EMPH_USA_VAL;
-    }
-    else 
-    {
-        Log.errorln("setPreEmphasis: Invalid Value, Using Default");
-        preEmphasisStr = PRE_EMPH_DEF_STR;
-        emphVal        = PRE_EMPH_DEF_VAL;
-    }
-
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        setRfCarrier(OFF);
-        FmRadio.setPreEmphTime50(emphVal);
-        setRfCarrier();
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-
-#endif // def OldWay
     // DEBUG_END;
 }
 
