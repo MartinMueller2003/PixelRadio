@@ -38,7 +38,6 @@ public:
     void        saveConfiguration (JsonObject & json);
     
 // Callbacks need to be public 
-    void        CbDigitalGainAdjust(Control *sender, int type);
     void        CbImpedanceAdjust(Control *sender, int type);
     void        CbProgramServiceName(Control *sender, int type);
     void        CbRadioEmphasis(Control *sender, int type);
@@ -48,7 +47,6 @@ public:
     void        CbSetPtyCode(Control *sender, int type);
 
 private:
-    void        setDigitalGain(void);
     void        setPiCode(uint16_t value);
     void        setPiCode();
     void        setProgramServiceName();
@@ -102,13 +100,6 @@ private:
     
 #define OFF 0x00
 #define ON 0x01
-
-#define DIG_GAIN0_STR     "0 dB (default)"
-#define DIG_GAIN1_STR     "1 dB"
-#define DIG_GAIN2_STR     "2 dB"
-#define DIG_GAIN_DEF_STR  DIG_GAIN0_STR;
-    String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
-
 
 #define RF_PWR_LOW_STR   "Low"
 #define RF_PWR_MED_STR   "Med"

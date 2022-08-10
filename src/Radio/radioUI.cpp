@@ -23,6 +23,7 @@
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
+#include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
@@ -175,25 +176,8 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString,               ControlColor::None,    radioTab);
         AnalogAudioGain.AddControls(radioTab);
         AudioInputImpedance.AddControls(radioTab);
-
         #ifdef ADV_RADIO_FEATURES
-        radioDgainID = ESPUI.addControl(
-                                ControlType::Select,
-                                RADIO_DIG_AUDIO_STR,
-                                digitalGainStr,
-                                ControlColor::Emerald,
-                                radioTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbDigitalGainAdjust(sender, type);
-                                    }
-                                },
-                                this);
-        ESPUI.addControl(ControlType::Option, DIG_GAIN0_STR, DIG_GAIN0_STR, ControlColor::Emerald, radioDgainID);
-        ESPUI.addControl(ControlType::Option, DIG_GAIN1_STR, DIG_GAIN1_STR, ControlColor::Emerald, radioDgainID);
-        ESPUI.addControl(ControlType::Option, DIG_GAIN2_STR, DIG_GAIN2_STR, ControlColor::Emerald, radioDgainID);
+        DigitalAudioGain.AddControls(radioTab);
         #endif // ifdef ADV_RADIO_FEATURES
 
         ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString,            ControlColor::None,    radioTab);

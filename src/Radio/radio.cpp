@@ -27,6 +27,7 @@
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
+#include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
@@ -61,16 +62,16 @@ void cRadio::restoreConfiguration(JsonObject & config)
     // DEBUG_START;
 
     ReadFromJSON(rfPowerStr,        config, F("RADIO_POWER_STR"));
-    ReadFromJSON(digitalGainStr,    config, F("DIGITAL_GAIN_STR"));
 
+    AnalogAudioGain.restoreConfiguration(config);
     AudioInputImpedance.restoreConfiguration(config);
-    AudioMute.restoreConfiguration(config);
     AudioMode.restoreConfiguration(config);
-    RfCarrier.restoreConfiguration(config);
+    AudioMute.restoreConfiguration(config);
+    DigitalAudioGain.restoreConfiguration(config);
     FrequencyAdjust.restoreConfiguration(config);
     PreEmphasis.restoreConfiguration(config);
-    AnalogAudioGain.restoreConfiguration(config);
-
+    RfCarrier.restoreConfiguration(config);
+    
     // DEBUG_END;
 }
 
@@ -79,13 +80,14 @@ void cRadio::saveConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
+    AnalogAudioGain.saveConfiguration(config);
     AudioInputImpedance.saveConfiguration(config);
-    AudioMute.saveConfiguration(config);
     AudioMode.saveConfiguration(config);
-    RfCarrier.saveConfiguration(config);
+    AudioMute.saveConfiguration(config);
+    DigitalAudioGain.saveConfiguration(config);
     FrequencyAdjust.saveConfiguration(config);
     PreEmphasis.saveConfiguration(config);
-    AnalogAudioGain.saveConfiguration(config);
+    RfCarrier.saveConfiguration(config);
 
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
@@ -96,50 +98,6 @@ void cRadio::saveConfiguration(JsonObject & config)
     config[F("RDS_PTY_CODE")]           = PtyCode;
     config[F("RDS_PROG_SERV_STR")]      = ProgramServiceName;
 
-    config[F("DIGITAL_GAIN_STR")]       = digitalGainStr;   // Use radio.setTxDigitalGain(0/1/2) when restoring this Int value.
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setDigitalGain(): Set the Tx Digital Gain on the QN8027 chip.
-void cRadio::setDigitalGain(void)
-{
-    // DEBUG_START;
-
-    uint8_t gainVal = 0;
-
-    // Log.verboseln(String(F( "-> Digital Audio Gain Set to: %s.")).c_str(), digitalGainStr.c_str());
-
-    if (digitalGainStr.equals(DIG_GAIN0_STR))
-    {
-        gainVal = 0; // 0dB.
-    }
-    else if (digitalGainStr.equals(DIG_GAIN1_STR))
-    {
-        gainVal = 1; // 1dB.
-    }
-    else if (digitalGainStr.equals(DIG_GAIN2_STR))
-    {
-        gainVal = 2; // 2dB.
-    }
-    else 
-    {
-        Log.errorln(String(F("setDigitalGain: Invalid Value, Using Default")).c_str());
-        digitalGainStr = DIG_GAIN_DEF_STR;
-        gainVal        = 0;
-    }
-#ifdef OldWay
-
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        delay(5);
-        FmRadio.setTxDigitalGain(gainVal);
-        delay(5);
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
     // DEBUG_END;
 }
 

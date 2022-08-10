@@ -22,40 +22,6 @@
 #include "memdebug.h"
 
 // ************************************************************************************************
-// gainAdjust(): Adjust Digital (USB) or Analog Input Gain. Sets String.
-void cRadio::CbDigitalGainAdjust(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    digitalGainStr = sender->value;
-
-    if (!digitalGainStr.equals(DIG_GAIN0_STR) &&
-        !digitalGainStr.equals(DIG_GAIN1_STR) &&
-        !digitalGainStr.equals(DIG_GAIN2_STR) &&
-        !digitalGainStr.equals(DIG_GAIN1_STR) )
-    {
-        Log.errorln(String("Invalid Digital Gain Value: %s.").c_str(), digitalGainStr.c_str());
-        digitalGainStr = DIG_GAIN_DEF_STR;
-        ESPUI.updateControlValue(sender, digitalGainStr);
-    }
-
-    setDigitalGain(); // Update setting on QN8027 FM Radio Chip.
-
-#ifdef OldWay
-    String tempStr  = String(getAudioGain()) + F(" dB");
-    ESPUI.print(radioGainID, tempStr);
-#endif // def OldWay
-
-    displaySaveWarning();
-    Log.infoln(String("Digital Gain Set to: %s.").c_str(), digitalGainStr.c_str());
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 void cRadio::CbProgramServiceName(Control *sender, int type)
 {
     DEBUG_START;
