@@ -259,7 +259,7 @@ void cQN8027RadioApi::initRadioChip(void)
         }
      */
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -354,7 +354,7 @@ void cQN8027RadioApi::setFrequency(float frequency, bool Carrier)
 // setMonoAudio(): Control the Audio Stereo/Mono mode on the QN8027 chip.
 void cQN8027RadioApi::setMonoAudio(bool value)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if (RadioSemaphore)
     {
@@ -365,7 +365,7 @@ void cQN8027RadioApi::setMonoAudio(bool value)
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
