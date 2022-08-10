@@ -19,12 +19,6 @@
 #include "PixelRadio.h"
 #include "language.h"
 
-#include "AudioInputImpedance.hpp"
-#include "AudioMode.hpp"
-#include "AudioMute.hpp"
-#include "FrequencyAdjust.hpp"
-#include "RfCarrier.hpp"
-
 // *********************************************************************************************
 class cRadio
 {
@@ -67,7 +61,6 @@ private:
     void        setPtyCode();
     void        setPtyCode(String & ptyStr);
     void        setPtyCodeOptionValues ();
-    void        setRdsMessage();
     void        setRfAutoOff(void);
     void        setRfPower(void);
     void        setVgaGain(void);
@@ -109,11 +102,6 @@ private:
     uint16_t    rdsProgNameID   = Control::noParent;
     uint16_t    rdsRstID        = Control::noParent;
 
-    uint16_t    homeRdsTextID   = Control::noParent;
-    uint16_t    homeRdsTmrID    = Control::noParent;
-    uint16_t    homeTextMsgID   = Control::noParent;
-    uint16_t    homeOnAirID     = Control::noParent;
-
     bool        testModeFlg     = false;
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
 
@@ -125,10 +113,6 @@ private:
     String      ProgramServiceName = F("PixeyFM");
     String      LastMessageSent;
     
-    c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
-    unsigned long CurrentMsgEndTime = 0;
-    unsigned long CurrentMsgLastUpdateTime = 0;
-
 #define OFF 0x00
 #define ON 0x01
 #define PRE_EMPH_USA_STR    "North America (75uS)" // North America / Japan.

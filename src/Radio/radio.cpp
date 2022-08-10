@@ -23,6 +23,14 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
+#include "AudioInputImpedance.hpp"
+#include "AudioMode.hpp"
+#include "AudioMute.hpp"
+#include "FrequencyAdjust.hpp"
+#include "RdsText.hpp"
+#include "RfCarrier.hpp"
+
+
 static const uint16_t toneList[] =
 { TONE_NONE, TONE_NONE, TONE_NONE, TONE_A3, TONE_E4, TONE_A3, TONE_C4, TONE_C5, TONE_F4, TONE_F4, TONE_A4, TONE_NONE };
 static const uint8_t listSize = sizeof(toneList) / sizeof(uint16_t);
@@ -117,40 +125,7 @@ void cRadio::Poll()
 
     updateTestTones(false);
 
-    unsigned long now = millis();
-
-    do // once
-    {
-        // has it been one second since the last update?
-        if (1000 > (now - CurrentMsgLastUpdateTime))
-        {
-            // need to wait a bit longer
-            break;
-        }
-        CurrentMsgLastUpdateTime = now;
-        /// DEBUG_V("One second later");
-
-        // has the current message output expired?
-        if(now < CurrentMsgEndTime)
-        {
-            /// DEBUG_V("still waiting");
-            updateRdsMsgRemainingTime(now);
-            break;
-        }
-
-        /// DEBUG_V("time for a new message");
-        ControllerMgr.GetNextRdsMessage(RdsMsgInfo);
-        CurrentMsgEndTime = now + RdsMsgInfo.DurationMilliSec;
-        if(!LastMessageSent.equals(RdsMsgInfo.Text))
-        {
-            /// DEBUG_V("Display the new message");
-            LastMessageSent = RdsMsgInfo.Text;
-            setRdsMessage();
-            updateUiRdsText(RdsMsgInfo.Text);
-        }
-        updateRdsMsgRemainingTime(now);
-
-    } while (false);
+    RdsText.poll();
 
     /// DEBUG_END;
 }
@@ -343,26 +318,6 @@ void cRadio::setPtyCode()
         FmRadio.setPtyCode(PtyCode);
         setRfCarrier();
         xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRadio::setRdsMessage()
-{
-    // DEBUG_START;
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        waitForIdle(50);
-        FmRadio.sendRadioText(RdsMsgInfo.Text);
-        xSemaphoreGiveRecursive(RadioSemaphore);
-
-        Log.traceln(String(F("Refreshing RDS RadioText Message: %s")).c_str(), RdsMsgInfo.Text.c_str());
     }
 #endif // def OldWay
 
@@ -619,7 +574,7 @@ void cRadio::updateTestTones(bool resetTimerFlg)
                     sendStationName(AUDIO_PSN_STR);
                     sendRadioText(tmpStr);
 
-                    updateUiRdsText(tmpStr);
+                    RdsText.set(tmpStr);
 
                     Log.verboseln(String(F("New Test Tone Sequence, RadioText Sent.")).c_str());
                     break;                // We will send the tones on next entry.

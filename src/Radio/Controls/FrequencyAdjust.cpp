@@ -22,12 +22,11 @@
 #include "memdebug.h"
 
 
-static const PROGMEM char HOME_FREQ_STR         [] = "FM FREQUENCY";
 static const PROGMEM char RADIO_FM_FRQ_STR      [] = "FM FREQUENCY";
-static const PROGMEM char ADJUST_FM_FRQ_STR     [] = "FM FREQUENCY";
 static const PROGMEM char ADJUST_FRQ_ADJ_STR    [] = "FREQUENCY ADJUST";
 static const PROGMEM char RADIO_FM_FREQ         [] = "RADIO_FM_FREQ";
 static const PROGMEM char UNITS_MHZ_STR         [] = " MHz";
+static const PROGMEM char HOME_RAD_STAT_STR     [] = "RADIO STATUS";
 
 // *********************************************************************************************
 cFrequencyAdjust::cFrequencyAdjust()
@@ -119,7 +118,7 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value)
 
         AdjustStatusID = ESPUI.addControl(
                                 ControlType::Label, 
-                                ADJUST_FM_FRQ_STR, 
+                                RADIO_FM_FRQ_STR, 
                                 emptyString, 
                                 ControlColor::Wetasphalt, 
                                 AdjustId);
