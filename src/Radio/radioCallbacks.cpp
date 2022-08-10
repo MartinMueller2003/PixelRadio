@@ -43,8 +43,11 @@ void cRadio::CbDigitalGainAdjust(Control *sender, int type)
     }
 
     setDigitalGain(); // Update setting on QN8027 FM Radio Chip.
+
+#ifdef OldWay
     String tempStr  = String(getAudioGain()) + F(" dB");
     ESPUI.print(radioGainID, tempStr);
+#endif // def OldWay
 
     displaySaveWarning();
     Log.infoln(String("Digital Gain Set to: %s.").c_str(), digitalGainStr.c_str());
@@ -180,38 +183,6 @@ void cRadio::CbSetPiCode(Control *sender, int type)
     setPiCode();
 
     Log.infoln(String(F("RDS PI Code Set to: \"%s\"")).c_str(), Response);
-}
-
-// ************************************************************************************************
-void cRadio::CbVgaGainAdjust(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    vgaGainStr = sender->value;
-
-    if(!vgaGainStr.equals(VGA_GAIN0_STR) &&
-       !vgaGainStr.equals(VGA_GAIN1_STR) &&
-       !vgaGainStr.equals(VGA_GAIN2_STR) &&
-       !vgaGainStr.equals(VGA_GAIN3_STR) &&
-       !vgaGainStr.equals(VGA_GAIN4_STR) &&
-       !vgaGainStr.equals(VGA_GAIN5_STR) )
-    {
-        vgaGainStr = VGA_GAIN_DEF_STR;
-        ESPUI.updateControlValue(sender, vgaGainStr);
-        Log.errorln(String(F("gainAdjust: BAD_VALUE.")).c_str());
-    }
-
-    setVgaGain(); // Update analog (VGA) gain setting on QN8027 FM Radio Chip.
-    displaySaveWarning();
-
-    String tempStr  = String(getAudioGain()) + F(" dB");
-    ESPUI.print(radioGainID, tempStr);
-    Log.infoln(String(F("Analog Input Gain Set to: %s.")).c_str(), tempStr.c_str());
-
-    DEBUG_END;
 }
 
 // *********************************************************************************************

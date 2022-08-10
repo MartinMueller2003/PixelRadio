@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: AudioInputImpedance.cpp
+   File: AnalogAudioGain.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -19,15 +19,16 @@
 #include <ESPUI.h>
 
 // *********************************************************************************************
-class cAudioInputImpedance
+class cAnalogAudioGain
 {
 public:
-                cAudioInputImpedance ();
-    virtual     ~cAudioInputImpedance() {}
+                cAnalogAudioGain ();
+    virtual     ~cAnalogAudioGain() {}
 
     void        AddControls (uint16_t Tab);
 
-    uint8_t     get() { return InputImpedanceValue; }
+    String &    get() { return vgaGainStr; }
+
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
     void        set(String & value);
@@ -39,11 +40,11 @@ private:
     uint16_t    TabId       = Control::noParent;
     uint16_t    ControlId   = Control::noParent;
 
-    String      InputImpedanceStr;
-    uint8_t     InputImpedanceValue = 0;
+    String      vgaGainStr;
+    uint8_t     vgaGainValue;
 };
 
-extern cAudioInputImpedance AudioInputImpedance;
+extern cAnalogAudioGain AnalogAudioGain;
 
 // *********************************************************************************************
 // OEF

@@ -1,5 +1,5 @@
 /*
-   File: AudioInputImpedance.cpp
+   File: AnalogAudioGain.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -17,39 +17,46 @@
 #include <ArduinoLog.h>
 #include <map>
 #include "radio.hpp"
-#include "AudioInputImpedance.hpp"
+#include "AnalogAudioGain.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-#define INP_IMP05K_STR   " 5K Ohms"
-#define INP_IMP10K_STR   "10K Ohms"
-#define INP_IMP20K_STR   "20K Ohms (default)"
-#define INP_IMP40K_STR   "40K Ohms"
+#define VGA_GAIN0_STR     " 3dB"
+#define VGA_GAIN1_STR     " 6dB"
+#define VGA_GAIN2_STR     " 9dB"
+#define VGA_GAIN3_STR     "12dB (default)"
+#define VGA_GAIN4_STR     "15dB"
+#define VGA_GAIN5_STR     "18dB"
+#define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
 
-static std::map<String, uint8_t> MapOfImpedances
+static std::map<String, uint8_t> MapOfGainValues
 {
-    {INP_IMP05K_STR,  5},
-    {INP_IMP10K_STR, 10},
-    {INP_IMP20K_STR, 20},
-    {INP_IMP40K_STR, 40},
+    {VGA_GAIN0_STR,  0},
+    {VGA_GAIN1_STR,  1},
+    {VGA_GAIN2_STR,  2},
+    {VGA_GAIN3_STR,  3},
+    {VGA_GAIN4_STR,  4},
+    {VGA_GAIN5_STR,  5},
 };
 
-static const PROGMEM char INPUT_IMPED_STR   [] = "INPUT_IMPED_STR";
-static const PROGMEM char INP_IMP_DEF_STR   [] = INP_IMP20K_STR;
+static const PROGMEM char RADIO_VGA_AUDIO_STR   [] = "ANALOG (VGA) AUDIO GAIN";
+static const PROGMEM char ANALOG_GAIN_STR       [] = "ANALOG_GAIN_STR";
+
 static const PROGMEM char RADIO_INP_IMP_STR [] = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
-cAudioInputImpedance::cAudioInputImpedance()
+cAnalogAudioGain::cAnalogAudioGain()
 {
     /// DEBUG_START;
 
-    InputImpedanceStr = INP_IMP_DEF_STR;
+    vgaGainStr = VGA_GAIN_DEF_STR;
+    vgaGainValue = MapOfGainValues[vgaGainStr];
 
     /// DEBUG_END;
 }
 
 // *********************************************************************************************
-void cAudioInputImpedance::AddControls (uint16_t value)
+void cAnalogAudioGain::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
@@ -65,20 +72,20 @@ void cAudioInputImpedance::AddControls (uint16_t value)
 
         ControlId = ESPUI.addControl(
                             ControlType::Select, 
-                            RADIO_INP_IMP_STR, 
-                            InputImpedanceStr, 
+                            RADIO_VGA_AUDIO_STR, 
+                            emptyString, 
                             ControlColor::Emerald, 
                             TabId, 
                             [](Control* sender, int type, void* UserInfo)
                             {
                                 if(UserInfo)
                                 {
-                                    static_cast<cAudioInputImpedance *>(UserInfo)->Callback(sender, type);
+                                    static_cast<cAnalogAudioGain *>(UserInfo)->Callback(sender, type);
                                 }
                             },
                             this);
 
-        for(auto & CurrentOption : MapOfImpedances)
+        for(auto & CurrentOption : MapOfGainValues)
         {
             ESPUI.addControl(ControlType::Option, 
                             CurrentOption.first.c_str(), 
@@ -86,6 +93,11 @@ void cAudioInputImpedance::AddControls (uint16_t value)
                             ControlColor::None, 
                             ControlId);
         }
+
+        String Temp = vgaGainStr;
+        vgaGainStr.clear();
+        set(Temp);
+
         // DEBUG_V();
 
     } while (false);
@@ -95,7 +107,7 @@ void cAudioInputImpedance::AddControls (uint16_t value)
 
 // ************************************************************************************************
 // Callback(): Adjust Audio Input Impedance.
-void cAudioInputImpedance::Callback(Control *sender, int type)
+void cAnalogAudioGain::Callback(Control *sender, int type)
 {
     // DEBUG_START;
 
@@ -108,57 +120,74 @@ void cAudioInputImpedance::Callback(Control *sender, int type)
 }
 
 // *********************************************************************************************
-void cAudioInputImpedance::restoreConfiguration(JsonObject & config)
+void cAnalogAudioGain::restoreConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    ReadFromJSON(InputImpedanceStr, config, INPUT_IMPED_STR);
-    set(InputImpedanceStr);
+    String Temp;
+    ReadFromJSON(Temp, config, ANALOG_GAIN_STR);
+    set(Temp);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cAudioInputImpedance::saveConfiguration(JsonObject & config)
+void cAnalogAudioGain::saveConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    config[INPUT_IMPED_STR] = InputImpedanceStr;      // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
+    config[ANALOG_GAIN_STR] = vgaGainStr;       // Use radio.setTxInputBufferGain(0-5) when restoring this Int value.
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
 // set(): Set the Audio Input Impedance on the QN8027 chip.
-void cAudioInputImpedance::set(String & value)
+void cAnalogAudioGain::set(String & value)
 {
     // DEBUG_START;
 
-    InputImpedanceStr = value;
-    if(MapOfImpedances.end() == MapOfImpedances.find(InputImpedanceStr))
+    do // once
     {
-        Log.errorln((String(F("cAudioInputImpedance::Set: BAD_VALUE: ")) + InputImpedanceStr).c_str());
-        InputImpedanceStr = INP_IMP_DEF_STR;
-    }
+        if(vgaGainStr.equals(value))
+        {
+            DEBUG_V("Ignore duplicate setting");
+            break;
+        }
 
-    Log.infoln(String(F("Input Impedance Set to: %s.")).c_str(), InputImpedanceStr.c_str());
+        vgaGainStr = value;
+        if(MapOfGainValues.end() == MapOfGainValues.find(vgaGainStr))
+        {
+            Log.errorln(String(F("Analog (VGA) Gain: Set: BAD VALUE: '%s'. Using default.")).c_str(), value);
+            break;
+        }
 
-    InputImpedanceValue = MapOfImpedances[InputImpedanceStr];
+        DEBUG_V("Update the radio")
+        vgaGainValue = MapOfGainValues[vgaGainStr];
+        QN8027RadioApi.setVgaGain(vgaGainValue);
 
-    QN8027RadioApi.setAudioImpedance(InputImpedanceValue);
+        ESPUI.updateControlValue(ControlId, vgaGainStr);
 
-    ESPUI.updateControlValue(ControlId, InputImpedanceStr);
+        #ifdef OldWay
+        // new way
+        AudioGain.set(((vgaGain + 1) * 3) - (AudioInputImpedance.get() * 3));
+        // old way
+        String tempStr = String(getAudioGain()) + F(" dB");
+        ESPUI.print(radioGainID, tempStr);
+        Log.infoln(String(F("Analog Input Gain Set to: %s.")).c_str(), tempStr.c_str());
+        #endif // def OldWay
 
-#ifdef OldWay
-    ESPUI.print(radioGainID, String(getAudioGain()) + F(" dB"));
-#endif // def OldWay
-    displaySaveWarning();
+
+        displaySaveWarning();
+    } while (false);
+
+    Log.infoln(String(F("Analog (VGA) Gain Set to: %s.")).c_str(), vgaGainStr.c_str());
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-cAudioInputImpedance AudioInputImpedance;
+cAnalogAudioGain AnalogAudioGain;
 
 // *********************************************************************************************
 // OEF

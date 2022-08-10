@@ -19,6 +19,7 @@
 #include "memdebug.h"
 #include "language.h"
 
+#include "AnalogAudioGain.hpp"
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
@@ -172,28 +173,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         #endif // ifdef ADV_RADIO_FEATURES
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString,               ControlColor::None,    radioTab);
-
-        radioVgaGainID = ESPUI.addControl(
-                                    ControlType::Select, 
-                                    RADIO_VGA_AUDIO_STR, 
-                                    vgaGainStr, 
-                                    ControlColor::Emerald, 
-                                    radioTab,
-                                    [](Control* sender, int type, void* UserInfo)
-                                    {
-                                        if(UserInfo)
-                                        {
-                                            static_cast<cRadio *>(UserInfo)->CbVgaGainAdjust(sender, type);
-                                        }
-                                    },
-                                    this);
-        ESPUI.addControl(ControlType::Option, VGA_GAIN0_STR, VGA_GAIN0_STR, ControlColor::Emerald, radioVgaGainID);
-        ESPUI.addControl(ControlType::Option, VGA_GAIN1_STR, VGA_GAIN1_STR, ControlColor::Emerald, radioVgaGainID);
-        ESPUI.addControl(ControlType::Option, VGA_GAIN2_STR, VGA_GAIN2_STR, ControlColor::Emerald, radioVgaGainID);
-        ESPUI.addControl(ControlType::Option, VGA_GAIN3_STR, VGA_GAIN3_STR, ControlColor::Emerald, radioVgaGainID);
-        ESPUI.addControl(ControlType::Option, VGA_GAIN4_STR, VGA_GAIN4_STR, ControlColor::Emerald, radioVgaGainID);
-        ESPUI.addControl(ControlType::Option, VGA_GAIN5_STR, VGA_GAIN5_STR, ControlColor::Emerald, radioVgaGainID);
-
+        AnalogAudioGain.AddControls(radioTab);
         AudioInputImpedance.AddControls(radioTab);
 
         #ifdef ADV_RADIO_FEATURES
@@ -223,11 +203,13 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         ESPUI.setElementStyle(radioSoundID, F("max-width: 35%;"));
 
         #ifdef ADV_RADIO_FEATURES
+#ifdef OldWay
         String tempStr = String(getAudioGain()) + F(" dB");
         radioGainID = ESPUI.addControl(ControlType::Label, RADIO_AUDIO_GAIN_STR, tempStr, ControlColor::Emerald, radioTab);
         ESPUI.setPanelStyle(radioGainID, F("font-size: 1.15em;"));
         ESPUI.setElementStyle(radioGainID, F("width: 35%;"));
         ESPUI.print(radioGainID, tempStr);
+#endif // def OldWay
         #endif // ifdef ADV_RADIO_FEATURES
 
         // DEBUG_V();

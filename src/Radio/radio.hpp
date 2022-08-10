@@ -46,11 +46,8 @@ public:
     void        CbRdsRst(Control *sender, int type);
     void        CbSetPiCode(Control *sender, int type);
     void        CbSetPtyCode(Control *sender, int type);
-    void        CbVgaGainAdjust(Control *sender, int type);
 
 private:
-    int8_t      getAudioGain(void);
-
     void        setDigitalGain(void);
     void        setPiCode(uint16_t value);
     void        setPiCode();
@@ -60,7 +57,6 @@ private:
     void        setPtyCodeOptionValues ();
     void        setRfAutoOff(void);
     void        setRfPower(void);
-    void        setVgaGain(void);
     void        updateOnAirSign(void);
     void        updateRdsMsgRemainingTime(unsigned long now);
     void        updateUiAudioLevel(void);
@@ -82,7 +78,6 @@ private:
     uint16_t    radioTab        = Control::noParent;
     uint16_t    rdsTab          = Control::noParent;
 
-    uint16_t    radioVgaGainID  = Control::noParent;
     uint16_t    radioDgainID    = Control::noParent;
     uint16_t    radioAutoID     = Control::noParent;
     uint16_t    radioGainID     = Control::noParent;
@@ -115,15 +110,6 @@ private:
     String digitalGainStr = DIG_GAIN_DEF_STR;                  // Control.
 
 
-#define VGA_GAIN0_STR     "3dB"
-#define VGA_GAIN1_STR     "6dB"
-#define VGA_GAIN2_STR     "9dB"
-#define VGA_GAIN3_STR     "12dB (default)"
-#define VGA_GAIN4_STR     "15dB"
-#define VGA_GAIN5_STR     "18dB"
-#define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
-    String vgaGainStr = VGA_GAIN_DEF_STR;                  // Control.
-    
 #define RF_PWR_LOW_STR   "Low"
 #define RF_PWR_MED_STR   "Med"
 #define RF_PWR_HIGH_STR  "High (default)"

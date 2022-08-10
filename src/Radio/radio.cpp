@@ -23,6 +23,7 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
+#include "AnalogAudioGain.hpp"
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
@@ -43,78 +44,6 @@ void cRadio::begin()
     // DEBUG_END;
 }
 
-// ************************************************************************************************
-// getAudioGain(): Compute the Audio Gain.
-// Radio Audio Gain in dB = ((Analog Input Gain Step + 1) * 3) - (Input Impedance Step * 3)
-// Please note that the formula has been modified based on real-world measurements.
-// The official formula uses 6dB Impedance steps vs the revised use of 3dB.
-int8_t cRadio::getAudioGain(void)
-{
-    // DEBUG_START;
-    int8_t audioGain = 0;
-#ifdef OldWay
-    int8_t impedance;
-    int8_t vgaGain;
-
-    if (vgaGainStr.equals(VGA_GAIN0_STR))
-    {
-        vgaGain = 0;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN1_STR))
-    {
-        vgaGain = 1;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN2_STR))
-    {
-        vgaGain = 2;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN3_STR))
-    {
-        vgaGain = 3;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN4_STR))
-    {
-        vgaGain = 4;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN5_STR))
-    {
-        vgaGain = 5;
-    }
-    else 
-    {
-        vgaGain = 0;
-        Log.errorln("getAudioGain: Undefined vgaGainStr!");
-    }
-
-    if (inpImpedStr.equals(INP_IMP05K_STR))
-    {
-        impedance = 0;
-    }
-    else if (inpImpedStr.equals(INP_IMP10K_STR))
-    {
-        impedance = 1;
-    }
-    else if (inpImpedStr.equals(INP_IMP20K_STR))
-    {
-        impedance = 2;
-    }
-    else if (inpImpedStr.equals(INP_IMP40K_STR))
-    {
-        impedance = 3;
-    }
-    else 
-    {
-        impedance = 0;
-        Log.errorln(F("displayAudioGain: Undefined inpImpedStr!"));
-    }
-
-    audioGain = ((vgaGain + 1) * 3) - (impedance * 3);
-#endif // def OldWay
-
-    // DEBUG_END;
-    return audioGain;
-}
-
 // *********************************************************************************************
 void cRadio::Poll()
 {
@@ -132,7 +61,6 @@ void cRadio::restoreConfiguration(JsonObject & config)
     // DEBUG_START;
 
     ReadFromJSON(rfPowerStr,        config, F("RADIO_POWER_STR"));
-    ReadFromJSON(vgaGainStr,        config, F("ANALOG_GAIN_STR"));
     ReadFromJSON(digitalGainStr,    config, F("DIGITAL_GAIN_STR"));
 
     AudioInputImpedance.restoreConfiguration(config);
@@ -141,6 +69,8 @@ void cRadio::restoreConfiguration(JsonObject & config)
     RfCarrier.restoreConfiguration(config);
     FrequencyAdjust.restoreConfiguration(config);
     PreEmphasis.restoreConfiguration(config);
+    AnalogAudioGain.restoreConfiguration(config);
+
     // DEBUG_END;
 }
 
@@ -155,12 +85,12 @@ void cRadio::saveConfiguration(JsonObject & config)
     RfCarrier.saveConfiguration(config);
     FrequencyAdjust.saveConfiguration(config);
     PreEmphasis.saveConfiguration(config);
+    AnalogAudioGain.saveConfiguration(config);
 
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
 
     config[F("ANALOG_VOLUME")]          = analogVol;        // Requires custom function, not written yet.
-    config[F("ANALOG_GAIN_STR")]        = vgaGainStr;       // Use radio.setTxInputBufferGain(0-5) when restoring this Int value.
     
     config[F("RDS_PI_CODE")]            = PiCode; // Use radio.setPiCode() when restoring this hex value.
     config[F("RDS_PTY_CODE")]           = PtyCode;
@@ -349,57 +279,6 @@ void cRadio::setRfPower(void)
             setRfCarrier(OFF);
             setRfCarrier();
         }
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setVgaGain(): Set the Tx Input Buffer Gain (Analog Gain) on the QN8027 chip.
-void cRadio::setVgaGain(void)
-{
-    // DEBUG_START;
-    uint8_t gainVal = 0;
-
-    if (vgaGainStr.equals(VGA_GAIN0_STR))
-    {
-        gainVal = 0x00;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN1_STR))
-    {
-        gainVal = 0x01;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN2_STR))
-    {
-        gainVal = 0x02;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN3_STR))
-    {
-        gainVal = 0x03;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN4_STR))
-    {
-        gainVal = 0x04;
-    }
-    else if (vgaGainStr.equals(VGA_GAIN5_STR))
-    {
-        gainVal = 0x05;
-    }
-    else 
-    {
-        Log.errorln(String(F("setVgaGain: Invalid Value, Using Default")).c_str());
-        vgaGainStr = VGA_GAIN3_STR;
-        gainVal    = 0x03;
-    }
-#ifdef OldWay
-
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        delay(5);
-        FmRadio.setTxInputBufferGain(gainVal);
-        delay(5);
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 #endif // def OldWay
