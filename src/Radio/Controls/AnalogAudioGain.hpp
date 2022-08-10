@@ -27,7 +27,7 @@ public:
 
     void        AddControls (uint16_t Tab);
 
-    String &    get() { return vgaGainStr; }
+    uint8_t     get() { return vgaGainValue; }
 
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
