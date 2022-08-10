@@ -40,7 +40,7 @@ private:
     uint16_t    ControlId   = Control::noParent;
     uint16_t    MessageID   = Control::noParent;
 
-    bool        Mode = false;
+    bool        Mode        = true;
 };
 
 extern cAudioMode AudioMode;
