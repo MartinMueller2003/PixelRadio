@@ -15,8 +15,10 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "language.h"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
+#include "TestTone.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
@@ -64,7 +66,8 @@ void cRdsText::AddHomeControls (uint16_t value)
                                 emptyString, 
                                 ControlColor::Peterriver, 
                                 homeRdsTextID);
-        ESPUI.setPanelStyle(homeTextMsgID, String(F("font-size: 1.25em;")));
+        ESPUI.setPanelStyle(homeTextMsgID,   String(F("font-size: 1.15em;")));
+        ESPUI.setElementStyle(homeTextMsgID, CSS_LABEL_STYLE_WHITE);
 
         homeRdsTmrID = ESPUI.addControl(
                                 ControlType::Label, 
@@ -93,6 +96,12 @@ void cRdsText::poll()
 
     do // once
     {
+        if (TestTone.get())
+        {
+            // dont output anything when test mode is running
+            break;
+        }
+
         // has it been one second since the last update?
         if (1000 > (now - CurrentMsgLastUpdateTime))
         {
@@ -133,6 +142,7 @@ void cRdsText::poll()
 void cRdsText::set(String & value)
 {
     // DEBUG_START;
+    // DEBUG_V(String("value: ") + value);
 
     LastMessageSent = value;
     QN8027RadioApi.setRdsMessage(LastMessageSent);
@@ -146,8 +156,17 @@ void cRdsText::UpdateStatus()
 {
     // DEBUG_START;
 
-    ESPUI.print(homeRdsTextID, String(RfCarrier.get() ? LastMessageSent : RDS_RF_DISABLED_STR));
-    ESPUI.print(homeTextMsgID, String(String(RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
+    if (TestTone.get())
+    {
+        // DEBUG_V("Test Mode");
+        ESPUI.print(homeRdsTextID, LastMessageSent);
+        ESPUI.print(homeTextMsgID, emptyString);
+    }
+    else
+    {
+        ESPUI.print(homeRdsTextID, String(RfCarrier.get() ? LastMessageSent : RDS_RF_DISABLED_STR));
+        ESPUI.print(homeTextMsgID, String(String(RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
+    }
 
     // DEBUG_END;
 }
@@ -163,14 +182,12 @@ void cRdsText::updateRdsMsgRemainingTime(uint32_t now)
 
     do // once
     {
-#ifdef OldWay
-        if (IsTestModeOn())
+        if (TestTone.get())
         {
             // DEBUG_V("Test Mode");
             ESPUI.print(homeRdsTmrID, String(F("Test Mode")));
             break;
         }
-#endif // def OldWay
 
         if (!RfCarrier.get())
         {
