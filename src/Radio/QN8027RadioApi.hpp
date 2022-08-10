@@ -59,6 +59,7 @@ private:
     void    initRadioChip(void);
     void    waitForIdle(uint16_t waitMs);
 
+    bool DeviceIsPresent = false;
     QN8027Radio FmRadio;
     SemaphoreHandle_t RadioSemaphore = NULL;
 

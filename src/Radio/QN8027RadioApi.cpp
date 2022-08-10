@@ -34,16 +34,27 @@ void cQN8027RadioApi::begin()
     Wire.begin(SDA_PIN, SCL_PIN);
     Wire.setClock(I2C_FREQ_HZ);     // 100KHz i2c speed.
     pinMode(SCL_PIN, INPUT_PULLUP); // I2C Clock Pin.
-
-    RadioSemaphore = xSemaphoreCreateRecursiveMutex();
-    // DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));
-    if (NULL == RadioSemaphore)
+    if (!checkRadioIsPresent())
     {
-        Log.errorln(String(F("Could not allocate a semaphore for access to the radio hardware")).c_str());
+        TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_FAIL;
+        Log.errorln(String(F("-> QN8027 is Missing")).c_str());
     }
-    // DEBUG_V(String("fmRadioTestCode: 0x") + String(fmRadioTestCode, HEX))
-    initRadioChip(); // If QN8027 fails we will warn user on UI homeTab.
-    Log.infoln(String(F("FM Radio RDS/RBDS Started.")).c_str());
+    else
+    {
+        Log.verboseln(String(F("-> QN8027 is Present")).c_str());
+        RadioSemaphore = xSemaphoreCreateRecursiveMutex();
+        // DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));
+        if (NULL == RadioSemaphore)
+        {
+            Log.errorln(String(F("Could not allocate a semaphore for access to the radio hardware")).c_str());
+        }
+        else
+        {
+            // DEBUG_V(String("fmRadioTestCode: 0x") + String(fmRadioTestCode, HEX))
+            initRadioChip(); // If QN8027 fails we will warn user on UI homeTab.
+            Log.infoln(String(F("FM Radio RDS/RBDS Started.")).c_str());
+        }
+    }
 
     // DEBUG_END;
 }
@@ -143,7 +154,7 @@ bool cQN8027RadioApi::checkRadioIsPresent(void)
     }
 
     // DEBUG_END;
-    return false;
+    return response;
 }
 
 // *********************************************************************************************
@@ -158,14 +169,6 @@ void cQN8027RadioApi::initRadioChip(void)
 
     do // once
     {
-        if (!checkRadioIsPresent())
-        {
-            TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_FAIL;
-            Log.errorln(String(F("-> QN8027 is Missing")).c_str());
-            break;
-        }
-        Log.verboseln(String(F("-> QN8027 is Present")).c_str());
-
         regVal = FmRadio.read1Byte(CID1_REG);
 
         if ((regVal == 0x00) || ((regVal & 0x0C) != 0x00))
