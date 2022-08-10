@@ -81,30 +81,7 @@ void cRadio::AddAdjControls(uint16_t _adjTab)
 
         ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
 
-        String tempStr = String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR);
-        adjFmDispID = ESPUI.addControl(
-                                ControlType::Label, 
-                                ADJUST_FM_FRQ_STR, 
-                                tempStr, 
-                                ControlColor::Wetasphalt, 
-                                adjTab);
-        ESPUI.setPanelStyle(adjFmDispID, F("font-size: 3.0em;"));
-        ESPUI.setElementStyle(adjFmDispID, F("max-width: 75%;"));
-
-        adjFreqID = ESPUI.addControl(
-                            ControlType::Pad,
-                            ADJUST_FRQ_ADJ_STR,
-                            emptyString,
-                            ControlColor::Wetasphalt,
-                            adjTab,
-                            [](Control* sender, int type, void* UserInfo)
-                            {
-                                if(UserInfo)
-                                {
-                                    static_cast<cRadio *>(UserInfo)->CbAdjFmFreq(sender, type);
-                                }
-                            },
-                            this);
+        FrequencyAdjust.AddAdjustControls(adjTab);
 
         ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, "", ControlColor::None, adjTab);
 
@@ -167,15 +144,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
         homeTab = _homeTab;
 
         RfCarrier.AddHomeControls(homeTab);
-
-        tempStr    = String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR);
-        homeFreqID = ESPUI.addControl(ControlType::Label,
-                                    HOME_FREQ_STR,
-                                    tempStr,
-                                    ControlColor::Peterriver,
-                                    homeTab);
-        ESPUI.setPanelStyle(homeFreqID, "font-size: 3.0em;");
-        ESPUI.setElementStyle(homeFreqID, "max-width: 80%;");
+        FrequencyAdjust.AddHomeControls(homeTab);
 
         ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
 
@@ -211,14 +180,7 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
 
-        radioFreqID = ESPUI.addControl(
-                                ControlType::Label,
-                                RADIO_FM_FRQ_STR,
-                                String(float(fmFreqX10) / 10.0f, 1) + F(UNITS_MHZ_STR),
-                                ControlColor::Emerald,radioTab);
-        ESPUI.setPanelStyle(radioFreqID, F("font-size: 3.0em;"));
-        ESPUI.setElementStyle(radioFreqID, F("width: 75%;"));
-
+        FrequencyAdjust.AddRadioControls(radioTab);
         RfCarrier.AddControls(radioTab);
 
         ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
@@ -461,27 +423,6 @@ void cRadio::setPtyCode(String & ptyStr)
             updateUiPtyCode();
         }
     }
-
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiFrequency(): Update the FM Transmit Frequency on the UI's adjTab, homeTab, and radioTab.
-void cRadio::updateUiFrequency(int fmFreqX10)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("fmFreqX10: ") + String(fmFreqX10));
-
-    float tempFloat = float(fmFreqX10) / 10.0f;
-    // DEBUG_V(String("tempFloat: ") + String(tempFloat));
-
-    String tempStr = String(tempFloat, 1) + F(UNITS_MHZ_STR);
-    // DEBUG_V(String("  tempStr: ") + String(tempStr));
-
-    ESPUI.print(adjFmDispID, tempStr);
-    ESPUI.print(homeFreqID,  tempStr);
-    ESPUI.print(radioFreqID, tempStr);
 
     // DEBUG_END;
 }

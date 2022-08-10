@@ -22,6 +22,7 @@
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
+#include "FrequencyAdjust.hpp"
 #include "RfCarrier.hpp"
 
 // *********************************************************************************************
@@ -44,7 +45,6 @@ public:
     void        saveConfiguration (JsonObject & json);
     
 // Callbacks need to be public 
-    void        CbAdjFmFreq(Control *sender, int type);
     void        CbDigitalGainAdjust(Control *sender, int type);
     void        CbImpedanceAdjust(Control *sender, int type);
     void        CbProgramServiceName(Control *sender, int type);
@@ -56,15 +56,10 @@ public:
     void        CbTestMode(Control *sender, int type);
     void        CbVgaGainAdjust(Control *sender, int type);
 
-    void        setFrequency(uint32_t value);
-    void        setMonoAudio(bool value);
-
 private:
     int8_t      getAudioGain(void);
 
     void        setDigitalGain(void);
-    void        setFrequency(void);
-    void        setMonoAudio(void);
     void        setPiCode(uint16_t value);
     void        setPiCode();
     void        setPreEmphasis(void);
@@ -85,7 +80,6 @@ private:
     void        waitForIdle(uint16_t waitMs);
 
 // UI declarations
-    void        updateUiFrequency(int fmFreqX10);
 #ifdef OldWay
     void        sendStationName(String value) { FmRadio.sendStationName(value); }
     void        sendRadioText(String value)   { FmRadio.sendRadioText(value); }
@@ -103,7 +97,6 @@ private:
     uint16_t    radioDgainID    = Control::noParent;
     uint16_t    radioAutoID     = Control::noParent;
     uint16_t    radioEmphID     = Control::noParent;
-    uint16_t    radioFreqID     = Control::noParent;
     uint16_t    radioGainID     = Control::noParent;
     uint16_t    radioImpID      = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
@@ -111,7 +104,6 @@ private:
     uint16_t    adjTestModeID   = Control::noParent;
     uint16_t    adjFmDispID     = Control::noParent;
     uint16_t    radioSoundID    = Control::noParent;
-    uint16_t    adjFreqID       = Control::noParent;
     uint16_t    rdsPiID         = Control::noParent;
     uint16_t    rdsPtyID        = Control::noParent;
     uint16_t    rdsProgNameID   = Control::noParent;
@@ -121,14 +113,12 @@ private:
     uint16_t    homeRdsTmrID    = Control::noParent;
     uint16_t    homeTextMsgID   = Control::noParent;
     uint16_t    homeOnAirID     = Control::noParent;
-    uint16_t    homeFreqID      = Control::noParent;
 
     bool        testModeFlg     = false;
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
 
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
     uint32_t    rdsMsgTime = 0;
-    uint16_t    fmFreqX10 = FM_FREQ_DEF_X10;                        // Control. FM MHz Frequency X 10 (881 - 1079).
     bool        successFlg  = true;
     uint16_t    PiCode = 0x6400;
     uint16_t    PtyCode = 0;

@@ -24,9 +24,7 @@
 // ************************************************************************************************
 
 #define ADJUST_ANA_VOL_STR    "AUDIO VOLUME"
-#define ADJUST_FM_FRQ_STR     "FM FREQUENCY"
 #define ADJUST_FRQ_CTRL_STR   "FM TRANSMIT FREQUENCY"
-#define ADJUST_FRQ_ADJ_STR    "FREQUENCY ADJUST"
 #define ADJUST_AUDIO_SEP_STR  "AUDIO CONTROLS"
 #define ADJUST_TAB_STR        "Adjust"
 #define ADJUST_TEST_STR       "TEST TONES"
@@ -117,7 +115,6 @@
 #define HOME_CUR_TEXT_STR   "CURRENT RADIOTEXT"
 #define HOME_RDS_WAIT_STR   "Waiting for RDS RadioText ..."
 #define HOME_FM_SEP_STR     "FM RADIO STATUS"
-#define HOME_FREQ_STR       "FM FREQUENCY"
 #define HOME_RDS_TIMER_STR  "RDS TIMER COUNTDOWN"
 #define HOME_SEP_WIFI_STR   "WIFI"
 #define HOME_SEP_RDS_STR    "RADIO DATA SYSTEM (RDS)"
@@ -143,7 +140,6 @@
 #define RADIO_AUTO_OFF_STR    "RF AUTO OFF"
 #define RADIO_PRE_EMPH_STR    "FM PRE-EMPHASIS"
 #define RADIO_DIG_AUDIO_STR   "DIGITAL AUDIO GAIN"
-#define RADIO_FM_FRQ_STR      "FM FREQUENCY"
 #define RADIO_RF_POWER_STR    "RF POWER"
 #define RADIO_SEP_AUDIO_STR   "AUDIO SETTINGS"
 #define RADIO_SEP_MOD_STR     "MODULATION SETTINGS"
@@ -185,7 +181,6 @@
 #define SAVE_BACKUP_STR        "BACKUP SETTINGS TO SD CARD"
 
 #define UNITS_DBM_STR  " dBm"
-#define UNITS_MHZ_STR  " MHz"
 
 #define WIFI_ADDR_SEP_STR      "WIFI ADDRESS SETTINGS"
 #define WIFI_DISABLE_STR       "WiFi Disabled"

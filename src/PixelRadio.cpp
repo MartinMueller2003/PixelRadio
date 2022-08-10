@@ -91,15 +91,7 @@ String rdsTextMsgStr    = "";                // Current RDS RadioText Message.
 
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
-
-bool apFallBackFlg = AP_FALLBACK_DEF_FLG;                  // Control, Switch to AP mode if STA fails.
-// bool wifiDhcpFlg    = CTRL_DHCP_DEF_FLG;                   // Control, Use DHCP if true, else static IP.
-// bool WiFiRebootFlg  = WIFI_REBOOT_DEF_FLG;                 // Control, Reboot if all connections fail.
-
 uint8_t usbVol    = (atoi(USB_VOL_DEF_STR));               // Control. Unused, for future expansion.
-
-// uint8_t  rdsLocalPtyCode = RDS_PTY_CODE_DEF;               // Control. Local PTY Code, default for all controllers.
-// uint16_t rdsLocalPiCode  = RDS_PI_CODE_DEF;                // Control. Local PI Code, default for all controllers.
 
 uint32_t baudRate = ESP_BAUD_DEF;                          // Control.
 

@@ -169,6 +169,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     AudioMute.restoreConfiguration(config);
     AudioMode.restoreConfiguration(config);
     RfCarrier.restoreConfiguration(config);
+    FrequencyAdjust.restoreConfiguration(config);
 
     // DEBUG_END;
 }
@@ -182,8 +183,8 @@ void cRadio::saveConfiguration(JsonObject & config)
     AudioMute.saveConfiguration(config);
     AudioMode.saveConfiguration(config);
     RfCarrier.restoreConfiguration(config);
+    FrequencyAdjust.restoreConfiguration(config);
 
-    config[F("RADIO_FM_FREQ")]          = fmFreqX10;      // Use radio.setFrequency(MHZ) when restoring this uint16 value.
     config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_PRE_EMPH_STR")]     = preEmphasisStr; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
@@ -236,39 +237,6 @@ void cRadio::setDigitalGain(void)
         delay(5);
         FmRadio.setTxDigitalGain(gainVal);
         delay(5);
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setFrequency(): Set the Radio Frequency on the QN8027.
-void cRadio::setFrequency(uint32_t value)
-{
-    // DEBUG_START;
-
-    fmFreqX10 = value;
-    setFrequency();
-    updateUiFrequency(fmFreqX10);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setFrequency(): Set the Radio Frequency on the QN8027.
-void cRadio::setFrequency(void)
-{
-    // DEBUG_START;
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        setRfCarrier(OFF);
-        waitForIdle(5);
-        FmRadio.setFrequency((float(fmFreqX10)) / 10.0f);
-        setRfCarrier();
         xSemaphoreGiveRecursive(RadioSemaphore);
     }
 #endif // def OldWay
