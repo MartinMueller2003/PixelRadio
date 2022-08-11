@@ -21,8 +21,7 @@
 #include "memdebug.h"
 
 static const PROGMEM char RADIO_AUDIO_GAIN_STR []   = "AUDIO GAIN";
-static const PROGMEM uint32_t AUDIO_MEAS_TIME       = uint32_t(2000);
-static const PROGMEM uint32_t AUDIO_LEVEL_MAX       = uint32_t(675);
+static const PROGMEM int32_t AUDIO_LEVEL_MAX        = uint32_t(675);
 
 // *********************************************************************************************
 cAudioGain::cAudioGain()
@@ -73,7 +72,11 @@ void cAudioGain::set()
 
     uint32_t    vgaGain   = AnalogAudioGain.get();
     uint32_t    impedance = AudioInputImpedance.get();
-    uint32_t    FinalGain = ((vgaGain + 1) * 3) - (impedance * 3);
+    int32_t     FinalGain = ((vgaGain + 1) * 3) - (impedance * 3);
+
+    // DEBUG_V(String("  vgaGain: ") + String(vgaGain));
+    // DEBUG_V(String("impedance: ") + String(impedance));
+    // DEBUG_V(String("FinalGain: ") + String(FinalGain));
 
     String Result;
     Result.reserve(128);

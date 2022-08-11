@@ -88,6 +88,8 @@ void cAudioInputImpedance::AddControls (uint16_t value)
         }
         // DEBUG_V();
 
+        set(InputImpedanceStr);
+        
     } while (false);
 
     // DEBUG_END;
