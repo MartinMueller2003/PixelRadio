@@ -17,31 +17,17 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cAnalogAudioGain
+class cAnalogAudioGain : public cControlCommon
 {
 public:
                 cAnalogAudioGain ();
     virtual     ~cAnalogAudioGain() {}
 
     void        AddControls (uint16_t Tab);
-
-    uint8_t     get() { return vgaGainValue; }
-
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(String & value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
-    String      vgaGainStr;
-    uint8_t     vgaGainValue;
+    bool        set(String & value, String & ResponseMessage);
 };
 
 extern cAnalogAudioGain AnalogAudioGain;
