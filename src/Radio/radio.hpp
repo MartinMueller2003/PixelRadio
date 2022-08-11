@@ -49,7 +49,6 @@ public:
 private:
     void        setPiCode(uint16_t value);
     void        setPiCode();
-    void        setProgramServiceName();
     void        setPtyCode();
     void        setPtyCode(String & ptyStr);
     void        setPtyCodeOptionValues ();
@@ -79,7 +78,6 @@ private:
     uint16_t    radioPwrID      = Control::noParent;
     uint16_t    rdsPiID         = Control::noParent;
     uint16_t    rdsPtyID        = Control::noParent;
-    uint16_t    rdsProgNameID   = Control::noParent;
     uint16_t    rdsRstID        = Control::noParent;
 
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
@@ -89,7 +87,6 @@ private:
     bool        successFlg  = true;
     uint16_t    PiCode = 0x6400;
     uint16_t    PtyCode = 0;
-    String      ProgramServiceName = F("PixeyFM");
     String      LastMessageSent;
     
 #define OFF 0x00

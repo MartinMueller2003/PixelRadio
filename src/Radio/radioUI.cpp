@@ -27,6 +27,7 @@
 #include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
 #include "PeakAudio.hpp"
+#include "ProgramServiceName.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
@@ -209,25 +210,8 @@ void cRadio::AddRdsControls (uint16_t _rdsTab)
         }
 
         rdsTab = _rdsTab;
+        ProgramServiceName.AddControls(rdsTab);
 
-        rdsProgNameID = ESPUI.addControl(
-                                ControlType::Text, 
-                                RDS_PROG_SERV_NM_STR, 
-                                ProgramServiceName, 
-                                ControlColor::Alizarin, 
-                                rdsTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbProgramServiceName(sender, type);
-                                    }
-                                },
-                                this);
-        ESPUI.setPanelStyle(rdsProgNameID,   "font-size: 1.5em;");
-        ESPUI.setElementStyle(rdsProgNameID, "color: black;");
-        ESPUI.addControl(ControlType::Min, emptyString.c_str(), "4", ControlColor::None, rdsProgNameID);
-        ESPUI.addControl(ControlType::Max, emptyString.c_str(), "8", ControlColor::None, rdsProgNameID);
         // DEBUG_V();
 
         rdsPiID = ESPUI.addControl(
@@ -280,8 +264,8 @@ void cRadio::AddRdsControls (uint16_t _rdsTab)
                                         }
                                     },
                                     this);
-        ESPUI.setPanelStyle(rdsPiID, "font-size: 1.35em;");
-        ESPUI.setElementStyle(rdsProgNameID, "color: black;");
+        ESPUI.setPanelStyle(rdsRstID, "font-size: 1.35em;");
+        ESPUI.setElementStyle(rdsRstID, "color: black;");
 
     } while (false);
 

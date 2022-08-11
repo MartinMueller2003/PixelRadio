@@ -96,7 +96,6 @@ void cRadio::saveConfiguration(JsonObject & config)
     
     config[F("RDS_PI_CODE")]            = PiCode; // Use radio.setPiCode() when restoring this hex value.
     config[F("RDS_PTY_CODE")]           = PtyCode;
-    config[F("RDS_PROG_SERV_STR")]      = ProgramServiceName;
 
     // DEBUG_END;
 }
@@ -130,25 +129,6 @@ void cRadio::setPiCode()
     }
 #endif // def OldWay
 
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRadio::setProgramServiceName()
-{
-    // DEBUG_START;
-#ifdef OldWay
-
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        setRfCarrier(OFF);
-        FmRadio.sendStationName(ProgramServiceName);
-        setRfCarrier();
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-
-#endif // def OldWay
     // DEBUG_END;
 }
 

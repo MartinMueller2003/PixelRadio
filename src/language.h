@@ -144,8 +144,6 @@
 #define RDS_LOCKED_STR        "{ LOCKED }"
 #define RDS_NOT_AVAIL_STR     "{ RADIOTEXT UNAVAILABLE }"
 #define RDS_PI_CODE_STR       "PI CODE"
-#define RDS_PSN_DEF_STR       "PixeyFM"
-#define RDS_PROG_SERV_NM_STR  "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)"
 #define RDS_PTY_CODE_STR      "PTY CODE<br>Station Genre"
 #define RDS_REMOTE_BLANK_STR  "{ REMOTE RADIOTEXT MESSAGE IS BLANK }"
 #define RDS_RESET_SEP_STR     "LOCAL RDS RESET"

@@ -240,8 +240,6 @@ bool    piCodeCmd(String  payloadStr,
                   ControllerTypeId controller);
 bool    ptyCodeCmd(String  payloadStr,
                   ControllerTypeId controller);
-bool    programServiceNameCmd(String  payloadStr,
-                              ControllerTypeId controller);
 bool    radioTextCmd(String  payloadStr,
                      ControllerTypeId controller);
 bool    rdsTimePeriodCmd(String  payloadStr,

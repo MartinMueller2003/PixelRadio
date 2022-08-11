@@ -22,30 +22,6 @@
 #include "memdebug.h"
 
 // ************************************************************************************************
-void cRadio::CbProgramServiceName(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    if(sender->value.length() < 4)
-    {
-        Log.infoln(String(F("Program Service Name: '%s' is too short.")).c_str(), sender->value.c_str());
-        sender->value = ProgramServiceName;
-        ESPUI.updateControl(sender);
-    }
-
-    ProgramServiceName = sender->value;
-
-    setProgramServiceName(); // Update QN8027 Radio Chip's setting.
-    displaySaveWarning();
-    Log.infoln(String(F("Program Service Name: '%s'.")).c_str(), ProgramServiceName.c_str());
-
-    DEBUG_END;
-}
-
-// ************************************************************************************************
 void cRadio::CbRdsRst(Control *sender, int type)
 {
     DEBUG_START;
@@ -57,9 +33,11 @@ void cRadio::CbRdsRst(Control *sender, int type)
     {
         PiCode = 0x6400;
         PtyCode = 0;
+#ifdef OldWay
         ProgramServiceName = F("PixeyFM");
-
         setProgramServiceName();
+#endif // def OldWay
+
         setPiCode();
         setPtyCode();
         updateUiPtyCode();
