@@ -66,6 +66,7 @@
 #include "ControllerMgr.h"
 #include "WiFiDriver.hpp"
 #include "radio.hpp"
+#include "PeakAudio.hpp"
 #include "TestTone.hpp"
 #include "memdebug.h"
 
@@ -202,13 +203,12 @@ void loop()
     ControllerMgr.poll();
     /// DEBUG_V("Radio");
     Radio.Poll();
-
+    PeakAudio.poll();
 
 #ifdef OldWay
     processMeasurements();  // Measure the two system voltages.
 
     updateUiFreeMemory();   // Update the Memory value on UI diagTab.
-    updateUiAudioLevel();   // Update the Audio Level value on UI diagtab.
     updateUiDiagTimer();    // Upddate the Elapsed Timer on UI diagTab.
     updateUiVolts();        // Update the two system voltages on UI diagTab.
 

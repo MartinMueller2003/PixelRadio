@@ -108,7 +108,6 @@ void cDigitalAudioGain::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cDigitalAudioGain::Callback(Control *sender, int type)
 {
     // DEBUG_START;

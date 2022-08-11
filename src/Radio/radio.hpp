@@ -57,7 +57,6 @@ private:
     void        setRfPower(void);
     void        updateOnAirSign(void);
     void        updateRdsMsgRemainingTime(unsigned long now);
-    void        updateUiAudioLevel(void);
     void        updateUiPtyCode();
     void        updateUiRdsText(String & Text);
     void        waitForIdle(uint16_t waitMs);
@@ -76,13 +75,8 @@ private:
     uint16_t    radioTab        = Control::noParent;
     uint16_t    rdsTab          = Control::noParent;
 
-    uint16_t    radioDgainID    = Control::noParent;
     uint16_t    radioAutoID     = Control::noParent;
-    uint16_t    radioGainID     = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
-    uint16_t    radioRfEnbID    = Control::noParent;
-    uint16_t    adjFmDispID     = Control::noParent;
-    uint16_t    radioSoundID    = Control::noParent;
     uint16_t    rdsPiID         = Control::noParent;
     uint16_t    rdsPtyID        = Control::noParent;
     uint16_t    rdsProgNameID   = Control::noParent;

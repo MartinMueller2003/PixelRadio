@@ -20,11 +20,13 @@
 #include "language.h"
 
 #include "AnalogAudioGain.hpp"
+#include "AudioGain.hpp"
 #include "AudioInputImpedance.hpp"
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
 #include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
+#include "PeakAudio.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
@@ -181,19 +183,9 @@ void cRadio::AddRadioControls (uint16_t _radioTab)
         #endif // ifdef ADV_RADIO_FEATURES
 
         ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString,            ControlColor::None,    radioTab);
-
-        radioSoundID = ESPUI.addControl(ControlType::Label, RADIO_AUDLVL_STR, F("0%"), ControlColor::Emerald, radioTab);
-        ESPUI.setPanelStyle(radioSoundID, F("font-size: 1.25em;"));
-        ESPUI.setElementStyle(radioSoundID, F("max-width: 35%;"));
-
+        PeakAudio.AddControls(radioTab);
         #ifdef ADV_RADIO_FEATURES
-#ifdef OldWay
-        String tempStr = String(getAudioGain()) + F(" dB");
-        radioGainID = ESPUI.addControl(ControlType::Label, RADIO_AUDIO_GAIN_STR, tempStr, ControlColor::Emerald, radioTab);
-        ESPUI.setPanelStyle(radioGainID, F("font-size: 1.15em;"));
-        ESPUI.setElementStyle(radioGainID, F("width: 35%;"));
-        ESPUI.print(radioGainID, tempStr);
-#endif // def OldWay
+        AudioGain.AddControls(radioTab);
         #endif // ifdef ADV_RADIO_FEATURES
 
         // DEBUG_V();
@@ -364,41 +356,6 @@ void cRadio::updateUiPtyCode()
     // DEBUG_START;
 
     ESPUI.updateControlValue(rdsPtyID, ListOfPtyCodes[PtyCode].name[PreEmphasis.get()]);
-
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiAudioLevel(): Update the diagTab UI's Audio Level (mV).
-void cRadio::updateUiAudioLevel(void)
-{
-    // DEBUG_START;
-
-    uint16_t mV;
-    static uint32_t previousMillis = 0;
-    String tempStr;
-
-    if (previousMillis == 0)
-    {
-        previousMillis = millis(); // Initialize First entry;
-    }
-    else if (millis() - previousMillis >= AUDIO_MEAS_TIME) 
-    {
-        previousMillis = millis();
-#ifdef OldWay
-        mV             = measureAudioLevel();
-#endif // def OldWay
-
-        if (mV >= AUDIO_LEVEL_MAX) 
-        {
-            tempStr = ">";
-        }
-
-        tempStr += String(mV);
-        tempStr += F("mV");
-        ESPUI.print(radioSoundID, tempStr);
-        Log.verboseln(String(F("Peak Audio Amplitude %03umV.")).c_str(), mV);
-    }
 
     // DEBUG_END;
 }

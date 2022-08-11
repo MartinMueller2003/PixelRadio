@@ -16,7 +16,6 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <vector>
-// #include "language.h"
 #include "TestTone.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
@@ -104,7 +103,6 @@ void cTestTone::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cTestTone::Callback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -140,10 +138,6 @@ void cTestTone::Init()
 }
 
 // *********************************************************************************************
-// poll(): Test Tone mode creates cascading audio tones for Radio Installation Tests.
-//                    On entry, true will Reset Tone Sequence.
-//                    The tone sequence is sent every five seconds.
-//                    Also Sends Special RadioText message with approximate Elapsed Time.
 void cTestTone::poll()
 {
     /// DEBUG_START;
@@ -239,7 +233,6 @@ void cTestTone::UpdateRdsTimeMsg()
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_Tone_state_Idle::Init ()
 {
     // DEBUG_START;
@@ -254,7 +247,6 @@ void fsm_Tone_state_Idle::Init ()
 }
 
 /*****************************************************************************/
-// Wait for events
 void fsm_Tone_state_Idle::Poll (uint32_t)
 {
     // DEBUG_START;
@@ -269,7 +261,6 @@ void fsm_Tone_state_Idle::Poll (uint32_t)
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_Tone_state_SendingTone::Init ()
 {
     // DEBUG_START;
@@ -290,7 +281,6 @@ void fsm_Tone_state_SendingTone::Init ()
 }
 
 /*****************************************************************************/
-// Wait for events
 void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 {
     // DEBUG_START;

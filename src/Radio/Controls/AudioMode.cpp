@@ -15,9 +15,9 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
 #include "AudioMode.hpp"
 #include "QN8027RadioApi.hpp"
+#include "language.h"
 #include "memdebug.h"
 
 static const PROGMEM char RADIO_STEREO_FLAG     [] = "RADIO_STEREO_FLAG";
@@ -83,7 +83,6 @@ void cAudioMode::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cAudioMode::Callback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -119,7 +118,6 @@ void cAudioMode::saveConfiguration(JsonObject & config)
 }
 
 // *********************************************************************************************
-// set(): Set the Audio Input Impedance on the QN8027 chip.
 void cAudioMode::set(bool value)
 {
     // DEBUG_START;

@@ -16,7 +16,6 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "radio.hpp"
 #include "AudioMute.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
@@ -72,7 +71,6 @@ void cAudioMute::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cAudioMute::Callback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -107,7 +105,6 @@ void cAudioMute::saveConfiguration(JsonObject & config)
 }
 
 // *********************************************************************************************
-// set(): Set the Audio Input Impedance on the QN8027 chip.
 void cAudioMute::set(bool value)
 {
     // DEBUG_START;

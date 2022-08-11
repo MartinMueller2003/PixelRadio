@@ -166,8 +166,6 @@ const uint16_t HTTP_RESPONSE_MAX_SZ = 225;        // Maximum Chars Allowed in HT
 const int32_t MEAS_TIME = 50;                     // Measurement Refresh Time, in mS.
 
 // Radio
-const uint16_t AUDIO_LEVEL_MAX = 675;             // Maxium Audio Level (peak mV) Measurement by QN8027.
-const uint32_t AUDIO_MEAS_TIME = 2000;            // Sample period for Audio Level Meas.
 const uint8_t  RADIO_CAL_RETRY = 3;               // RF Port Calibration Retry Count (Maximum Retry Count).
 const uint8_t  RF_LOW_POWER    = 27;              // 88dBuv.
 const uint8_t  RF_MED_POWER    = 40;              // 96dBuV.
@@ -269,7 +267,6 @@ void   updateUiFreeMemory(void);
 bool   updateUiGpioMsg(gpio_num_t pin, String & ControllerName, bool PinState);
 void   updateUiIpaddress(String ipStr);
 #ifdef OldWay
-void   updateUiAudioLevel(void);
 void   updateUiFrequency(int Freq10x);
 #endif // def OldWay
 void   updateUiDiagTimer(void);

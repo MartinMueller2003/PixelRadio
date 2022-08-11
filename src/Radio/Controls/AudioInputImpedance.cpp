@@ -16,8 +16,8 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "radio.hpp"
 #include "AudioInputImpedance.hpp"
+#include "AudioGain.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
@@ -94,7 +94,6 @@ void cAudioInputImpedance::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cAudioInputImpedance::Callback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -129,7 +128,6 @@ void cAudioInputImpedance::saveConfiguration(JsonObject & config)
 }
 
 // *********************************************************************************************
-// set(): Set the Audio Input Impedance on the QN8027 chip.
 void cAudioInputImpedance::set(String & value)
 {
     // DEBUG_START;
@@ -149,9 +147,8 @@ void cAudioInputImpedance::set(String & value)
 
     ESPUI.updateControlValue(ControlId, InputImpedanceStr);
 
-#ifdef OldWay
-    ESPUI.print(radioGainID, String(getAudioGain()) + F(" dB"));
-#endif // def OldWay
+    AudioGain.set();
+
     displaySaveWarning();
 
     // DEBUG_END;

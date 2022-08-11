@@ -15,7 +15,7 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
+// #include "language.h"
 #include "FrequencyAdjust.hpp"
 #include "RfCarrier.hpp"
 #include "QN8027RadioApi.hpp"

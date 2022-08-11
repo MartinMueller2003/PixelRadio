@@ -15,9 +15,9 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
 #include "RfCarrier.hpp"
 #include "QN8027RadioApi.hpp"
+#include "language.h"
 #include "memdebug.h"
 
 static const PROGMEM char RADIO_RF_CARRIER_STR  [] = "RF CARRIER ENABLE";
@@ -117,7 +117,6 @@ void cRfCarrier::AddHomeControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cRfCarrier::Callback(Control *sender, int type)
 {
     // DEBUG_START;

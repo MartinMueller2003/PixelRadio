@@ -15,11 +15,11 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
 #include "QN8027RadioApi.hpp"
+#include "language.h"
 #include "memdebug.h"
 
 static const PROGMEM char HOME_RDS_WAIT_STR     [] = "Waiting for RDS RadioText ...";
@@ -172,8 +172,6 @@ void cRdsText::UpdateStatus()
 }
 
 // ************************************************************************************************
-// updateRdsMsgRemainingTime(): Updates the GUI's RDS time on homeTab.
-//                    Test mode clears the time field.
 void cRdsText::updateRdsMsgRemainingTime(uint32_t now)
 {
     // DEBUG_START;

@@ -99,7 +99,6 @@ void cPreEmphasis::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cPreEmphasis::Callback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -135,7 +134,6 @@ void cPreEmphasis::saveConfiguration(JsonObject & config)
 }
 
 // *********************************************************************************************
-// set(): Set the Audio Input Impedance on the QN8027 chip.
 void cPreEmphasis::set(String & value)
 {
     // DEBUG_START;

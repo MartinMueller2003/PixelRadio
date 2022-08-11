@@ -17,6 +17,7 @@
 #include <ArduinoLog.h>
 #include <map>
 #include "AnalogAudioGain.hpp"
+#include "AudioGain.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
@@ -103,7 +104,6 @@ void cAnalogAudioGain::AddControls (uint16_t value)
 }
 
 // ************************************************************************************************
-// Callback(): Adjust Audio Input Impedance.
 void cAnalogAudioGain::Callback(Control *sender, int type)
 {
     // DEBUG_START;
@@ -139,7 +139,6 @@ void cAnalogAudioGain::saveConfiguration(JsonObject & config)
 }
 
 // *********************************************************************************************
-// set(): Set the Audio Input Impedance on the QN8027 chip.
 void cAnalogAudioGain::set(String & value)
 {
     // DEBUG_START;
@@ -164,16 +163,7 @@ void cAnalogAudioGain::set(String & value)
         QN8027RadioApi.setVgaGain(vgaGainValue);
 
         ESPUI.updateControlValue(ControlId, vgaGainStr);
-
-        #ifdef OldWay
-        // new way
-        AudioGain.set(((vgaGain + 1) * 3) - (AudioInputImpedance.get() * 3));
-        // old way
-        String tempStr = String(getAudioGain()) + F(" dB");
-        ESPUI.print(radioGainID, tempStr);
-        Log.infoln(String(F("Analog Input Gain Set to: %s.")).c_str(), tempStr.c_str());
-        #endif // def OldWay
-
+        AudioGain.set();
 
         displaySaveWarning();
     } while (false);
