@@ -17,31 +17,17 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cPiCode
+class cPiCode : public cControlCommon
 {
 public:
                 cPiCode ();
     virtual     ~cPiCode() {}
 
     void        AddControls (uint16_t TabId);
-
-    uint32_t    get() { return DataValue; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
     bool        set(String & value, String & Response);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId           = Control::noParent;
-    uint16_t    ControlId       = Control::noParent;
-    uint16_t    StatusMessageId = Control::noParent;
-
-    uint32_t    DataValue = 0;
-    String      DataValueStr;
 };
 
 extern cPiCode PiCode;

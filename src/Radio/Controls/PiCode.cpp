@@ -21,7 +21,7 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char RDS_PI_CODE_STR       [] = "PI CODE";
+static const PROGMEM String RDS_PI_CODE_STR     = "PI CODE";
 static const PROGMEM char RDS_PI_CODE           [] = "RDS_PI_CODE";
 
 static const PROGMEM uint16_t RDS_PI_CODE_DEF   = uint32_t(0x6400);         // Default RDS PI Code, 16-bit hex value, 0x00ff - 0xffff.
@@ -29,7 +29,7 @@ static const PROGMEM uint32_t RDS_PI_CODE_MAX   = uint32_t(0xffff);         // M
 static const PROGMEM uint32_t RDS_PI_CODE_MIN   = uint32_t(0x00ff);         // Minumum PI Code Value (hex).
 
 // *********************************************************************************************
-cPiCode::cPiCode()
+cPiCode::cPiCode() : cControlCommon(String(RDS_PI_CODE))
 {
     //_ DEBUG_START;
 
@@ -46,87 +46,14 @@ void cPiCode::AddControls (uint16_t value)
 
     do // once
     {
-        if(Control::noParent != TabId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
-
-        TabId = value;
-
-        ControlId = ESPUI.addControl(
-                                ControlType::Text,
-                                RDS_PI_CODE_STR,
-                                emptyString,
-                                ControlColor::Alizarin,
-                                TabId,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cPiCode *>(UserInfo)->Callback(sender, type);
-                                    }
-                                },
-                                this);
-
-        ESPUI.setPanelStyle(ControlId, "font-size: 1.25em;");
-        ESPUI.setElementStyle(ControlId, "color: black;");
-
-        StatusMessageId = ESPUI.addControl(
-                            ControlType::Label,
-                            emptyString.c_str(),
-                            emptyString,
-                            ControlColor::Alizarin,
-                            ControlId);
-        ESPUI.setPanelStyle(StatusMessageId, "font-size: 1.25em;");
-        ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_TRANSPARENT);
-
-        // force a UI Update
-        String Response;
-        DataValue = !DataValue;
-        set(DataValueStr, Response);
+        cControlCommon::AddControls(value, 
+                                    ControlType::Text, 
+                                    ControlColor::Alizarin);
+        ESPUI.updateControlLabel(ControlId, RDS_PI_CODE_STR.c_str());
 
         // DEBUG_V();
 
     } while (false);
-
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cPiCode::Callback(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    String Response;
-    ESPUI.setElementStyle(StatusMessageId, set(sender->value, Response) ? CSS_LABEL_STYLE_TRANSPARENT : CSS_LABEL_STYLE_BLACK);
-    ESPUI.print(StatusMessageId, Response);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cPiCode::restoreConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    String NewValue = DataValueStr;
-    ReadFromJSON(NewValue, config, RDS_PI_CODE);
-    String Response;
-    set(NewValue, Response);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cPiCode::saveConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    config[RDS_PI_CODE] = DataValueStr;
 
     // DEBUG_END;
 }
@@ -157,7 +84,7 @@ bool cPiCode::set(String & value, String & ResponseMessage)
         if ((NewPiCodeValue < RDS_PI_CODE_MIN) || 
             (NewPiCodeValue > RDS_PI_CODE_MAX))
         {
-            ResponseMessage = String(F("Value Out of Range: ") + value;
+            ResponseMessage = String(F("Value Out of Range: ")) + value;
             Response = false;
             break;
         }
