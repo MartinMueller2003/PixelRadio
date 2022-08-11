@@ -15,32 +15,17 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cAudioMode
+class cAudioMode : public cControlCommon
 {
 public:
                 cAudioMode ();
     virtual     ~cAudioMode() {}
 
     void        AddControls (uint16_t TabId);
-
-    bool        get() { return Mode; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(bool value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-    uint16_t    MessageID   = Control::noParent;
-
-    bool        Mode        = true;
+    bool        set(String & value, String & ResponseMessage);
 };
 
 extern cAudioMode AudioMode;

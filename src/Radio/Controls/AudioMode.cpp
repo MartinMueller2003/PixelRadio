@@ -17,20 +17,25 @@
 #include <ArduinoLog.h>
 #include "AudioMode.hpp"
 #include "QN8027RadioApi.hpp"
-#include "language.h"
 #include "memdebug.h"
 
-static const PROGMEM char RADIO_STEREO_FLAG     [] = "RADIO_STEREO_FLAG";
+static const PROGMEM String RADIO_STEREO_FLAG      = "RADIO_STEREO_FLAG";
 static const PROGMEM char RADIO_MONO_STR        [] = "MONO AUDIO";
 static const PROGMEM char RADIO_STEREO_STR      [] = "STEREO AUDIO";
-static const PROGMEM char RADIO_AUDIO_MODE_STR  [] = "AUDIO MODE";
+static const PROGMEM String RADIO_AUDIO_MODE_STR   = "AUDIO MODE";
 
 // *********************************************************************************************
-cAudioMode::cAudioMode()
+cAudioMode::cAudioMode() : cControlCommon(RADIO_STEREO_FLAG)
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
-    /// DEBUG_END;
+    DataValueStr = "1";
+    DataValue = true;
+
+    ActiveLabelStyle     = CSS_LABEL_STYLE_BLACK;
+    InactiveLabelStyle   = CSS_LABEL_STYLE_BLACK;
+
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -38,103 +43,70 @@ void cAudioMode::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
+    cControlCommon::AddControls(value, 
+                                ControlType::Switcher, 
+                                ControlColor::Emerald);
+    ESPUI.updateControlLabel(ControlId, RADIO_AUDIO_MODE_STR.c_str());
+    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_BLACK);
+
+    // DEBUG_V();
+
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+bool cAudioMode::set(String & value, String & ResponseMessage)
+{
+    // DEBUG_START;
+
+    // DEBUG_V(String("       value: ") + value);
+    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+
+    bool Response = true;
+    ResponseMessage.reserve(128);
+    ResponseMessage.clear();
+
     do // once
     {
-        if(Control::noParent != TabId)
+        if (DataValueStr.equals(value))
         {
-            // DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Ignore duplicate setting");
             break;
         }
 
-        TabId = value;
+        if (value.equals(F("0")))
+        {
+            DataValue = 0;
+        }
+        else if (value.equals(F("1")))
+        {
+            DataValue = 1;
+        }
+        else
+        {
+            ResponseMessage = String(F("Radio Audio Mode Invalid Value: ")) + value;
+            Log.infoln(ResponseMessage.c_str());
+            Response = false;
+            break;
+        }
 
-        ControlId = ESPUI.addControl(
-                                ControlType::Switcher,
-                                RADIO_AUDIO_MODE_STR,
-                                emptyString,
-                                ControlColor::Emerald,
-                                TabId,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cAudioMode *>(UserInfo)->Callback(sender, type);
-                                    }
-                                },
-                                this);
+        DataValueStr = value;
+        ResponseMessage = DataValue ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR);
+        Response = true;
 
-        MessageID = ESPUI.addControl(
-                                ControlType::Label, 
-                                RADIO_AUDIO_MODE_STR, 
-                                emptyString, 
-                                ControlColor::Emerald, 
-                                ControlId);
-        ESPUI.setElementStyle(MessageID, CSS_LABEL_STYLE_BLACK);
+        QN8027RadioApi.setMonoAudio(DataValue);
+        ESPUI.updateControlValue(ControlId, DataValueStr);
+        ESPUI.print(StatusMessageId, ResponseMessage);
 
-        // force a UI Update
-        Mode = !Mode; 
-        set(!Mode);
-
-        // DEBUG_V();
+        Log.infoln(String(F("Radio Audio Mode Set to: %s.")).c_str(), ResponseMessage.c_str());
+        displaySaveWarning();
 
     } while (false);
 
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cAudioMode::Callback(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    set(type == S_ACTIVE);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioMode::restoreConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    ReadFromJSON(Mode, config, RADIO_STEREO_FLAG);
-    set(Mode);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioMode::saveConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    // Use radio.Mode(0/1) when restoring this uint8 value. 1=ModeOn
-    config[RADIO_STEREO_FLAG] = Mode;
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioMode::set(bool value)
-{
-    // DEBUG_START;
-
-    if(value != Mode)
-    {
-        Mode = value;
-        QN8027RadioApi.setMonoAudio(value);
-
-        ESPUI.print(MessageID, value ? F(RADIO_STEREO_STR) : F(RADIO_MONO_STR));
-        ESPUI.updateControlValue(ControlId, value ? F("1") : F("0"));
-
-        Log.infoln(String(F("Radio Audio Mode Set to: %s.")).c_str(), String(value ? F("Stereo") : F("Mono")).c_str());
-        displaySaveWarning();
-    }
-
-    // DEBUG_END;
+    return Response;
 }
 
 // *********************************************************************************************

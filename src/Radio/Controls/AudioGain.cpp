@@ -20,11 +20,11 @@
 #include "AudioInputImpedance.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char RADIO_AUDIO_GAIN_STR []   = "AUDIO GAIN";
+static const PROGMEM String RADIO_AUDIO_GAIN_STR    = "AUDIO GAIN";
 static const PROGMEM int32_t AUDIO_LEVEL_MAX        = uint32_t(675);
 
 // *********************************************************************************************
-cAudioGain::cAudioGain()
+cAudioGain::cAudioGain() : cControlCommon(emptyString)
 {
     //_ DEBUG_START;
 
@@ -36,32 +36,15 @@ void cAudioGain::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != TabId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
-
-        TabId = value;
-
-        ControlId = ESPUI.addControl(
-                                ControlType::Label,
-                                RADIO_AUDIO_GAIN_STR,
-                                emptyString,
-                                ControlColor::Emerald,
-                                TabId);
-
-        ESPUI.setPanelStyle(ControlId, F("font-size: 1.15em;"));
-        ESPUI.setElementStyle(ControlId, F("width: 35%;"));
-
-        set();
-
-        // DEBUG_V();
-
-    } while (false);
-
+    cControlCommon::AddControls(value, 
+                                ControlType::Label, 
+                                ControlColor::Emerald);
+    
+    ESPUI.updateControlLabel(ControlId, RADIO_AUDIO_GAIN_STR.c_str());
+    ESPUI.setPanelStyle(ControlId, F("font-size: 1.15em;"));
+    ESPUI.setElementStyle(ControlId, F("width: 35%;"));
+    set();
+        
     // DEBUG_END;
 }
 

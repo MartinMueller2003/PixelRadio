@@ -15,32 +15,17 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cAudioInputImpedance
+class cAudioInputImpedance : public cControlCommon
 {
 public:
                 cAudioInputImpedance ();
     virtual     ~cAudioInputImpedance() {}
 
     void        AddControls (uint16_t Tab);
-
-    uint8_t     get() { return InputImpedanceValue; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(String & value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
-    String      InputImpedanceStr;
-    uint8_t     InputImpedanceValue = 0;
+    bool        set(String &, String &);
 };
 
 extern cAudioInputImpedance AudioInputImpedance;

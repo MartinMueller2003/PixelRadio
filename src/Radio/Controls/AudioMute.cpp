@@ -20,15 +20,21 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char RADIO_MUTE_FLAG [] = "RADIO_MUTE_FLAG";
-static const PROGMEM char ADJUST_MUTE_STR [] = "AUDIO MUTE";
+static const PROGMEM String RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
+static const PROGMEM String ADJUST_MUTE_STR = "AUDIO MUTE";
 
 // *********************************************************************************************
-cAudioMute::cAudioMute()
+cAudioMute::cAudioMute() : cControlCommon(ADJUST_MUTE_STR)
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
-    /// DEBUG_END;
+    DataValueStr = "0";
+    DataValue    = false;
+
+    ActiveLabelStyle     = CSS_LABEL_STYLE_WHITE;
+    InactiveLabelStyle   = CSS_LABEL_STYLE_WHITE;
+
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -36,92 +42,67 @@ void cAudioMute::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
+    cControlCommon::AddControls(value, 
+                                ControlType::Switcher, 
+                                ControlColor::Wetasphalt);
+    ESPUI.updateControlLabel(ControlId, ADJUST_MUTE_STR.c_str());
+    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+bool cAudioMute::set(String & value, String & ResponseMessage)
+{
+    // DEBUG_START;
+
+    // DEBUG_V(String("       value: ") + value);
+    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+
+    bool Response = true;
+    ResponseMessage.reserve(128);
+    ResponseMessage.clear();
+
     do // once
     {
-        if(Control::noParent != TabId)
+        if (DataValueStr.equals(value))
         {
-            // DEBUG_V("Controls have already been set up");
+            // DEBUG_V("Ignore duplicate setting");
             break;
         }
 
-        TabId = value;
+        if (value.equals(F("0")))
+        {
+            DataValue = 0;
+        }
+        else if (value.equals(F("1")))
+        {
+            DataValue = 1;
+        }
+        else
+        {
+            ResponseMessage = String(F("Radio Audio Mute Invalid Value: ")) + value;
+            Log.infoln(ResponseMessage.c_str());
+            Response = false;
+            break;
+        }
 
-        ControlId = ESPUI.addControl(
-                                ControlType::Switcher,
-                                ADJUST_MUTE_STR,
-                                emptyString,
-                                ControlColor::Wetasphalt,
-                                TabId,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cAudioMute *>(UserInfo)->Callback(sender, type);
-                                    }
-                                },
-                                this);
-        Mute = !Mute; // force a UI Update
-        set(!Mute);
+        DataValueStr = value;
+        ResponseMessage = DataValue ? F("Muted") : F("Unmuted");
+        Response = true;
 
-        // DEBUG_V();
+        QN8027RadioApi.setAudioMute(!value);
+        ESPUI.updateControlValue(ControlId, DataValueStr);
+        ESPUI.print(StatusMessageId, ResponseMessage);
+
+        Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), ResponseMessage.c_str());
+        displaySaveWarning();
 
     } while (false);
 
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cAudioMute::Callback(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    set(type == S_ACTIVE);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioMute::restoreConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    ReadFromJSON(Mute, config, RADIO_MUTE_FLAG);
-    set(Mute);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioMute::saveConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    config[RADIO_MUTE_FLAG] = Mute;        // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioMute::set(bool value)
-{
-    // DEBUG_START;
-
-    if(value != Mute)
-    {
-        Mute = value;
-        QN8027RadioApi.setAudioMute(Mute);
-
-        ESPUI.setElementStyle(ControlId, Mute ? F("background: red;") : F("background: #bebebe;"));
-        ESPUI.updateControlValue(ControlId, Mute ? F("1") : F("0"));
-
-        Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), String(Mute ? F("On") : F("Off") ).c_str());
-        displaySaveWarning();
-    }
-
-    // DEBUG_END;
+    return Response;
 }
 
 // *********************************************************************************************

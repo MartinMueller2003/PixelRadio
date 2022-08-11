@@ -16,6 +16,7 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ESPUI.h>
+#include "language.h"
 
 // *********************************************************************************************
 class cControlCommon
@@ -42,6 +43,9 @@ protected:
 
     uint32_t    DataValue = 0;
     String      DataValueStr;
+
+    String ActiveLabelStyle     = CSS_LABEL_STYLE_TRANSPARENT;
+    String InactiveLabelStyle   = CSS_LABEL_STYLE_BLACK;
 
 private:
     String      ConfigName;

@@ -15,22 +15,21 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cAudioGain
+class cAudioGain : public cControlCommon
 {
 public:
                 cAudioGain ();
     virtual     ~cAudioGain() {}
 
-    void        AddControls (uint16_t TabId);
-    void        set();
+    void        restoreConfiguration(JsonObject &) {};
+    void        saveConfiguration (JsonObject &) {};
 
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
+    void        AddControls (uint16_t Tab);
+    bool        set(String &, String &) { return true; }
+    void        set();
 };
 
 extern cAudioGain AudioGain;

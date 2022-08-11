@@ -19,12 +19,12 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char RADIO_AUDLVL_STR []   = "PEAK AUDIO LEVEL";
+static const PROGMEM String RADIO_AUDLVL_STR    = "PEAK AUDIO LEVEL";
 static const PROGMEM uint32_t AUDIO_MEAS_TIME   = uint32_t(2000);
 static const PROGMEM uint32_t AUDIO_LEVEL_MAX   = uint32_t(675);
 
 // *********************************************************************************************
-cPeakAudio::cPeakAudio()
+cPeakAudio::cPeakAudio() : cControlCommon(emptyString)
 {
     /// DEBUG_START;
 
@@ -36,29 +36,13 @@ void cPeakAudio::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != TabId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
-
-        TabId = value;
-
-        ControlId = ESPUI.addControl(
-                                ControlType::Label,
-                                RADIO_AUDLVL_STR,
-                                emptyString,
-                                ControlColor::Emerald,
-                                TabId);
-
-        ESPUI.setPanelStyle(ControlId, F("font-size: 1.25em;"));
-        ESPUI.setElementStyle(ControlId, F("max-width: 35%;"));
-
-        // DEBUG_V();
-
-    } while (false);
+    cControlCommon::AddControls(value, 
+                                ControlType::Label, 
+                                ControlColor::Emerald);
+    
+    ESPUI.updateControlLabel(ControlId, RADIO_AUDLVL_STR.c_str());
+    ESPUI.setPanelStyle(ControlId, F("font-size: 1.15em;"));
+    ESPUI.setElementStyle(ControlId, F("width: 35%;"));
 
     // DEBUG_END;
 }

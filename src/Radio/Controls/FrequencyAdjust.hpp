@@ -15,42 +15,32 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cFrequencyAdjust
+class cFrequencyAdjust : public cControlCommon
 {
 public:
                 cFrequencyAdjust ();
     virtual     ~cFrequencyAdjust() {}
 
-    void        AddAdjustControls (uint16_t TabId);
+    void        AddControls(uint16_t TabId) { AddAdjustControls(TabId); }
+    void        AddAdjustControls(uint16_t TabId);
     void        AddRadioControls (uint16_t TabId);
     void        AddHomeControls (uint16_t TabId);
 
-    uint32_t    get() { return data; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(uint32_t value);
-    
-// Callbacks need to be public 
+    bool        set(String & value, String & ResponseMessage);
     void        Callback(Control *sender, int type);
-    
+
 private:
     void        UpdateStatus();
 
     uint16_t    RadioId         = Control::noParent;
-    uint16_t    AdjustId        = Control::noParent;
     uint16_t    HomeId          = Control::noParent;
 
-    uint16_t    ControlId       = Control::noParent;
-    uint16_t    MessageID       = Control::noParent;
     uint16_t    HomeStatusID    = Control::noParent;
-    uint16_t    RadioStatusID   = Control::noParent;
     uint16_t    AdjustStatusID  = Control::noParent;
-
-    uint32_t    data            = 881;
+    uint16_t    RadioStatusID   = Control::noParent;
 };
 
 extern cFrequencyAdjust FrequencyAdjust;

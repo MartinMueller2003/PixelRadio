@@ -15,33 +15,17 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cDigitalAudioGain
+class cDigitalAudioGain : public cControlCommon
 {
 public:
                 cDigitalAudioGain ();
     virtual     ~cDigitalAudioGain() {}
 
     void        AddControls (uint16_t Tab);
-
-    uint8_t     get() { return GainValue; }
-
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(String & value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
-    String      GainStr;
-    uint8_t     GainValue;
+    bool        set(String & value, String & ResponseMessage);
 };
 
 extern cDigitalAudioGain DigitalAudioGain;

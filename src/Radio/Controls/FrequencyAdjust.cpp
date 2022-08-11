@@ -15,25 +15,26 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-// #include "language.h"
 #include "FrequencyAdjust.hpp"
 #include "RfCarrier.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-
-static const PROGMEM char RADIO_FM_FRQ_STR      [] = "FM FREQUENCY";
-static const PROGMEM char ADJUST_FRQ_ADJ_STR    [] = "FREQUENCY ADJUST";
-static const PROGMEM char RADIO_FM_FREQ         [] = "RADIO_FM_FREQ";
-static const PROGMEM char UNITS_MHZ_STR         [] = " MHz";
-static const PROGMEM char HOME_RAD_STAT_STR     [] = "RADIO STATUS";
+static const PROGMEM String RADIO_FM_FRQ_STR       = "FM FREQUENCY";
+static const PROGMEM String ADJUST_FRQ_ADJ_STR     = "FREQUENCY ADJUST";
+static const PROGMEM String RADIO_FM_FREQ          = "RADIO_FM_FREQ";
+static const PROGMEM String UNITS_MHZ_STR          = " MHz";
+static const PROGMEM String HOME_RAD_STAT_STR      = "RADIO STATUS";
 
 // *********************************************************************************************
-cFrequencyAdjust::cFrequencyAdjust()
+cFrequencyAdjust::cFrequencyAdjust()  : cControlCommon(String(RADIO_FM_FREQ))
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
-    /// DEBUG_END;
+    DataValueStr = "88.1";
+    DataValue = 881;
+
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -41,30 +42,18 @@ void cFrequencyAdjust::AddRadioControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != RadioId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+    RadioId = value;
 
-        RadioId = value;
+    RadioStatusID = ESPUI.addControl(
+                            ControlType::Label,
+                            RADIO_FM_FRQ_STR.c_str(),
+                            emptyString,
+                            ControlColor::Emerald,
+                            RadioId);
+    ESPUI.setPanelStyle(RadioStatusID, F("font-size: 3.0em;"));
+    ESPUI.setElementStyle(RadioStatusID, F("width: 75%;"));
 
-        RadioStatusID = ESPUI.addControl(
-                                ControlType::Label,
-                                RADIO_FM_FRQ_STR,
-                                emptyString,
-                                ControlColor::Emerald,
-                                RadioId);
-        ESPUI.setPanelStyle(RadioStatusID, F("font-size: 3.0em;"));
-        ESPUI.setElementStyle(RadioStatusID, F("width: 75%;"));
-
-        UpdateStatus();
-
-        // DEBUG_V();
-
-    } while (false);
+    UpdateStatus();
 
     // DEBUG_END;
 }
@@ -74,29 +63,17 @@ void cFrequencyAdjust::AddHomeControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != HomeId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+    HomeId = value;
 
-        HomeId = value;
+    HomeStatusID = ESPUI.addControl(
+                            ControlType::Label, 
+                            HOME_RAD_STAT_STR.c_str(), 
+                            emptyString, 
+                            ControlColor::Peterriver, 
+                            HomeId);
+    ESPUI.setPanelStyle(HomeStatusID, F("font-size: 3.0em;"));
 
-        HomeStatusID = ESPUI.addControl(
-                                ControlType::Label, 
-                                HOME_RAD_STAT_STR, 
-                                emptyString, 
-                                ControlColor::Peterriver, 
-                                HomeId);
-        ESPUI.setPanelStyle(HomeStatusID, F("font-size: 3.0em;"));
-
-        UpdateStatus();
-
-        // DEBUG_V();
-
-    } while (false);
+    UpdateStatus();
 
     // DEBUG_END;
 }
@@ -106,44 +83,21 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != AdjustId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+    AdjustStatusID = ESPUI.addControl(
+                            ControlType::Label, 
+                            RADIO_FM_FRQ_STR.c_str(), 
+                            emptyString, 
+                            ControlColor::Wetasphalt, 
+                            value);
+    ESPUI.setPanelStyle(AdjustStatusID, F("font-size: 3.0em;"));
+    ESPUI.setElementStyle(AdjustStatusID, F("max-width: 75%;"));
 
-        AdjustId = value;
+    cControlCommon::AddControls(value, 
+                        ControlType::Pad, 
+                        ControlColor::Wetasphalt);
+    ESPUI.updateControlLabel(ControlId, ADJUST_FRQ_ADJ_STR.c_str());
 
-        AdjustStatusID = ESPUI.addControl(
-                                ControlType::Label, 
-                                RADIO_FM_FRQ_STR, 
-                                emptyString, 
-                                ControlColor::Wetasphalt, 
-                                AdjustId);
-        ESPUI.setPanelStyle(AdjustStatusID, F("font-size: 3.0em;"));
-        ESPUI.setElementStyle(AdjustStatusID, F("max-width: 75%;"));
-
-        ControlId = ESPUI.addControl(
-                            ControlType::Pad,
-                            ADJUST_FRQ_ADJ_STR,
-                            emptyString,
-                            ControlColor::Wetasphalt,
-                            AdjustId,
-                            [](Control* sender, int type, void* UserInfo)
-                            {
-                                if(UserInfo)
-                                {
-                                    static_cast<cFrequencyAdjust *>(UserInfo)->Callback(sender, type);
-                                }
-                            },
-                            this);
-        UpdateStatus();
-
-        // DEBUG_V();
-
-    } while (false);
+    UpdateStatus();
 
     // DEBUG_END;
 }
@@ -155,9 +109,9 @@ void cFrequencyAdjust::Callback(Control *sender, int type)
 
     // DEBUG_V(String("    value: ") + String(sender->value));
     // DEBUG_V(String("     type: ") + String(type));
-    // DEBUG_V(String("     data: ") + String(data));
+    // DEBUG_V(String("DataValue: ") + String(DataValue));
 
-    uint32_t NewData = data;
+    uint32_t NewData = DataValue;
     do // once
     {
         if(0 <= type)
@@ -191,67 +145,82 @@ void cFrequencyAdjust::Callback(Control *sender, int type)
             Log.errorln(String(F("CbAdjFmFreq: %s.")).c_str(), BAD_VALUE_STR);
             break;
         }
+
+        if (NewData > FM_FREQ_MAX_X10)
+        {
+            // DEBUG_V("Frequency is too high");
+            NewData = FM_FREQ_MAX_X10;
+        }
+        else if (NewData < FM_FREQ_MIN_X10) 
+        {
+            // DEBUG_V("Frequency is too low");
+            NewData = FM_FREQ_MIN_X10;
+        }
+
+        String DataStr = String(float(NewData) / 10.0f);
+        String Response;
+        set(DataStr, Response);
+
     } while (false);
 
-    // DEBUG_V(String("data: ") + String(data));
-
-    if (NewData > FM_FREQ_MAX_X10)
-    {
-        // DEBUG_V("Frequency is too high");
-        NewData = FM_FREQ_MAX_X10;
-    }
-    else if (NewData < FM_FREQ_MIN_X10) 
-    {
-        // DEBUG_V("Frequency is too ;ow");
-        NewData = FM_FREQ_MIN_X10;
-    }
-
-    // DEBUG_V(String("fmFreqX10: ") + String(data));
-
-    set(NewData);
-    displaySaveWarning();
-    Log.infoln(String(F("FM Frequency Set to: %s.")).c_str(), (String(float(data) / 10.0f, 1) + F(UNITS_MHZ_STR)).c_str());
-
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cFrequencyAdjust::restoreConfiguration(JsonObject & config)
+bool cFrequencyAdjust::set(String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    ReadFromJSON(data, config, RADIO_FM_FREQ);
-    set(data);
+    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+    // DEBUG_V(String("       value: ") + value);
 
-    // DEBUG_END;
-}
+    bool Response = true;
+    ResponseMessage.reserve(128);
+    ResponseMessage.clear();
 
-// *********************************************************************************************
-void cFrequencyAdjust::saveConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
+    uint32_t NewData = uint32_t(atof(value.c_str()) * 10.0f);
+    // DEBUG_V(String("     NewData: ") + NewData);
 
-    config[RADIO_FM_FREQ] = data;
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cFrequencyAdjust::set(uint32_t value)
-{
-    // DEBUG_START;
-
-    if(value != data)
+    do // once
     {
-        data = value;
+        if (NewData > FM_FREQ_MAX_X10)
+        {
+            ResponseMessage = F("RF Frequency Set failed: Frequency is too high");
+            Response = false;
+            break;
+        }
+
+        if (NewData < FM_FREQ_MIN_X10) 
+        {
+            ResponseMessage = F("RF Frequency Set failed: Frequency is too low");
+            Response = false;
+            break;
+        }
+
+        if(NewData == DataValue)
+        {
+            // DEBUG_V("Ignore duplicate value");
+            break;
+        }
+
+        DataValueStr = String(float(NewData) / 10.0f, 1) + UNITS_MHZ_STR;
+        DataValue = NewData;
 
         UpdateStatus();
 
-        Log.infoln(String(F("RF Frequency Set to: %.1f Mhz")).c_str(), float(data) / 10.0f);
+        Log.infoln(String(F("RF Frequency Set to: %s")).c_str(), DataValueStr);
         displaySaveWarning();
-    }
+
+    } while (false);
+
+    // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("      DataValue: ") + String(DataValue));
+    // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
+    // DEBUG_V(String("       Response: ") + String(Response));
 
     // DEBUG_END;
+    return Response;
 }
 
 // *********************************************************************************************
@@ -259,16 +228,15 @@ void cFrequencyAdjust::UpdateStatus()
 {
     // DEBUG_START;
 
-    float tempFloat = float(data) / 10.0f;
+    float tempFloat = float(DataValue) / 10.0f;
 
     QN8027RadioApi.setFrequency(tempFloat, RfCarrier.get());
 
-    String tempStr = String(tempFloat, 1) + F(UNITS_MHZ_STR);
     // DEBUG_V(String("tempFloat: ") + String(tempFloat));
 
-    ESPUI.print(AdjustStatusID, tempStr);
-    ESPUI.print(HomeStatusID,   tempStr);
-    ESPUI.print(RadioStatusID,  tempStr);
+    ESPUI.print(AdjustStatusID, DataValueStr);
+    ESPUI.print(HomeStatusID,   DataValueStr);
+    ESPUI.print(RadioStatusID,  DataValueStr);
 
     // DEBUG_END;
 }

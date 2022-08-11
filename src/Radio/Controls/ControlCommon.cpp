@@ -18,7 +18,6 @@
 #include <ESPUI.h>
 #include "PixelRadio.h"
 #include "ControlCommon.hpp"
-#include "language.h"
 #include "memdebug.h"
 
 // *********************************************************************************************
@@ -74,7 +73,9 @@ void cControlCommon::AddControls (uint16_t value,
         // force a UI Update
         String Response;
         DataValue = !DataValue;
-        set(DataValueStr, Response);
+        String TempDataValueStr = DataValueStr;
+        DataValueStr.clear();
+        set(TempDataValueStr, Response);
 
         // DEBUG_V();
 
@@ -92,7 +93,7 @@ void cControlCommon::Callback(Control *sender, int type)
     // DEBUG_V(String(" type: ") + String(type));
 
     String Response;
-    ESPUI.setElementStyle(StatusMessageId, set(sender->value, Response) ? CSS_LABEL_STYLE_TRANSPARENT : CSS_LABEL_STYLE_BLACK);
+    ESPUI.setElementStyle(StatusMessageId, set(sender->value, Response) ? ActiveLabelStyle : InactiveLabelStyle);
     ESPUI.print(StatusMessageId, Response);
 
     // DEBUG_END;

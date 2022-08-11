@@ -15,24 +15,24 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cPeakAudio
+class cPeakAudio : public cControlCommon
 {
 public:
                 cPeakAudio ();
     virtual     ~cPeakAudio() {}
 
-    void        AddControls (uint16_t TabId);
+    void        restoreConfiguration(JsonObject &) {};
+    void        saveConfiguration (JsonObject &) {};
+
+    void        AddControls (uint16_t Tab);
     void        poll();
-
+    bool        set(String &, String &) { return false; }
 private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
     uint32_t    NextReadingTime = 0;
+
 };
 
 extern cPeakAudio PeakAudio;

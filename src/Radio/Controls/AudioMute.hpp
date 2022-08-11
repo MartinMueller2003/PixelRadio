@@ -15,31 +15,17 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cAudioMute
+class cAudioMute : public cControlCommon
 {
 public:
                 cAudioMute ();
     virtual     ~cAudioMute() {}
 
     void        AddControls (uint16_t TabId);
-
-    bool        get() { return Mute; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(bool value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
-    bool        Mute = false;
+    bool        set(String & value, String & ResponseMessage);
 };
 
 extern cAudioMute AudioMute;

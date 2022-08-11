@@ -58,25 +58,20 @@ void cAnalogAudioGain::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
+    cControlCommon::AddControls(value, 
+                                ControlType::Select, 
+                                ControlColor::Emerald);
+    ESPUI.updateControlLabel(ControlId, RADIO_VGA_AUDIO_STR.c_str());
+
+    for(auto & CurrentOption : MapOfGainValues)
     {
-        cControlCommon::AddControls(value, 
-                                    ControlType::Select, 
-                                    ControlColor::Emerald);
-        ESPUI.updateControlLabel(ControlId, RADIO_VGA_AUDIO_STR.c_str());
-
-        for(auto & CurrentOption : MapOfGainValues)
-        {
-            ESPUI.addControl(ControlType::Option, 
-                            CurrentOption.first.c_str(), 
-                            CurrentOption.first, 
-                            ControlColor::None, 
-                            ControlId);
-        }
-
-        // DEBUG_V();
-
-    } while (false);
+        ESPUI.addControl(ControlType::Option, 
+                        CurrentOption.first.c_str(), 
+                        CurrentOption.first, 
+                        ControlColor::None, 
+                        ControlId);
+    }
+    ESPUI.updateControlValue(ControlId, DataValueStr);
 
     // DEBUG_END;
 }
@@ -112,9 +107,11 @@ bool cAnalogAudioGain::set(String & value, String & ResponseMessage)
         QN8027RadioApi.setVgaGain(DataValue);
 
         ESPUI.updateControlValue(ControlId, DataValueStr);
+        
         AudioGain.set();
 
         displaySaveWarning();
+
     } while (false);
 
     Log.infoln(String(F("Analog (VGA) Gain Set to: %s.")).c_str(), DataValueStr.c_str());

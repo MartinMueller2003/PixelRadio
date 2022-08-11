@@ -34,16 +34,17 @@ static std::map<String, uint8_t> MapOfImpedances
     {INP_IMP40K_STR, 40},
 };
 
-static const PROGMEM char INPUT_IMPED_STR   [] = "INPUT_IMPED_STR";
+static const PROGMEM String INPUT_IMPED_STR    = "INPUT_IMPED_STR";
 static const PROGMEM char INP_IMP_DEF_STR   [] = INP_IMP20K_STR;
-static const PROGMEM char RADIO_INP_IMP_STR [] = "INPUT IMPEDANCE";
+static const PROGMEM String RADIO_INP_IMP_STR  = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
-cAudioInputImpedance::cAudioInputImpedance()
+cAudioInputImpedance::cAudioInputImpedance() : cControlCommon(INPUT_IMPED_STR)
 {
     /// DEBUG_START;
 
-    InputImpedanceStr = INP_IMP_DEF_STR;
+    DataValueStr = INP_IMP_DEF_STR;
+    DataValue = MapOfImpedances[DataValueStr];
 
     /// DEBUG_END;
 }
@@ -53,107 +54,60 @@ void cAudioInputImpedance::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
+    cControlCommon::AddControls(value, 
+                                ControlType::Select, 
+                                ControlColor::Emerald);
+    ESPUI.updateControlLabel(ControlId, RADIO_INP_IMP_STR.c_str());
+
+    for(auto & CurrentOption : MapOfImpedances)
+    {
+        ESPUI.addControl(ControlType::Option, 
+                        CurrentOption.first.c_str(), 
+                        CurrentOption.first, 
+                        ControlColor::None, 
+                        ControlId);
+    }
+
+    ESPUI.updateControlValue(ControlId, DataValueStr);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+bool cAudioInputImpedance::set(String & value, String & ResponseMessage)
+{
+    // DEBUG_START;
+
+    bool Response = true;
+    ResponseMessage.reserve(128);
+    ResponseMessage.clear();
+
     do // once
     {
-        if(Control::noParent != TabId)
+        if (MapOfImpedances.end() == MapOfImpedances.find(value))
         {
-            // DEBUG_V("Controls have already been set up");
+            ResponseMessage = F("AudioInputImpedance::Set: BAD_VALUE: ");
+            ResponseMessage += DataValueStr;
+            Log.errorln(ResponseMessage.c_str());
+            Response = false;
             break;
         }
 
-        TabId = value;
+        DataValueStr = value;
+        DataValue = MapOfImpedances[DataValueStr];
 
-        ControlId = ESPUI.addControl(
-                            ControlType::Select, 
-                            RADIO_INP_IMP_STR, 
-                            InputImpedanceStr, 
-                            ControlColor::Emerald, 
-                            TabId, 
-                            [](Control* sender, int type, void* UserInfo)
-                            {
-                                if(UserInfo)
-                                {
-                                    static_cast<cAudioInputImpedance *>(UserInfo)->Callback(sender, type);
-                                }
-                            },
-                            this);
+        QN8027RadioApi.setAudioImpedance(DataValue);
 
-        for(auto & CurrentOption : MapOfImpedances)
-        {
-            ESPUI.addControl(ControlType::Option, 
-                            CurrentOption.first.c_str(), 
-                            CurrentOption.first, 
-                            ControlColor::None, 
-                            ControlId);
-        }
-        // DEBUG_V();
+        ESPUI.updateControlValue(ControlId, DataValueStr);
 
-        set(InputImpedanceStr);
-        
+        AudioGain.set();
+
+        Log.infoln(String(F("Input Impedance Set to: %s.")).c_str(), DataValueStr.c_str());
+        displaySaveWarning();
     } while (false);
 
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cAudioInputImpedance::Callback(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    set(sender->value);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioInputImpedance::restoreConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    ReadFromJSON(InputImpedanceStr, config, INPUT_IMPED_STR);
-    set(InputImpedanceStr);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioInputImpedance::saveConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    config[INPUT_IMPED_STR] = InputImpedanceStr;      // Use radio.setAudioInpImp(5/10/20/40) when restoring this Int value.
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioInputImpedance::set(String & value)
-{
-    // DEBUG_START;
-
-    InputImpedanceStr = value;
-    if(MapOfImpedances.end() == MapOfImpedances.find(InputImpedanceStr))
-    {
-        Log.errorln((String(F("cAudioInputImpedance::Set: BAD_VALUE: ")) + InputImpedanceStr).c_str());
-        InputImpedanceStr = INP_IMP_DEF_STR;
-    }
-
-    Log.infoln(String(F("Input Impedance Set to: %s.")).c_str(), InputImpedanceStr.c_str());
-
-    InputImpedanceValue = MapOfImpedances[InputImpedanceStr];
-
-    QN8027RadioApi.setAudioImpedance(InputImpedanceValue);
-
-    ESPUI.updateControlValue(ControlId, InputImpedanceStr);
-
-    AudioGain.set();
-
-    displaySaveWarning();
-
-    // DEBUG_END;
+    return Response;
 }
 
 // *********************************************************************************************
