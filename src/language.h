@@ -143,7 +143,6 @@
 #define RDS_LOCAL_BLANK_STR   "{ LOCAL RADIOTEXT MESSAGE IS BLANK }"
 #define RDS_LOCKED_STR        "{ LOCKED }"
 #define RDS_NOT_AVAIL_STR     "{ RADIOTEXT UNAVAILABLE }"
-#define RDS_PI_CODE_STR       "PI CODE"
 #define RDS_PTY_CODE_STR      "PTY CODE<br>Station Genre"
 #define RDS_REMOTE_BLANK_STR  "{ REMOTE RADIOTEXT MESSAGE IS BLANK }"
 #define RDS_RESET_SEP_STR     "LOCAL RDS RESET"
@@ -208,6 +207,7 @@ extern const PROGMEM char CSS_LABEL_STYLE_RED[];
 extern const PROGMEM char CSS_LABEL_STYLE_BLACK[];
 extern const PROGMEM char CSS_LABEL_STYLE_WHITE[];
 extern const PROGMEM char CSS_LABEL_STYLE_MAROON[];
+extern const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT[];
 
 extern const PROGMEM char N_About[];
 extern const PROGMEM char N_About_PixelRadio[];
@@ -234,9 +234,7 @@ extern const PROGMEM char N_MQTT_USER_STR[];
 extern const PROGMEM char N_name[];
 extern const PROGMEM char N_path[];
 extern const PROGMEM char N_PayloadTest[];
-extern const PROGMEM char N_PiCode[];
 extern const PROGMEM char N_PixelRadio[];
-extern const PROGMEM char N_ProgramServiceName[];
 extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];
 extern const PROGMEM char N_SequenceLearningEnabled[];
@@ -253,7 +251,6 @@ extern const PROGMEM char  CMD_GPIO33_STR[];
 extern const PROGMEM char  CMD_INFO_STR[];
 extern const PROGMEM char  CMD_MUTE_STR[];
 extern const PROGMEM char  CMD_PERIOD_STR[];
-extern const PROGMEM char  CMD_PICODE_STR[];
 extern const PROGMEM char  CMD_PTYCODE_STR[];
 extern const PROGMEM char  CMD_PSN_STR[];
 extern const PROGMEM char  CMD_REBOOT_STR[];

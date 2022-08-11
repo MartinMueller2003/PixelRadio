@@ -22,15 +22,16 @@
 // ************************************************************************************************
 #include "Language.h"
 
-const PROGMEM char SERIAL_096_STR             [] = "9600 Baud";
-const PROGMEM char SERIAL_192_STR             [] = "19.2K Baud";
-const PROGMEM char SERIAL_576_STR             [] = "57.6K Baud";
+const PROGMEM char SERIAL_096_STR             [] = "  9600 Baud";
+const PROGMEM char SERIAL_192_STR             [] = " 19.2K Baud";
+const PROGMEM char SERIAL_576_STR             [] = " 57.6K Baud";
 const PROGMEM char SERIAL_115_STR             [] = "115.2K Baud";
 
-const PROGMEM char CSS_LABEL_STYLE_RED        [] = "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_BLACK      [] = "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_WHITE      [] = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_MAROON     [] = "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_RED          [] = "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_BLACK        [] = "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_WHITE        [] = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_MAROON       [] = "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT  [] = "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
 
 const PROGMEM char N_About                    [] = "About";
 const PROGMEM char N_About_PixelRadio         [] = "About PixelRadio";
@@ -57,7 +58,6 @@ const PROGMEM char N_MQTT_USER_STR            [] = "MQTT_USER_STR";
 const PROGMEM char N_name                     [] = "name";
 const PROGMEM char N_path                     [] = "path";
 const PROGMEM char N_PayloadTest              [] = "PayloadTest";
-const PROGMEM char N_PiCode                   [] = "PiCode";
 const PROGMEM char N_PixelRadio               [] = "PixelRadio";
 const PROGMEM char N_ProgramServiceName       [] = "ProgramServiceName";
 const PROGMEM char N_PtyCode                  [] = "PtyCode";

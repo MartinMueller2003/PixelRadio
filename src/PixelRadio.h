@@ -176,10 +176,6 @@ const uint16_t RDS_DSP_TM_MAX   = 900;            // Maximum RadioText Display P
 const uint16_t RDS_DSP_TM_MIN   = 5;              // Minimum RadioText Display Period, in secs.
 const uint32_t RDS_DSP_TM_DEF   = 15000;          // Default Radio Display Period, in mS.
 const uint16_t RDS_MSG_UPD_TIME = 1000;           // RadioText UI Update Time, im mS.
-const uint16_t RDS_PI_CODE_DEF  = 0x6400;         // Default RDS PI Code, 16-bit hex value, 0x00ff - 0xffff.
-const uint32_t RDS_PI_CODE_MAX  = 0xffff;         // Maximum PI Code Value (hex).
-const uint32_t RDS_PI_CODE_MIN  = 0x00ff;         // Minumum PI Code Value (hex).
-const uint8_t  RDS_PSN_MAX_SZ   = CMD_PSN_MAX_SZ; // RDS Program Service Name, Max Allowed Length.
 const uint8_t  RDS_PTY_CODE_DEF = 9;              // Default RDS PTY Code "Top 40", 0-29 allowed.
 const uint8_t  RDS_PTY_CODE_MIN = 0;              // Min RDS PTY Code "None", See https://en.wikipedia.org/wiki/Radio_Data_System
 const uint8_t  RDS_PTY_CODE_MAX = 29;             // Max RDS PTY Code "Weather".
@@ -236,8 +232,6 @@ bool    logCmd(String  payloadStr,
                ControllerTypeId controller);
 bool    muteCmd(String  payloadStr,
                 ControllerTypeId controller);
-bool    piCodeCmd(String  payloadStr,
-                  ControllerTypeId controller);
 bool    ptyCodeCmd(String  payloadStr,
                   ControllerTypeId controller);
 bool    radioTextCmd(String  payloadStr,

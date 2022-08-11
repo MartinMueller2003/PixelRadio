@@ -40,20 +40,12 @@ Edits by TEB (thomastech) and dkulp, Jun-13-2022
 #define     	RDS_REG               0x12
 #define     	ANT_REG               0x1E
 
-
 //indicate self definition
 #define 		ON				  	  0x01
 #define			OFF				  	  0x00
 #define 		CH0_MASK			  0x03
 #define 		POWER_MAX			  75
 #define			POWER_MIN			  20
-
-/*
-These values are provided in pixelradio.h
-#define         RDS_PI_CODE_DEF       0x6400
-#define         RDS_PTY_CODE_DEF      9
-*/
-
 
 class QN8027Radio
 {
@@ -63,21 +55,21 @@ private:
 
 public:
   //SYSTEM
-  uint8_t radioStatus = 32;			//32==ON, 0==OFF
-  uint8_t rdsReady = 0;				//Toggle between 4 And 0
-  uint8_t monoAudio = 0;			//16==mono , 0=Stereo
-  uint8_t muteAudio = 0; 			//8==mute ON, 0==mute OFF
-  uint8_t ptyCode = RDS_PTY_CODE_DEF; // TEB, Jun-13-2022
-  uint16_t piCode = RDS_PI_CODE_DEF;  // TEB, MAR-07-2022
+  uint8_t radioStatus = 32; // 32==ON, 0==OFF
+  uint8_t rdsReady = 0;		  // Toggle between 4 And 0
+  uint8_t monoAudio = 0;	  // 16==mono , 0=Stereo
+  uint8_t muteAudio = 0; 	  // 8==mute ON, 0==mute OFF
+  uint8_t ptyCode = 0;      // TEB, Jun-13-2022
+  uint16_t piCode = 0;      // TEB, MAR-07-2022
 
   //XPLT
-  uint8_t preEmphTime = 128; 		//128==75uS, 0==50uS
-  uint8_t privateMode = 0;   		//0==disabled, 64==enabled
-  uint8_t PAAutoOffTime = 60; 		//0==58s, 16==59s, 32==60s, 48==Never
-  uint8_t TxPilotFreqDeviation = 9; //N == N% * 75KHz (N={7,8,9,10})
+  uint8_t preEmphTime = 128;        // 128==75uS, 0==50uS
+  uint8_t privateMode = 0;          // 0==disabled, 64==enabled
+  uint8_t PAAutoOffTime = 60;       // 0==58s, 16==59s, 32==60s, 48==Never
+  uint8_t TxPilotFreqDeviation = 9; // N == N% * 75KHz (N={7,8,9,10})
 
   //XTL
-  uint8_t clockSource = 0; 			//0==Crystal at 1:2, 1== DigitalClockInject at 1, 2==SinWave at 1, 3==DiffSinWave at 1:2
+  uint8_t clockSource = 0; 		    //0==Crystal at 1:2, 1== DigitalClockInject at 1, 2==SinWave at 1, 3==DiffSinWave at 1:2
   uint8_t CrystalCurrentuA = 16; 	// actual current = CrystalCurrentuA x 6.25uA
 
   //VGA

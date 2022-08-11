@@ -29,6 +29,7 @@
 #include "AudioMute.hpp"
 #include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
+#include "PiCode.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
@@ -69,6 +70,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     AudioMute.restoreConfiguration(config);
     DigitalAudioGain.restoreConfiguration(config);
     FrequencyAdjust.restoreConfiguration(config);
+    PiCode.restoreConfiguration(config);
     PreEmphasis.restoreConfiguration(config);
     RfCarrier.restoreConfiguration(config);
     
@@ -86,48 +88,16 @@ void cRadio::saveConfiguration(JsonObject & config)
     AudioMute.saveConfiguration(config);
     DigitalAudioGain.saveConfiguration(config);
     FrequencyAdjust.saveConfiguration(config);
+    PiCode.saveConfiguration(config);
     PreEmphasis.saveConfiguration(config);
     RfCarrier.saveConfiguration(config);
 
-    config[F("RADIO_AUTO_FLAG")]        = rfAutoFlg;      // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
+    config[F("RADIO_AUTO_FLAG")] = rfAutoFlg;             // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
 
     config[F("ANALOG_VOLUME")]          = analogVol;        // Requires custom function, not written yet.
     
-    config[F("RDS_PI_CODE")]            = PiCode; // Use radio.setPiCode() when restoring this hex value.
     config[F("RDS_PTY_CODE")]           = PtyCode;
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRadio::setPiCode(uint16_t value)
-{
-    // DEBUG_START;
-
-    PiCode = value;
-    setPiCode();
-    String Response = String(F("0x")) + String(PiCode, HEX);
-    ESPUI.print(rdsPiID, Response);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRadio::setPiCode()
-{
-    // DEBUG_START;
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        setRfCarrier(OFF);
-        FmRadio.setPiCode(PiCode);
-        setRfCarrier();
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
 
     // DEBUG_END;
 }

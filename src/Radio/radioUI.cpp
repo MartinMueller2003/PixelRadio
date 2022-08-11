@@ -27,6 +27,7 @@
 #include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
 #include "PeakAudio.hpp"
+#include "PiCode.hpp"
 #include "ProgramServiceName.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
@@ -211,25 +212,7 @@ void cRadio::AddRdsControls (uint16_t _rdsTab)
 
         rdsTab = _rdsTab;
         ProgramServiceName.AddControls(rdsTab);
-
-        // DEBUG_V();
-
-        rdsPiID = ESPUI.addControl(
-                            ControlType::Text, 
-                            RDS_PI_CODE_STR, 
-                            String(F("0x")) + String(PiCode, HEX), 
-                            ControlColor::Alizarin, 
-                            rdsTab,
-                            [](Control* sender, int type, void* UserInfo)
-                            {
-                                if(UserInfo)
-                                {
-                                    static_cast<cRadio *>(UserInfo)->CbSetPiCode(sender, type);
-                                }
-                            },
-                            this);
-        ESPUI.setPanelStyle(rdsPiID, "font-size: 1.25em;");
-        ESPUI.setElementStyle(rdsPiID, "color: black;");
+        PiCode.AddControls(rdsTab);
 
         rdsPtyID = ESPUI.addControl(
                             ControlType::Select, 

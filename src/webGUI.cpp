@@ -338,16 +338,6 @@ void updateUiFreeMemory(void)
 
 #ifdef OldWay
 // ************************************************************************************************
-// updateUiLocalPiCode() Update the PI Code on the Local RDS Tab.
-void updateUiLocalPiCode(void)
-{
-    char piBuff[15];
-
-    sprintf(piBuff, "0x%04X", ControllerMgr.GetPiCode(LocalControllerId));
-    ESPUI.print(rdsPiID, piBuff);
-}
-
-// ************************************************************************************************
 // updateUiLocalPtyCode() Update the PTY Code on the Local RDS Tab.
 void updateUiLocalPtyCode(void)
 {

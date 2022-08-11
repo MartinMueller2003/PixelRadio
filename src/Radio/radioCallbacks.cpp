@@ -31,14 +31,13 @@ void cRadio::CbRdsRst(Control *sender, int type)
   
     if(B_DOWN == type)
     {
+#ifdef OldWay
         PiCode = 0x6400;
         PtyCode = 0;
-#ifdef OldWay
         ProgramServiceName = F("PixeyFM");
         setProgramServiceName();
 #endif // def OldWay
 
-        setPiCode();
         setPtyCode();
         updateUiPtyCode();
 
@@ -89,44 +88,6 @@ void cRadio::CbSetPtyCode(Control *sender, int type)
     Log.infoln(String(F("RDS PTY Code Set to: '%s'")).c_str(), sender->value.c_str());
 
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cRadio::CbSetPiCode(Control *sender, int type)
-{
-    DEBUG_START;
-    
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    uint16_t tempPiCode = PiCode;
-    String piStr;
-
-    piStr.reserve(20);
-
-    piStr = sender->value;
-    piStr.trim();
-    if (piStr.isEmpty()) 
-    {
-        tempPiCode = RDS_PI_CODE_DEF; // Use default PI Code.
-    }
-    else 
-    {
-        tempPiCode = strtol(piStr.c_str(), NULL, HEX);
-    }
-
-    if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX))
-    { // Value Out of Range.
-        tempPiCode = PiCode;
-    }
-
-    PiCode = tempPiCode;
-    String Response = String(F("0x")) + String(PiCode, HEX);
-    ESPUI.print(rdsPiID, Response);
-    displaySaveWarning();
-    setPiCode();
-
-    Log.infoln(String(F("RDS PI Code Set to: \"%s\"")).c_str(), Response);
 }
 
 // *********************************************************************************************

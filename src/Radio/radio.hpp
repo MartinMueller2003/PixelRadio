@@ -43,12 +43,9 @@ public:
     void        CbRadioEmphasis(Control *sender, int type);
     void        CbRfPowerCallback(Control *sender, int type);
     void        CbRdsRst(Control *sender, int type);
-    void        CbSetPiCode(Control *sender, int type);
     void        CbSetPtyCode(Control *sender, int type);
 
 private:
-    void        setPiCode(uint16_t value);
-    void        setPiCode();
     void        setPtyCode();
     void        setPtyCode(String & ptyStr);
     void        setPtyCodeOptionValues ();
@@ -76,7 +73,6 @@ private:
 
     uint16_t    radioAutoID     = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
-    uint16_t    rdsPiID         = Control::noParent;
     uint16_t    rdsPtyID        = Control::noParent;
     uint16_t    rdsRstID        = Control::noParent;
 
@@ -85,7 +81,6 @@ private:
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
     uint32_t    rdsMsgTime = 0;
     bool        successFlg  = true;
-    uint16_t    PiCode = 0x6400;
     uint16_t    PtyCode = 0;
     String      LastMessageSent;
     
