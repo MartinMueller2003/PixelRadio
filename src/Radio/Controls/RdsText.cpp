@@ -22,15 +22,15 @@
 #include "language.h"
 #include "memdebug.h"
 
-static const PROGMEM char HOME_RDS_WAIT_STR     [] = "Waiting for RDS RadioText ...";
-static const PROGMEM char HOME_CUR_TEXT_STR     [] = "CURRENT RADIOTEXT";
-static const PROGMEM char HOME_RDS_TIMER_STR    [] = "RDS TIMER COUNTDOWN";
-static const PROGMEM char RDS_RF_DISABLED_STR   [] = "{ RADIO CARRIER OFF }";
-static const PROGMEM char RDS_DISABLED_STR      [] = "{ DISABLED }";
-static const PROGMEM char RDS_EXPIRED_STR       [] = "{ EXPIRED }";
+static const PROGMEM String HOME_RDS_WAIT_STR     = "Waiting for RDS RadioText ...";
+static const PROGMEM String HOME_CUR_TEXT_STR     = "CURRENT RADIOTEXT";
+static const PROGMEM String HOME_RDS_TIMER_STR    = "RDS TIMER COUNTDOWN";
+static const PROGMEM String RDS_RF_DISABLED_STR   = "{ RADIO CARRIER OFF }";
+static const PROGMEM String RDS_DISABLED_STR      = "{ DISABLED }";
+static const PROGMEM String RDS_EXPIRED_STR       = "{ EXPIRED }";
 
 // *********************************************************************************************
-cRdsText::cRdsText()
+cRdsText::cRdsText() : cControlCommon(emptyString)
 {
     /// DEBUG_START;
 
@@ -38,51 +38,29 @@ cRdsText::cRdsText()
 }
 
 // *********************************************************************************************
-void cRdsText::AddHomeControls (uint16_t value)
+void cRdsText::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != HomeId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
-
-        HomeId = value;
-
-        homeRdsTextID = ESPUI.addControl(
+    cControlCommon::AddControls(value, 
                                 ControlType::Label, 
-                                HOME_CUR_TEXT_STR, 
-                                emptyString, 
-                                ControlColor::Peterriver, 
-                                HomeId);
-        ESPUI.setPanelStyle(homeRdsTextID, String(F("font-size: 1.25em;")));
+                                ControlColor::Peterriver);
+    ESPUI.updateControlLabel(ControlId, HOME_CUR_TEXT_STR.c_str());
+    ESPUI.setPanelStyle(ControlId, String(F("font-size: 1.25em;")));
+    ESPUI.setElementStyle(ControlId, CSS_LABEL_STYLE_WHITE);
 
-        homeTextMsgID = ESPUI.addControl(
-                                ControlType::Label, 
-                                emptyString.c_str(), 
-                                emptyString, 
-                                ControlColor::Peterriver, 
-                                homeRdsTextID);
-        ESPUI.setPanelStyle(homeTextMsgID,   String(F("font-size: 1.15em;")));
-        ESPUI.setElementStyle(homeTextMsgID, CSS_LABEL_STYLE_WHITE);
+    ESPUI.setPanelStyle(StatusMessageId,   String(F("font-size: 1.15em;")));
+    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
-        homeRdsTmrID = ESPUI.addControl(
-                                ControlType::Label, 
-                                HOME_RDS_TIMER_STR, 
-                                emptyString, 
-                                ControlColor::Peterriver, 
-                                HomeId);
-        ESPUI.setPanelStyle(homeRdsTmrID, String(F("font-size: 1.25em;")));
-        // ESPUI.setElementStyle(homeRdsTmrID, String(F("max-width: 30%;")));
+    homeRdsTmrID = ESPUI.addControl(
+                            ControlType::Label, 
+                            HOME_RDS_TIMER_STR.c_str(), 
+                            emptyString, 
+                            ControlColor::Peterriver, 
+                            TabId);
+    ESPUI.setPanelStyle(homeRdsTmrID, String(F("font-size: 1.25em;")));
 
-        UpdateStatus();
-
-        // DEBUG_V();
-
-    } while (false);
+    UpdateStatus();
 
     // DEBUG_END;
 }
@@ -129,7 +107,8 @@ void cRdsText::poll()
             /// DEBUG_V("Display the new message");
             LastMessageSent = RdsMsgInfo.Text;
             Log.traceln(String(F("Refreshing RDS RadioText Message: %s")).c_str(), RdsMsgInfo.Text.c_str());
-            set(RdsMsgInfo.Text);
+            String dummy;
+            set(RdsMsgInfo.Text, dummy);
         }
         updateRdsMsgRemainingTime(now);
 
@@ -139,7 +118,7 @@ void cRdsText::poll()
 }
 
 // *********************************************************************************************
-void cRdsText::set(String & value)
+bool cRdsText::set(String & value, String &)
 {
     // DEBUG_START;
     // DEBUG_V(String("value: ") + value);
@@ -149,6 +128,7 @@ void cRdsText::set(String & value)
     UpdateStatus();
 
     // DEBUG_END;
+    return true;
 }
 
 // *********************************************************************************************
@@ -159,13 +139,13 @@ void cRdsText::UpdateStatus()
     if (TestTone.get())
     {
         // DEBUG_V("Test Mode");
-        ESPUI.print(homeRdsTextID, LastMessageSent);
-        ESPUI.print(homeTextMsgID, emptyString);
+        ESPUI.print(ControlId, LastMessageSent);
+        ESPUI.print(StatusMessageId, emptyString);
     }
     else
     {
-        ESPUI.print(homeRdsTextID, String(RfCarrier.get() ? LastMessageSent : RDS_RF_DISABLED_STR));
-        ESPUI.print(homeTextMsgID, String(String(RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
+        ESPUI.print(ControlId, String(RfCarrier.get() ? LastMessageSent : RDS_RF_DISABLED_STR));
+        ESPUI.print(StatusMessageId, String(String(RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
     }
 
     // DEBUG_END;

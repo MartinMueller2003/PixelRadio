@@ -23,9 +23,9 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-static const PROGMEM char ADJUST_TEST_STR   [] = "TEST TONES";
-static const PROGMEM char AUDIO_TEST_STR    [] = "PIXELRADIO AUDIO TEST";
-static const PROGMEM char AUDIO_PSN_STR     [] = "TestTone";
+static const PROGMEM String ADJUST_TEST_STR   = "TEST TONES";
+static const PROGMEM String AUDIO_TEST_STR    = "PIXELRADIO AUDIO TEST";
+static const PROGMEM String AUDIO_PSN_STR     = "TestTone";
 
 // Test Tone
 const uint8_t  TEST_TONE_CHNL = 0;                // Test Tone PWM Channel.
@@ -58,11 +58,17 @@ static std::vector<uint16_t> toneList
     fsm_Tone_state_SendingTone  fsm_Tone_state_SendingTone_imp;
 
 // *********************************************************************************************
-cTestTone::cTestTone()
+cTestTone::cTestTone() : cControlCommon(emptyString)
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
-    /// DEBUG_END;
+    DataValue = 0;
+    DataValueStr = "0";
+
+    ActiveLabelStyle     = CSS_LABEL_STYLE_WHITE;
+    InactiveLabelStyle   = CSS_LABEL_STYLE_WHITE;
+
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -70,53 +76,65 @@ void cTestTone::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != TabId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
 
-        TabId = value;
-
-        ControlId = ESPUI.addControl(
-                                ControlType::Switcher,
-                                ADJUST_TEST_STR,
-                                F("0"),
-                                ControlColor::Wetasphalt,
-                                TabId,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cTestTone *>(UserInfo)->Callback(sender, type);
-                                    }
-                                },
-                                this);
-
-        // DEBUG_V();
-
-    } while (false);
+    cControlCommon::AddControls(value, 
+                                ControlType::Switcher, 
+                                ControlColor::Wetasphalt);
+    ESPUI.updateControlLabel(ControlId, ADJUST_TEST_STR.c_str());
+    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
     // DEBUG_END;
 }
 
-// ************************************************************************************************
-void cTestTone::Callback(Control *sender, int type)
+// *********************************************************************************************
+bool cTestTone::set(String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
+    // DEBUG_V(String("       value: ") + value);
+    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    testModeFlg = type == S_ACTIVE;
+    bool Response = true;
+    ResponseMessage.reserve(128);
+    ResponseMessage.clear();
+    uint32_t NewDataValue;
 
-    ESPUI.setElementStyle(ControlId, String(testModeFlg ? F("background: red;") : F("background: #bebebe;")));
+    do // once
+    {
+        if(value.equals(F("0")) ||
+           value.equals(F("off")))
+        {
+            NewDataValue = false;
+        }
+        else if(value.equals(F("1")) ||
+                value.equals(F("on")))
+        {
+            NewDataValue = true;
+        }
+        else
+        {
+            ResponseMessage = String(F("Test Tone: BAD_VALUE: ")) + value;
+            Response = false;
+            break;
+        }
 
-    Log.infoln(String(F("Test Mode Set to: %s.")).c_str(), String(testModeFlg ? F("On") : F("Off")).c_str());
+        if(NewDataValue == DataValue)
+        {
+            // DEBUG_V("Skip duplicate setting");
+            break;
+        }
+
+        DataValue = NewDataValue;
+        DataValueStr = DataValue ? F("1") : F("0");
+
+        Log.infoln(String(F("Test Mode Set to: %s.")).c_str(), String(DataValue ? F("On") : F("Off")).c_str());
+        displaySaveWarning();
+
+    } while (false);
 
     // DEBUG_END;
+    return Response;
 }
 
 // *********************************************************************************************
@@ -140,7 +158,7 @@ void cTestTone::Init()
 // *********************************************************************************************
 void cTestTone::poll()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     uint32_t now = millis();
     do // once
@@ -200,14 +218,22 @@ void cTestTone::UpdateRdsTimeMsg()
 {
     // DEBUG_START;
 
+    String FrequencyMessage;
+    FrequencyMessage.reserve(128);
+
     char rdsBuff[25];
 
     // DEBUG_V("Update the test tone clock. HH:MM:SS will be sent as RadioText.");
     seconds++;
 
+    FrequencyMessage = String(F("Current Tone: ")) + String(pCurrentFsmState->getCurrentToneFrequency()) + " hz";
+    ESPUI.print(StatusMessageId, FrequencyMessage);
     sprintf(rdsBuff, "[ %02u:%02u:%02u ]", hours, minutes, seconds);
-    String tmpStr = String(AUDIO_TEST_STR) + rdsBuff + F("<br>Current Tone: ") + String(pCurrentFsmState->getCurrentToneFrequency()) + " hz";
-    RdsText.set(tmpStr);
+    String tmpStr;
+    tmpStr.reserve(128);
+    tmpStr = String(AUDIO_TEST_STR) + rdsBuff + String(F("<br>")) + FrequencyMessage;
+    String dummy;
+    RdsText.set(tmpStr, dummy);
     tmpStr = AUDIO_PSN_STR;
     QN8027RadioApi.setProgramServiceName(tmpStr, RfCarrier.get());
 
@@ -241,6 +267,9 @@ void fsm_Tone_state_Idle::Init ()
     pTestTone->toneOff();
     digitalWrite(MUX_PIN, TONE_OFF); // Switch Audio Mux chip to Line-In.
 
+    ESPUI.setElementStyle(pTestTone->ControlId, String(F("background: #bebebe;")));
+    ESPUI.print(pTestTone->StatusMessageId, emptyString);
+
     pTestTone->pCurrentFsmState = &fsm_Tone_state_Idle_imp;
 
     // DEBUG_END;
@@ -251,7 +280,7 @@ void fsm_Tone_state_Idle::Poll (uint32_t)
 {
     // DEBUG_START;
 
-    if(pTestTone->testModeFlg)
+    if(pTestTone->DataValue)
     {
         fsm_Tone_state_SendingTone_imp.Init();
     }
@@ -275,6 +304,8 @@ void fsm_Tone_state_SendingTone::Init ()
     CurrentTone = toneList.begin();
     ToneExpirationTime = millis() + TEST_TONE_TIME;
 
+    ESPUI.setElementStyle(pTestTone->ControlId, String(F("background: red;")));
+
     pTestTone->pCurrentFsmState = &fsm_Tone_state_SendingTone_imp;
 
     // DEBUG_END;
@@ -287,7 +318,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 
     do // once
     {
-        if(!pTestTone->testModeFlg)
+        if(!pTestTone->DataValue)
         {
             fsm_Tone_state_Idle_imp.Init();
             break;

@@ -203,11 +203,12 @@ extern const PROGMEM char SERIAL_192_STR[];
 extern const PROGMEM char SERIAL_576_STR[];
 extern const PROGMEM char SERIAL_115_STR[];
 
-extern const PROGMEM char CSS_LABEL_STYLE_RED[];
 extern const PROGMEM char CSS_LABEL_STYLE_BLACK[];
-extern const PROGMEM char CSS_LABEL_STYLE_WHITE[];
+extern const PROGMEM char CSS_LABEL_STYLE_GREEN[];
+extern const PROGMEM char CSS_LABEL_STYLE_RED[];
 extern const PROGMEM char CSS_LABEL_STYLE_MAROON[];
 extern const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT[];
+extern const PROGMEM char CSS_LABEL_STYLE_WHITE[];
 
 extern const PROGMEM char N_About[];
 extern const PROGMEM char N_About_PixelRadio[];

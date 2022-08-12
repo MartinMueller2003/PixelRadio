@@ -28,7 +28,7 @@ cControlCommon::cControlCommon(String _ConfigName)
     ConfigName = _ConfigName;
 
     DataValue = 0;
-    DataValueStr = String(F("0x")) + String(DataValue, HEX);
+    DataValueStr = F("0");
 
     //_ DEBUG_END;
 }
@@ -39,47 +39,41 @@ void cControlCommon::AddControls (uint16_t value,
 {
     // DEBUG_START;
 
-    do // once
-    {
-        TabId = value;
+    TabId = value;
 
-        ControlId = ESPUI.addControl(
-                                uiControltype,
-                                emptyString.c_str(),
-                                emptyString,
-                                color,
-                                value,
-                                [](Control* sender, int type, void* UserInfo)
+    ControlId = ESPUI.addControl(
+                            uiControltype,
+                            emptyString.c_str(),
+                            emptyString,
+                            color,
+                            value,
+                            [](Control* sender, int type, void* UserInfo)
+                            {
+                                if(UserInfo)
                                 {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cControlCommon *>(UserInfo)->Callback(sender, type);
-                                    }
-                                },
-                                this);
+                                    static_cast<cControlCommon *>(UserInfo)->Callback(sender, type);
+                                }
+                            },
+                            this);
 
-        ESPUI.setPanelStyle(ControlId, "font-size: 1.25em;");
-        ESPUI.setElementStyle(ControlId, "color: black;");
+    ESPUI.setPanelStyle(ControlId, "font-size: 1.25em;");
+    ESPUI.setElementStyle(ControlId, "color: black;");
 
-        StatusMessageId = ESPUI.addControl(
-                                ControlType::Label,
-                                emptyString.c_str(),
-                                emptyString,
-                                ControlColor::None,
-                                ControlId);
-        ESPUI.setPanelStyle(StatusMessageId, "font-size: 1.25em;");
-        ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_TRANSPARENT);
+    StatusMessageId = ESPUI.addControl(
+                            ControlType::Label,
+                            emptyString.c_str(),
+                            emptyString,
+                            ControlColor::None,
+                            ControlId);
+    ESPUI.setPanelStyle(StatusMessageId, "font-size: 1.25em;");
+    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_TRANSPARENT);
 
-        // force a UI Update
-        String Response;
-        DataValue = !DataValue;
-        String TempDataValueStr = DataValueStr;
-        DataValueStr.clear();
-        set(TempDataValueStr, Response);
-
-        // DEBUG_V();
-
-    } while (false);
+    // force a UI Update
+    String Response;
+    DataValue = !DataValue;
+    String TempDataValueStr = DataValueStr;
+    DataValueStr.clear();
+    set(TempDataValueStr, Response);
 
     // DEBUG_END;
 }
@@ -104,10 +98,13 @@ void cControlCommon::restoreConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    String NewValue = DataValueStr;
-    ReadFromJSON(NewValue, config, ConfigName);
-    String Response;
-    set(NewValue, Response);
+    if(!ConfigName.isEmpty())
+    {
+        String NewValue = DataValueStr;
+        ReadFromJSON(NewValue, config, ConfigName);
+        String Response;
+        set(NewValue, Response);
+    }
 
     // DEBUG_END;
 }
@@ -117,7 +114,10 @@ void cControlCommon::saveConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    config[ConfigName] = DataValueStr;
+    if(!ConfigName.isEmpty())
+    {
+        config[ConfigName] = DataValueStr;
+    }
 
     // DEBUG_END;
 }

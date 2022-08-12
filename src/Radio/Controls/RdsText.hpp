@@ -15,29 +15,24 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 #include "ControllerMgr.h"
 
 // *********************************************************************************************
-class cRdsText
+class cRdsText : public cControlCommon
 {
 public:
                 cRdsText ();
     virtual     ~cRdsText() {}
 
-    void        AddHomeControls (uint16_t TabId);
-
+    void        AddControls (uint16_t TabId);
     void        poll();
-    void        set(String & value);
+    bool        set(String & value, String & Response);
 
 private:
     void        UpdateStatus();
     void        updateRdsMsgRemainingTime(uint32_t now);
 
-    uint16_t    HomeId          = Control::noParent;
-
-    uint16_t    homeRdsTextID   = Control::noParent;
     uint16_t    homeTextMsgID   = Control::noParent;
     uint16_t    homeRdsTmrID    = Control::noParent;
 

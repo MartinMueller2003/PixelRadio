@@ -22,7 +22,7 @@
 #include "memdebug.h"
 
 static const PROGMEM String RDS_PI_CODE_STR     = "PI CODE";
-static const PROGMEM char RDS_PI_CODE           [] = "RDS_PI_CODE";
+static const PROGMEM String RDS_PI_CODE         = "RDS_PI_CODE";
 
 static const PROGMEM uint16_t RDS_PI_CODE_DEF   = uint32_t(0x6400);         // Default RDS PI Code, 16-bit hex value, 0x00ff - 0xffff.
 static const PROGMEM uint32_t RDS_PI_CODE_MAX   = uint32_t(0xffff);         // Maximum PI Code Value (hex).
@@ -44,16 +44,10 @@ void cPiCode::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        cControlCommon::AddControls(value, 
-                                    ControlType::Text, 
-                                    ControlColor::Alizarin);
-        ESPUI.updateControlLabel(ControlId, RDS_PI_CODE_STR.c_str());
-
-        // DEBUG_V();
-
-    } while (false);
+    cControlCommon::AddControls(value, 
+                                ControlType::Text, 
+                                ControlColor::Alizarin);
+    ESPUI.updateControlLabel(ControlId, RDS_PI_CODE_STR.c_str());
 
     // DEBUG_END;
 }

@@ -15,31 +15,18 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cProgramServiceName
+class cProgramServiceName : public cControlCommon
 {
 public:
                 cProgramServiceName ();
     virtual     ~cProgramServiceName() {}
 
     void        AddControls (uint16_t TabId);
+    bool        set(String & value, String & Response);
 
-    String &    get() { return ProgramServiceName; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(String & value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
-    String      ProgramServiceName;
 };
 
 extern cProgramServiceName ProgramServiceName;

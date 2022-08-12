@@ -15,33 +15,22 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 class fsm_Tone_state;
 
 // *********************************************************************************************
-class cTestTone
+class cTestTone : public cControlCommon
 {
 public:
                 cTestTone ();
     virtual     ~cTestTone() {}
 
     void        AddControls (uint16_t TabId);
-
-    bool        get() { return testModeFlg; }
-    void        Init(void);
+    void        Init();
     void        poll();
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
+    bool        set(String &value, String &ResponseMessage);
 
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-    uint16_t    MessageID   = Control::noParent;
-
-    bool        testModeFlg     = false;
 protected:
     void    UpdateRdsTimeMsg();
     void    toneOn(uint16_t freq);

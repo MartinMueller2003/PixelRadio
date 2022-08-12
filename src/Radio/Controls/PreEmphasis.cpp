@@ -32,18 +32,18 @@ static std::map<String, uint8_t> MapOfRegions
     {PRE_EMPH_EUR_STR, PRE_EMPH_EUR_VAL},
 };
 
-static const PROGMEM char PRE_EMPH_DEF_STR      [] = PRE_EMPH_USA_STR;
-static const PROGMEM uint8_t PRE_EMPH_DEF_VAL      = uint8_t(PRE_EMPH_USA_VAL);
-static const PROGMEM char RADIO_PRE_EMPH_STR    [] = "RADIO_PRE_EMPH_STR";
-static const PROGMEM char PRE_EMPH_STR          [] = "FM PRE-EMPHASIS";
+static const PROGMEM String PRE_EMPH_DEF_STR      = PRE_EMPH_USA_STR;
+static const PROGMEM uint8_t PRE_EMPH_DEF_VAL     = uint8_t(PRE_EMPH_USA_VAL);
+static const PROGMEM String RADIO_PRE_EMPH_STR    = "RADIO_PRE_EMPH_STR";
+static const PROGMEM String PRE_EMPH_STR          = "FM PRE-EMPHASIS";
 
 // *********************************************************************************************
-cPreEmphasis::cPreEmphasis()
+cPreEmphasis::cPreEmphasis() : cControlCommon(RADIO_PRE_EMPH_STR)
 {
     // DEBUG_START;
 
-    preEmphasisStr  = PRE_EMPH_DEF_STR; // Control.
-    emphVal         = PRE_EMPH_DEF_VAL;
+    DataValueStr    = PRE_EMPH_DEF_STR; // Control.
+    DataValue       = PRE_EMPH_DEF_VAL;
 
     // DEBUG_END;
 }
@@ -53,122 +53,67 @@ void cPreEmphasis::AddControls (uint16_t value)
 {
     // DEBUG_START;
 
-    do // once
+    cControlCommon::AddControls(value, 
+                                ControlType::Select, 
+                                ControlColor::Emerald);
+    ESPUI.updateControlLabel(ControlId, PRE_EMPH_STR.c_str());
+
+    for(auto & CurrentOption : MapOfRegions)
     {
-        if(Control::noParent != TabId)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+        ESPUI.addControl(ControlType::Option, 
+                        CurrentOption.first.c_str(), 
+                        CurrentOption.first, 
+                        ControlColor::None, 
+                        ControlId);
+    }
 
-        TabId = value;
-
-        ControlId = ESPUI.addControl(
-                            ControlType::Select, 
-                            PRE_EMPH_STR, 
-                            emptyString, 
-                            ControlColor::Emerald, 
-                            TabId, 
-                            [](Control* sender, int type, void* UserInfo)
-                            {
-                                if(UserInfo)
-                                {
-                                    static_cast<cPreEmphasis *>(UserInfo)->Callback(sender, type);
-                                }
-                            },
-                            this);
-
-        for(auto & CurrentOption : MapOfRegions)
-        {
-            ESPUI.addControl(ControlType::Option, 
-                            CurrentOption.first.c_str(), 
-                            CurrentOption.first, 
-                            ControlColor::None, 
-                            ControlId);
-        }
-
-        String Temp = preEmphasisStr;
-        preEmphasisStr.clear();
-        set(Temp);
-
-        // DEBUG_V();
-
-    } while (false);
-
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cPreEmphasis::Callback(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    set(sender->value);
+    ESPUI.updateControlValue(ControlId, DataValueStr);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cPreEmphasis::restoreConfiguration(JsonObject & config)
+bool cPreEmphasis::set(String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    String Temp;
-    ReadFromJSON(Temp, config, RADIO_PRE_EMPH_STR);
-    set(Temp);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cPreEmphasis::saveConfiguration(JsonObject & config)
-{
-    // DEBUG_START;
-
-    config[RADIO_PRE_EMPH_STR] = preEmphasisStr; // Use radio.setPreEmphTime50(0/1), uint8 value. Not working?
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cPreEmphasis::set(String & value)
-{
-    // DEBUG_START;
+    bool Response = true;
+    ResponseMessage.reserve(128);
+    ResponseMessage.clear();
 
     do // once
     {
-        if(preEmphasisStr.equals(value))
+        if(DataValueStr.equals(value))
         {
             // DEBUG_V("Ignore a duplicate request");
             break;
         }
 
-        preEmphasisStr = value;
-        if(MapOfRegions.end() == MapOfRegions.find(preEmphasisStr))
+        if(MapOfRegions.end() == MapOfRegions.find(value))
         {
-            Log.errorln(String(F("radioEmphasis Set: BAD VALUE: '%s'. Using default.")).c_str(), value);
+            ResponseMessage = String(F("radioEmphasis Set: BAD VALUE: ")) + value;
+            Response = false;
+            Log.errorln(ResponseMessage.c_str());
             break;
         }
 
         // DEBUG_V("Update the radio")
-        emphVal = MapOfRegions[preEmphasisStr];
-        QN8027RadioApi.setPreEmphasis(emphVal, RfCarrier.get());
+        DataValueStr = value;
+        DataValue = MapOfRegions[DataValueStr];
+        QN8027RadioApi.setPreEmphasis(DataValue, RfCarrier.get());
 
-        ESPUI.updateControlValue(ControlId, preEmphasisStr);
+        ESPUI.updateControlValue(ControlId, DataValueStr);
 
 #ifdef OldWay
         setPtyCodeOptionValues();
 #endif // def OldWay
         displaySaveWarning();
+        Log.infoln(String(F("Pre-Emphasis Set to: %s.")).c_str(), DataValueStr.c_str());
 
     } while (false);
 
-    Log.infoln(String(F("Pre-Emphasis Set to: %s.")).c_str(), preEmphasisStr.c_str());
-
     // DEBUG_END;
+    return Response;
 }
 
 // *********************************************************************************************

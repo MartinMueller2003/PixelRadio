@@ -146,7 +146,7 @@ void cRadio::AddHomeControls (uint16_t _homeTab)
         RfCarrier.AddHomeControls(homeTab);
         FrequencyAdjust.AddHomeControls(homeTab);
         ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
-        RdsText.AddHomeControls(homeTab);
+        RdsText.AddControls(homeTab);
 
     } while (false);
     // DEBUG_END;

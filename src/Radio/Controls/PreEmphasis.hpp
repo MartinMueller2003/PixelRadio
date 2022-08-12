@@ -15,31 +15,18 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include <ESPUI.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cPreEmphasis
+class cPreEmphasis : public cControlCommon
 {
 public:
                 cPreEmphasis ();
     virtual     ~cPreEmphasis() {}
 
-    void        AddControls (uint16_t Tab);
+    void        AddControls (uint16_t TabId);
+    bool        set(String & value, String & Response);
 
-    uint8_t     get() { return emphVal; }
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    void        set(String & value);
-    
-// Callbacks need to be public 
-    void        Callback(Control *sender, int type);
-    
-private:
-    uint16_t    TabId       = Control::noParent;
-    uint16_t    ControlId   = Control::noParent;
-
-    String  preEmphasisStr; // Control.
-    uint8_t emphVal;
 };
 
 extern cPreEmphasis PreEmphasis;
