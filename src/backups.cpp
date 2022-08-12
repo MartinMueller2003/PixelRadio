@@ -32,8 +32,8 @@
 #include <SD.h>
 #include "PixelRadio.h"
 #include "globals.h"
-#include "Network/WiFiDriver.hpp"
-
+#include "radio.hpp"
+#include "WiFiDriver.hpp"
 
 // *************************************************************************************************************************
 const uint16_t JSON_CFG_SZ    = 10000;
@@ -291,37 +291,7 @@ bool restoreConfiguration(uint8_t restoreMode, const char *fileName)
 
     ControllerMgr.restoreConfiguration(doc);
     WiFiDriver.restoreConfiguration(doc);
-
-//    if ((const char *)doc["RDS_PROG_SERV_STR"] != NULL) {
-//        String Temp = doc["RDS_PROG_SERV_STR"];
-//        ControllerMgr.SetRdsProgramServiceName(LocalControllerId, Temp);
-//    }
-
-#ifdef OldWay
-    if (doc.containsKey("RDS_PI_CODE")) {
-        ControllerMgr.SetPiCode(LocalControllerId, doc["RDS_PI_CODE"]); // Use radio.setPiCode() when restoring this hex value.
-    }
-
-    if (doc.containsKey("RDS_PTY_CODE")) {
-        ControllerMgr.SetPtyCode(LocalControllerId, doc["RDS_PTY_CODE"]);
-    }
-#endif // def OldWay
-/*
-    if (doc.containsKey("RDS_LOCAL_MSG_TIME")) {
-        ControllerMgr.SetRdsMsgTime(LocalControllerId, doc["RDS_LOCAL_MSG_TIME"]);
-    }
-    if (doc.containsKey("RADIO_FM_FREQ")) {
-        fmFreqX10 = doc["RADIO_FM_FREQ"]; // Use radio.setFrequency(MHZ) when restoring this float value.
-    }
-
-    if (doc.containsKey("RADIO_MUTE_FLAG")) {
-        muteFlg = doc["RADIO_MUTE_FLAG"]; // Use radio.mute(0/1) when restoring this uint8 value. 1=MuteOn
-    }
-
-    if (doc.containsKey("RADIO_AUTO_FLAG")) {
-        rfAutoFlg = doc["RADIO_AUTO_FLAG"]; // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
-    }
-*/
+    Radio.restoreConfiguration(doc);
 
     if (doc.containsKey("USB_VOLUME")) {
         usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".

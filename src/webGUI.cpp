@@ -335,19 +335,6 @@ void updateUiFreeMemory(void)
     }
 }
 
-
-#ifdef OldWay
-// ************************************************************************************************
-// updateUiLocalPtyCode() Update the PTY Code on the Local RDS Tab.
-void updateUiLocalPtyCode(void)
-{
-    char ptyBuff[10];
-
-    sprintf(ptyBuff, "%u", ControllerMgr.GetPtyCode(LocalControllerId));
-    ESPUI.print(rdsPtyID, ptyBuff);
-}
-#endif // def OldWay
-
 // *********************************************************************************************
 // updateUiDiagTimer(): Update Elapsed Time on diagTab Page. Show Days + HH:MM:SS.
 void updateUiDiagTimer(void)

@@ -30,10 +30,11 @@
 #include "DigitalAudioGain.hpp"
 #include "FrequencyAdjust.hpp"
 #include "PiCode.hpp"
+#include "PreEmphasis.hpp"
+#include "PtyCode.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
-#include "PreEmphasis.hpp"
 
 // *********************************************************************************************
 void cRadio::begin()
@@ -72,6 +73,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     FrequencyAdjust.restoreConfiguration(config);
     PiCode.restoreConfiguration(config);
     PreEmphasis.restoreConfiguration(config);
+    PtyCode.saveConfiguration(config);
     RfCarrier.restoreConfiguration(config);
     
     // DEBUG_END;
@@ -90,33 +92,13 @@ void cRadio::saveConfiguration(JsonObject & config)
     FrequencyAdjust.saveConfiguration(config);
     PiCode.saveConfiguration(config);
     PreEmphasis.saveConfiguration(config);
+    PtyCode.saveConfiguration(config);
     RfCarrier.saveConfiguration(config);
 
     config[F("RADIO_AUTO_FLAG")] = rfAutoFlg;             // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
     config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
 
     config[F("ANALOG_VOLUME")]          = analogVol;        // Requires custom function, not written yet.
-    
-    config[F("RDS_PTY_CODE")]           = PtyCode;
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRadio::setPtyCode()
-{
-    // DEBUG_START;
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        setRfCarrier(OFF);
-        FmRadio.setPtyCode(PtyCode);
-        setRfCarrier();
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
 
     // DEBUG_END;
 }
@@ -211,50 +193,6 @@ new way: call GPIO and tell it to update the output and the UI.
     }
 #endif // def OldWay
 
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// waitForIdle(): Wait for QN8027 to enter Idle State. This means register command has executed.
-void cRadio::waitForIdle(uint16_t waitMs) 
-{
-    // DEBUG_START;
-#ifdef OldWay
-    uint8_t stateCode1;
-    uint8_t stateCode2;
-
-    do // once
-    {
-        stateCode1 = FmRadio.getStatus() & 0x07;
-        // DEBUG_V(String("stateCode1: 0x") + String(stateCode1, HEX));
-
-        // make sure the delay is a minimum of 5ms
-        if(5 > waitMs) {waitMs = 5;}
-
-        do
-        {
-            waitMs -= 5;
-
-            delay(5);
-
-            stateCode2 = FmRadio.getStatus() & 0x07;
-            // DEBUG_V(String("stateCode2: 0x") + String(stateCode2, HEX));
-
-            if ((stateCode2 == 0x02) || (stateCode2 == 0x05))
-            {
-                break;
-            }
-            else if  (stateCode1 != stateCode2) 
-            {
-                FmRadio.getStatus(); // Clear next status byte.
-                break;
-            }
-        } while (5 <= waitMs);
-
-    } while (false);
-
-    // DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
-#endif // def OldWay
     // DEBUG_END;
 }
 

@@ -53,20 +53,20 @@ cRfCarrier::cRfCarrier() : cControlCommon(RADIO_RF_CARR_FLAG)
 // *********************************************************************************************
 void cRfCarrier::AddControls (uint16_t value)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     cControlCommon::AddControls(value, 
                                 ControlType::Switcher, 
                                 ControlColor::Emerald);
     ESPUI.updateControlLabel(ControlId, RADIO_RF_CARRIER_STR.c_str());
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cRfCarrier::AddHomeControls (uint16_t value)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     HomeId = value;
 
@@ -81,17 +81,17 @@ void cRfCarrier::AddHomeControls (uint16_t value)
     String Dummy;
     UpdateStatus(Dummy);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 bool cRfCarrier::set(String & value, String & ResponseMessage)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    DEBUG_V(String("       value: ") + value);
-    DEBUG_V(String("DataValueStr: ") + DataValueStr);
-    DEBUG_V(String("   DataValue: ") + String(DataValue));
+    // DEBUG_V(String("       value: ") + value);
+    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
     bool Response = true;
     ResponseMessage.reserve(128);
@@ -119,7 +119,7 @@ bool cRfCarrier::set(String & value, String & ResponseMessage)
 
         if(NewDataValue == DataValue)
         {
-            DEBUG_V("Skip duplicate setting");
+            // DEBUG_V("Skip duplicate setting");
             break;
         }
 
@@ -133,7 +133,7 @@ bool cRfCarrier::set(String & value, String & ResponseMessage)
 
     } while (false);
 
-    DEBUG_END;
+    // DEBUG_END;
     return Response;
 }
 
@@ -151,7 +151,7 @@ void cRfCarrier::UpdateStatus(String & ResponseMessage)
         cQN8027RadioApi::QN8027RadioFmTestStatus_e TestStatus = QN8027RadioApi.GetTestStatus();
         if (TestStatus == cQN8027RadioApi::QN8027RadioFmTestStatus_e::FM_TEST_FAIL)
         {
-            DEBUG_V(RADIO_FAIL_STR);
+            // DEBUG_V(RADIO_FAIL_STR);
             ResponseMessage = RADIO_FAIL_STR;
             ESPUI.print(StatusMessageId, RADIO_FAIL_STR);
             ESPUI.print(HomeStatusMessageId, RADIO_FAIL_STR);
@@ -163,7 +163,7 @@ void cRfCarrier::UpdateStatus(String & ResponseMessage)
         }
         else if (TestStatus == cQN8027RadioApi::QN8027RadioFmTestStatus_e::FM_TEST_VSWR) 
         {
-            DEBUG_V(RADIO_VSWR_STR);
+            // DEBUG_V(RADIO_VSWR_STR);
             ResponseMessage = RADIO_VSWR_STR;
             ESPUI.print(StatusMessageId, RADIO_OFF_AIR_STR);
             ESPUI.print(HomeStatusMessageId, RADIO_VSWR_STR);
@@ -175,7 +175,7 @@ void cRfCarrier::UpdateStatus(String & ResponseMessage)
         }
         else if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX)) 
         {
-            DEBUG_V(RADIO_VOLT_STR);
+            // DEBUG_V(RADIO_VOLT_STR);
             ResponseMessage = RADIO_VOLT_STR;
             ESPUI.print(StatusMessageId, RADIO_OFF_AIR_STR);
             ESPUI.print(HomeStatusMessageId, RADIO_VOLT_STR);
@@ -187,7 +187,7 @@ void cRfCarrier::UpdateStatus(String & ResponseMessage)
         }
         else 
         {
-            DEBUG_V(RADIO_ON_AIR_STR);
+            // DEBUG_V(RADIO_ON_AIR_STR);
             ResponseMessage = RADIO_ON_AIR_STR;
             ESPUI.print(StatusMessageId, RADIO_OFF_AIR_STR);
             ESPUI.print(HomeStatusMessageId, RADIO_ON_AIR_STR);
@@ -200,7 +200,7 @@ void cRfCarrier::UpdateStatus(String & ResponseMessage)
     }
     else 
     {
-        DEBUG_V(RADIO_OFF_AIR_STR);
+        // DEBUG_V(RADIO_OFF_AIR_STR);
         ResponseMessage = RADIO_OFF_AIR_STR;
         ESPUI.print(StatusMessageId, RADIO_OFF_AIR_STR);
         ESPUI.print(HomeStatusMessageId, RADIO_OFF_AIR_STR);

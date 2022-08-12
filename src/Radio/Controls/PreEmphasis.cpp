@@ -17,6 +17,7 @@
 #include <ArduinoLog.h>
 #include <map>
 #include "PreEmphasis.hpp"
+#include "PtyCode.hpp"
 #include "RfCarrier.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
@@ -77,6 +78,10 @@ bool cPreEmphasis::set(String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
+    // DEBUG_V(String("       value: ") + value);
+    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+
     bool Response = true;
     ResponseMessage.reserve(128);
     ResponseMessage.clear();
@@ -104,13 +109,17 @@ bool cPreEmphasis::set(String & value, String & ResponseMessage)
 
         ESPUI.updateControlValue(ControlId, DataValueStr);
 
-#ifdef OldWay
-        setPtyCodeOptionValues();
-#endif // def OldWay
+        PtyCode.setPtyCodeOptionValues();
+
         displaySaveWarning();
         Log.infoln(String(F("Pre-Emphasis Set to: %s.")).c_str(), DataValueStr.c_str());
 
     } while (false);
+
+    // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("      DataValue: ") + String(DataValue));
+    // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
+    // DEBUG_V(String("       Response: ") + String(Response));
 
     // DEBUG_END;
     return Response;

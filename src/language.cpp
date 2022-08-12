@@ -61,7 +61,6 @@ const PROGMEM char N_path                     [] = "path";
 const PROGMEM char N_PayloadTest              [] = "PayloadTest";
 const PROGMEM char N_PixelRadio               [] = "PixelRadio";
 const PROGMEM char N_ProgramServiceName       [] = "ProgramServiceName";
-const PROGMEM char N_PtyCode                  [] = "PtyCode";
 const PROGMEM char N_sequences                [] = "sequences";
 const PROGMEM char N_SequenceLearningEnabled  [] = "SequenceLearningEnabled";
 const PROGMEM char N_type                     [] = "type";

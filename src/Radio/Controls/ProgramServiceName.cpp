@@ -16,6 +16,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "ProgramServiceName.hpp"
+#include "PtyCode.hpp"
 #include "RfCarrier.hpp"
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
@@ -89,6 +90,8 @@ bool cProgramServiceName::set(String & value, String & ResponseMessage)
 
         ESPUI.updateControlValue(ControlId, DataValueStr);
         QN8027RadioApi.setProgramServiceName(DataValueStr, RfCarrier.get());
+        PtyCode.setPtyCodeOptionValues();
+        
         displaySaveWarning();
         Log.infoln(ResponseMessage.c_str());
         ResponseMessage.clear();

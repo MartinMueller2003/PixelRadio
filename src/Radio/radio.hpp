@@ -30,7 +30,7 @@ public:
     void        AddDiagControls (uint16_t Tab);
     void        AddHomeControls (uint16_t Tab);
     void        AddRadioControls (uint16_t Tab);
-    void        AddRdsControls(uint16_t Tab);
+    void        AddRdsControls (uint16_t Tab);
 
     void        begin ();
     void        Poll();
@@ -38,32 +38,15 @@ public:
     void        saveConfiguration (JsonObject & json);
     
 // Callbacks need to be public 
-    void        CbImpedanceAdjust(Control *sender, int type);
-    void        CbProgramServiceName(Control *sender, int type);
-    void        CbRadioEmphasis(Control *sender, int type);
     void        CbRfPowerCallback(Control *sender, int type);
     void        CbRdsRst(Control *sender, int type);
-    void        CbSetPtyCode(Control *sender, int type);
 
 private:
-    void        setPtyCode();
-    void        setPtyCode(String & ptyStr);
-    void        setPtyCodeOptionValues ();
     void        setRfAutoOff(void);
     void        setRfPower(void);
     void        updateOnAirSign(void);
-    void        updateRdsMsgRemainingTime(unsigned long now);
-    void        updateUiPtyCode();
-    void        updateUiRdsText(String & Text);
-    void        waitForIdle(uint16_t waitMs);
 
 // UI declarations
-#ifdef OldWay
-    void        sendStationName(String value) { FmRadio.sendStationName(value); }
-    void        sendRadioText(String value)   { FmRadio.sendRadioText(value); }
-#endif // def OldWay
-    void        sendStationName(String value) { }
-    void        sendRadioText(String value)   { }
 
     uint16_t    adjTab          = Control::noParent;
     uint16_t    diagTab         = Control::noParent;
@@ -73,7 +56,6 @@ private:
 
     uint16_t    radioAutoID     = Control::noParent;
     uint16_t    radioPwrID      = Control::noParent;
-    uint16_t    rdsPtyID        = Control::noParent;
     uint16_t    rdsRstID        = Control::noParent;
 
     bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
@@ -81,7 +63,6 @@ private:
     uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
     uint32_t    rdsMsgTime = 0;
     bool        successFlg  = true;
-    uint16_t    PtyCode = 0;
     String      LastMessageSent;
     
 #define OFF 0x00

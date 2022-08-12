@@ -32,14 +32,10 @@ void cRadio::CbRdsRst(Control *sender, int type)
     if(B_DOWN == type)
     {
 #ifdef OldWay
-        PiCode = 0x6400;
-        PtyCode = 0;
-        ProgramServiceName = F("PixeyFM");
-        setProgramServiceName();
+        P iCode = 0x6400;
+        Pt yCode = 0;
+        Program ServiceName = F("PixeyFM");
 #endif // def OldWay
-
-        setPtyCode();
-        updateUiPtyCode();
 
         displaySaveWarning();
         Log.infoln(String(F("Reset RDS Settings to defaults.")).c_str());
@@ -72,22 +68,6 @@ void cRadio::CbRfPowerCallback(Control *sender, int type)
     Log.infoln(String(F("RF Power Set to: %s.")).c_str(), rfPowerStr.c_str());
 
     DEBUG_END;
-}
-
-// ************************************************************************************************
-void cRadio::CbSetPtyCode(Control *sender, int type)
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
-
-    setPtyCode(sender->value);
-    displaySaveWarning();
-
-    Log.infoln(String(F("RDS PTY Code Set to: '%s'")).c_str(), sender->value.c_str());
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************

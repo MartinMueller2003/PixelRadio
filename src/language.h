@@ -143,7 +143,6 @@
 #define RDS_LOCAL_BLANK_STR   "{ LOCAL RADIOTEXT MESSAGE IS BLANK }"
 #define RDS_LOCKED_STR        "{ LOCKED }"
 #define RDS_NOT_AVAIL_STR     "{ RADIOTEXT UNAVAILABLE }"
-#define RDS_PTY_CODE_STR      "PTY CODE<br>Station Genre"
 #define RDS_REMOTE_BLANK_STR  "{ REMOTE RADIOTEXT MESSAGE IS BLANK }"
 #define RDS_RESET_SEP_STR     "LOCAL RDS RESET"
 #define RDS_RESET_STR         "RESET RDS SETTINGS"
@@ -236,7 +235,6 @@ extern const PROGMEM char N_name[];
 extern const PROGMEM char N_path[];
 extern const PROGMEM char N_PayloadTest[];
 extern const PROGMEM char N_PixelRadio[];
-extern const PROGMEM char N_PtyCode[];
 extern const PROGMEM char N_sequences[];
 extern const PROGMEM char N_SequenceLearningEnabled[];
 extern const PROGMEM char N_type[];

@@ -41,17 +41,8 @@
 #define elapsedDays(_time_) (_time_ / SECS_PER_DAY)
 
 // Controller Command Limits
-const uint8_t CMD_AUD_MAX_SZ  = 6;  // AUD Command Arg max length is 6 ("mono" / "stereo").
-const uint8_t CMD_FREQ_MAX_SZ = 4;  // FREQ Command Arg max length is 4 (879 - 1079).
 const uint8_t CMD_GPIO_MAX_SZ = 7;  // GPIO Cmd Code max length is 7 ("input/inputpd/inputpu/outhigh/outlow/read").
 const uint8_t CMD_LOG_MAX_SZ  = 7;  // Serial Log Level Arg max length is 7 ("silent" / "restore");
-const uint8_t CMD_MUTE_MAX_SZ = 3;  // MUTE Command Arg max length is 3 ("on" / "off").
-const uint8_t CMD_PI_MAX_SZ   = 7;  // PI Command Arg max length is 6 (Examples, "ffff" and/or "0xffff"). Add +1 to trap typos.
-const uint8_t CMD_PTY_MAX_SZ  = 3;  // PTY Command Arg max length is 3 (Example, "10" or "010").
-const uint8_t CMD_PSN_MAX_SZ  = 8;  // PSN Command Arg max length for Program Service Name.
-const uint8_t CMD_RDS_MAX_SZ  = 3;  // RDS Control Cmd Code length is 3 ("rds").
-const uint8_t CMD_RF_MAX_SZ   = 3;  // RF Carrier Cmd Arg max length (Example "on" or "off").
-const uint8_t CMD_RT_MAX_SZ   = 64; // RT Command Arg max Length for RadioText.
 const uint8_t CMD_SYS_MAX_SZ  = 6;  // System Cmd Code length is 6 ("system").
 const uint8_t CMD_TIME_MAX_SZ = 4;  // Time Command Arg length is 3 (5-900). Add +1 to trap typos.
 
@@ -177,10 +168,7 @@ const uint16_t RDS_DSP_TM_MIN   = 5;              // Minimum RadioText Display P
 const uint32_t RDS_DSP_TM_DEF   = 15000;          // Default Radio Display Period, in mS.
 const uint16_t RDS_MSG_UPD_TIME = 1000;           // RadioText UI Update Time, im mS.
 const uint8_t  RDS_PTY_CODE_DEF = 9;              // Default RDS PTY Code "Top 40", 0-29 allowed.
-const uint8_t  RDS_PTY_CODE_MIN = 0;              // Min RDS PTY Code "None", See https://en.wikipedia.org/wiki/Radio_Data_System
-const uint8_t  RDS_PTY_CODE_MAX = 29;             // Max RDS PTY Code "Weather".
 const uint8_t  RDS_REFRESH_TM   = 5;              // RadioText Refresh Time, in Seconds.
-const uint8_t  RDS_TEXT_MAX_SZ  = CMD_RT_MAX_SZ;  // RDS RadioText Message, Max Allowed Length.
 
 // RSSI:
 const uint16_t RSSI_UPD_TIME = 2500;              // RSSI GUI Update time (on homeTab), in mS.
@@ -230,14 +218,6 @@ bool    gpioCmd(String  payloadStr,
                 uint8_t pin);
 bool    logCmd(String  payloadStr,
                ControllerTypeId controller);
-bool    muteCmd(String  payloadStr,
-                ControllerTypeId controller);
-bool    ptyCodeCmd(String  payloadStr,
-                  ControllerTypeId controller);
-bool    radioTextCmd(String  payloadStr,
-                     ControllerTypeId controller);
-bool    rdsTimePeriodCmd(String  payloadStr,
-                         ControllerTypeId controller);
 bool    rebootCmd(String  payloadStr,
                   ControllerTypeId controller);
 bool    startCmd(String  payloadStr,
