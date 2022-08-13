@@ -429,7 +429,6 @@ void buildGUI(void)
     diagTab   = ESPUI.addControl(ControlType::Tab, "DIAG", DIAG_TAB_STR);
     aboutTab  = ESPUI.addControl(ControlType::Tab, "ABOUT", N_About);
 
-    // DEBUG_V();
     // ************
     // Home Tab
     ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, emptyString, ControlColor::None, homeTab);
@@ -437,8 +436,6 @@ void buildGUI(void)
     Radio.AddHomeControls(homeTab);
     WiFiDriver.addHomeControls(homeTab);
 
-    // DEBUG_V();
-    
     // **************
     // Adjust Tab
     Radio.AddAdjControls(adjTab);
@@ -450,10 +447,10 @@ void buildGUI(void)
                                 ControlColor::Wetasphalt,
                                 adjTab,
                                 &saveSettingsCallback);
+    
     adjSaveMsgID =
         ESPUI.addControl(ControlType::Label, "SAVE", emptyString, ControlColor::Wetasphalt, adjSaveID);
 
-    // DEBUG_V();
     // ************
     // Radio Tab
     Radio.AddRadioControls(radioTab);
@@ -470,18 +467,7 @@ void buildGUI(void)
 
     // RF Power Control is not compatible with the RF Amp Circutry.
     // Low Power levels do not correctly excite the PA Transistor.
-
-    /*
-       radioPwrID = ESPUI.addControl(ControlType::Select,
-                                  RADIO_RF_POWER_STR,
-                                  rfPowerStr,
-                                  ControlColor::Emerald,
-                                  radioTab,
-                                  &rfPowerCallback);
-       ESPUI.addControl(ControlType::Option, RF_PWR_LOW_STR,  RF_PWR_LOW_STR,  ControlColor::Emerald, radioPwrID);
-       ESPUI.addControl(ControlType::Option, RF_PWR_MED_STR,  RF_PWR_MED_STR,  ControlColor::Emerald, radioPwrID);
-       ESPUI.addControl(ControlType::Option, RF_PWR_HIGH_STR, RF_PWR_HIGH_STR, ControlColor::Emerald, radioPwrID);
-     */
+    // RfPower.AddControl(radioTab);
 
     //
     // *****************

@@ -158,20 +158,7 @@ const int32_t MEAS_TIME = 50;                     // Measurement Refresh Time, i
 
 // Radio
 const uint8_t  RADIO_CAL_RETRY = 3;               // RF Port Calibration Retry Count (Maximum Retry Count).
-const uint8_t  RF_LOW_POWER    = 27;              // 88dBuv.
-const uint8_t  RF_MED_POWER    = 40;              // 96dBuV.
-const uint8_t  RF_HIGH_POWER   = 78;              // 119dBuV. Do Not change.
 
-// RDS:
-const uint16_t RDS_DSP_TM_MAX   = 900;            // Maximum RadioText Display Period, in secs.
-const uint16_t RDS_DSP_TM_MIN   = 5;              // Minimum RadioText Display Period, in secs.
-const uint32_t RDS_DSP_TM_DEF   = 15000;          // Default Radio Display Period, in mS.
-const uint16_t RDS_MSG_UPD_TIME = 1000;           // RadioText UI Update Time, im mS.
-const uint8_t  RDS_PTY_CODE_DEF = 9;              // Default RDS PTY Code "Top 40", 0-29 allowed.
-const uint8_t  RDS_REFRESH_TM   = 5;              // RadioText Refresh Time, in Seconds.
-
-// RSSI:
-const uint16_t RSSI_UPD_TIME = 2500;              // RSSI GUI Update time (on homeTab), in mS.
 
 // Serial Controller
 #define SERIAL_LOG_STR       "log"                // Serial Log Command Keyword.

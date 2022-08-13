@@ -38,12 +38,10 @@ public:
     void        saveConfiguration (JsonObject & json);
     
 // Callbacks need to be public 
-    void        CbRfPowerCallback(Control *sender, int type);
     void        CbRdsRst(Control *sender, int type);
 
 private:
     void        setRfAutoOff(void);
-    void        setRfPower(void);
     void        updateOnAirSign(void);
 
 // UI declarations
@@ -67,12 +65,6 @@ private:
     
 #define OFF 0x00
 #define ON 0x01
-
-#define RF_PWR_LOW_STR   "Low"
-#define RF_PWR_MED_STR   "Med"
-#define RF_PWR_HIGH_STR  "High (default)"
-#define RF_PWR_DEF_STR   RF_PWR_HIGH_STR;
-    String rfPowerStr = RF_PWR_DEF_STR;                    // Control.
 
 };
 

@@ -34,6 +34,7 @@
 #include "PtyCode.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
+#include "RfPower.hpp"
 #include "TestTone.hpp"
 
 // *********************************************************************************************
@@ -63,8 +64,6 @@ void cRadio::restoreConfiguration(JsonObject & config)
 {
     // DEBUG_START;
 
-    ReadFromJSON(rfPowerStr,        config, F("RADIO_POWER_STR"));
-
     AnalogAudioGain.restoreConfiguration(config);
     AudioInputImpedance.restoreConfiguration(config);
     AudioMode.restoreConfiguration(config);
@@ -75,7 +74,7 @@ void cRadio::restoreConfiguration(JsonObject & config)
     PreEmphasis.restoreConfiguration(config);
     PtyCode.saveConfiguration(config);
     RfCarrier.restoreConfiguration(config);
-    
+    RfPower.restoreConfiguration(config);
     // DEBUG_END;
 }
 
@@ -94,10 +93,9 @@ void cRadio::saveConfiguration(JsonObject & config)
     PreEmphasis.saveConfiguration(config);
     PtyCode.saveConfiguration(config);
     RfCarrier.saveConfiguration(config);
+    RfPower.saveConfiguration(config);
 
     config[F("RADIO_AUTO_FLAG")] = rfAutoFlg;             // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
-    config[F("RADIO_POWER_STR")]        = rfPowerStr;     // Use radio.setTxPower(20-75) when restoring this uint8 value.
-
     config[F("ANALOG_VOLUME")]          = analogVol;        // Requires custom function, not written yet.
 
     // DEBUG_END;
@@ -123,55 +121,6 @@ void cRadio::setRfAutoOff(void)
     }
 #endif // def OldWay
 
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setRfPower(): Set the QN8027 chip's RF Power Output. Max 121dBuVp.
-// Note: Power is not changed until RF Carrier is toggled Off then On.
-void cRadio::setRfPower(void)
-{
-    // DEBUG_START;
-
-#ifdef OldWay
-    uint8_t pwrVal = RF_HIGH_POWER;
-
-    // Log.verboseln(String(F( "-> RF Power Set to: %s")).c_str(), rfPowerStr.c_str());
-
-    if (rfPowerStr.equals(RF_PWR_LOW_STR))
-    {
-        pwrVal = RF_LOW_POWER;
-    }
-    else if (rfPowerStr.equals(RF_PWR_MED_STR))
-    {
-        pwrVal = RF_MED_POWER;
-    }
-    else if (rfPowerStr.equals(RF_PWR_HIGH_STR))
-    {
-        pwrVal = RF_HIGH_POWER;
-    }
-    else 
-    {
-        Log.errorln(String(F("setRfPower: Invalid Value, Using High Power")).c_str());
-        rfPowerStr = RF_PWR_HIGH_STR;
-        pwrVal     = RF_HIGH_POWER;
-    }
-
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        waitForIdle(10);
-        FmRadio.setTxPower(pwrVal);
-        waitForIdle(10);
-
-        if (rfCarrierFlg)
-        {
-            setRfCarrier(OFF);
-            setRfCarrier();
-        }
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
     // DEBUG_END;
 }
 

@@ -44,31 +44,6 @@ void cRadio::CbRdsRst(Control *sender, int type)
     DEBUG_END;
 }
 
-// ************************************************************************************************
-// rfPower(): Sets RF Power.
-void cRadio::CbRfPowerCallback(Control *sender, int type)
-{
-    DEBUG_START;
-
-    DEBUG_V(String("value: ") + String(sender->value));
-    DEBUG_V(String(" type: ") + String(type));
-
-    rfPowerStr = sender->value;
-
-    if (!rfPowerStr.equals(RF_PWR_LOW_STR) &&
-        !rfPowerStr.equals(RF_PWR_MED_STR) &&
-        !rfPowerStr.equals(RF_PWR_HIGH_STR) )
-    {
-        Log.errorln(String(F("rfPower: %s.")).c_str(), BAD_VALUE_STR);
-        rfPowerStr = RF_PWR_DEF_STR;
-    }
-
-    setRfPower();    // Update RF Power Setting on QN8027 FM Radio Chip.
-    displaySaveWarning();
-    Log.infoln(String(F("RF Power Set to: %s.")).c_str(), rfPowerStr.c_str());
-
-    DEBUG_END;
-}
 
 // *********************************************************************************************
 // OEF
