@@ -45,22 +45,20 @@ static const PROGMEM String ANALOG_GAIN_STR     = "ANALOG_GAIN_STR";
 // *********************************************************************************************
 cAnalogAudioGain::cAnalogAudioGain() : cControlCommon(String(ANALOG_GAIN_STR))
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     DataValueStr = VGA_GAIN_DEF_STR;
     DataValue = MapOfGainValues[DataValueStr];
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cAnalogAudioGain::AddControls (uint16_t value)
+void cAnalogAudioGain::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Select, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Select, color);
     ESPUI.updateControlLabel(ControlId, RADIO_VGA_AUDIO_STR.c_str());
 
     for(auto & CurrentOption : MapOfGainValues)

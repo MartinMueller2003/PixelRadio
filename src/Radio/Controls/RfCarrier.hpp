@@ -24,8 +24,8 @@ public:
                 cRfCarrier ();
     virtual     ~cRfCarrier() {}
 
-    void        AddHomeControls (uint16_t TabId);
-    void        AddControls (uint16_t TabId);
+    void        AddHomeControls (uint16_t TabId, ControlColor color);
+    void        AddControls (uint16_t TabId, ControlColor color);
     bool        set(String & value, String & ResponseMessage);
     
 private:

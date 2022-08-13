@@ -51,20 +51,18 @@ cRfCarrier::cRfCarrier() : cControlCommon(RADIO_RF_CARR_FLAG)
 }
 
 // *********************************************************************************************
-void cRfCarrier::AddControls (uint16_t value)
+void cRfCarrier::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Switcher, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Switcher, color);
     ESPUI.updateControlLabel(ControlId, RADIO_RF_CARRIER_STR.c_str());
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRfCarrier::AddHomeControls (uint16_t value)
+void cRfCarrier::AddHomeControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
@@ -74,7 +72,7 @@ void cRfCarrier::AddHomeControls (uint16_t value)
                             ControlType::Label, 
                             HOME_RAD_STAT_STR.c_str(), 
                             emptyString, 
-                            ControlColor::Peterriver, 
+                            color, 
                             HomeId);
     ESPUI.setPanelStyle(HomeStatusMessageId, F("font-size: 3.0em;"));
 

@@ -32,19 +32,17 @@ static const PROGMEM String RDS_EXPIRED_STR       = "{ EXPIRED }";
 // *********************************************************************************************
 cRdsText::cRdsText() : cControlCommon(emptyString)
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRdsText::AddControls (uint16_t value)
+void cRdsText::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Label, 
-                                ControlColor::Peterriver);
+    cControlCommon::AddControls(value, ControlType::Label, color);
     ESPUI.updateControlLabel(ControlId, HOME_CUR_TEXT_STR.c_str());
     ESPUI.setPanelStyle(ControlId, String(F("font-size: 1.25em;")));
     ESPUI.setElementStyle(ControlId, CSS_LABEL_STYLE_WHITE);
@@ -56,7 +54,7 @@ void cRdsText::AddControls (uint16_t value)
                             ControlType::Label, 
                             HOME_RDS_TIMER_STR.c_str(), 
                             emptyString, 
-                            ControlColor::Peterriver, 
+                            color, 
                             TabId);
     ESPUI.setPanelStyle(homeRdsTmrID, String(F("font-size: 1.25em;")));
 
@@ -68,7 +66,7 @@ void cRdsText::AddControls (uint16_t value)
 // *********************************************************************************************
 void cRdsText::poll()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     unsigned long now = millis();
 
@@ -87,24 +85,24 @@ void cRdsText::poll()
             break;
         }
         CurrentMsgLastUpdateTime = now;
-        /// DEBUG_V("One second later");
+        //_ DEBUG_V("One second later");
         
         UpdateStatus();
 
         // has the current message output expired?
         if(now < CurrentMsgEndTime)
         {
-            /// DEBUG_V("still waiting");
+            //_ DEBUG_V("still waiting");
             updateRdsMsgRemainingTime(now);
             break;
         }
 
-        /// DEBUG_V("time for a new message");
+        //_ DEBUG_V("time for a new message");
         ControllerMgr.GetNextRdsMessage(RdsMsgInfo);
         CurrentMsgEndTime = now + RdsMsgInfo.DurationMilliSec;
         if(!LastMessageSent.equals(RdsMsgInfo.Text))
         {
-            /// DEBUG_V("Display the new message");
+            //_ DEBUG_V("Display the new message");
             LastMessageSent = RdsMsgInfo.Text;
             Log.traceln(String(F("Refreshing RDS RadioText Message: %s")).c_str(), RdsMsgInfo.Text.c_str());
             String dummy;
@@ -114,7 +112,7 @@ void cRdsText::poll()
 
     } while (false);
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************

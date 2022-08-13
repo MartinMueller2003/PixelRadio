@@ -37,161 +37,113 @@
 
 
 // *********************************************************************************************
-void cRadio::AddAdjControls(uint16_t _adjTab)
+void cRadio::AddAdjControls(uint16_t _adjTab, ControlColor color)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != adjTab)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+    adjTab = _adjTab;
 
-        adjTab = _adjTab;
+    ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
+    FrequencyAdjust.AddAdjustControls(adjTab, color);
 
-        ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
-        FrequencyAdjust.AddAdjustControls(adjTab);
+    ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, emptyString, ControlColor::None, adjTab);
+    TestTone.AddControls(adjTab, color);
+    AudioMute.AddControls(adjTab, color);
 
-        ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, emptyString, ControlColor::None, adjTab);
-        TestTone.AddControls(adjTab);
-        AudioMute.AddControls(adjTab);
-
-    } while (false);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::AddDiagControls (uint16_t _diagTab)
+void cRadio::AddDiagControls (uint16_t _diagTab, ControlColor color)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != diagTab)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
-
-        diagTab = _diagTab;
+    diagTab = _diagTab;
 
         
-    } while (false);
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::AddHomeControls (uint16_t _homeTab)
+void cRadio::AddHomeControls (uint16_t _homeTab, ControlColor color)
 {
     // DEBUG_START;
 
     String tempStr;
     
-    do // once
-    {
-        if(Control::noParent != homeTab)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+    homeTab = _homeTab;
 
-        homeTab = _homeTab;
-
-        RfCarrier.AddHomeControls(homeTab);
-        FrequencyAdjust.AddHomeControls(homeTab);
-        ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
-        RdsText.AddControls(homeTab);
-
-    } while (false);
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRadio::AddRadioControls (uint16_t _radioTab)
-{
-    // DEBUG_START;
-
-    do // once
-    {
-        if(Control::noParent != radioTab)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
-
-        radioTab = _radioTab;
-
-        ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
-        FrequencyAdjust.AddRadioControls(radioTab);
-        RfCarrier.AddControls(radioTab);
-
-        ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
-        AudioMode.AddControls(radioTab);
-        #ifdef ADV_RADIO_FEATURES
-        PreEmphasis.AddControls(radioTab);
-        #endif // ifdef ADV_RADIO_FEATURES
-
-        ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString,               ControlColor::None,    radioTab);
-        AnalogAudioGain.AddControls(radioTab);
-        AudioInputImpedance.AddControls(radioTab);
-        #ifdef ADV_RADIO_FEATURES
-        DigitalAudioGain.AddControls(radioTab);
-        #endif // ifdef ADV_RADIO_FEATURES
-
-        ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString,            ControlColor::None,    radioTab);
-        PeakAudio.AddControls(radioTab);
-        #ifdef ADV_RADIO_FEATURES
-        AudioGain.AddControls(radioTab);
-        #endif // ifdef ADV_RADIO_FEATURES
-
-        // DEBUG_V();
-
-    } while (false);
+    RfCarrier.AddHomeControls(homeTab, color);
+    FrequencyAdjust.AddHomeControls(homeTab, color);
+    ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
+    RdsText.AddControls(homeTab, color);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::AddRdsControls (uint16_t _rdsTab)
+void cRadio::AddRadioControls (uint16_t _radioTab, ControlColor color)
 {
     // DEBUG_START;
 
-    do // once
-    {
-        if(Control::noParent != rdsTab)
-        {
-            // DEBUG_V("Controls have already been set up");
-            break;
-        }
+    radioTab = _radioTab;
 
-        rdsTab = _rdsTab;
-        ProgramServiceName.AddControls(rdsTab);
-        PiCode.AddControls(rdsTab);
-        PtyCode.AddControls(rdsTab);
+    ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
+    FrequencyAdjust.AddRadioControls(radioTab, color);
+    RfCarrier.AddControls(radioTab, color);
 
-        ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, rdsTab);
+    ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
+    AudioMode.AddControls(radioTab, color);
+    #ifdef ADV_RADIO_FEATURES
+        PreEmphasis.AddControls(radioTab, color);
+    #endif // ifdef ADV_RADIO_FEATURES
 
-        rdsRstID = ESPUI.addControl(ControlType::Button,
-                                    RDS_RESET_STR,
-                                    RDS_RESTORE_STR,
-                                    ControlColor::Alizarin,
-                                    rdsTab,
-                                    [](Control* sender, int type, void* UserInfo)
+    ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString, ControlColor::None, radioTab);
+    AnalogAudioGain.AddControls(radioTab, color);
+    AudioInputImpedance.AddControls(radioTab, color);
+    #ifdef ADV_RADIO_FEATURES
+        DigitalAudioGain.AddControls(radioTab, color);
+    #endif // ifdef ADV_RADIO_FEATURES
+
+    ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString, ControlColor::None, radioTab);
+    PeakAudio.AddControls(radioTab, color);
+    #ifdef ADV_RADIO_FEATURES
+    AudioGain.AddControls(radioTab, color);
+    #endif // ifdef ADV_RADIO_FEATURES
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cRadio::AddRdsControls (uint16_t _rdsTab, ControlColor color)
+{
+    // DEBUG_START;
+
+    rdsTab = _rdsTab;
+    ProgramServiceName.AddControls(rdsTab, color);
+    PiCode.AddControls(rdsTab, color);
+    PtyCode.AddControls(rdsTab, color);
+
+    ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, rdsTab);
+
+#ifdef OldWay
+    rdsRstID = ESPUI.addControl(ControlType::Button,
+                                RDS_RESET_STR,
+                                RDS_RESTORE_STR,
+                                color,
+                                rdsTab,
+                                [](Control* sender, int type, void* UserInfo)
+                                {
+                                    if(UserInfo)
                                     {
-                                        if(UserInfo)
-                                        {
-                                            static_cast<cRadio *>(UserInfo)->CbRdsRst(sender, type);
-                                        }
-                                    },
-                                    this);
-        ESPUI.setPanelStyle(rdsRstID, "font-size: 1.35em;");
-        ESPUI.setElementStyle(rdsRstID, "color: black;");
-
-    } while (false);
-
+                                        static_cast<cRadio *>(UserInfo)->CbRdsRst(sender, type);
+                                    }
+                                },
+                                this);
+    ESPUI.setPanelStyle(rdsRstID, "font-size: 1.35em;");
+    ESPUI.setElementStyle(rdsRstID, "color: black;");
+#endif
     // DEBUG_END;
 }
 

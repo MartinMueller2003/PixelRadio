@@ -26,11 +26,11 @@ public:
                 cRadio () {}
     virtual     ~cRadio() {}
 
-    void        AddAdjControls (uint16_t Tab);
-    void        AddDiagControls (uint16_t Tab);
-    void        AddHomeControls (uint16_t Tab);
-    void        AddRadioControls (uint16_t Tab);
-    void        AddRdsControls (uint16_t Tab);
+    void        AddAdjControls (uint16_t Tab, ControlColor color);
+    void        AddDiagControls (uint16_t Tab, ControlColor color);
+    void        AddHomeControls (uint16_t Tab, ControlColor color);
+    void        AddRadioControls (uint16_t Tab, ControlColor color);
+    void        AddRdsControls (uint16_t Tab, ControlColor color);
 
     void        begin ();
     void        Poll();

@@ -326,14 +326,14 @@ void c_WiFiDriver::onWiFiDisconnect (const WiFiEvent_t event, const WiFiEventInf
 //-----------------------------------------------------------------------------
 void c_WiFiDriver::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     if (millis () > NextPollTime)
     {
-        /// DEBUG_V ("Start Poll");
+        //_ DEBUG_V ("Start Poll");
         NextPollTime += PollInterval;
         pCurrentFsmState->Poll ();
-        /// DEBUG_V ("End Poll");
+        //_ DEBUG_V ("End Poll");
     }
 
     if (ResetWiFi)
@@ -342,7 +342,7 @@ void c_WiFiDriver::Poll ()
         reset ();
     }
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 
 } // Poll
 
@@ -546,13 +546,13 @@ int c_WiFiDriver::ValidateConfig ()
 // Waiting for polling to start
 void fsm_WiFi_state_Boot::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     // Start trying to connect to the AP
-    /// DEBUG_V (String ("this: ") + String (uint32_t (this), HEX));
+    //_ DEBUG_V (String ("this: ") + String (uint32_t (this), HEX));
     fsm_WiFi_state_ConnectingUsingConfig_imp.Init ();
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 } // fsm_WiFi_state_boot
 
 /*****************************************************************************/
@@ -574,7 +574,7 @@ void fsm_WiFi_state_Boot::Init ()
 // Wait for events
 void fsm_WiFi_state_ConnectingUsingConfig::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     // wait for the connection to complete via the callback function
     uint32_t CurrentTimeMS = millis ();
@@ -583,13 +583,13 @@ void fsm_WiFi_state_ConnectingUsingConfig::Poll ()
     {
         if (CurrentTimeMS - pWiFiDriver->GetFsmStartTime() > (1000 * pWiFiDriver->Get_sta_timeout()))
         {
-            /// DEBUG_V (String ("this: ") + String (uint32_t (this), HEX));
+            //_ DEBUG_V (String ("this: ") + String (uint32_t (this), HEX));
             Log.errorln(String(F ("WiFi Failed to connect using Configured Credentials")).c_str());
             fsm_WiFi_state_ConnectingUsingDefaults_imp.Init ();
         }
     }
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 } // fsm_WiFi_state_ConnectingUsingConfig::Poll
 
 /*****************************************************************************/
@@ -638,7 +638,7 @@ void fsm_WiFi_state_ConnectingUsingConfig::OnConnect ()
 // Wait for events
 void fsm_WiFi_state_ConnectingUsingDefaults::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     // wait for the connection to complete via the callback function
     uint32_t CurrentTimeMS = millis ();
@@ -647,13 +647,13 @@ void fsm_WiFi_state_ConnectingUsingDefaults::Poll ()
     {
         if (CurrentTimeMS - pWiFiDriver->GetFsmStartTime () > (1000 * pWiFiDriver->Get_sta_timeout ()))
         {
-            /// DEBUG_V (String ("this: ") + String (uint32_t (this), HEX));
+            //_ DEBUG_V (String ("this: ") + String (uint32_t (this), HEX));
             Log.errorln(String(F ("WiFi Failed to connect using default Credentials")).c_str());
             fsm_WiFi_state_ConnectingAsAP_imp.Init ();
         }
     }
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 } // fsm_WiFi_state_ConnectingUsingDefaults::Poll
 
 /*****************************************************************************/
@@ -690,7 +690,7 @@ void fsm_WiFi_state_ConnectingUsingDefaults::OnConnect ()
 // Wait for events
 void fsm_WiFi_state_ConnectingAsAP::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     if (0 != WiFi.softAPgetStationNum ())
     {
@@ -705,7 +705,7 @@ void fsm_WiFi_state_ConnectingAsAP::Poll ()
         }
     }
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 } // fsm_WiFi_state_ConnectingAsAP::Poll
 
 /*****************************************************************************/
@@ -768,7 +768,7 @@ void fsm_WiFi_state_ConnectingAsAP::OnConnect ()
 // Wait for events
 void fsm_WiFi_state_ConnectedToAP::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     // did we get silently disconnected?
     if (WiFi.status () != WL_CONNECTED)
@@ -787,7 +787,7 @@ void fsm_WiFi_state_ConnectedToAP::Poll ()
         pWiFiDriver->UpdateStatusFields();
     }
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 } // fsm_WiFi_state_ConnectedToAP::Poll
 
 /*****************************************************************************/
@@ -857,7 +857,7 @@ void fsm_WiFi_state_ConnectedToAP::OnDisconnect ()
 // Wait for events
 void fsm_WiFi_state_ConnectedToSta::Poll ()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     // did we get silently disconnected?
     if (0 == WiFi.softAPgetStationNum ())
@@ -872,7 +872,7 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
         pWiFiDriver->UpdateStatusFields();
     }
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 } // fsm_WiFi_state_ConnectedToSta::Poll
 
 /*****************************************************************************/

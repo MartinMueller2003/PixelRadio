@@ -26,7 +26,7 @@ public:
                 cTestTone ();
     virtual     ~cTestTone() {}
 
-    void        AddControls (uint16_t TabId);
+    void        AddControls (uint16_t TabId, ControlColor color);
     void        Init();
     void        poll();
     bool        set(String &value, String &ResponseMessage);

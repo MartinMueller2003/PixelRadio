@@ -40,13 +40,11 @@ cPiCode::cPiCode() : cControlCommon(String(RDS_PI_CODE))
 }
 
 // *********************************************************************************************
-void cPiCode::AddControls (uint16_t value)
+void cPiCode::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Text, 
-                                ControlColor::Alizarin);
+    cControlCommon::AddControls(value, ControlType::Text, color);
     ESPUI.updateControlLabel(ControlId, RDS_PI_CODE_STR.c_str());
 
     // DEBUG_END;

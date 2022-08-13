@@ -157,8 +157,6 @@
 #define RF_AUTO_DEF_STR  RF_AUTO_DIS_STR;
 
 
-#define SAVE_SETTINGS_STR      "SAVE SETTINGS"
-#define SAVE_SETTINGS_MSG_STR  "[ Settings Changed, Save Required ]"
 #define SAVE_BACKUP_STR        "BACKUP SETTINGS TO SD CARD"
 
 #define UNITS_DBM_STR  " dBm"

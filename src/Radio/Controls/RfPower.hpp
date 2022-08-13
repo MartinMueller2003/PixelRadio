@@ -24,7 +24,7 @@ public:
                 cRfPower ();
     virtual     ~cRfPower() {}
 
-    void        AddControls (uint16_t Tab);
+    void        AddControls (uint16_t Tab, ControlColor color);
     bool        set(String &, String &);
 };
 

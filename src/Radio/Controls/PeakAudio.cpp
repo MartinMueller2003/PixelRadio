@@ -26,19 +26,17 @@ static const PROGMEM uint32_t AUDIO_LEVEL_MAX   = uint32_t(675);
 // *********************************************************************************************
 cPeakAudio::cPeakAudio() : cControlCommon(emptyString)
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cPeakAudio::AddControls (uint16_t value)
+void cPeakAudio::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Label, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Label, color);
     
     ESPUI.updateControlLabel(ControlId, RADIO_AUDLVL_STR.c_str());
     ESPUI.setPanelStyle(ControlId, F("font-size: 1.15em;"));

@@ -72,14 +72,12 @@ cTestTone::cTestTone() : cControlCommon(emptyString)
 }
 
 // *********************************************************************************************
-void cTestTone::AddControls (uint16_t value)
+void cTestTone::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Switcher, 
-                                ControlColor::Wetasphalt);
+    cControlCommon::AddControls(value, ControlType::Switcher, color);
     ESPUI.updateControlLabel(ControlId, ADJUST_TEST_STR.c_str());
     ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
 

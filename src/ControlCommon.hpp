@@ -25,7 +25,7 @@ public:
                         cControlCommon (String _ConfigName);
     virtual             ~cControlCommon() {}
 
-    virtual void        AddControls (uint16_t TabId) = 0;
+    virtual void        AddControls (uint16_t TabId, ControlColor color) = 0;
 
     virtual uint32_t    get() { return DataValue; }
     virtual void        restoreConfiguration(JsonObject &json);

@@ -25,7 +25,7 @@ public:
                 cRdsText ();
     virtual     ~cRdsText() {}
 
-    void        AddControls (uint16_t TabId);
+    void        AddControls (uint16_t TabId, ControlColor color);
     void        poll();
     bool        set(String & value, String & Response);
 

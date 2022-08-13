@@ -91,6 +91,7 @@
 #include "ControllerMgr.h"
 #include "memdebug.h"
 #include "radio.hpp"
+#include "ConfigSave.hpp"
 
 // ************************************************************************************************
 // Local Strings.
@@ -226,6 +227,7 @@ void initCustomCss(void)
 // displaySaveWarning(): Show the "Save Required" Message on all configuration pages.
 void displaySaveWarning(void)
 {
+#ifdef OldWay
     ESPUI.print(adjSaveMsgID,       SAVE_SETTINGS_MSG_STR);
     ESPUI.print(backupSaveSetMsgID, SAVE_SETTINGS_MSG_STR);
     ESPUI.print(ctrlSaveMsgID,      SAVE_SETTINGS_MSG_STR);
@@ -233,6 +235,7 @@ void displaySaveWarning(void)
     ESPUI.print(radioSaveMsgID,     SAVE_SETTINGS_MSG_STR);
     ESPUI.print(rdsSaveMsgID,       SAVE_SETTINGS_MSG_STR);
     ESPUI.print(wifiSaveMsgID,      SAVE_SETTINGS_MSG_STR);
+#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -432,38 +435,18 @@ void buildGUI(void)
     // ************
     // Home Tab
     ESPUI.addControl(ControlType::Separator, HOME_FM_SEP_STR, emptyString, ControlColor::None, homeTab);
-
-    Radio.AddHomeControls(homeTab);
+    Radio.AddHomeControls(homeTab, ControlColor::Peterriver);
     WiFiDriver.addHomeControls(homeTab);
 
     // **************
     // Adjust Tab
-    Radio.AddAdjControls(adjTab);
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, adjTab);
-    adjSaveID = ESPUI.addControl(ControlType::Button,
-                                SAVE_SETTINGS_STR,
-                                SAVE_SETTINGS_STR,
-                                ControlColor::Wetasphalt,
-                                adjTab,
-                                &saveSettingsCallback);
-    
-    adjSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", emptyString, ControlColor::Wetasphalt, adjSaveID);
+    Radio.AddAdjControls(adjTab, ControlColor::Wetasphalt);
+    ConfigSave.AddControls(adjTab, ControlColor::Wetasphalt);
 
     // ************
     // Radio Tab
-    Radio.AddRadioControls(radioTab);
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, radioTab);
-    radioSaveID = ESPUI.addControl(ControlType::Button,
-                                SAVE_SETTINGS_STR,
-                                SAVE_SETTINGS_STR,
-                                ControlColor::Emerald,
-                                radioTab,
-                                &saveSettingsCallback);
-    radioSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", emptyString, ControlColor::Emerald, radioSaveID);
+    Radio.AddRadioControls(radioTab, ControlColor::Emerald);
+    ConfigSave.AddControls(radioTab, ControlColor::Emerald);
 
     // RF Power Control is not compatible with the RF Amp Circutry.
     // Low Power levels do not correctly excite the PA Transistor.
@@ -472,63 +455,28 @@ void buildGUI(void)
     //
     // *****************
     // Local RDS Tab
-
     ESPUI.addControl(ControlType::Separator, RDS_GENERAL_SET_STR, emptyString, ControlColor::None, rdsTab);
-
-    Radio.AddRdsControls(rdsTab);
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, rdsTab);
-    rdsSaveID = ESPUI.addControl(ControlType::Button,
-                                 SAVE_SETTINGS_STR,
-                                 SAVE_SETTINGS_STR,
-                                 ControlColor::Alizarin,
-                                 rdsTab,
-                                 &saveSettingsCallback);
-    rdsSaveMsgID =
-        ESPUI.addControl(ControlType::Label, emptyString.c_str(), emptyString, ControlColor::Alizarin, rdsSaveID);
+    Radio.AddRdsControls(rdsTab, ControlColor::Alizarin);
+    ConfigSave.AddControls(rdsTab, ControlColor::Alizarin);
 
     //
     // *************
     //  WiFi Tab
-
-    // DEBUG_V();
     WiFiDriver.addControls(wifiTab);
-    // DEBUG_V();
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, wifiTab);
-    wifiSaveID = ESPUI.addControl(ControlType::Button,
-                                  SAVE_SETTINGS_STR,
-                                  SAVE_SETTINGS_STR,
-                                  ControlColor::Carrot,
-                                  wifiTab,
-                                  &saveSettingsCallback);
-    wifiSaveMsgID =
-        ESPUI.addControl(ControlType::Label, emptyString.c_str(), emptyString, ControlColor::Carrot, wifiSaveID);
-
-    // DEBUG_V();
+    ConfigSave.AddControls(wifiTab, ControlColor::Carrot);
 
     //
     // *************
     //  Controller Tab
     ControllerMgr.AddControls(ctrlTab);
-    // ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, "", ControlColor::None, ctrlTab);
-
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, ctrlTab);
-    ctrlSaveID = ESPUI.addControl(ControlType::Button,
-                                  SAVE_SETTINGS_STR,
-                                  SAVE_SETTINGS_STR,
-                                  ControlColor::Turquoise,
-                                  ctrlTab,
-                                  &saveSettingsCallback);
-    ctrlSaveMsgID =
-        ESPUI.addControl(ControlType::Label, emptyString.c_str(), emptyString, ControlColor::Turquoise, ctrlSaveID);
-    // DEBUG_V();
+    // ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, emptyString, ControlColor::None, ctrlTab);
+    ConfigSave.AddControls(ctrlTab, ControlColor::Turquoise);
 
     //
     // *****************
     // GPIO Tab
 
-    ESPUI.addControl(ControlType::Separator, GPIO_SETTINGS_STR, "",              ControlColor::None, gpioTab);
+    ESPUI.addControl(ControlType::Separator, GPIO_SETTINGS_STR, emptyString,              ControlColor::None, gpioTab);
     gpio19ID =
         ESPUI.addControl(ControlType::Select, GPIO_19_STR, gpio19BootStr, ControlColor::Dark, gpioTab, &gpioCallback);
     ESPUI.addControl(ControlType::Option,    GPIO_INP_FT_STR,   GPIO_INP_FT_STR, ControlColor::None, gpio19ID);
@@ -556,33 +504,14 @@ void buildGUI(void)
     ESPUI.addControl(ControlType::Option,    GPIO_OUT_HI_STR,   GPIO_OUT_HI_STR, ControlColor::None, gpio33ID);
     gpio33MsgID = ESPUI.addControl(ControlType::Label, "GPIO_MSG", " ", ControlColor::None, gpio33ID);
 
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "",              ControlColor::None, gpioTab);
-    gpioSaveID = ESPUI.addControl(ControlType::Button,
-                                  SAVE_SETTINGS_STR,
-                                  SAVE_SETTINGS_STR,
-                                  ControlColor::Dark,
-                                  gpioTab,
-                                  &saveSettingsCallback);
-    gpioSaveMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::None, gpioSaveID);
-    // DEBUG_V();
-
+    ConfigSave.AddControls(gpioTab, ControlColor::Dark);
 
     //
     // *****************
     // Backup Tab
+    ConfigSave.AddControls(backupTab, ControlColor::Wetasphalt);
 
-    ESPUI.addControl(ControlType::Separator, SAVE_SETTINGS_STR, "", ControlColor::None, backupTab);
-    backupSaveSetID = ESPUI.addControl(ControlType::Button,
-                                       SAVE_SETTINGS_STR,
-                                       SAVE_SETTINGS_STR,
-                                       ControlColor::Wetasphalt,
-                                       backupTab,
-                                       &saveSettingsCallback);
-    backupSaveSetMsgID =
-        ESPUI.addControl(ControlType::Label, "SAVE", "", ControlColor::Wetasphalt, backupSaveSetID);
-
-    ESPUI.addControl(ControlType::Separator, SAVE_BACKUP_STR, "", ControlColor::None, backupTab);
+    ESPUI.addControl(ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     backupSaveID =
         ESPUI.addControl(ControlType::Button,
                          BACKUP_SAV_CFG_STR,
@@ -590,7 +519,7 @@ void buildGUI(void)
                          ControlColor::Wetasphalt,
                          backupTab,
                          &backupCallback);
-    backupSaveMsgID = ESPUI.addControl(ControlType::Label, "SAVE_MSG", "", ControlColor::Wetasphalt, backupSaveID);
+    backupSaveMsgID = ESPUI.addControl(ControlType::Label, "SAVE_MSG", emptyString, ControlColor::Wetasphalt, backupSaveID);
 
     backupRestoreID =
         ESPUI.addControl(ControlType::Button,
@@ -599,14 +528,14 @@ void buildGUI(void)
                          ControlColor::Wetasphalt,
                          backupTab,
                          &backupCallback);
-    backupRestoreMsgID = ESPUI.addControl(ControlType::Label, "RESTORE_MSG", "", ControlColor::Wetasphalt, backupRestoreID);
+    backupRestoreMsgID = ESPUI.addControl(ControlType::Label, "RESTORE_MSG", emptyString, ControlColor::Wetasphalt, backupRestoreID);
     // DEBUG_V();
 
     //
     // ******************
     // Diagnostics Tab
 
-    ESPUI.addControl(ControlType::Separator, DIAG_HEALTH_SEP_STR, "", ControlColor::None, diagTab);
+    ESPUI.addControl(ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, diagTab);
     tempStr    = String(vbatVolts, 1);
     tempStr   += " VDC";
     diagVbatID = ESPUI.addControl(ControlType::Label, DIAG_VBAT_STR, tempStr, ControlColor::Sunflower, diagTab);
@@ -615,7 +544,7 @@ void buildGUI(void)
     tempStr  += " VDC";
     diagVdcID = ESPUI.addControl(ControlType::Label, DIAG_VDC_STR, tempStr, ControlColor::Sunflower, diagTab);
 
-    ESPUI.addControl(ControlType::Separator, DIAG_DEBUG_SEP_STR, "", ControlColor::None, diagTab);
+    ESPUI.addControl(ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, diagTab);
     diagLogID =
         ESPUI.addControl(ControlType::Select, DIAG_LOG_LVL_STR, logLevelStr, ControlColor::Sunflower, diagTab, &diagLogCallback);
     ESPUI.addControl(ControlType::Option,
@@ -658,14 +587,14 @@ void buildGUI(void)
     diagLogMsgID = ESPUI.addControl(ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
 #endif // def OldWay
 
-    ESPUI.addControl(ControlType::Separator, DIAG_SYSTEM_SEP_STR, "", ControlColor::None, diagTab);
+    ESPUI.addControl(ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, diagTab);
     // DEBUG_V();
 
     tempStr      = ESP.getFreeHeap();
     tempStr     += " Bytes";
     diagMemoryID = ESPUI.addControl(ControlType::Label, DIAG_FREE_MEM_STR, tempStr, ControlColor::Sunflower, diagTab);
 
-    diagTimerID = ESPUI.addControl(ControlType::Label, DIAG_RUN_TIME_STR, "", ControlColor::Sunflower, diagTab);
+    diagTimerID = ESPUI.addControl(ControlType::Label, DIAG_RUN_TIME_STR, emptyString, ControlColor::Sunflower, diagTab);
 
     diagBootID =
         ESPUI.addControl(ControlType::Button,
@@ -674,7 +603,7 @@ void buildGUI(void)
                          ControlColor::Sunflower,
                          diagTab,
                          &diagBootCallback);
-    diagBootMsgID = ESPUI.addControl(ControlType::Label, "REBOOT_MSG", "", ControlColor::Sunflower, diagBootID);
+    diagBootMsgID = ESPUI.addControl(ControlType::Label, "REBOOT_MSG", emptyString, ControlColor::Sunflower, diagBootID);
 
     //
     // ******************

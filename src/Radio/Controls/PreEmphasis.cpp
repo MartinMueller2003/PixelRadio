@@ -50,13 +50,11 @@ cPreEmphasis::cPreEmphasis() : cControlCommon(RADIO_PRE_EMPH_STR)
 }
 
 // *********************************************************************************************
-void cPreEmphasis::AddControls (uint16_t value)
+void cPreEmphasis::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Select, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Select, color);
     ESPUI.updateControlLabel(ControlId, PRE_EMPH_STR.c_str());
 
     for(auto & CurrentOption : MapOfRegions)

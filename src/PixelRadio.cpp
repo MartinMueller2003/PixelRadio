@@ -192,16 +192,16 @@ void setup()
 // Main Loop.
 void loop()
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     Log.setLevel(LOG_LEVEL_INFO);
 
     // Background tasks
-    /// DEBUG_V("WiFiDriver");
+    //_ DEBUG_V("WiFiDriver");
     WiFiDriver.Poll();
-    /// DEBUG_V("ControllerMgr");
+    //_ DEBUG_V("ControllerMgr");
     ControllerMgr.poll();
-    /// DEBUG_V("Radio");
+    //_ DEBUG_V("Radio");
     Radio.Poll();
     PeakAudio.poll();
 
@@ -223,7 +223,7 @@ void loop()
     #endif // ifdef HTTP_ENB
 
 #endif // def OldWay 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************

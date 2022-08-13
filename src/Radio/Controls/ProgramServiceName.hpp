@@ -24,7 +24,7 @@ public:
                 cProgramServiceName ();
     virtual     ~cProgramServiceName() {}
 
-    void        AddControls (uint16_t TabId);
+    void        AddControls (uint16_t TabId, ControlColor color);
     bool        set(String & value, String & Response);
 
 };

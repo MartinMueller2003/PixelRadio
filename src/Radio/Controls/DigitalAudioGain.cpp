@@ -35,22 +35,20 @@ static const PROGMEM String DIGITAL_GAIN_STR      = "DIGITAL_GAIN_STR";
 // *********************************************************************************************
 cDigitalAudioGain::cDigitalAudioGain() : cControlCommon(String(DIGITAL_GAIN_STR))
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     DataValueStr = DIG_GAIN_DEF_STR;
     DataValue = MapOfGainValues[DataValueStr];
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cDigitalAudioGain::AddControls (uint16_t value)
+void cDigitalAudioGain::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Select, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Select, color);
     ESPUI.updateControlLabel(ControlId, RADIO_DIG_AUDIO_STR.c_str());
 
     for(auto & CurrentOption : MapOfGainValues)

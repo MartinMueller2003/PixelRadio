@@ -24,10 +24,10 @@ public:
                 cFrequencyAdjust ();
     virtual     ~cFrequencyAdjust() {}
 
-    void        AddControls(uint16_t TabId) { AddAdjustControls(TabId); }
-    void        AddAdjustControls(uint16_t TabId);
-    void        AddRadioControls (uint16_t TabId);
-    void        AddHomeControls (uint16_t TabId);
+    void        AddControls(uint16_t TabId, ControlColor color) { AddAdjustControls(TabId, color); }
+    void        AddAdjustControls(uint16_t TabId, ControlColor color);
+    void        AddRadioControls (uint16_t TabId, ControlColor color);
+    void        AddHomeControls (uint16_t TabId, ControlColor color);
 
     bool        set(String & value, String & ResponseMessage);
     void        Callback(Control *sender, int type);

@@ -35,13 +35,11 @@ cProgramServiceName::cProgramServiceName() : cControlCommon(RDS_PROG_SERV_STR)
 }
 
 // *********************************************************************************************
-void cProgramServiceName::AddControls (uint16_t value)
+void cProgramServiceName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Text, 
-                                ControlColor::Alizarin);
+    cControlCommon::AddControls(value, ControlType::Text, color);
     ESPUI.updateControlLabel(ControlId, RDS_PROG_SERV_NM_STR.c_str());
     ESPUI.addControl(ControlType::Min, emptyString.c_str(), "4", ControlColor::None, ControlId);
     ESPUI.addControl(ControlType::Max, emptyString.c_str(), "8", ControlColor::None, ControlId);

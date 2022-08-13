@@ -32,14 +32,11 @@ cAudioGain::cAudioGain() : cControlCommon(emptyString)
 }
 
 // *********************************************************************************************
-void cAudioGain::AddControls (uint16_t value)
+void cAudioGain::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Label, 
-                                ControlColor::Emerald);
-    
+    cControlCommon::AddControls(value, ControlType::Label, color);
     ESPUI.updateControlLabel(ControlId, RADIO_AUDIO_GAIN_STR.c_str());
     ESPUI.setPanelStyle(ControlId, F("font-size: 1.15em;"));
     ESPUI.setElementStyle(ControlId, F("width: 35%;"));

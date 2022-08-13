@@ -41,22 +41,20 @@ static const PROGMEM String RADIO_INP_IMP_STR  = "INPUT IMPEDANCE";
 // *********************************************************************************************
 cAudioInputImpedance::cAudioInputImpedance() : cControlCommon(INPUT_IMPED_STR)
 {
-    /// DEBUG_START;
+    //_ DEBUG_START;
 
     DataValueStr = INP_IMP_DEF_STR;
     DataValue = MapOfImpedances[DataValueStr];
 
-    /// DEBUG_END;
+    //_ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cAudioInputImpedance::AddControls (uint16_t value)
+void cAudioInputImpedance::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Select, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Select, color);
     ESPUI.updateControlLabel(ControlId, RADIO_INP_IMP_STR.c_str());
 
     for(auto & CurrentOption : MapOfImpedances)

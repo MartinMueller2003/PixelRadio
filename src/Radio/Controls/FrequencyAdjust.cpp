@@ -38,7 +38,7 @@ cFrequencyAdjust::cFrequencyAdjust()  : cControlCommon(String(RADIO_FM_FREQ))
 }
 
 // *********************************************************************************************
-void cFrequencyAdjust::AddRadioControls (uint16_t value)
+void cFrequencyAdjust::AddRadioControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
@@ -48,7 +48,7 @@ void cFrequencyAdjust::AddRadioControls (uint16_t value)
                             ControlType::Label,
                             RADIO_FM_FRQ_STR.c_str(),
                             emptyString,
-                            ControlColor::Emerald,
+                            color,
                             RadioId);
     ESPUI.setPanelStyle(RadioStatusID, F("font-size: 3.0em;"));
     ESPUI.setElementStyle(RadioStatusID, F("width: 75%;"));
@@ -59,7 +59,7 @@ void cFrequencyAdjust::AddRadioControls (uint16_t value)
 }
 
 // *********************************************************************************************
-void cFrequencyAdjust::AddHomeControls (uint16_t value)
+void cFrequencyAdjust::AddHomeControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
@@ -69,7 +69,7 @@ void cFrequencyAdjust::AddHomeControls (uint16_t value)
                             ControlType::Label, 
                             HOME_RAD_STAT_STR.c_str(), 
                             emptyString, 
-                            ControlColor::Peterriver, 
+                            color, 
                             HomeId);
     ESPUI.setPanelStyle(HomeStatusID, F("font-size: 3.0em;"));
 
@@ -79,7 +79,7 @@ void cFrequencyAdjust::AddHomeControls (uint16_t value)
 }
 
 // *********************************************************************************************
-void cFrequencyAdjust::AddAdjustControls (uint16_t value)
+void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
@@ -87,14 +87,14 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value)
                             ControlType::Label, 
                             RADIO_FM_FRQ_STR.c_str(), 
                             emptyString, 
-                            ControlColor::Wetasphalt, 
+                            color, 
                             value);
     ESPUI.setPanelStyle(AdjustStatusID, F("font-size: 3.0em;"));
     ESPUI.setElementStyle(AdjustStatusID, F("max-width: 75%;"));
 
     cControlCommon::AddControls(value, 
                         ControlType::Pad, 
-                        ControlColor::Wetasphalt);
+                        color);
     ESPUI.updateControlLabel(ControlId, ADJUST_FRQ_ADJ_STR.c_str());
 
     UpdateStatus();

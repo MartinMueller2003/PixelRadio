@@ -24,7 +24,7 @@ public:
                 cAudioInputImpedance ();
     virtual     ~cAudioInputImpedance() {}
 
-    void        AddControls (uint16_t Tab);
+    void        AddControls (uint16_t Tab, ControlColor color);
     bool        set(String &, String &);
 };
 

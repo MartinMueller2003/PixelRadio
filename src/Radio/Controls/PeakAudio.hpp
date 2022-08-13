@@ -27,7 +27,7 @@ public:
     void        restoreConfiguration(JsonObject &) {};
     void        saveConfiguration (JsonObject &) {};
 
-    void        AddControls (uint16_t Tab);
+    void        AddControls (uint16_t Tab, ControlColor color);
     void        poll();
     bool        set(String &, String &) { return false; }
 private:

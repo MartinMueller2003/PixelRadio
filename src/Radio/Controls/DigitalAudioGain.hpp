@@ -24,7 +24,7 @@ public:
                 cDigitalAudioGain ();
     virtual     ~cDigitalAudioGain() {}
 
-    void        AddControls (uint16_t Tab);
+    void        AddControls (uint16_t Tab, ControlColor color);
     bool        set(String & value, String & ResponseMessage);
 };
 

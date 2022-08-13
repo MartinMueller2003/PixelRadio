@@ -39,13 +39,11 @@ cAudioMode::cAudioMode() : cControlCommon(RADIO_STEREO_FLAG)
 }
 
 // *********************************************************************************************
-void cAudioMode::AddControls (uint16_t value)
+void cAudioMode::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Switcher, 
-                                ControlColor::Emerald);
+    cControlCommon::AddControls(value, ControlType::Switcher, color);
     ESPUI.updateControlLabel(ControlId, RADIO_AUDIO_MODE_STR.c_str());
     ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_BLACK);
 

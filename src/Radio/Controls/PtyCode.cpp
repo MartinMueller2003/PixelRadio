@@ -81,13 +81,11 @@ cPtyCode::cPtyCode() : cControlCommon(RDS_PTY_CODE)
 }
 
 // *********************************************************************************************
-void cPtyCode::AddControls (uint16_t value)
+void cPtyCode::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, 
-                                ControlType::Select, 
-                                ControlColor::Alizarin);
+    cControlCommon::AddControls(value, ControlType::Select, color);
     ESPUI.updateControlLabel(ControlId, RDS_PTY_CODE_STR.c_str());
     ESPUI.setPanelStyle(ControlId, "font-size: 1.15em;");
 

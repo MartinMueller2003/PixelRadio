@@ -86,9 +86,19 @@ void cControlCommon::Callback(Control *sender, int type)
     // DEBUG_V(String("value: ") + String(sender->value));
     // DEBUG_V(String(" type: ") + String(type));
 
-    String Response;
-    ESPUI.setElementStyle(StatusMessageId, set(sender->value, Response) ? ActiveLabelStyle : InactiveLabelStyle);
-    ESPUI.print(StatusMessageId, Response);
+    do // once
+    {
+        if( B_UP == type)
+        {
+            // DEBUG_V("Ignore button up events");
+            break;
+        }
+
+        String Response;
+        ESPUI.setElementStyle(StatusMessageId, set(sender->value, Response) ? ActiveLabelStyle : InactiveLabelStyle);
+        ESPUI.print(StatusMessageId, Response);
+
+    } while (false);
 
     // DEBUG_END;
 }

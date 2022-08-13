@@ -173,7 +173,7 @@ void c_ControllerUsbSERIAL::CbBaudrateControl(Control *sender, int type)
 // This is the Command Line Interface (CLI).
 void c_ControllerUsbSERIAL::serialCommands(void)
 {
-   /// DEBUG_START;
+   //_ DEBUG_START;
 
    do // once
    {
@@ -200,7 +200,7 @@ void c_ControllerUsbSERIAL::serialCommands(void)
 
    } while (false);
 
-   /// DEBUG_END;
+   //_ DEBUG_END;
 }
 
 // ************************************************************************************************
