@@ -227,6 +227,7 @@ void initCustomCss(void)
 // displaySaveWarning(): Show the "Save Required" Message on all configuration pages.
 void displaySaveWarning(void)
 {
+    ConfigSave.SetSaveNeeded();
 #ifdef OldWay
     ESPUI.print(adjSaveMsgID,       SAVE_SETTINGS_MSG_STR);
     ESPUI.print(backupSaveSetMsgID, SAVE_SETTINGS_MSG_STR);
@@ -635,5 +636,9 @@ void buildGUI(void)
         tempStr, 
         ControlColor::None, 
         aboutLogoID);
+
+    // this gets set as a side effect of the control setup.
+    ConfigSave.ClearSaveNeeded();
+
     // DEBUG_END;
 }

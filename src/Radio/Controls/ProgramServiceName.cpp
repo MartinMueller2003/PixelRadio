@@ -50,13 +50,13 @@ void cProgramServiceName::AddControls (uint16_t value, ControlColor color)
 // *********************************************************************************************
 void cProgramServiceName::ResetToDefaults()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     String value = RDS_PSN_DEF_STR;
     String dummy;
     set(value, dummy);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

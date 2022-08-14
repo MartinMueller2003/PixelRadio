@@ -53,13 +53,13 @@ void cPiCode::AddControls (uint16_t value, ControlColor color)
 // *********************************************************************************************
 void cPiCode::ResetToDefaults()
 {
-   DEBUG_START;
+   // DEBUG_START;
 
     String value = String(F("0x")) + String(RDS_PI_CODE_DEF, HEX);;
     String dummy;
     set(value, dummy);
     
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

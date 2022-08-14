@@ -28,6 +28,7 @@
 // ************************************************************************************************
 void backupCallback(Control *sender, int type)
 {
+#ifdef OldWay
     static bool saveSuccessFlg    = true;
     static bool restoreSuccessFlg = true;
     char logBuff[60];
@@ -89,6 +90,7 @@ void backupCallback(Control *sender, int type)
         sprintf(logBuff, "backupCallback: %s.", BAD_SENDER_STR);
         Log.errorln(logBuff);
     }
+#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -351,6 +353,7 @@ void gpioCallback(Control *sender, int type)
 // ************************************************************************************************
 void saveSettingsCallback(Control *sender, int type)
 {
+#ifdef OldWay
     // DEBUG_START;
 
     bool   saveSuccessFlg = true;
@@ -419,4 +422,5 @@ void saveSettingsCallback(Control *sender, int type)
     }
 
     // DEBUG_END;
+#endif // def OldWay
 }
