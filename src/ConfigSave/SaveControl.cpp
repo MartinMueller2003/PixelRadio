@@ -16,6 +16,7 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include "SaveControl.hpp"
+#include "ConfigSave.hpp"
 #include "memdebug.h"
 
 // *********************************************************************************************
@@ -51,7 +52,8 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor _color)
     cControlCommon::AddControls(TabId, ControlType::Button, color);
     ESPUI.updateControlLabel(ControlId, SAVE_SETTINGS_STR.c_str());
     ESPUI.updateControlValue(ControlId, SAVE_SETTINGS_STR);
-    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_BLACK);
+    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
+    ESPUI.setElementStyle(ControlId, String(F("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
 
     // DEBUG_END;
 }
@@ -59,13 +61,13 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor _color)
 // *********************************************************************************************
 void cSaveControl::ClearSaveNeeded()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_BLACK);
     ESPUI.updateControlValue(StatusMessageId, emptyString);
     ESPUI.updateControlLabel(StatusMessageId, emptyString.c_str());
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -77,18 +79,17 @@ bool cSaveControl::set(String & value, String & ResponseMessage)
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
     bool Response = true;
-    ResponseMessage.reserve(128);
     ResponseMessage.clear();
 
-    do // once
+    if(!IgnoreFirstSet)
     {
         Response = true;
-
-        // Do something usefull
-
-        Log.infoln(String(F("Settings Saved")).c_str());
-
-    } while (false);
+        ConfigSave.InitiateSaveOperation();
+    }
+    else
+    {
+        IgnoreFirstSet = false;
+    }
 
     // DEBUG_END;
     return Response;
@@ -97,13 +98,13 @@ bool cSaveControl::set(String & value, String & ResponseMessage)
 // *********************************************************************************************
 void cSaveControl::SetSaveNeeded()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     ESPUI.updateControlValue(StatusMessageId, SAVE_SETTINGS_MSG_STR);
     ESPUI.updateControlLabel(StatusMessageId, SAVE_SETTINGS_MSG_STR.c_str());
     ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

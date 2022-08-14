@@ -31,7 +31,8 @@ public:
     void        SetSaveNeeded();
 
 private:
-  ControlColor color = ControlColor::None;
+    ControlColor color = ControlColor::None;
+    bool IgnoreFirstSet = true;
 };
 
 // *********************************************************************************************
