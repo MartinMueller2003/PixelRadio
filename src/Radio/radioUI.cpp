@@ -38,11 +38,9 @@
 
 
 // *********************************************************************************************
-void cRadio::AddAdjControls(uint16_t _adjTab, ControlColor color)
+void cRadio::AddAdjControls(uint16_t adjTab, ControlColor color)
 {
     // DEBUG_START;
-
-    adjTab = _adjTab;
 
     ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
     FrequencyAdjust.AddAdjustControls(adjTab, color);
@@ -51,30 +49,26 @@ void cRadio::AddAdjControls(uint16_t _adjTab, ControlColor color)
     TestTone.AddControls(adjTab, color);
     AudioMute.AddControls(adjTab, color);
 
-
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::AddDiagControls (uint16_t _diagTab, ControlColor color)
+void cRadio::AddDiagControls (uint16_t diagTab, ControlColor color)
 {
     // DEBUG_START;
 
-    diagTab = _diagTab;
 
         
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::AddHomeControls (uint16_t _homeTab, ControlColor color)
+void cRadio::AddHomeControls (uint16_t homeTab, ControlColor color)
 {
     // DEBUG_START;
 
     String tempStr;
     
-    homeTab = _homeTab;
-
     RfCarrier.AddHomeControls(homeTab, color);
     FrequencyAdjust.AddHomeControls(homeTab, color);
     ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
@@ -84,11 +78,9 @@ void cRadio::AddHomeControls (uint16_t _homeTab, ControlColor color)
 }
 
 // *********************************************************************************************
-void cRadio::AddRadioControls (uint16_t _radioTab, ControlColor color)
+void cRadio::AddRadioControls (uint16_t radioTab, ControlColor color)
 {
     // DEBUG_START;
-
-    radioTab = _radioTab;
 
     ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
     FrequencyAdjust.AddRadioControls(radioTab, color);
@@ -110,18 +102,17 @@ void cRadio::AddRadioControls (uint16_t _radioTab, ControlColor color)
     ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString, ControlColor::None, radioTab);
     PeakAudio.AddControls(radioTab, color);
     #ifdef ADV_RADIO_FEATURES
-    AudioGain.AddControls(radioTab, color);
+        AudioGain.AddControls(radioTab, color);
     #endif // ifdef ADV_RADIO_FEATURES
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::AddRdsControls (uint16_t _rdsTab, ControlColor color)
+void cRadio::AddRdsControls (uint16_t rdsTab, ControlColor color)
 {
     // DEBUG_START;
 
-    rdsTab = _rdsTab;
     ProgramServiceName.AddControls(rdsTab, color);
     PiCode.AddControls(rdsTab, color);
     PtyCode.AddControls(rdsTab, color);
@@ -131,4 +122,4 @@ void cRadio::AddRdsControls (uint16_t _rdsTab, ControlColor color)
 }
 
 // *********************************************************************************************
-// OEF
+// EOF

@@ -95,32 +95,6 @@ void cRadio::saveConfiguration(JsonObject & config)
     RfCarrier.saveConfiguration(config);
     RfPower.saveConfiguration(config);
 
-    config[F("RADIO_AUTO_FLAG")] = rfAutoFlg;             // Use radio.radioNoAudioAutoOFF(0/1) when restoring this uint8 Value.
-    config[F("ANALOG_VOLUME")]          = analogVol;        // Requires custom function, not written yet.
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-// setRfAutoOff():
-// IMPORTANT: Sending RDS Messages and/or using updateUiAudioLevel() Will prevent 60S Turn Off.
-// rfAutoOff = true: Turn-off RF Carrier if Audio is missing for > 60 seconds.
-// rfAutoOff = false: Never turn off.
-void cRadio::setRfAutoOff(void)
-{
-    // DEBUG_START;
-
-#ifdef OldWay
-    if (RadioSemaphore)
-    {
-        xSemaphoreTakeRecursive(RadioSemaphore, portMAX_DELAY);
-        setRfCarrier(OFF);
-        FmRadio.radioNoAudioAutoOFF(rfAutoFlg ? ON : OFF );
-        setRfCarrier();
-        xSemaphoreGiveRecursive(RadioSemaphore);
-    }
-#endif // def OldWay
-
     // DEBUG_END;
 }
 
@@ -144,26 +118,6 @@ new way: call GPIO and tell it to update the output and the UI.
 
     // DEBUG_END;
 }
-
-#ifdef OldWay
-// *********************************************************************************************
-// updateRadioSettings(): Update Any Radio Setting that has changed by the Web UI.
-// This routine must be placed in main loop();
-// QN8027 specific settings must not be changed in the Web UI Callbacks due to ESP32 core
-// limitations. So instead the callbacks set a flag that tells this routine to perform the action.
-void cRadio::updateRadioSettings(void)
-{
-    // DEBUG_START;
-
-    if (newAutoRfFlg) 
-    {
-        newAutoRfFlg = false;
-        setRfAutoOff();
-    }
-
-    // DEBUG_END;
-}
-#endif // def OldWay
 
 // *********************************************************************************************
 cRadio  Radio;

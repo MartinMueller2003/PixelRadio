@@ -38,31 +38,9 @@ public:
     void        saveConfiguration (JsonObject & json);
     
 private:
-    void        setRfAutoOff(void);
     void        updateOnAirSign(void);
-
-// UI declarations
-
-    uint16_t    adjTab          = Control::noParent;
-    uint16_t    diagTab         = Control::noParent;
-    uint16_t    homeTab         = Control::noParent;
-    uint16_t    radioTab        = Control::noParent;
-    uint16_t    rdsTab          = Control::noParent;
-
-    uint16_t    radioAutoID     = Control::noParent;
-    uint16_t    radioPwrID      = Control::noParent;
-    uint16_t    rdsRstID        = Control::noParent;
-
-    bool        rfAutoFlg       = RF_AUTO_OFF_DEF_FLG;                 // Control, Turn Off RF carrier if no audio for 60Sec. false=Never turn off.
-
-    uint8_t     analogVol = (atoi(ANA_VOL_DEF_STR));               // Control. Unused, for future expansion.
-    uint32_t    rdsMsgTime = 0;
-    bool        successFlg  = true;
-    String      LastMessageSent;
+    // String      LastMessageSent;
     
-#define OFF 0x00
-#define ON 0x01
-
 };
 
 extern cRadio  Radio;
