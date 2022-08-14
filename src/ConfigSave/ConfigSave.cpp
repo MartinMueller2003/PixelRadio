@@ -42,27 +42,27 @@ void  cConfigSave::AddControls(uint16_t TabId, ControlColor color)
 // *********************************************************************************************
 void cConfigSave::SetSaveNeeded()
 {
-  DEBUG_START;
+    // DEBUG_START;
 
-  for(auto & CurrentControl : ListOfSaveControls)
-  {
-    CurrentControl->SetSaveNeeded();
-  }
+    for(auto & CurrentControl : ListOfSaveControls)
+    {
+      CurrentControl->SetSaveNeeded();
+    }
 
-  DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cConfigSave::ClearSaveNeeded()
 {
-  DEBUG_START;
+    // DEBUG_START;
 
-  for(auto & CurrentControl : ListOfSaveControls)
-  {
-    CurrentControl->ClearSaveNeeded();
-  }
+    for(auto & CurrentControl : ListOfSaveControls)
+    {
+      CurrentControl->ClearSaveNeeded();
+    }
 
-  DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
