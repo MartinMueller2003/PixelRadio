@@ -63,7 +63,7 @@ cTestTone::cTestTone() : cControlCommon(emptyString)
     //_ DEBUG_START;
 
     DataValue = 0;
-    DataValueStr = "0";
+    DataValueStr = "off";
 
     ActiveLabelStyle     = CSS_LABEL_STYLE_WHITE;
     InactiveLabelStyle   = CSS_LABEL_STYLE_WHITE;
@@ -126,8 +126,10 @@ bool cTestTone::set(String & value, String & ResponseMessage)
         DataValue = NewDataValue;
         DataValueStr = DataValue ? F("1") : F("0");
 
+        ESPUI.updateControlValue(ControlId, DataValueStr);
+
         Log.infoln(String(F("Test Mode Set to: %s.")).c_str(), String(DataValue ? F("On") : F("Off")).c_str());
-        displaySaveWarning();
+        // displaySaveWarning();
 
     } while (false);
 
