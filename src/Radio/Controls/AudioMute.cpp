@@ -93,6 +93,7 @@ bool cAudioMute::set(String & value, String & ResponseMessage)
         QN8027RadioApi.setAudioMute(!value);
         ESPUI.updateControlValue(ControlId, DataValueStr);
         ESPUI.print(StatusMessageId, ResponseMessage);
+        ESPUI.setElementStyle(ControlId, DataValue ? String(F("background: red;")) : String(F("background: #bebebe;")));
 
         Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), ResponseMessage.c_str());
         displaySaveWarning();
