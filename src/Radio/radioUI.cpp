@@ -31,6 +31,7 @@
 #include "ProgramServiceName.hpp"
 #include "PtyCode.hpp"
 #include "RdsText.hpp"
+#include "RdsReset.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
 #include "PreEmphasis.hpp"
@@ -124,26 +125,8 @@ void cRadio::AddRdsControls (uint16_t _rdsTab, ControlColor color)
     ProgramServiceName.AddControls(rdsTab, color);
     PiCode.AddControls(rdsTab, color);
     PtyCode.AddControls(rdsTab, color);
+    RdsReset.AddControls(rdsTab, color);
 
-    ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, rdsTab);
-
-#ifdef OldWay
-    rdsRstID = ESPUI.addControl(ControlType::Button,
-                                RDS_RESET_STR,
-                                RDS_RESTORE_STR,
-                                color,
-                                rdsTab,
-                                [](Control* sender, int type, void* UserInfo)
-                                {
-                                    if(UserInfo)
-                                    {
-                                        static_cast<cRadio *>(UserInfo)->CbRdsRst(sender, type);
-                                    }
-                                },
-                                this);
-    ESPUI.setPanelStyle(rdsRstID, "font-size: 1.35em;");
-    ESPUI.setElementStyle(rdsRstID, "color: black;");
-#endif
     // DEBUG_END;
 }
 

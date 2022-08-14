@@ -143,8 +143,6 @@
 #define RDS_LOCKED_STR        "{ LOCKED }"
 #define RDS_NOT_AVAIL_STR     "{ RADIOTEXT UNAVAILABLE }"
 #define RDS_REMOTE_BLANK_STR  "{ REMOTE RADIOTEXT MESSAGE IS BLANK }"
-#define RDS_RESET_SEP_STR     "LOCAL RDS RESET"
-#define RDS_RESET_STR         "RESET RDS SETTINGS"
 #define RDS_RESTORE_STR       "Restore Defaults"
 #define RDS_TAB_STR           "Local RDS"
 #define RDS_TEXT1_DEF_STR     "Welcome to Our Drive-by Holiday Light Show"

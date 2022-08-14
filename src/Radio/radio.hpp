@@ -37,9 +37,6 @@ public:
     void        restoreConfiguration(JsonObject &json);
     void        saveConfiguration (JsonObject & json);
     
-// Callbacks need to be public 
-    void        CbRdsRst(Control *sender, int type);
-
 private:
     void        setRfAutoOff(void);
     void        updateOnAirSign(void);

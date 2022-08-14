@@ -1,11 +1,11 @@
 #pragma once
 /*
-   File: ProgramServiceName.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+   File: RdsReset.cpp
+   Project: PixelRdsReset, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
    Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
+   Revision History: See PixelRdsReset.cpp
    Project Leader: T. Black (thomastech)
    Contributors: thomastech
 
@@ -18,19 +18,18 @@
 #include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cProgramServiceName : public cControlCommon
+class cRdsReset : public cControlCommon
 {
 public:
-                cProgramServiceName ();
-    virtual     ~cProgramServiceName() {}
+                cRdsReset ();
+    virtual     ~cRdsReset() {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
+    void        AddControls(uint16_t adjTab, ControlColor color);
     void        ResetToDefaults();
-    bool        set(String & value, String & Response);
-
+    bool        set(String& value, String & ResponseMessage);
 };
 
-extern cProgramServiceName ProgramServiceName;
+extern cRdsReset  RdsReset;
 
 // *********************************************************************************************
 // OEF

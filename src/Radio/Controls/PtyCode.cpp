@@ -94,6 +94,18 @@ void cPtyCode::AddControls (uint16_t value, ControlColor color)
     // DEBUG_END;
 }
 
+// *********************************************************************************************
+void cPtyCode::ResetToDefaults()
+{
+    DEBUG_START;
+
+    String value = "9";
+    String dummy;
+    set(value, dummy);
+    
+    DEBUG_END;
+}
+
 // ************************************************************************************************
 bool cPtyCode::set(String & value, String & ResponseMessage)
 {
