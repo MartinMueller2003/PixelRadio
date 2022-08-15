@@ -21,14 +21,17 @@
 class cAudioInputImpedance : public cControlCommon
 {
 public:
-                cAudioInputImpedance ();
-    virtual     ~cAudioInputImpedance() {}
+
+    cAudioInputImpedance ();
+    virtual     ~cAudioInputImpedance ()
+    {
+    }
 
     void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set(String &, String &);
+    bool        set (String &, String &);
 };
 
-extern cAudioInputImpedance AudioInputImpedance;
+extern cAudioInputImpedance  AudioInputImpedance;
 
 // *********************************************************************************************
 // OEF

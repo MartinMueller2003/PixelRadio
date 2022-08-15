@@ -20,21 +20,21 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
-static const PROGMEM String ADJUST_MUTE_STR = "AUDIO MUTE";
+static const PROGMEM String     RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
+static const PROGMEM String     ADJUST_MUTE_STR = "AUDIO MUTE";
 
 // *********************************************************************************************
-cAudioMute::cAudioMute() : cControlCommon(ADJUST_MUTE_STR)
+cAudioMute::cAudioMute () : cControlCommon (ADJUST_MUTE_STR)
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    DataValueStr = "0";
-    DataValue    = false;
+    DataValueStr        = "0";
+    DataValue           = false;
 
-    ActiveLabelStyle     = CSS_LABEL_STYLE_WHITE;
-    InactiveLabelStyle   = CSS_LABEL_STYLE_WHITE;
+    ActiveLabelStyle    = CSS_LABEL_STYLE_WHITE;
+    InactiveLabelStyle  = CSS_LABEL_STYLE_WHITE;
 
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -42,15 +42,15 @@ void cAudioMute::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, ControlType::Switcher, color);
-    ESPUI.updateControlLabel(ControlId, ADJUST_MUTE_STR.c_str());
-    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
+    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    ESPUI.updateControlLabel (ControlId, ADJUST_MUTE_STR.c_str ());
+    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cAudioMute::set(String & value, String & ResponseMessage)
+bool cAudioMute::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
@@ -58,46 +58,45 @@ bool cAudioMute::set(String & value, String & ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+
+    do  // once
     {
-        if (DataValueStr.equals(value))
+        if (DataValueStr.equals (value))
         {
             // DEBUG_V("Ignore duplicate setting");
             break;
         }
 
-        if (value.equals(F("0")))
+        if (value.equals (F ("0")))
         {
             DataValue = 0;
         }
-        else if (value.equals(F("1")))
+        else if (value.equals (F ("1")))
         {
             DataValue = 1;
         }
         else
         {
-            ResponseMessage = String(F("Radio Audio Mute Invalid Value: ")) + value;
-            Log.infoln(ResponseMessage.c_str());
+            ResponseMessage = String (F ("Radio Audio Mute Invalid Value: ")) + value;
+            Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
+        DataValueStr    = value;
+        ResponseMessage = DataValue ? F ("Muted") : F ("Unmuted");
+        Response        = true;
 
-        DataValueStr = value;
-        ResponseMessage = DataValue ? F("Muted") : F("Unmuted");
-        Response = true;
+        QN8027RadioApi.setAudioMute (!value);
+        ESPUI.updateControlValue (ControlId, DataValueStr);
+        ESPUI.print (StatusMessageId, ResponseMessage);
+        ESPUI.setElementStyle (ControlId, DataValue ? String (F ("background: red;")) : String (F ("background: #bebebe;")));
 
-        QN8027RadioApi.setAudioMute(!value);
-        ESPUI.updateControlValue(ControlId, DataValueStr);
-        ESPUI.print(StatusMessageId, ResponseMessage);
-        ESPUI.setElementStyle(ControlId, DataValue ? String(F("background: red;")) : String(F("background: #bebebe;")));
-
-        Log.infoln(String(F("Audio Mute Set to: %s.")).c_str(), ResponseMessage.c_str());
-        displaySaveWarning();
-
+        Log.infoln (String (F ("Audio Mute Set to: %s.")).c_str (), ResponseMessage.c_str ());
+        displaySaveWarning ();
     } while (false);
 
     // DEBUG_END;
@@ -105,7 +104,7 @@ bool cAudioMute::set(String & value, String & ResponseMessage)
 }
 
 // *********************************************************************************************
-cAudioMute AudioMute;
+cAudioMute  AudioMute;
 
 // *********************************************************************************************
 // OEF

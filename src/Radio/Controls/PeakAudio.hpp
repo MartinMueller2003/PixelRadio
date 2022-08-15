@@ -21,21 +21,33 @@
 class cPeakAudio : public cControlCommon
 {
 public:
-                cPeakAudio ();
-    virtual     ~cPeakAudio() {}
 
-    void        restoreConfiguration(JsonObject &) {};
-    void        saveConfiguration (JsonObject &) {};
+    cPeakAudio ();
+    virtual     ~cPeakAudio ()
+    {
+    }
+
+    void restoreConfiguration (JsonObject &)
+    {
+    }
+
+    void saveConfiguration (JsonObject &)
+    {
+    }
 
     void        AddControls (uint16_t Tab, ControlColor color);
-    void        poll();
-    bool        set(String &, String &) { return false; }
-private:
-    uint32_t    NextReadingTime = 0;
+    void        poll ();
+    bool        set (String &, String &)
+    {
+        return false;
+    }
 
+private:
+
+    uint32_t NextReadingTime = 0;
 };
 
-extern cPeakAudio PeakAudio;
+extern cPeakAudio  PeakAudio;
 
 // *********************************************************************************************
 // OEF

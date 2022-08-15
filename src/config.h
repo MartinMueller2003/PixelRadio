@@ -29,12 +29,12 @@
 #define ADV_RADIO_FEATURES
 
 /* Uncomment ADD_CHIP_ID if you want the ESP32's Unique Chip ID to be appended to the AP (Hotspot) Host Name. */
-//#define ADD_CHIP_ID
+// #define ADD_CHIP_ID
 
 /* COMMAND LINE INTERFACE SECTION (SERIAL PORT RDS CONTROLLER)
    Change CMD_EOL_TERM if your serial console doesn't send a Carriage Return <CR> when [ENTER] is pressed.
    For example, change to  '\n' if your terminal only sends a NEWLINE <LF> when [ENTER] is pressed. */
-#define CMD_EOL_TERM    '\r'                            // Serial Manager EOL termination character.
+#define CMD_EOL_TERM    '\r'    // Serial Manager EOL termination character.
 
 /* Uncomment MQTT_ENB define statement to enable the MQTT Controller. Approx 17KB used. */
 #define MQTT_ENB
@@ -47,10 +47,10 @@
 #define MDNS_ENB
 
 /* Uncomment OTA_ENB to enable Over-the-Air Firmware Updates. Approx 15KB used. */
-//#define OTA_ENB
+// #define OTA_ENB
 
 /* Uncomment OTA_REBOOT_ENB to enable automatic reboots after a successful OTA (Over-The-Air) firmware update.*/
-//#define OTA_REBOOT_ENB
+// #define OTA_REBOOT_ENB
 
 /* ----------------------------------------------------------------------------------------------------------------------- */
 // EOF

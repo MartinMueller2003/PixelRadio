@@ -21,17 +21,17 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String RDS_PSN_DEF_STR       = "PixeyFM";
-static const PROGMEM String RDS_PROG_SERV_STR     = "RDS_PROG_SERV_STR";
-static const PROGMEM String RDS_PROG_SERV_NM_STR  = "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)";
+static const PROGMEM String     RDS_PSN_DEF_STR         = "PixeyFM";
+static const PROGMEM String     RDS_PROG_SERV_STR       = "RDS_PROG_SERV_STR";
+static const PROGMEM String     RDS_PROG_SERV_NM_STR    = "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)";
 
 // *********************************************************************************************
-cProgramServiceName::cProgramServiceName() : cControlCommon(RDS_PROG_SERV_STR)
+cProgramServiceName::cProgramServiceName () : cControlCommon (RDS_PROG_SERV_STR)
 {
-    //_ DEBUG_START;
-    DataValueStr.reserve(10);
+    // _ DEBUG_START;
+    DataValueStr.reserve (10);
     DataValueStr = RDS_PSN_DEF_STR;
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -39,73 +39,73 @@ void cProgramServiceName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, ControlType::Text, color);
-    ESPUI.updateControlLabel(ControlId, RDS_PROG_SERV_NM_STR.c_str());
-    ESPUI.addControl(ControlType::Min, emptyString.c_str(), "4", ControlColor::None, ControlId);
-    ESPUI.addControl(ControlType::Max, emptyString.c_str(), "8", ControlColor::None, ControlId);
+    cControlCommon::AddControls (value, ControlType::Text, color);
+    ESPUI.updateControlLabel (ControlId, RDS_PROG_SERV_NM_STR.c_str ());
+    ESPUI.      addControl (    ControlType::Min,       emptyString.c_str (),   "4",    ControlColor::None,     ControlId);
+    ESPUI.      addControl (    ControlType::Max,       emptyString.c_str (),   "8",    ControlColor::None,     ControlId);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cProgramServiceName::ResetToDefaults()
+void cProgramServiceName::ResetToDefaults ()
 {
     // DEBUG_START;
 
-    String value = RDS_PSN_DEF_STR;
-    String dummy;
-    set(value, dummy);
+    String      value = RDS_PSN_DEF_STR;
+    String      dummy;
+
+    set (value, dummy);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cProgramServiceName::set(String & value, String & ResponseMessage)
+bool cProgramServiceName::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+
+    do  // once
     {
-        if(DataValueStr.equals(value))
+        if (DataValueStr.equals (value))
         {
             // DEBUG_V("Skip duplicate name");
             break;
         }
+        ResponseMessage = String (F ("Program Service Name: '")) + value;
 
-        ResponseMessage = String(F("Program Service Name: '")) + value;
-        if(value.length() < 4)
+        if (value.length () < 4)
         {
-            ResponseMessage += F("' is too short.");
-            Log.infoln(ResponseMessage.c_str());
+            ResponseMessage += F ("' is too short.");
+            Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
 
-        if(value.length() > 8)
+        if (value.length () > 8)
         {
-            ResponseMessage += F("' is too long.");
-            Log.infoln(ResponseMessage.c_str());
+            ResponseMessage += F ("' is too long.");
+            Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
-
         // DEBUG_V();
         DataValueStr = value;
 
-        ResponseMessage += F("' Accepted");
+        ResponseMessage += F ("' Accepted");
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
-        QN8027RadioApi.setProgramServiceName(DataValueStr, RfCarrier.get());
-        PtyCode.setPtyCodeOptionValues();
-        
-        displaySaveWarning();
-        Log.infoln(ResponseMessage.c_str());
-        ResponseMessage.clear();
-        
+        ESPUI.updateControlValue (ControlId, DataValueStr);
+        QN8027RadioApi.setProgramServiceName (DataValueStr, RfCarrier.get ());
+        PtyCode.setPtyCodeOptionValues ();
+
+        displaySaveWarning ();
+        Log.infoln (ResponseMessage.c_str ());
+        ResponseMessage.clear ();
     } while (false);
 
     // DEBUG_END;
@@ -113,7 +113,7 @@ bool cProgramServiceName::set(String & value, String & ResponseMessage)
 }
 
 // *********************************************************************************************
-cProgramServiceName ProgramServiceName;
+cProgramServiceName  ProgramServiceName;
 
 // *********************************************************************************************
 // OEF

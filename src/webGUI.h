@@ -19,51 +19,51 @@
 
 // ************************************************************************************************
 
-extern String tempStr;
+extern String  tempStr;
 
 
-extern uint16_t aboutTab;
-extern uint16_t adjTab;
-extern uint16_t backupTab;
-extern uint16_t ctrlTab;
-extern uint16_t diagTab;
-extern uint16_t gpioTab;
-extern uint16_t homeTab;
-extern uint16_t radioTab;
-extern uint16_t rdsTab;
-extern uint16_t wifiTab;
+extern uint16_t         aboutTab;
+extern uint16_t         adjTab;
+extern uint16_t         backupTab;
+extern uint16_t         ctrlTab;
+extern uint16_t         diagTab;
+extern uint16_t         gpioTab;
+extern uint16_t         homeTab;
+extern uint16_t         radioTab;
+extern uint16_t         rdsTab;
+extern uint16_t         wifiTab;
 
-extern uint16_t aboutLogoID;
-extern uint16_t aboutVersionID;
+extern uint16_t         aboutLogoID;
+extern uint16_t         aboutVersionID;
 
-extern uint16_t adjAvolID;
-extern uint16_t adjFreqID;
-extern uint16_t adjUvolID;
+extern uint16_t         adjAvolID;
+extern uint16_t         adjFreqID;
+extern uint16_t         adjUvolID;
 
-extern uint16_t backupRestoreID;
-extern uint16_t backupRestoreMsgID;
-extern uint16_t backupSaveSetID;
-extern uint16_t backupSaveSetMsgID;
+extern uint16_t         backupRestoreID;
+extern uint16_t         backupRestoreMsgID;
+extern uint16_t         backupSaveSetID;
+extern uint16_t         backupSaveSetMsgID;
 
-extern uint16_t ctrlLocalID;
+extern uint16_t         ctrlLocalID;
 
-extern uint16_t diagBootID;
-extern uint16_t diagBootMsgID;
-extern uint16_t diagLogID;
-extern uint16_t diagLogMsgID;
-extern uint16_t diagMemoryID;
-extern uint16_t diagSoundID;
-extern uint16_t diagTimerID;
-extern uint16_t diagVbatID;
-extern uint16_t diagVdcID;
+extern uint16_t         diagBootID;
+extern uint16_t         diagBootMsgID;
+extern uint16_t         diagLogID;
+extern uint16_t         diagLogMsgID;
+extern uint16_t         diagMemoryID;
+extern uint16_t         diagSoundID;
+extern uint16_t         diagTimerID;
+extern uint16_t         diagVbatID;
+extern uint16_t         diagVdcID;
 
-extern uint16_t gpio19ID;
-extern uint16_t gpio23ID;
-extern uint16_t gpio33ID;
-extern uint16_t gpio19MsgID;
-extern uint16_t gpio23MsgID;
-extern uint16_t gpio33MsgID;
+extern uint16_t         gpio19ID;
+extern uint16_t         gpio23ID;
+extern uint16_t         gpio33ID;
+extern uint16_t         gpio19MsgID;
+extern uint16_t         gpio23MsgID;
+extern uint16_t         gpio33MsgID;
 
-extern uint16_t homeOnAirID;
+extern uint16_t         homeOnAirID;
 
-extern uint16_t rdsSnameID;
+extern uint16_t         rdsSnameID;

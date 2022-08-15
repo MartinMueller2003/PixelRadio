@@ -22,13 +22,19 @@
 class cConfigSave
 {
 public:
-                cConfigSave () {}
-    virtual     ~cConfigSave() {}
 
-    void        AddControls(uint16_t adjTab, ControlColor color);
-    void        ClearSaveNeeded();
-    void        InitiateSaveOperation();
-    void        SetSaveNeeded();
+    cConfigSave ()
+    {
+    }
+
+    virtual     ~cConfigSave ()
+    {
+    }
+
+    void        AddControls (uint16_t adjTab, ControlColor color);
+    void        ClearSaveNeeded ();
+    void        InitiateSaveOperation ();
+    void        SetSaveNeeded ();
 };
 
 extern cConfigSave  ConfigSave;

@@ -38,83 +38,83 @@
 #include "TestTone.hpp"
 
 // *********************************************************************************************
-void cRadio::begin()
+void cRadio::begin ()
 {
     // DEBUG_START;
 
-    QN8027RadioApi.begin(); // If QN8027 fails we will warn user on UI homeTab.
-    Log.infoln(String(F("FM Radio RDS/RBDS Started.")).c_str());
+    QN8027RadioApi.begin ();    // If QN8027 fails we will warn user on UI homeTab.
+    Log.infoln (String (F ("FM Radio RDS/RBDS Started.")).c_str ());
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::Poll()
+void cRadio::Poll ()
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    TestTone.poll();
-    RdsText.poll();
+    TestTone.poll ();
+    RdsText.poll ();
 
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::restoreConfiguration(JsonObject & config)
+void cRadio::restoreConfiguration (JsonObject &config)
 {
     // DEBUG_START;
 
-    AnalogAudioGain.restoreConfiguration(config);
-    AudioInputImpedance.restoreConfiguration(config);
-    AudioMode.restoreConfiguration(config);
-    AudioMute.restoreConfiguration(config);
-    DigitalAudioGain.restoreConfiguration(config);
-    FrequencyAdjust.restoreConfiguration(config);
-    PiCode.restoreConfiguration(config);
-    PreEmphasis.restoreConfiguration(config);
-    PtyCode.saveConfiguration(config);
-    RfCarrier.restoreConfiguration(config);
-    RfPower.restoreConfiguration(config);
+    AnalogAudioGain.restoreConfiguration (config);
+    AudioInputImpedance.restoreConfiguration (config);
+    AudioMode.restoreConfiguration (config);
+    AudioMute.restoreConfiguration (config);
+    DigitalAudioGain.restoreConfiguration (config);
+    FrequencyAdjust.restoreConfiguration (config);
+    PiCode.restoreConfiguration (config);
+    PreEmphasis.restoreConfiguration (config);
+    PtyCode.saveConfiguration (config);
+    RfCarrier.restoreConfiguration (config);
+    RfPower.restoreConfiguration (config);
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRadio::saveConfiguration(JsonObject & config)
+void cRadio::saveConfiguration (JsonObject &config)
 {
     // DEBUG_START;
 
-    AnalogAudioGain.saveConfiguration(config);
-    AudioInputImpedance.saveConfiguration(config);
-    AudioMode.saveConfiguration(config);
-    AudioMute.saveConfiguration(config);
-    DigitalAudioGain.saveConfiguration(config);
-    FrequencyAdjust.saveConfiguration(config);
-    PiCode.saveConfiguration(config);
-    PreEmphasis.saveConfiguration(config);
-    PtyCode.saveConfiguration(config);
-    RfCarrier.saveConfiguration(config);
-    RfPower.saveConfiguration(config);
+    AnalogAudioGain.saveConfiguration (config);
+    AudioInputImpedance.saveConfiguration (config);
+    AudioMode.saveConfiguration (config);
+    AudioMute.saveConfiguration (config);
+    DigitalAudioGain.saveConfiguration (config);
+    FrequencyAdjust.saveConfiguration (config);
+    PiCode.saveConfiguration (config);
+    PreEmphasis.saveConfiguration (config);
+    PtyCode.saveConfiguration (config);
+    RfCarrier.saveConfiguration (config);
+    RfPower.saveConfiguration (config);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
 // updateOnAirSign(): Turn on the "On Air" LED Sign if RF Carrier is present.
-void cRadio::updateOnAirSign(void)
+void cRadio::updateOnAirSign (void)
 {
     // DEBUG_START;
-#ifdef OldWay
-new way: call GPIO and tell it to update the output and the UI.
+    #ifdef OldWay
+    new way: call  GPIO and tell it to update the output and the UI.
 
     if (rfCarrierFlg)
     {
-        digitalWrite(ON_AIR_PIN, SIGN_ON);
+        digitalWrite (ON_AIR_PIN, SIGN_ON);
     }
-    else 
+    else
     {
-        digitalWrite(ON_AIR_PIN, SIGN_OFF);
+        digitalWrite (ON_AIR_PIN, SIGN_OFF);
     }
-#endif // def OldWay
+    #endif // def OldWay
 
     // DEBUG_END;
 }

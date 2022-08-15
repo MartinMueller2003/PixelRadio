@@ -24,17 +24,22 @@
 class c_ControllerHTTP : public c_ControllerCommon
 {
 public:
-            c_ControllerHTTP();
-   virtual  ~c_ControllerHTTP();
-   void     saveConfiguration(ArduinoJson::JsonObject &config);
-   void     restoreConfiguration(ArduinoJson::JsonObject &config);
-   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response) { if(ControllerEnabled){ Messages.GetNextRdsMessage(Response); }}
 
-private: 
-   uint16_t EspuiControlID = 0;
-   c_ControllerMessages Messages;
+    c_ControllerHTTP ();
+    virtual  ~c_ControllerHTTP ();
+    void        saveConfiguration (ArduinoJson::JsonObject &config);
+    void        restoreConfiguration (ArduinoJson::JsonObject &config);
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+    {
+        if (ControllerEnabled)
+            Messages.GetNextRdsMessage (Response);
+    }
 
-}; // c_ControllerHTTP
+private:
+
+    uint16_t EspuiControlID = 0;
+    c_ControllerMessages Messages;
+};      // c_ControllerHTTP
 
 // *********************************************************************************************
 // EOF

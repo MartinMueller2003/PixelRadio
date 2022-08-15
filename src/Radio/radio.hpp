@@ -23,8 +23,14 @@
 class cRadio
 {
 public:
-                cRadio () {}
-    virtual     ~cRadio() {}
+
+    cRadio ()
+    {
+    }
+
+    virtual     ~cRadio ()
+    {
+    }
 
     void        AddAdjControls (uint16_t Tab, ControlColor color);
     void        AddDiagControls (uint16_t Tab, ControlColor color);
@@ -33,13 +39,13 @@ public:
     void        AddRdsControls (uint16_t Tab, ControlColor color);
 
     void        begin ();
-    void        Poll();
-    void        restoreConfiguration(JsonObject &json);
-    void        saveConfiguration (JsonObject & json);
-    
+    void        Poll ();
+    void        restoreConfiguration (JsonObject &json);
+    void        saveConfiguration (JsonObject &json);
+
 private:
-    void        updateOnAirSign(void);
-    
+
+    void updateOnAirSign (void);
 };
 
 extern cRadio  Radio;

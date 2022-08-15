@@ -18,22 +18,22 @@
 
 // *********************************************************************************************
 
-extern bool newAutoRfFlg;
-extern bool newGpio19Flg;
-extern bool newGpio23Flg;
-extern bool newGpio33Flg;
-extern bool rebootFlg;
-extern uint8_t usbVol;
+extern bool     newAutoRfFlg;
+extern bool     newGpio19Flg;
+extern bool     newGpio23Flg;
+extern bool     newGpio33Flg;
+extern bool     rebootFlg;
+extern uint8_t  usbVol;
 
-extern float vbatVolts;
+extern float    vbatVolts;
 
 // GUI Strings
-extern String gpio19BootStr;
-extern String gpio23BootStr;
-extern String gpio33BootStr;
-extern String gpio19CtrlStr;
-extern String gpio23CtrlStr;
-extern String gpio33CtrlStr;
-extern String logLevelStr;
-extern String userNameStr;
-extern String userPassStr;
+extern String   gpio19BootStr;
+extern String   gpio23BootStr;
+extern String   gpio33BootStr;
+extern String   gpio19CtrlStr;
+extern String   gpio23CtrlStr;
+extern String   gpio33CtrlStr;
+extern String   logLevelStr;
+extern String   userNameStr;
+extern String   userPassStr;

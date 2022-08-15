@@ -21,26 +21,32 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static std::map<String, uint8_t> MapOfGainValues
+static std::map <String, uint8_t>  MapOfGainValues
 {
-    {"0 dB (default)",  0},
-    {"1 dB",  1},
-    {"2 dB",  2},
+    {
+        "0 dB (default)",  0
+    },
+    {
+        "1 dB",  1
+    },
+    {
+        "2 dB",  2
+    },
 };
 
-static const PROGMEM String RADIO_DIG_AUDIO_STR   = "DIGITAL AUDIO GAIN";
-static const PROGMEM String DIG_GAIN_DEF_STR      = "0 dB (default)";
-static const PROGMEM String DIGITAL_GAIN_STR      = "DIGITAL_GAIN_STR";
+static const PROGMEM String     RADIO_DIG_AUDIO_STR     = "DIGITAL AUDIO GAIN";
+static const PROGMEM String     DIG_GAIN_DEF_STR        = "0 dB (default)";
+static const PROGMEM String     DIGITAL_GAIN_STR        = "DIGITAL_GAIN_STR";
 
 // *********************************************************************************************
-cDigitalAudioGain::cDigitalAudioGain() : cControlCommon(String(DIGITAL_GAIN_STR))
+cDigitalAudioGain::cDigitalAudioGain () : cControlCommon (String (DIGITAL_GAIN_STR))
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    DataValueStr = DIG_GAIN_DEF_STR;
-    DataValue = MapOfGainValues[DataValueStr];
+    DataValueStr        = DIG_GAIN_DEF_STR;
+    DataValue           = MapOfGainValues[DataValueStr];
 
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -48,43 +54,45 @@ void cDigitalAudioGain::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, ControlType::Select, color);
-    ESPUI.updateControlLabel(ControlId, RADIO_DIG_AUDIO_STR.c_str());
+    cControlCommon::AddControls (value, ControlType::Select, color);
+    ESPUI.updateControlLabel (ControlId, RADIO_DIG_AUDIO_STR.c_str ());
 
-    for(auto & CurrentOption : MapOfGainValues)
+    for (auto &CurrentOption : MapOfGainValues)
     {
-        ESPUI.addControl(ControlType::Option, 
-                        CurrentOption.first.c_str(), 
-                        CurrentOption.first, 
-                        ControlColor::None, 
-                        ControlId);
+        ESPUI.addControl (
+            ControlType::Option,
+            CurrentOption.first.c_str (),
+            CurrentOption.first,
+            ControlColor::None,
+            ControlId);
     }
-    ESPUI.updateControlValue(ControlId, DataValueStr);
+    ESPUI.updateControlValue (ControlId, DataValueStr);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cDigitalAudioGain::set(String & value, String & ResponseMessage)
+bool cDigitalAudioGain::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+
+    do  // once
     {
-        if(DataValueStr.equals(value))
+        if (DataValueStr.equals (value))
         {
             // DEBUG_V("Ignore duplicate setting");
             break;
         }
 
-        if(MapOfGainValues.end() == MapOfGainValues.find(value))
+        if (MapOfGainValues.end () == MapOfGainValues.find (value))
         {
-            ResponseMessage = String(F("Digital Gain: Set: BAD VALUE: ")) + value;
-            Log.errorln(ResponseMessage.c_str());
+            ResponseMessage = String (F ("Digital Gain: Set: BAD VALUE: ")) + value;
+            Log.errorln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
@@ -92,24 +100,23 @@ bool cDigitalAudioGain::set(String & value, String & ResponseMessage)
 
         // DEBUG_V("Update the radio")
         DataValue = MapOfGainValues[DataValueStr];
-        QN8027RadioApi.setDigitalGain(DataValue);
+        QN8027RadioApi.setDigitalGain (DataValue);
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
-        
-        AudioGain.set();
+        ESPUI.updateControlValue (ControlId, DataValueStr);
 
-        displaySaveWarning();
+        AudioGain.set ();
 
+        displaySaveWarning ();
     } while (false);
 
-    Log.infoln(String(F("Digital Gain Set to: %s.")).c_str(), DataValueStr.c_str());
+    Log.infoln (String (F ("Digital Gain Set to: %s.")).c_str (), DataValueStr.c_str ());
 
     // DEBUG_END;
     return Response;
 }
 
 // *********************************************************************************************
-cDigitalAudioGain DigitalAudioGain;
+cDigitalAudioGain  DigitalAudioGain;
 
 // *********************************************************************************************
 // OEF

@@ -21,21 +21,24 @@
 class cPtyCode : public cControlCommon
 {
 public:
-              cPtyCode ();
-    virtual   ~cPtyCode() {}
 
-    void      AddControls (uint16_t TabId, ControlColor color);
-    void      ResetToDefaults();
-    bool      set(String & value, String & Response);
+    cPtyCode ();
+    virtual   ~cPtyCode ()
+    {
+    }
 
-    void      setPtyCodeOptionValues ();
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String &value, String &Response);
+
+    void        setPtyCodeOptionValues ();
 
 private:
-    void      updateUiPtyCode();
 
+    void updateUiPtyCode ();
 };
 
-extern cPtyCode PtyCode;
+extern cPtyCode  PtyCode;
 
 // *********************************************************************************************
 // OEF

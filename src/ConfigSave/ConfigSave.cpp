@@ -22,58 +22,58 @@
 
 // *********************************************************************************************
 
-static std::vector<cSaveControl *> ListOfSaveControls;
+static std::vector <cSaveControl *>  ListOfSaveControls;
 
 // *********************************************************************************************
 
-void  cConfigSave::AddControls(uint16_t TabId, ControlColor color)
+void cConfigSave::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
     // DEBUG_V(String("TabId: ") + String(TabId))
     // DEBUG_V(String("color: ") + String(color))
 
-    ListOfSaveControls.emplace_back(new cSaveControl());
-    ListOfSaveControls.back()->AddControls(TabId, color);
+    ListOfSaveControls.emplace_back (new cSaveControl ());
+    ListOfSaveControls.back ()->AddControls (TabId, color);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cConfigSave::SetSaveNeeded()
+void cConfigSave::SetSaveNeeded ()
 {
     // DEBUG_START;
 
-    for(auto & CurrentControl : ListOfSaveControls)
+    for (auto &CurrentControl : ListOfSaveControls)
     {
-      CurrentControl->SetSaveNeeded();
+        CurrentControl->SetSaveNeeded ();
     }
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cConfigSave::ClearSaveNeeded()
+void cConfigSave::ClearSaveNeeded ()
 {
     // DEBUG_START;
 
-    for(auto & CurrentControl : ListOfSaveControls)
+    for (auto &CurrentControl : ListOfSaveControls)
     {
-      CurrentControl->ClearSaveNeeded();
+        CurrentControl->ClearSaveNeeded ();
     }
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cConfigSave::InitiateSaveOperation()
+void cConfigSave::InitiateSaveOperation ()
 {
-  DEBUG_START;
+    DEBUG_START;
 
-  // saveSuccessFlg = saveConfiguration(LITTLEFS_MODE, fileName);
-  ClearSaveNeeded();
+    // saveSuccessFlg = saveConfiguration(LITTLEFS_MODE, fileName);
+    ClearSaveNeeded ();
 
-  DEBUG_END;
+    DEBUG_END;
 }
 
 // *********************************************************************************************

@@ -24,20 +24,20 @@
 class c_ControllerLOCAL : public c_ControllerCommon
 {
 public:
-   c_ControllerLOCAL();
-   virtual ~c_ControllerLOCAL();
 
-   void AddControls(uint16_t ctrlTab);
-   void restoreConfiguration(ArduinoJson::JsonObject &config);
-   void saveConfiguration(ArduinoJson::JsonObject &config);
-   void CreateDefaultMsgSet();
-   void GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
+    c_ControllerLOCAL ();
+    virtual ~c_ControllerLOCAL ();
+
+    void        AddControls (uint16_t ctrlTab);
+    void        restoreConfiguration (ArduinoJson::JsonObject &config);
+    void        saveConfiguration (ArduinoJson::JsonObject &config);
+    void        CreateDefaultMsgSet ();
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
 
-   c_ControllerMessages Messages;
-
-}; // c_ControllerLOCAL
+    c_ControllerMessages Messages;
+};      // c_ControllerLOCAL
 
 // *********************************************************************************************
 // EOF

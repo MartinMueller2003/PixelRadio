@@ -28,289 +28,296 @@
 #include "ControllerUsbSERIAL.h"
 #include "language.h"
 
-#if __has_include("memdebug.h")
-#  include "memdebug.h"
+#if __has_include ("memdebug.h")
+# include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 struct ControllerDefinition_t
 {
-   c_ControllerMgr::ControllerTypeId_t Type;
-   uint16_t                            ActiveBit;
-   uint16_t                            SendingBit;
+    c_ControllerMgr::ControllerTypeId_t Type;
+    uint16_t                            ActiveBit;
+    uint16_t                            SendingBit;
 };
 
-static const ControllerDefinition_t ControllerDefinitions[] = 
+static const ControllerDefinition_t  ControllerDefinitions[] =
 {
-   {c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL, SERIAL_CONTROLLER_ACTIVE_FLAG, 0x0008 },
-   {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,       MQTT_CONTROLLER_ACTIVE_FLAG,   0x0004 },
-   {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,       FPPD_CONTROLLER_ACTIVE_FLAG,   0x1000 },
-   {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,       HTTP_CONTROLLER_ACTIVE_FLAG,   0x0002 },
-   {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,      LOCAL_CONTROLLER_ACTIVE_FLAG,  0x0001 },
-   {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,         0,                             0x0000 },
+    {
+        c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL, SERIAL_CONTROLLER_ACTIVE_FLAG, 0x0008
+    },
+    {
+        c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,       MQTT_CONTROLLER_ACTIVE_FLAG,   0x0004
+    },
+    {
+        c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,       FPPD_CONTROLLER_ACTIVE_FLAG,   0x1000
+    },
+    {
+        c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,       HTTP_CONTROLLER_ACTIVE_FLAG,   0x0002
+    },
+    {
+        c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,      LOCAL_CONTROLLER_ACTIVE_FLAG,  0x0001
+    },
+    {
+        c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,         0,                             0x0000
+    },
 };
 
 // *********************************************************************************************
-c_ControllerMgr::c_ControllerMgr()
+c_ControllerMgr::c_ControllerMgr ()
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   for(auto& CurrentDefinition : ControllerDefinitions)
-   {
-      uint32_t index = int(CurrentDefinition.Type);
-      ListOfControllers[index].ControllerId = CurrentDefinition.Type;
-      ListOfControllers[index].ActiveBit    = CurrentDefinition.ActiveBit;
-      ListOfControllers[index].SendingBit   = CurrentDefinition.SendingBit;
-      
-      switch(CurrentDefinition.Type)
-      {
-         case ControllerTypeId_t::NO_CNTRL:
-         {
-            // DEBUG_V("NO_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerNONE();
-            break;
-         }
+    for (auto &CurrentDefinition : ControllerDefinitions)
+    {
+        uint32_t  index = int(CurrentDefinition.Type);
+        ListOfControllers[index].ControllerId   = CurrentDefinition.Type;
+        ListOfControllers[index].ActiveBit      = CurrentDefinition.ActiveBit;
+        ListOfControllers[index].SendingBit     = CurrentDefinition.SendingBit;
 
-         case ControllerTypeId_t::USB_SERIAL_CNTRL:
-         {
-            // DEBUG_V("SERIAL_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerUsbSERIAL();
-            break;
-         }
+        switch (CurrentDefinition.Type)
+        {
+            case ControllerTypeId_t::NO_CNTRL:
+            {
+                // DEBUG_V("NO_CNTRL");
+                ListOfControllers[index].pController = new c_ControllerNONE ();
+                break;
+            }
 
-         case ControllerTypeId_t::MQTT_CNTRL:
-         {
-            // DEBUG_V("MQTT_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerMQTT();
-            break;
-         }
+            case ControllerTypeId_t::USB_SERIAL_CNTRL:
+            {
+                // DEBUG_V("SERIAL_CNTRL");
+                ListOfControllers[index].pController = new c_ControllerUsbSERIAL ();
+                break;
+            }
 
-         case ControllerTypeId_t::FPPD_CNTRL:
-         {
-            // DEBUG_V("FPPD_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerFPPD();
-            break;
-         }
+            case ControllerTypeId_t::MQTT_CNTRL:
+            {
+                // DEBUG_V("MQTT_CNTRL");
+                ListOfControllers[index].pController = new c_ControllerMQTT ();
+                break;
+            }
 
-         case ControllerTypeId_t::HTTP_CNTRL:
-         {
-            // DEBUG_V("HTTP_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerHTTP();
-            break;
-         }
+            case ControllerTypeId_t::FPPD_CNTRL:
+            {
+                // DEBUG_V("FPPD_CNTRL");
+                ListOfControllers[index].pController = new c_ControllerFPPD ();
+                break;
+            }
 
-         case ControllerTypeId_t::LOCAL_CNTRL:
-         {
-            // DEBUG_V("LOCAL_CNTRL");
-            ListOfControllers[index].pController = new c_ControllerLOCAL();
-            break;
-         } 
-         
-         default:
-         {
-            // DEBUG_V("default");
-            ListOfControllers[index].pController = new c_ControllerNONE();
-            // post an error
-            break;
-         }
-      } // end switch(index)
-   }
+            case ControllerTypeId_t::HTTP_CNTRL:
+            {
+                // DEBUG_V("HTTP_CNTRL");
+                ListOfControllers[index].pController = new c_ControllerHTTP ();
+                break;
+            }
 
-   // DEBUG_END;
+            case ControllerTypeId_t::LOCAL_CNTRL:
+            {
+                // DEBUG_V("LOCAL_CNTRL");
+                ListOfControllers[index].pController = new c_ControllerLOCAL ();
+                break;
+            }
 
-} // c_ControllerMgr
+            default:
+            {
+                // DEBUG_V("default");
+                ListOfControllers[index].pController = new c_ControllerNONE ();
+                // post an error
+                break;
+            }
+        }       // end switch(index)
+    }
+
+    // DEBUG_END;
+}       // c_ControllerMgr
 
 // *********************************************************************************************
-c_ControllerMgr::~c_ControllerMgr()
+c_ControllerMgr::~c_ControllerMgr ()
 {
-   for (auto & CurrentController : ListOfControllers)
-   {
-      if (nullptr != CurrentController.pController)
-      {
-         delete CurrentController.pController;
-         CurrentController.pController = nullptr;
-      }
-   }
+    for (auto &CurrentController : ListOfControllers)
+    {
+        if (nullptr != CurrentController.pController)
+        {
+            delete CurrentController.pController;
+            CurrentController.pController = nullptr;
+        }
+    }
 }
 
 // *********************************************************************************************
-void c_ControllerMgr::AddControls(uint16_t ctrlTab)
+void c_ControllerMgr::AddControls (uint16_t ctrlTab)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   for (auto &CurrentController : ListOfControllers)
-   {
-      // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
-      CurrentController.pController->AddControls(ctrlTab);
-   }
-   // DEBUG_END;
-} // AddControls
+    for (auto &CurrentController : ListOfControllers)
+    {
+        // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
+        CurrentController.pController->AddControls (ctrlTab);
+    }
+    // DEBUG_END;
+}       // AddControls
 
 // *********************************************************************************************
-void c_ControllerMgr::begin()
+void c_ControllerMgr::begin ()
 {
-   // DEBUG_START;
-   for (auto &CurrentController : ListOfControllers)
-   {
-      // DEBUG_V(String("Begin: ") + CurrentController.pController->GetName());
-      // DEBUG_V(String("pController: 0x") + String(uint32_t(CurrentController.pController), HEX));
-      CurrentController.pController->begin();
-   }
-   // DEBUG_END;
-} // begin
+    // DEBUG_START;
+    for (auto &CurrentController : ListOfControllers)
+    {
+        // DEBUG_V(String("Begin: ") + CurrentController.pController->GetName());
+        // DEBUG_V(String("pController: 0x") + String(uint32_t(CurrentController.pController), HEX));
+        CurrentController.pController->begin ();
+    }
+    // DEBUG_END;
+}       // begin
 
 // *********************************************************************************************
-c_ControllerCommon * c_ControllerMgr::GetControllerById(ControllerTypeId_t Id)
+c_ControllerCommon * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id)
 {
-   return ListOfControllers[Id].pController;
-} // GetControllerById
+    return ListOfControllers[Id].pController;
+}       // GetControllerById
 
 // *********************************************************************************************
-void c_ControllerMgr::GetNextRdsMessage(RdsMsgInfo_t &Response)
+void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t &Response)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   Response.DurationMilliSec = 0;
-   Response.Text = F("No Controllers Available");
-   CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
+    Response.DurationMilliSec   = 0;
+    Response.Text               = F ("No Controllers Available");
+    CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
 
-   for (auto &CurrentController : ListOfControllers)
-   {
-      if(!CurrentController.pController->ControllerIsEnabled())
-      {
-         continue;
-      }
-
-      Response.Text = F("No Messages Available");
-      CurrentController.pController->GetNextRdsMessage(Response);
-
-      if(Response.DurationMilliSec)
-      {
-         // DEBUG_V("Found a message to send");
-         
-         Response.ControllerName = CurrentController.pController->GetName();
-         CurrentSendingControllerId = CurrentController.ControllerId;
-
-         // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
-         // DEBUG_V(String("           Text: ") + String(Response.Text));
-         // DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
-         break;
-      }
-   }
-
-   // DEBUG_END;
-}
-
-// *********************************************************************************************
-uint16_t c_ControllerMgr::getControllerStatusSummary()
-{
-   // DEBUG_START;
-
-   uint16_t Response = 0;
-
-   for(auto& CurrentController : ListOfControllers)
-   {
-      if(CurrentController.pController->ControllerIsEnabled())
-      {
-         Response |= CurrentController.ActiveBit;
-      }
-
-      if(CurrentController.ControllerId == CurrentSendingControllerId)
-      {
-         Response |= CurrentController.SendingBit;
-      }
-   }
-
-   // DEBUG_END;
-   return Response;
-}
-
-// *********************************************************************************************
-String c_ControllerMgr::GetName(ControllerTypeId_t Id)
-{
-   return ListOfControllers[Id].pController->GetName();
-} // GetName
-
-// *********************************************************************************************
-void c_ControllerMgr::poll()
-{
-   //_ DEBUG_START;
-   for (auto &CurrentController : ListOfControllers)
-   {
-      CurrentController.pController->poll();
-   }
-   //_ DEBUG_END;
-} // poll
-
-// *********************************************************************************************
-void c_ControllerMgr::restoreConfiguration(ArduinoJson::JsonObject &config)
-{
-   // DEBUG_START;
-
-   serializeJsonPretty(config, Serial);
-
-   do // once
-   {
-      if (false == config.containsKey(N_controllers))
-      {
-         // DEBUG_V("No Config Found");
-         break;
-      }
-      // DEBUG_V();
-
-      JsonArray ArrayOfControllerConfigs = config[N_controllers];
-
-      for (auto CurrentControllerConfig : ArrayOfControllerConfigs)
-      {
-         // DEBUG_V("Individual Controller Config");
-         // serializeJsonPretty(CurrentControllerConfig, Serial);
-         // DEBUG_V();
-         if (false == CurrentControllerConfig.containsKey(N_type))
-         {
-            // DEBUG_V("No controller type ID found");
+    for (auto &CurrentController : ListOfControllers)
+    {
+        if (!CurrentController.pController->ControllerIsEnabled ())
+        {
             continue;
-         }
+        }
+        Response.Text = F ("No Messages Available");
+        CurrentController.pController->GetNextRdsMessage (Response);
 
-         uint32_t type = CurrentControllerConfig[N_type];
-         // DEBUG_V(String("Type ID: ") + String(type));
-         JsonObject Temp = CurrentControllerConfig;
-         ListOfControllers[type].pController->restoreConfiguration(Temp);
-      }
+        if (Response.DurationMilliSec)
+        {
+            // DEBUG_V("Found a message to send");
 
-   } while (false);
+            Response.ControllerName     = CurrentController.pController->GetName ();
+            CurrentSendingControllerId  = CurrentController.ControllerId;
 
-   // DEBUG_END;
-} // restoreConfiguration
+            // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
+            // DEBUG_V(String("           Text: ") + String(Response.Text));
+            // DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
+            break;
+        }
+    }
+
+    // DEBUG_END;
+}
 
 // *********************************************************************************************
-void c_ControllerMgr::saveConfiguration(ArduinoJson::JsonObject &config)
+uint16_t c_ControllerMgr::getControllerStatusSummary ()
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   do // once
-   {
-      if (!config.containsKey(N_controllers))
-      {
-         // DEBUG_V();
-         config.createNestedArray(N_controllers);
-      }
-      // DEBUG_V();
+    uint16_t  Response = 0;
 
-      JsonArray ControllerConfigs = config[N_controllers];
+    for (auto &CurrentController : ListOfControllers)
+    {
+        if (CurrentController.pController->ControllerIsEnabled ())
+        {
+            Response |= CurrentController.ActiveBit;
+        }
 
-      for (auto &CurrentController : ListOfControllers)
-      {
-         JsonObject ControllerConfig = ControllerConfigs.createNestedObject();
-         CurrentController.pController->saveConfiguration(ControllerConfig);
-      }
+        if (CurrentController.ControllerId == CurrentSendingControllerId)
+        {
+            Response |= CurrentController.SendingBit;
+        }
+    }
 
-   } while (false);
+    // DEBUG_END;
+    return Response;
+}
 
-   serializeJsonPretty(config, Serial);
+// *********************************************************************************************
+String c_ControllerMgr::GetName (ControllerTypeId_t Id)
+{
+    return ListOfControllers[Id].pController->GetName ();
+}       // GetName
 
-   // DEBUG_END;
-} // saveConfiguration
+// *********************************************************************************************
+void c_ControllerMgr::poll ()
+{
+    // _ DEBUG_START;
+    for (auto &CurrentController : ListOfControllers)
+    {
+        CurrentController.pController->poll ();
+    }
+    // _ DEBUG_END;
+}       // poll
 
-c_ControllerMgr ControllerMgr;
+// *********************************************************************************************
+void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject &config)
+{
+    // DEBUG_START;
+
+    serializeJsonPretty (config, Serial);
+
+    do  // once
+    {
+        if (false == config.containsKey (N_controllers))
+        {
+            // DEBUG_V("No Config Found");
+            break;
+        }
+        // DEBUG_V();
+
+        JsonArray  ArrayOfControllerConfigs = config[N_controllers];
+
+        for (auto CurrentControllerConfig : ArrayOfControllerConfigs)
+        {
+            // DEBUG_V("Individual Controller Config");
+            // serializeJsonPretty(CurrentControllerConfig, Serial);
+            // DEBUG_V();
+            if (false == CurrentControllerConfig.containsKey (N_type))
+            {
+                // DEBUG_V("No controller type ID found");
+                continue;
+            }
+            uint32_t    type = CurrentControllerConfig[N_type];
+            // DEBUG_V(String("Type ID: ") + String(type));
+            JsonObject  Temp = CurrentControllerConfig;
+            ListOfControllers[type].pController->restoreConfiguration (Temp);
+        }
+    } while (false);
+
+    // DEBUG_END;
+}       // restoreConfiguration
+
+// *********************************************************************************************
+void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject &config)
+{
+    // DEBUG_START;
+
+    do  // once
+    {
+        if (!config.containsKey (N_controllers))
+        {
+            // DEBUG_V();
+            config.createNestedArray (N_controllers);
+        }
+        // DEBUG_V();
+
+        JsonArray  ControllerConfigs = config[N_controllers];
+
+        for (auto &CurrentController : ListOfControllers)
+        {
+            JsonObject  ControllerConfig = ControllerConfigs.createNestedObject ();
+            CurrentController.pController->saveConfiguration (ControllerConfig);
+        }
+    } while (false);
+
+    serializeJsonPretty (config, Serial);
+
+    // DEBUG_END;
+}       // saveConfiguration
+
+c_ControllerMgr  ControllerMgr;
 
 // *********************************************************************************************
 // EOF

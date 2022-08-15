@@ -26,27 +26,35 @@
 #define INP_IMP20K_STR   "20K Ohms (default)"
 #define INP_IMP40K_STR   "40K Ohms"
 
-static std::map<String, uint8_t> MapOfImpedances
+static std::map <String, uint8_t>  MapOfImpedances
 {
-    {INP_IMP05K_STR,  5},
-    {INP_IMP10K_STR, 10},
-    {INP_IMP20K_STR, 20},
-    {INP_IMP40K_STR, 40},
+    {
+        INP_IMP05K_STR,  5
+    },
+    {
+        INP_IMP10K_STR, 10
+    },
+    {
+        INP_IMP20K_STR, 20
+    },
+    {
+        INP_IMP40K_STR, 40
+    },
 };
 
-static const PROGMEM String INPUT_IMPED_STR    = "INPUT_IMPED_STR";
-static const PROGMEM char INP_IMP_DEF_STR   [] = INP_IMP20K_STR;
-static const PROGMEM String RADIO_INP_IMP_STR  = "INPUT IMPEDANCE";
+static const PROGMEM String     INPUT_IMPED_STR         = "INPUT_IMPED_STR";
+static const PROGMEM char       INP_IMP_DEF_STR   []    = INP_IMP20K_STR;
+static const PROGMEM String     RADIO_INP_IMP_STR       = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
-cAudioInputImpedance::cAudioInputImpedance() : cControlCommon(INPUT_IMPED_STR)
+cAudioInputImpedance::cAudioInputImpedance () : cControlCommon (INPUT_IMPED_STR)
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    DataValueStr = INP_IMP_DEF_STR;
-    DataValue = MapOfImpedances[DataValueStr];
+    DataValueStr        = INP_IMP_DEF_STR;
+    DataValue           = MapOfImpedances[DataValueStr];
 
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -54,54 +62,55 @@ void cAudioInputImpedance::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, ControlType::Select, color);
-    ESPUI.updateControlLabel(ControlId, RADIO_INP_IMP_STR.c_str());
+    cControlCommon::AddControls (value, ControlType::Select, color);
+    ESPUI.updateControlLabel (ControlId, RADIO_INP_IMP_STR.c_str ());
 
-    for(auto & CurrentOption : MapOfImpedances)
+    for (auto &CurrentOption : MapOfImpedances)
     {
-        ESPUI.addControl(ControlType::Option, 
-                        CurrentOption.first.c_str(), 
-                        CurrentOption.first, 
-                        ControlColor::None, 
-                        ControlId);
+        ESPUI.addControl (
+            ControlType::Option,
+            CurrentOption.first.c_str (),
+            CurrentOption.first,
+            ControlColor::None,
+            ControlId);
     }
 
-    ESPUI.updateControlValue(ControlId, DataValueStr);
+    ESPUI.updateControlValue (ControlId, DataValueStr);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cAudioInputImpedance::set(String & value, String & ResponseMessage)
+bool cAudioInputImpedance::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+
+    do  // once
     {
-        if (MapOfImpedances.end() == MapOfImpedances.find(value))
+        if (MapOfImpedances.end () == MapOfImpedances.find (value))
         {
-            ResponseMessage = F("AudioInputImpedance::Set: BAD_VALUE: ");
-            ResponseMessage += DataValueStr;
-            Log.errorln(ResponseMessage.c_str());
+            ResponseMessage     = F ("AudioInputImpedance::Set: BAD_VALUE: ");
+            ResponseMessage     += DataValueStr;
+            Log.errorln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
+        DataValueStr    = value;
+        DataValue       = MapOfImpedances[DataValueStr];
 
-        DataValueStr = value;
-        DataValue = MapOfImpedances[DataValueStr];
+        QN8027RadioApi.setAudioImpedance (DataValue);
 
-        QN8027RadioApi.setAudioImpedance(DataValue);
+        ESPUI.updateControlValue (ControlId, DataValueStr);
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
+        AudioGain.set ();
 
-        AudioGain.set();
-
-        Log.infoln(String(F("Input Impedance Set to: %s.")).c_str(), DataValueStr.c_str());
-        displaySaveWarning();
+        Log.infoln (String (F ("Input Impedance Set to: %s.")).c_str (), DataValueStr.c_str ());
+        displaySaveWarning ();
     } while (false);
 
     // DEBUG_END;
@@ -109,7 +118,7 @@ bool cAudioInputImpedance::set(String & value, String & ResponseMessage)
 }
 
 // *********************************************************************************************
-cAudioInputImpedance AudioInputImpedance;
+cAudioInputImpedance  AudioInputImpedance;
 
 // *********************************************************************************************
 // OEF

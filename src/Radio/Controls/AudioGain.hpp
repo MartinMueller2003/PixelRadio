@@ -21,18 +21,30 @@
 class cAudioGain : public cControlCommon
 {
 public:
-                cAudioGain ();
-    virtual     ~cAudioGain() {}
 
-    void        restoreConfiguration(JsonObject &) {};
-    void        saveConfiguration (JsonObject &) {};
+    cAudioGain ();
+    virtual     ~cAudioGain ()
+    {
+    }
+
+    void restoreConfiguration (JsonObject &)
+    {
+    }
+
+    void saveConfiguration (JsonObject &)
+    {
+    }
 
     void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set(String &, String &) { return true; }
-    void        set();
+    bool        set (String &, String &)
+    {
+        return true;
+    }
+
+    void set ();
 };
 
-extern cAudioGain AudioGain;
+extern cAudioGain  AudioGain;
 
 // *********************************************************************************************
 // OEF

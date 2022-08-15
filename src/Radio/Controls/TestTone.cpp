@@ -23,52 +23,52 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-static const PROGMEM String ADJUST_TEST_STR   = "TEST TONES";
-static const PROGMEM String AUDIO_TEST_STR    = "PIXELRADIO AUDIO TEST";
-static const PROGMEM String AUDIO_PSN_STR     = "TestTone";
+static const PROGMEM String     ADJUST_TEST_STR = "TEST TONES";
+static const PROGMEM String     AUDIO_TEST_STR  = "PIXELRADIO AUDIO TEST";
+static const PROGMEM String     AUDIO_PSN_STR   = "TestTone";
 
 // Test Tone
-const uint8_t  TEST_TONE_CHNL = 0;                // Test Tone PWM Channel.
-const uint32_t TEST_TONE_TIME = 2000;             // Test Tone Sequence Time, in mS.
-const uint16_t TONE_A3        = 220;              // 220Hz Audio Tone.
-const uint16_t TONE_A4        = 440;
-const uint16_t TONE_C4        = 262;
-const uint16_t TONE_C5        = 523;
-const uint16_t TONE_E4        = 330;
-const uint16_t TONE_F4        = 349;
-const uint16_t TONE_NONE      = 0;
+const uint8_t   TEST_TONE_CHNL  = 0;    // Test Tone PWM Channel.
+const uint32_t  TEST_TONE_TIME  = 2000; // Test Tone Sequence Time, in mS.
+const uint16_t  TONE_A3         = 220;  // 220Hz Audio Tone.
+const uint16_t  TONE_A4         = 440;
+const uint16_t  TONE_C4         = 262;
+const uint16_t  TONE_C5         = 523;
+const uint16_t  TONE_E4         = 330;
+const uint16_t  TONE_F4         = 349;
+const uint16_t  TONE_NONE       = 0;
 
-const int TONE_OFF = 1;
-const int TONE_ON  = 0;
+const int       TONE_OFF        = 1;
+const int       TONE_ON         = 0;
 
-static std::vector<uint16_t> toneList
-{ 
-    TONE_NONE, 
-    TONE_A3, 
-    TONE_E4, 
-    TONE_A3, 
-    TONE_C4, 
-    TONE_C5, 
-    TONE_F4, 
-    TONE_F4, 
-    TONE_A4, 
+static std::vector <uint16_t>  toneList
+{
+    TONE_NONE,
+    TONE_A3,
+    TONE_E4,
+    TONE_A3,
+    TONE_C4,
+    TONE_C5,
+    TONE_F4,
+    TONE_F4,
+    TONE_A4,
 };
 
-    fsm_Tone_state_Idle         fsm_Tone_state_Idle_imp;
-    fsm_Tone_state_SendingTone  fsm_Tone_state_SendingTone_imp;
+fsm_Tone_state_Idle  fsm_Tone_state_Idle_imp;
+fsm_Tone_state_SendingTone  fsm_Tone_state_SendingTone_imp;
 
 // *********************************************************************************************
-cTestTone::cTestTone() : cControlCommon(emptyString)
+cTestTone::cTestTone () : cControlCommon (emptyString)
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    DataValue = 0;
-    DataValueStr = "off";
+    DataValue           = 0;
+    DataValueStr        = "off";
 
-    ActiveLabelStyle     = CSS_LABEL_STYLE_WHITE;
-    InactiveLabelStyle   = CSS_LABEL_STYLE_WHITE;
+    ActiveLabelStyle    = CSS_LABEL_STYLE_WHITE;
+    InactiveLabelStyle  = CSS_LABEL_STYLE_WHITE;
 
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -77,15 +77,15 @@ void cTestTone::AddControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
 
-    cControlCommon::AddControls(value, ControlType::Switcher, color);
-    ESPUI.updateControlLabel(ControlId, ADJUST_TEST_STR.c_str());
-    ESPUI.setElementStyle(StatusMessageId, CSS_LABEL_STYLE_WHITE);
+    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    ESPUI.updateControlLabel (ControlId, ADJUST_TEST_STR.c_str ());
+    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cTestTone::set(String & value, String & ResponseMessage)
+bool cTestTone::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
@@ -93,44 +93,43 @@ bool cTestTone::set(String & value, String & ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
-    uint32_t NewDataValue;
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+    uint32_t  NewDataValue;
+
+    do  // once
     {
-        if(value.equals(F("0")) ||
-           value.equals(F("off")))
+        if (value.equals (F ("0")) ||
+            value.equals (F ("off")))
         {
             NewDataValue = false;
         }
-        else if(value.equals(F("1")) ||
-                value.equals(F("on")))
+        else if (value.equals (F ("1")) ||
+            value.equals (F ("on")))
         {
             NewDataValue = true;
         }
         else
         {
-            ResponseMessage = String(F("Test Tone: BAD_VALUE: ")) + value;
-            Response = false;
+            ResponseMessage     = String (F ("Test Tone: BAD_VALUE: ")) + value;
+            Response            = false;
             break;
         }
 
-        if(NewDataValue == DataValue)
+        if (NewDataValue == DataValue)
         {
             // DEBUG_V("Skip duplicate setting");
             break;
         }
+        DataValue       = NewDataValue;
+        DataValueStr    = DataValue ? F ("1") : F ("0");
 
-        DataValue = NewDataValue;
-        DataValueStr = DataValue ? F("1") : F("0");
+        ESPUI.updateControlValue (ControlId, DataValueStr);
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
-
-        Log.infoln(String(F("Test Mode Set to: %s.")).c_str(), String(DataValue ? F("On") : F("Off")).c_str());
+        Log.infoln (String (F ("Test Mode Set to: %s.")).c_str (), String (DataValue ? F ("On") : F ("Off")).c_str ());
         // displaySaveWarning();
-
     } while (false);
 
     // DEBUG_END;
@@ -138,32 +137,33 @@ bool cTestTone::set(String & value, String & ResponseMessage)
 }
 
 // *********************************************************************************************
-void cTestTone::Init()
+void cTestTone::Init ()
 {
     // DEBUG_START;
 
-    pinMode(MUX_PIN, OUTPUT);       // Audio MUX Control (Line-In:Tone-In), Output.
-    digitalWrite(MUX_PIN, TONE_OFF); // Init Audio Mux, Enable Audio Line-In Jack, Music LED On.
-    ledcSetup(TEST_TONE_CHNL, 1000, 8);
+    pinMode (MUX_PIN, OUTPUT);          // Audio MUX Control (Line-In:Tone-In), Output.
+    digitalWrite (MUX_PIN, TONE_OFF);   // Init Audio Mux, Enable Audio Line-In Jack, Music LED On.
+    ledcSetup (TEST_TONE_CHNL, 1000, 8);
 
-    FsmTimerExpirationTime = millis() + 1000;
+    FsmTimerExpirationTime = millis () + 1000;
 
-    fsm_Tone_state_Idle_imp.SetParent(this);
-    fsm_Tone_state_SendingTone_imp.SetParent(this);
+    fsm_Tone_state_Idle_imp.SetParent (this);
+    fsm_Tone_state_SendingTone_imp.SetParent (this);
     pCurrentFsmState = &fsm_Tone_state_Idle_imp;
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cTestTone::poll()
+void cTestTone::poll ()
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    uint32_t now = millis();
-    do // once
+    uint32_t  now = millis ();
+
+    do  // once
     {
-        if(now < FsmTimerExpirationTime)
+        if (now < FsmTimerExpirationTime)
         {
             // keep waiting
             break;
@@ -171,89 +171,90 @@ void cTestTone::poll()
         // do not use 'now' here or you will slip time
         FsmTimerExpirationTime += 1000;
 
-        pCurrentFsmState->Poll(now);
+        pCurrentFsmState->Poll (now);
     } while (false);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cTestTone::toneOff()
+void cTestTone::toneOff ()
 {
     // DEBUG_START;
 
-    ledcDetachPin(TONE_PIN);
-    ledcWrite(TEST_TONE_CHNL, 0);
+    ledcDetachPin (TONE_PIN);
+    ledcWrite (TEST_TONE_CHNL, 0);
 
     // Allow a bit of time for tone channel to shutdown.
-    delay(5); 
+    delay (5);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cTestTone::toneOn(uint16_t freq)
+void cTestTone::toneOn (uint16_t freq)
 {
     // DEBUG_START;
 
-    if (ledcRead(TEST_TONE_CHNL))
+    if (ledcRead (TEST_TONE_CHNL))
     {
-        Log.warningln(String(F("Ignored Tone Request: Channel %u is already in-use")).c_str(), TEST_TONE_CHNL);
+        Log.warningln (String (F ("Ignored Tone Request: Channel %u is already in-use")).c_str (), TEST_TONE_CHNL);
     }
     else if (0 == freq)
     {
-        toneOff();
+        toneOff ();
     }
     else
     {
-        ledcAttachPin(TONE_PIN, TEST_TONE_CHNL);
-        ledcWriteTone(TEST_TONE_CHNL, freq);
+        ledcAttachPin (TONE_PIN, TEST_TONE_CHNL);
+        ledcWriteTone (TEST_TONE_CHNL, freq);
     }
-
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cTestTone::UpdateRdsTimeMsg()
+void cTestTone::UpdateRdsTimeMsg ()
 {
     // DEBUG_START;
 
-    String FrequencyMessage;
-    FrequencyMessage.reserve(128);
+    String  FrequencyMessage;
 
-    char rdsBuff[25];
+    FrequencyMessage.reserve (128);
+
+    char  rdsBuff[25];
 
     // DEBUG_V("Update the test tone clock. HH:MM:SS will be sent as RadioText.");
     seconds++;
 
-    FrequencyMessage = String(F("Current Tone: ")) + String(pCurrentFsmState->getCurrentToneFrequency()) + " hz";
-    ESPUI.print(StatusMessageId, FrequencyMessage);
-    sprintf(rdsBuff, "[ %02u:%02u:%02u ]", hours, minutes, seconds);
-    String tmpStr;
-    tmpStr.reserve(128);
-    tmpStr = String(AUDIO_TEST_STR) + rdsBuff + String(F("<br>")) + FrequencyMessage;
-    String dummy;
-    RdsText.set(tmpStr, dummy);
-    tmpStr = AUDIO_PSN_STR;
-    QN8027RadioApi.setProgramServiceName(tmpStr, RfCarrier.get());
+    FrequencyMessage = String (F ("Current Tone: ")) + String (pCurrentFsmState->getCurrentToneFrequency ()) + " hz";
+    ESPUI.print (StatusMessageId, FrequencyMessage);
+    sprintf (rdsBuff, "[ %02u:%02u:%02u ]", hours, minutes, seconds);
+    String  tmpStr;
 
-    if (seconds >= 60) 
+    tmpStr.reserve (128);
+    tmpStr = String (AUDIO_TEST_STR) + rdsBuff + String (F ("<br>")) + FrequencyMessage;
+    String  dummy;
+
+    RdsText.set (tmpStr, dummy);
+    tmpStr = AUDIO_PSN_STR;
+    QN8027RadioApi.setProgramServiceName (tmpStr, RfCarrier.get ());
+
+    if (seconds >= 60)
     {
         seconds = 0;
         minutes++;
 
-        if (minutes >= 60) 
+        if (minutes >= 60)
         {
             minutes = 0;
             hours++;
 
-            if (hours >= 100) 
-            { // Clock wraps at 99:59:59.
+            if (hours >= 100)
+            {   // Clock wraps at 99:59:59.
                 hours = 0;
             }
         }
     }
-
     // DEBUG_END;
 }
 
@@ -264,11 +265,11 @@ void fsm_Tone_state_Idle::Init ()
     // DEBUG_START;
 
     // DEBUG_V("Kill active tone generator.");
-    pTestTone->toneOff();
-    digitalWrite(MUX_PIN, TONE_OFF); // Switch Audio Mux chip to Line-In.
+    pTestTone->toneOff ();
+    digitalWrite (MUX_PIN, TONE_OFF);   // Switch Audio Mux chip to Line-In.
 
-    ESPUI.setElementStyle(pTestTone->ControlId, String(F("background: #bebebe;")));
-    ESPUI.print(pTestTone->StatusMessageId, emptyString);
+    ESPUI.setElementStyle (pTestTone->ControlId, String (F ("background: #bebebe;")));
+    ESPUI.print (pTestTone->StatusMessageId, emptyString);
 
     pTestTone->pCurrentFsmState = &fsm_Tone_state_Idle_imp;
 
@@ -280,11 +281,10 @@ void fsm_Tone_state_Idle::Poll (uint32_t)
 {
     // DEBUG_START;
 
-    if(pTestTone->DataValue)
+    if (pTestTone->DataValue)
     {
-        fsm_Tone_state_SendingTone_imp.Init();
+        fsm_Tone_state_SendingTone_imp.Init ();
     }
-
     // DEBUG_END;
 }
 
@@ -298,13 +298,13 @@ void fsm_Tone_state_SendingTone::Init ()
     pTestTone->minutes  = 0;
     pTestTone->seconds  = 0;
 
-    pTestTone->toneOff();
-    digitalWrite(MUX_PIN, TONE_ON); // Switch Audio Mux chip to Test Tones.
+    pTestTone->toneOff ();
+    digitalWrite (MUX_PIN, TONE_ON);    // Switch Audio Mux chip to Test Tones.
 
-    CurrentTone = toneList.begin();
-    ToneExpirationTime = millis() + TEST_TONE_TIME;
+    CurrentTone         = toneList.begin ();
+    ToneExpirationTime  = millis () + TEST_TONE_TIME;
 
-    ESPUI.setElementStyle(pTestTone->ControlId, String(F("background: red;")));
+    ESPUI.setElementStyle (pTestTone->ControlId, String (F ("background: red;")));
 
     pTestTone->pCurrentFsmState = &fsm_Tone_state_SendingTone_imp;
 
@@ -316,37 +316,36 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 {
     // DEBUG_START;
 
-    do // once
+    do  // once
     {
-        if(!pTestTone->DataValue)
+        if (!pTestTone->DataValue)
         {
-            fsm_Tone_state_Idle_imp.Init();
+            fsm_Tone_state_Idle_imp.Init ();
             break;
         }
+        pTestTone->UpdateRdsTimeMsg ();
 
-        pTestTone->UpdateRdsTimeMsg();
-
-        if(now < ToneExpirationTime)
+        if (now < ToneExpirationTime)
         {
             // DEBUG_V("Need to wait longer");
             break;
         }
         ToneExpirationTime += TEST_TONE_TIME;
 
-        pTestTone->toneOff();
+        pTestTone->toneOff ();
 
-        if(toneList.begin() == CurrentTone)
+        if (toneList.begin () == CurrentTone)
         {
-            Log.verboseln(String(F("New Test Tone Sequence, RadioText Sent.")).c_str());
+            Log.verboseln (String (F ("New Test Tone Sequence, RadioText Sent.")).c_str ());
         }
-
-        pTestTone->toneOn(*CurrentTone);
+        pTestTone->toneOn (*CurrentTone);
 
         // move to the next tone
         ++CurrentTone;
-        if(toneList.end() == CurrentTone)
+
+        if (toneList.end () == CurrentTone)
         {
-            CurrentTone = toneList.begin();
+            CurrentTone = toneList.begin ();
         }
     } while (false);
 
@@ -354,7 +353,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 }
 
 // *********************************************************************************************
-cTestTone TestTone;
+cTestTone  TestTone;
 
 // *********************************************************************************************
 // OEF

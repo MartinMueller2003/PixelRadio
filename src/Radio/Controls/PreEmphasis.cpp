@@ -22,29 +22,33 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-#define PRE_EMPH_USA_STR    "North America (75uS)" // North America / Japan.
-#define PRE_EMPH_EUR_STR    "Europe (50uS)"        // Europe, Australia, China.
+#define PRE_EMPH_USA_STR    "North America (75uS)"      // North America / Japan.
+#define PRE_EMPH_EUR_STR    "Europe (50uS)"             // Europe, Australia, China.
 #define PRE_EMPH_USA_VAL    OFF
 #define PRE_EMPH_EUR_VAL    ON
 
-static std::map<String, uint8_t> MapOfRegions
+static std::map <String, uint8_t> MapOfRegions
 {
-    {PRE_EMPH_USA_STR, PRE_EMPH_USA_VAL},
-    {PRE_EMPH_EUR_STR, PRE_EMPH_EUR_VAL},
+    {
+        PRE_EMPH_USA_STR, PRE_EMPH_USA_VAL
+    },
+    {
+        PRE_EMPH_EUR_STR, PRE_EMPH_EUR_VAL
+    },
 };
 
-static const PROGMEM String PRE_EMPH_DEF_STR      = PRE_EMPH_USA_STR;
-static const PROGMEM uint8_t PRE_EMPH_DEF_VAL     = uint8_t(PRE_EMPH_USA_VAL);
-static const PROGMEM String RADIO_PRE_EMPH_STR    = "RADIO_PRE_EMPH_STR";
-static const PROGMEM String PRE_EMPH_STR          = "FM PRE-EMPHASIS";
+static const PROGMEM String     PRE_EMPH_DEF_STR        = PRE_EMPH_USA_STR;
+static const PROGMEM uint8_t    PRE_EMPH_DEF_VAL        = uint8_t (PRE_EMPH_USA_VAL);
+static const PROGMEM String     RADIO_PRE_EMPH_STR      = "RADIO_PRE_EMPH_STR";
+static const PROGMEM String     PRE_EMPH_STR            = "FM PRE-EMPHASIS";
 
 // *********************************************************************************************
-cPreEmphasis::cPreEmphasis() : cControlCommon(RADIO_PRE_EMPH_STR)
+cPreEmphasis::cPreEmphasis () : cControlCommon (RADIO_PRE_EMPH_STR)
 {
     // DEBUG_START;
 
-    DataValueStr    = PRE_EMPH_DEF_STR; // Control.
-    DataValue       = PRE_EMPH_DEF_VAL;
+    DataValueStr        = PRE_EMPH_DEF_STR;     // Control.
+    DataValue           = PRE_EMPH_DEF_VAL;
 
     // DEBUG_END;
 }
@@ -54,25 +58,26 @@ void cPreEmphasis::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, ControlType::Select, color);
-    ESPUI.updateControlLabel(ControlId, PRE_EMPH_STR.c_str());
+    cControlCommon::AddControls (value, ControlType::Select, color);
+    ESPUI.updateControlLabel (ControlId, PRE_EMPH_STR.c_str ());
 
-    for(auto & CurrentOption : MapOfRegions)
+    for (auto &CurrentOption : MapOfRegions)
     {
-        ESPUI.addControl(ControlType::Option, 
-                        CurrentOption.first.c_str(), 
-                        CurrentOption.first, 
-                        ControlColor::None, 
-                        ControlId);
+        ESPUI.addControl (
+            ControlType::Option,
+            CurrentOption.first.c_str (),
+            CurrentOption.first,
+            ControlColor::None,
+            ControlId);
     }
 
-    ESPUI.updateControlValue(ControlId, DataValueStr);
+    ESPUI.updateControlValue (ControlId, DataValueStr);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cPreEmphasis::set(String & value, String & ResponseMessage)
+bool cPreEmphasis::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
@@ -80,38 +85,37 @@ bool cPreEmphasis::set(String & value, String & ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+
+    do  // once
     {
-        if(DataValueStr.equals(value))
+        if (DataValueStr.equals (value))
         {
             // DEBUG_V("Ignore a duplicate request");
             break;
         }
 
-        if(MapOfRegions.end() == MapOfRegions.find(value))
+        if (MapOfRegions.end () == MapOfRegions.find (value))
         {
-            ResponseMessage = String(F("radioEmphasis Set: BAD VALUE: ")) + value;
-            Response = false;
-            Log.errorln(ResponseMessage.c_str());
+            ResponseMessage     = String (F ("radioEmphasis Set: BAD VALUE: ")) + value;
+            Response            = false;
+            Log.errorln (ResponseMessage.c_str ());
             break;
         }
-
         // DEBUG_V("Update the radio")
-        DataValueStr = value;
-        DataValue = MapOfRegions[DataValueStr];
-        QN8027RadioApi.setPreEmphasis(DataValue, RfCarrier.get());
+        DataValueStr    = value;
+        DataValue       = MapOfRegions[DataValueStr];
+        QN8027RadioApi.setPreEmphasis (DataValue, RfCarrier.get ());
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
+        ESPUI.updateControlValue (ControlId, DataValueStr);
 
-        PtyCode.setPtyCodeOptionValues();
+        PtyCode.setPtyCodeOptionValues ();
 
-        displaySaveWarning();
-        Log.infoln(String(F("Pre-Emphasis Set to: %s.")).c_str(), DataValueStr.c_str());
-
+        displaySaveWarning ();
+        Log.infoln (String (F ("Pre-Emphasis Set to: %s.")).c_str (), DataValueStr.c_str ());
     } while (false);
 
     // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
@@ -124,7 +128,7 @@ bool cPreEmphasis::set(String & value, String & ResponseMessage)
 }
 
 // *********************************************************************************************
-cPreEmphasis PreEmphasis;
+cPreEmphasis  PreEmphasis;
 
 // *********************************************************************************************
 // OEF

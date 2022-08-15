@@ -21,15 +21,18 @@
 class cPiCode : public cControlCommon
 {
 public:
-                cPiCode ();
-    virtual     ~cPiCode() {}
+
+    cPiCode ();
+    virtual     ~cPiCode ()
+    {
+    }
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults();
-    bool        set(String & value, String & Response);
+    void        ResetToDefaults ();
+    bool        set (String &value, String &Response);
 };
 
-extern cPiCode PiCode;
+extern cPiCode  PiCode;
 
 // *********************************************************************************************
 // OEF

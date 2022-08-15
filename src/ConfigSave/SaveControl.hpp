@@ -22,16 +22,20 @@
 class cSaveControl : public cControlCommon
 {
 public:
-                cSaveControl ();
-    virtual     ~cSaveControl() {}
+
+    cSaveControl ();
+    virtual     ~cSaveControl ()
+    {
+    }
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    void        ClearSaveNeeded();
-    bool        set(String & value, String & ResponseMessage);
-    void        SetSaveNeeded();
+    void        ClearSaveNeeded ();
+    bool        set (String &value, String &ResponseMessage);
+    void        SetSaveNeeded ();
 
 private:
-    ControlColor color = ControlColor::None;
+
+    ControlColor color  = ControlColor::None;
     bool IgnoreFirstSet = true;
 };
 

@@ -21,14 +21,17 @@
 class cDigitalAudioGain : public cControlCommon
 {
 public:
-                cDigitalAudioGain ();
-    virtual     ~cDigitalAudioGain() {}
+
+    cDigitalAudioGain ();
+    virtual     ~cDigitalAudioGain ()
+    {
+    }
 
     void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set(String & value, String & ResponseMessage);
+    bool        set (String &value, String &ResponseMessage);
 };
 
-extern cDigitalAudioGain DigitalAudioGain;
+extern cDigitalAudioGain  DigitalAudioGain;
 
 // *********************************************************************************************
 // OEF

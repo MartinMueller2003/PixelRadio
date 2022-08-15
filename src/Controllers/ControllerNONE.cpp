@@ -19,44 +19,42 @@
 // *********************************************************************************************
 #include "ControllerNONE.h"
 
-#if __has_include("memdebug.h")
-#  include "memdebug.h"
+#if __has_include ("memdebug.h")
+# include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerNONE : public c_ControllerCommon
 
 // *********************************************************************************************
-c_ControllerNONE::c_ControllerNONE() : c_ControllerCommon("NONE", c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
+c_ControllerNONE::c_ControllerNONE () : c_ControllerCommon ("NONE", c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
 {
-
-} // c_ControllerNONE
+}       // c_ControllerNONE
 
 // *********************************************************************************************
-c_ControllerNONE::~c_ControllerNONE() 
+c_ControllerNONE::~c_ControllerNONE ()
 {
-   
 }
 
 // *********************************************************************************************
-void c_ControllerNONE::restoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   c_ControllerCommon::restoreConfiguration(config);
+    c_ControllerCommon::restoreConfiguration (config);
 
-   // DEBUG_END;
-} // restoreConfiguration
+    // DEBUG_END;
+}       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerNONE::saveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   c_ControllerCommon::saveConfiguration(config);
+    c_ControllerCommon::saveConfiguration (config);
 
-   // DEBUG_END;
-} // saveConfiguration
+    // DEBUG_END;
+}       // saveConfiguration
 
 // *********************************************************************************************
 // EOF

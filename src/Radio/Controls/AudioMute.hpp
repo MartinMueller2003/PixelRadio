@@ -21,14 +21,17 @@
 class cAudioMute : public cControlCommon
 {
 public:
-                cAudioMute ();
-    virtual     ~cAudioMute() {}
+
+    cAudioMute ();
+    virtual     ~cAudioMute ()
+    {
+    }
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set(String & value, String & ResponseMessage);
+    bool        set (String &value, String &ResponseMessage);
 };
 
-extern cAudioMute AudioMute;
+extern cAudioMute  AudioMute;
 
 // *********************************************************************************************
 // OEF

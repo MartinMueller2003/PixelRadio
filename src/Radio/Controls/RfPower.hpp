@@ -21,14 +21,17 @@
 class cRfPower : public cControlCommon
 {
 public:
-                cRfPower ();
-    virtual     ~cRfPower() {}
+
+    cRfPower ();
+    virtual     ~cRfPower ()
+    {
+    }
 
     void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set(String &, String &);
+    bool        set (String &, String &);
 };
 
-extern cRfPower RfPower;
+extern cRfPower  RfPower;
 
 // *********************************************************************************************
 // OEF

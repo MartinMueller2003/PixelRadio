@@ -21,14 +21,17 @@
 class cAudioMode : public cControlCommon
 {
 public:
-                cAudioMode ();
-    virtual     ~cAudioMode() {}
+
+    cAudioMode ();
+    virtual     ~cAudioMode ()
+    {
+    }
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set(String & value, String & ResponseMessage);
+    bool        set (String &value, String &ResponseMessage);
 };
 
-extern cAudioMode AudioMode;
+extern cAudioMode  AudioMode;
 
 // *********************************************************************************************
 // OEF

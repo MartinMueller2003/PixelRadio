@@ -29,28 +29,40 @@
 #define VGA_GAIN5_STR     "18dB"
 #define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
 
-static std::map<String, uint8_t> MapOfGainValues
+static std::map <String, uint8_t>  MapOfGainValues
 {
-    {VGA_GAIN0_STR,  0},
-    {VGA_GAIN1_STR,  1},
-    {VGA_GAIN2_STR,  2},
-    {VGA_GAIN3_STR,  3},
-    {VGA_GAIN4_STR,  4},
-    {VGA_GAIN5_STR,  5},
+    {
+        VGA_GAIN0_STR,  0
+    },
+    {
+        VGA_GAIN1_STR,  1
+    },
+    {
+        VGA_GAIN2_STR,  2
+    },
+    {
+        VGA_GAIN3_STR,  3
+    },
+    {
+        VGA_GAIN4_STR,  4
+    },
+    {
+        VGA_GAIN5_STR,  5
+    },
 };
 
-static const PROGMEM String RADIO_VGA_AUDIO_STR = "ANALOG (VGA) AUDIO GAIN";
-static const PROGMEM String ANALOG_GAIN_STR     = "ANALOG_GAIN_STR";
+static const PROGMEM String     RADIO_VGA_AUDIO_STR     = "ANALOG (VGA) AUDIO GAIN";
+static const PROGMEM String     ANALOG_GAIN_STR         = "ANALOG_GAIN_STR";
 
 // *********************************************************************************************
-cAnalogAudioGain::cAnalogAudioGain() : cControlCommon(String(ANALOG_GAIN_STR))
+cAnalogAudioGain::cAnalogAudioGain () : cControlCommon (String (ANALOG_GAIN_STR))
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    DataValueStr = VGA_GAIN_DEF_STR;
-    DataValue = MapOfGainValues[DataValueStr];
+    DataValueStr        = VGA_GAIN_DEF_STR;
+    DataValue           = MapOfGainValues[DataValueStr];
 
-    //_ DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -58,43 +70,45 @@ void cAnalogAudioGain::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls(value, ControlType::Select, color);
-    ESPUI.updateControlLabel(ControlId, RADIO_VGA_AUDIO_STR.c_str());
+    cControlCommon::AddControls (value, ControlType::Select, color);
+    ESPUI.updateControlLabel (ControlId, RADIO_VGA_AUDIO_STR.c_str ());
 
-    for(auto & CurrentOption : MapOfGainValues)
+    for (auto &CurrentOption : MapOfGainValues)
     {
-        ESPUI.addControl(ControlType::Option, 
-                        CurrentOption.first.c_str(), 
-                        CurrentOption.first, 
-                        ControlColor::None, 
-                        ControlId);
+        ESPUI.addControl (
+            ControlType::Option,
+            CurrentOption.first.c_str (),
+            CurrentOption.first,
+            ControlColor::None,
+            ControlId);
     }
-    ESPUI.updateControlValue(ControlId, DataValueStr);
+    ESPUI.updateControlValue (ControlId, DataValueStr);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cAnalogAudioGain::set(String & value, String & ResponseMessage)
+bool cAnalogAudioGain::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool Response = true;
-    ResponseMessage.reserve(128);
-    ResponseMessage.clear();
+    bool  Response = true;
 
-    do // once
+    ResponseMessage.reserve (128);
+    ResponseMessage.clear ();
+
+    do  // once
     {
-        if(DataValueStr.equals(value))
+        if (DataValueStr.equals (value))
         {
             // DEBUG_V("Ignore duplicate setting");
             break;
         }
 
-        if(MapOfGainValues.end() == MapOfGainValues.find(value))
+        if (MapOfGainValues.end () == MapOfGainValues.find (value))
         {
-            ResponseMessage = String(F("Analog (VGA) Gain: Set: BAD VALUE: ")) + value;
-            Log.errorln(ResponseMessage.c_str());
+            ResponseMessage = String (F ("Analog (VGA) Gain: Set: BAD VALUE: ")) + value;
+            Log.errorln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
@@ -102,24 +116,23 @@ bool cAnalogAudioGain::set(String & value, String & ResponseMessage)
 
         // DEBUG_V("Update the radio")
         DataValue = MapOfGainValues[DataValueStr];
-        QN8027RadioApi.setVgaGain(DataValue);
+        QN8027RadioApi.setVgaGain (DataValue);
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
-        
-        AudioGain.set();
+        ESPUI.updateControlValue (ControlId, DataValueStr);
 
-        displaySaveWarning();
+        AudioGain.set ();
 
+        displaySaveWarning ();
     } while (false);
 
-    Log.infoln(String(F("Analog (VGA) Gain Set to: %s.")).c_str(), DataValueStr.c_str());
+    Log.infoln (String (F ("Analog (VGA) Gain Set to: %s.")).c_str (), DataValueStr.c_str ());
 
     // DEBUG_END;
     return Response;
 }
 
 // *********************************************************************************************
-cAnalogAudioGain AnalogAudioGain;
+cAnalogAudioGain  AnalogAudioGain;
 
 // *********************************************************************************************
 // OEF

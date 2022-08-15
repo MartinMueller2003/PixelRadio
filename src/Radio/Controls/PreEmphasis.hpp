@@ -21,15 +21,17 @@
 class cPreEmphasis : public cControlCommon
 {
 public:
-                cPreEmphasis ();
-    virtual     ~cPreEmphasis() {}
+
+    cPreEmphasis ();
+    virtual     ~cPreEmphasis ()
+    {
+    }
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set(String & value, String & Response);
-
+    bool        set (String &value, String &Response);
 };
 
-extern cPreEmphasis PreEmphasis;
+extern cPreEmphasis  PreEmphasis;
 
 // *********************************************************************************************
 // OEF

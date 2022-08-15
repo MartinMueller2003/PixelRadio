@@ -30,36 +30,49 @@
 class c_ControllerMessageSet
 {
 public:
-            c_ControllerMessageSet();
-   virtual  ~c_ControllerMessageSet();
-   void     RestoreConfig(ArduinoJson::JsonObject & config);
-   void     SaveConfig(ArduinoJson::JsonObject & config);
 
-   void     Activate(bool value);
-   void     ActivateMessage(String MsgName);
-   void     AddMessage(String MsgText);
-   void     AddControls(c_ControllerMessage::MessageElementIds_t * MessageElementIds);
-   bool     empty() { return Messages.empty(); }
-   void     EraseMsg(String MsgTxt);
-   bool     HasMsg(String & MsgTxt) { return (Messages.end() != Messages.find(MsgTxt)); }
-   void     SetName(String & value) { MsgSetName = value; }
-   void     UpdateMsgText(String& OriginalMessageText, String& NewMessageText);
-   void     GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response);
+    c_ControllerMessageSet ();
+    virtual  ~c_ControllerMessageSet ();
+    void        RestoreConfig (ArduinoJson::JsonObject &config);
+    void        SaveConfig (ArduinoJson::JsonObject &config);
+
+    void        Activate (bool value);
+    void        ActivateMessage (String MsgName);
+    void        AddMessage (String MsgText);
+    void        AddControls (c_ControllerMessage::MessageElementIds_t * MessageElementIds);
+    bool        empty ()
+    {
+        return Messages.empty ();
+    }
+
+    void        EraseMsg (String MsgTxt);
+    bool        HasMsg (String &MsgTxt)
+    {
+        return Messages.end () != Messages.find (MsgTxt);
+    }
+
+    void SetName (String &value)
+    {
+        MsgSetName = value;
+    }
+
+    void        UpdateMsgText (String &OriginalMessageText, String &NewMessageText);
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
-   void     ShowMsgDetailsPane(bool value);
 
-   c_ControllerMessage::MessageElementIds_t * MessageElementIds = nullptr;
+    void ShowMsgDetailsPane (bool value);
 
-   String MsgSetName;
-   String CurrentMsgName;
+    c_ControllerMessage::MessageElementIds_t * MessageElementIds = nullptr;
 
-   std::map < String, c_ControllerMessage > Messages;
-   #define nullMessagesIterator static_cast<std::map < String, c_ControllerMessage >::iterator>(nullptr) 
-   std::map < String, c_ControllerMessage >::iterator MessagesIterator = nullMessagesIterator;
-   SemaphoreHandle_t MessagesSemaphore = NULL;
+    String MsgSetName;
+    String CurrentMsgName;
 
-}; // c_ControllerMessageSet
+    std::map <String, c_ControllerMessage> Messages;
+   #define nullMessagesIterator static_cast <std::map <String, c_ControllerMessage>::iterator> (nullptr)
+    std::map <String, c_ControllerMessage>::iterator MessagesIterator   = nullMessagesIterator;
+    SemaphoreHandle_t MessagesSemaphore                                 = NULL;
+};      // c_ControllerMessageSet
 
 // *********************************************************************************************
 // EOF

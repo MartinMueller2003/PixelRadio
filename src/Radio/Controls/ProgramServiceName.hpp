@@ -21,16 +21,18 @@
 class cProgramServiceName : public cControlCommon
 {
 public:
-                cProgramServiceName ();
-    virtual     ~cProgramServiceName() {}
+
+    cProgramServiceName ();
+    virtual     ~cProgramServiceName ()
+    {
+    }
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults();
-    bool        set(String & value, String & Response);
-
+    void        ResetToDefaults ();
+    bool        set (String &value, String &Response);
 };
 
-extern cProgramServiceName ProgramServiceName;
+extern cProgramServiceName  ProgramServiceName;
 
 // *********************************************************************************************
 // OEF

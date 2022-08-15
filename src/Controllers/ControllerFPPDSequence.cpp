@@ -22,144 +22,139 @@
 #include <ESPUI.h>
 #include "Language.h"
 
-#if __has_include("memdebug.h")
-#  include "memdebug.h"
+#if __has_include ("memdebug.h")
+# include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
-c_ControllerFPPDSequence::c_ControllerFPPDSequence()
+c_ControllerFPPDSequence::c_ControllerFPPDSequence ()
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   // DEBUG_END;
-} // c_ControllerFPPDSequence
+    // DEBUG_END;
+}       // c_ControllerFPPDSequence
 
 // *********************************************************************************************
-c_ControllerFPPDSequence::~c_ControllerFPPDSequence()
+c_ControllerFPPDSequence::~c_ControllerFPPDSequence ()
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   // DEBUG_V(String("Name: ") + Name);
+    // DEBUG_V(String("Name: ") + Name);
 
-   Messages->clear();
-   // DEBUG_V();
+    Messages->clear ();
+    // DEBUG_V();
 
-   if (Control::noParent != EspuiElementId)
-   {
-      // DEBUG_V("remove Controls");
-      ESPUI.removeControl(EspuiElementId);
-   }
-
-   // DEBUG_END;
-} // ~c_ControllerFPPDSequence
+    if (Control::noParent != EspuiElementId)
+    {
+        // DEBUG_V("remove Controls");
+        ESPUI.removeControl (EspuiElementId);
+    }
+    // DEBUG_END;
+}       // ~c_ControllerFPPDSequence
 
 // ************************************************************************************************
-void c_ControllerFPPDSequence::Activate(bool value)
+void c_ControllerFPPDSequence::Activate (bool value)
 {
-   // DEBUG_START;
-   // DEBUG_V(String("Sequence: ") + Name);
-   // DEBUG_V(String("   value: ") + String(value));
+    // DEBUG_START;
+    // DEBUG_V(String("Sequence: ") + Name);
+    // DEBUG_V(String("   value: ") + String(value));
 
-   do // once
-   {
-      if(!value)
-      {
-         // DEBUG_V("Deactivate is ignored.");
-         break;
-      }
+    do  // once
+    {
+        if (!value)
+        {
+            // DEBUG_V("Deactivate is ignored.");
+            break;
+        }
 
-      if (Control::noParent == EspuiElementId)
-      {
-         // DEBUG_V("We have not been set up yet");
-         break;
-      }
-      // DEBUG_V();
-      
-      Messages->ActivateMessageSet(Name);
+        if (Control::noParent == EspuiElementId)
+        {
+            // DEBUG_V("We have not been set up yet");
+            break;
+        }
+        // DEBUG_V();
 
-   } while (false);
+        Messages->ActivateMessageSet (Name);
+    } while (false);
 
-   // DEBUG_END;
-} // Activate
+    // DEBUG_END;
+}       // Activate
 
 // ************************************************************************************************
-void c_ControllerFPPDSequence::AddControls(uint16_t ctrlTab, uint16_t ParentElementId)
+void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentElementId)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   EspuiParentElementId = ParentElementId;
-   EspuiRootElementId = ctrlTab;
+    EspuiParentElementId        = ParentElementId;
+    EspuiRootElementId          = ctrlTab;
 
-   if (Control::noParent == EspuiElementId)
-   {
-      // DEBUG_V(String("Adding Control for ") + Name);
-      EspuiElementId = ESPUI.addControl(
-          ControlType::Option,
-          Name.c_str(),
-          Name,
-          ControlColor::None,
-          EspuiParentElementId);
-   }
-   else
-   {
-      // DEBUG_V(String("NOT Adding Controls"));
-   }
+    if (Control::noParent == EspuiElementId)
+    {
+        // DEBUG_V(String("Adding Control for ") + Name);
+        EspuiElementId = ESPUI.addControl (
+                ControlType::Option,
+                Name.c_str (),
+                Name,
+                ControlColor::None,
+                EspuiParentElementId);
+    }
+    else
+    {
+        // DEBUG_V(String("NOT Adding Controls"));
+    }
+    // DEBUG_V(String("EspuiElementId: ") + String(EspuiElementId));
 
-   // DEBUG_V(String("EspuiElementId: ") + String(EspuiElementId));
+    Messages->SetShowFseqNameSelection (true);
+    Messages->AddControls (EspuiRootElementId);
 
-   Messages->SetShowFseqNameSelection(true);
-   Messages->AddControls(EspuiRootElementId);
-
-   // DEBUG_END;
-
-} // AddControls
+    // DEBUG_END;
+}       // AddControls
 
 // *********************************************************************************************
-void c_ControllerFPPDSequence::RestoreConfig(ArduinoJson::JsonObject & config)
+void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   // serializeJsonPretty(config, Serial);
+    // serializeJsonPretty(config, Serial);
 
-   if (config.containsKey(N_name))
-   {
-      // DEBUG_V("Found Name");
-      Name = (const char*)config[N_name];
-   }
-   // DEBUG_V(String("Name: ") + Name);
+    if (config.containsKey (N_name))
+    {
+        // DEBUG_V("Found Name");
+        Name = (const char *)config[N_name];
+    }
+    // DEBUG_V(String("Name: ") + Name);
 
-   // DEBUG_END;
-} // RestoreConfig
+    // DEBUG_END;
+}       // RestoreConfig
 
 // *********************************************************************************************
-void c_ControllerFPPDSequence::SaveConfig(ArduinoJson::JsonObject & config)
+void c_ControllerFPPDSequence::SaveConfig (ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   config[N_name] = Name;
+    config[N_name] = Name;
 
-   // DEBUG_END;
-} // SaveConfig
+    // DEBUG_END;
+}       // SaveConfig
 
 // ************************************************************************************************
-void c_ControllerFPPDSequence::SetName(String &value)
+void c_ControllerFPPDSequence::SetName (String &value)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   // DEBUG_V(String("value: ") + value);
-   // DEBUG_V(String(" Name: ") + Name);
+    // DEBUG_V(String("value: ") + value);
+    // DEBUG_V(String(" Name: ") + Name);
 
-   Name = value;
+    Name = value;
 
-   if (Control::noParent != EspuiElementId)
-   {
-      ESPUI.updateControlValue(EspuiElementId, Name);
-   }
+    if (Control::noParent != EspuiElementId)
+    {
+        ESPUI.updateControlValue (EspuiElementId, Name);
+    }
+    Messages->ActivateMessageSet (Name);
 
-   Messages->ActivateMessageSet(Name);
-
-   // DEBUG_END;
-} // SetName
+    // DEBUG_END;
+}       // SetName
 
 // *********************************************************************************************
 // EOF

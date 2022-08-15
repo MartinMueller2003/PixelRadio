@@ -21,21 +21,25 @@
 class cRfCarrier : public cControlCommon
 {
 public:
-                cRfCarrier ();
-    virtual     ~cRfCarrier() {}
+
+    cRfCarrier ();
+    virtual     ~cRfCarrier ()
+    {
+    }
 
     void        AddHomeControls (uint16_t TabId, ControlColor color);
     void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set(String & value, String & ResponseMessage);
-    
-private:
-    void        UpdateStatus(String & ResponseMessage);
+    bool        set (String &value, String &ResponseMessage);
 
-    uint16_t    HomeId              = Control::noParent;
-    uint16_t    HomeStatusMessageId = Control::noParent;
+private:
+
+    void UpdateStatus (String &ResponseMessage);
+
+    uint16_t HomeId                     = Control::noParent;
+    uint16_t HomeStatusMessageId        = Control::noParent;
 };
 
-extern cRfCarrier RfCarrier;
+extern cRfCarrier  RfCarrier;
 
 // *********************************************************************************************
 // OEF

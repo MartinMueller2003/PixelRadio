@@ -76,154 +76,155 @@
 
 // Global System Vars
 
-bool newGpio19Flg    = false;                // New GPIO Pin 19 State.
-bool newGpio23Flg    = false;                // New GPIO Pin 23 State.
-bool newGpio33Flg    = false;                // New GPIO Pin 33 State.
-bool rebootFlg       = false;                // Reboot System if true;
+bool    newGpio19Flg    = false;        // New GPIO Pin 19 State.
+bool    newGpio23Flg    = false;        // New GPIO Pin 23 State.
+bool    newGpio33Flg    = false;        // New GPIO Pin 33 State.
+bool    rebootFlg       = false;        // Reboot System if true;
 
-float vbatVolts = 0.0f;                      // ESP32's Onboard "VBAT" Voltage. Typically 5V.
-float paVolts   = 0.0f;                      // RF Power Amp's Power Supply Voltage. Typically 9V.
+float   vbatVolts       = 0.0f;         // ESP32's Onboard "VBAT" Voltage. Typically 5V.
+float   paVolts         = 0.0f;         // RF Power Amp's Power Supply Voltage. Typically 9V.
 
-String gpio19CtrlStr    = "";                // GPIO-19 State if Changed by Serial/MQTT/HTTP Controller.
-String gpio23CtrlStr    = "";                // GPIO-23 State if Changed by Serial/MQTT/HTTP Controller.
-String gpio33CtrlStr    = "";                // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
+String  gpio19CtrlStr   = "";           // GPIO-19 State if Changed by Serial/MQTT/HTTP Controller.
+String  gpio23CtrlStr   = "";           // GPIO-23 State if Changed by Serial/MQTT/HTTP Controller.
+String  gpio33CtrlStr   = "";           // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
 
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
-uint8_t usbVol    = (atoi(USB_VOL_DEF_STR));               // Control. Unused, for future expansion.
+uint8_t         usbVol = (atoi (USB_VOL_DEF_STR));      // Control. Unused, for future expansion.
 
-uint32_t baudRate = ESP_BAUD_DEF;                          // Control.
+uint32_t        baudRate = ESP_BAUD_DEF;                // Control.
 
-String gpio19BootStr  = GPIO_DEF_STR;                      // Control.
-String gpio23BootStr  = GPIO_DEF_STR;                      // Control.
-String gpio33BootStr  = GPIO_DEF_STR;                      // Control.
-String logLevelStr    = DIAG_LOG_DEF_STR;                  // Control, Serial Log Level.
-String userNameStr    = LOGIN_USER_NAME_STR;               // Control.
-String userPassStr    = LOGIN_USER_PW_STR;                 // Control.
+String          gpio19BootStr   = GPIO_DEF_STR;         // Control.
+String          gpio23BootStr   = GPIO_DEF_STR;         // Control.
+String          gpio33BootStr   = GPIO_DEF_STR;         // Control.
+String          logLevelStr     = DIAG_LOG_DEF_STR;     // Control, Serial Log Level.
+String          userNameStr     = LOGIN_USER_NAME_STR;  // Control.
+String          userPassStr     = LOGIN_USER_PW_STR;    // Control.
 
 // *********************************************************************************************
 
-void setup()
+void setup ()
 {
-    bool successFlg = true;
-    char logBuff[80];
+    bool        successFlg = true;
+    char        logBuff[80];
 
     // enableCore1WDT();
-    pinMode(ON_AIR_PIN, OUTPUT);       // "ON AIR" Sign Driver Output.
-    pinMode(MISO_PIN,   INPUT_PULLUP); // MISO Requires Internal Pull-up.
-    pinMode(SCL_PIN,    INPUT_PULLUP); // I2C Clock Pin.
-    pinMode(SDA_PIN,    INPUT);        // I2C Data Pin. Do NOT Enable Internal Pullup.
-    pinMode(TONE_PIN,   OUTPUT);       // PWM Audio Test Tone, Output.
-    pinMode(SD_CS_PIN,  OUTPUT);       // SD Card Chip Select, Output.
+        pinMode (       ON_AIR_PIN,     OUTPUT);        // "ON AIR" Sign Driver Output.
+        pinMode (       MISO_PIN,       INPUT_PULLUP);  // MISO Requires Internal Pull-up.
+        pinMode (       SCL_PIN,        INPUT_PULLUP);  // I2C Clock Pin.
+        pinMode (       SDA_PIN,        INPUT);         // I2C Data Pin. Do NOT Enable Internal Pullup.
+        pinMode (       TONE_PIN,       OUTPUT);        // PWM Audio Test Tone, Output.
+        pinMode (       SD_CS_PIN,      OUTPUT);        // SD Card Chip Select, Output.
 
-    digitalWrite(SD_CS_PIN, HIGH);
+    digitalWrite (SD_CS_PIN, HIGH);
 
     // Initialize Tone Generator.
-    TestTone.Init();
+    TestTone.Init ();
 
     // delay(3000);                 // DEBUG ONLY, wait for Platformio's monitor terminal.
 
     // Initialize USB Serial.
-    Serial.begin(baudRate, SERIAL_8N1); // Open Serial-0 Port to Log System Messages.
+    Serial.begin (baudRate, SERIAL_8N1);        // Open Serial-0 Port to Log System Messages.
     // Serial1.begin(baudRate, SERIAL_8N1, SER1_RXD, SER1_TXD); // Optional Serial-1 Port.
     // Serial1.println("\r\n\r\n");
     // Serial1.println("COM1 NOW ALIVE");
 
-    while (!Serial && !Serial.available()) {} // Wait for ESP32 Device Serial Port to be available.
-    Serial.println("\r\n\r\n");
-    Serial.flush();
+    while (!Serial && !Serial.available ())
+    {
+    }   // Wait for ESP32 Device Serial Port to be available.
+    Serial.println ("\r\n\r\n");
+    Serial.flush ();
 
     // Initialize the System Serial Log.
-    initSerialLog(true); // Initally Set to verbose log level. Will use config file setting at end of setup.
+    initSerialLog (true);       // Initally Set to verbose log level. Will use config file setting at end of setup.
 
     // Let's Start System Initialization
-    Log.infoln((String(F("PixelRadio FM Transmitter ")) + F(AUTHOR_STR)).c_str());
-    Log.infoln(((String(F("Version ")) + F(VERSION_STR) + F(", ") + F(BLD_DATE_STR))).c_str());
-    Log.infoln(F("System is Starting ..."));
+    Log.infoln ((String (F ("PixelRadio FM Transmitter ")) + F (AUTHOR_STR)).c_str ());
+    Log.infoln (((String (F ("Version ")) + F (VERSION_STR) + F (", ") + F (BLD_DATE_STR))).c_str ());
+    Log.infoln (F ("System is Starting ..."));
 
     // Initialize EEPROM Emulation.
     // initEprom();
 
     // Setup ADC
-    initVdcAdc();    // Initialize the Bat Voltage ADC.
-    initVdcBuffer(); // Initialize the two Power Supply Measurement Buffers.
-    Log.infoln(F("Initialized VBAT and RF_VDC ADCs."));
+    initVdcAdc ();      // Initialize the Bat Voltage ADC.
+    initVdcBuffer ();   // Initialize the two Power Supply Measurement Buffers.
+    Log.infoln (F ("Initialized VBAT and RF_VDC ADCs."));
 
     // Setup the File System.
-    littlefsInit();
-    instalLogoImageFile();
+    littlefsInit ();
+    instalLogoImageFile ();
 
-    if (checkEmergencyCredentials(CRED_FILE_NAME)) 
-    {        // Check for Emergency WiFi Credential File on SD Card.
-        saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
+    if (checkEmergencyCredentials (CRED_FILE_NAME))
+    {                                                           // Check for Emergency WiFi Credential File on SD Card.
+        saveConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);    // Save restored credentials to file system.
     }
-    WiFiDriver.Begin();
-    ControllerMgr.begin();
+    WiFiDriver.Begin ();
+    ControllerMgr.begin ();
 
     // Restore System Settings from File System.
-    restoreConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME);
+    restoreConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);
 
-#ifdef OldWay
-    resetControllerRdsValues();                             // Must be called after restoreConfiguration().
+    #ifdef OldWay
+    resetControllerRdsValues ();                        // Must be called after restoreConfiguration().
 
-    setGpioBootPins();                                      // Must be called after restoreConfiguration().
+    setGpioBootPins ();                                 // Must be called after restoreConfiguration().
 
-    digitalWrite(MUX_PIN, TONE_ON);                         // Turn off Music (Mux) LED.
+        digitalWrite (  MUX_PIN,        TONE_ON);       // Turn off Music (Mux) LED.
 
-    digitalWrite(MUX_PIN, TONE_OFF); // Turn on Music (Mux) LED, restore Line-In to external audio.
-#endif // def OldWay
+        digitalWrite (  MUX_PIN,        TONE_OFF);      // Turn on Music (Mux) LED, restore Line-In to external audio.
+    #endif // def OldWay
 
     // Startup the I2C Devices).
-    i2cScanner();                      // Scan the i2c bus and report all devices.
-    Radio.begin();
+    i2cScanner ();      // Scan the i2c bus and report all devices.
+    Radio.begin ();
 
     // Startup the Web GUI. DO THIS LAST!
-    Log.infoln(F("Initializing Web UI ..."));
-    startGUI();
-    Log.infoln(F("-> Web UI Loaded."));
+    Log.infoln (F ("Initializing Web UI ..."));
+    startGUI ();
+    Log.infoln (F ("-> Web UI Loaded."));
 
-    Log.infoln("Changing Log Level to %s", logLevelStr.c_str());
-    initSerialLog(false);
-    Serial.flush();
-
+    Log.infoln ("Changing Log Level to %s", logLevelStr.c_str ());
+    initSerialLog (false);
+    Serial.flush ();
 }
 
 // *********************************************************************************************
 // Main Loop.
-void loop()
+void loop ()
 {
-    //_ DEBUG_START;
+    // _ DEBUG_START;
 
-    Log.setLevel(LOG_LEVEL_INFO);
+    Log.setLevel (LOG_LEVEL_INFO);
 
     // Background tasks
-    //_ DEBUG_V("WiFiDriver");
-    WiFiDriver.Poll();
-    //_ DEBUG_V("ControllerMgr");
-    ControllerMgr.poll();
-    //_ DEBUG_V("Radio");
-    Radio.Poll();
-    PeakAudio.poll();
+    // _ DEBUG_V("WiFiDriver");
+    WiFiDriver.Poll ();
+    // _ DEBUG_V("ControllerMgr");
+    ControllerMgr.poll ();
+    // _ DEBUG_V("Radio");
+    Radio.Poll ();
+    PeakAudio.poll ();
 
-#ifdef OldWay
-    processMeasurements();  // Measure the two system voltages.
+    #ifdef OldWay
+    processMeasurements ();     // Measure the two system voltages.
 
-    updateUiFreeMemory();   // Update the Memory value on UI diagTab.
-    updateUiDiagTimer();    // Upddate the Elapsed Timer on UI diagTab.
-    updateUiVolts();        // Update the two system voltages on UI diagTab.
+    updateUiFreeMemory ();      // Update the Memory value on UI diagTab.
+    updateUiDiagTimer ();       // Upddate the Elapsed Timer on UI diagTab.
+    updateUiVolts ();           // Update the two system voltages on UI diagTab.
 
-    updateRadioSettings();  // Update the QN8027 device registers.
-    updateGpioBootPins();   // Update the User Programmable GPIO Pins.
-    updateOnAirSign();      // Update the Optional "On Air" 12V LED Sign.
+    updateRadioSettings ();     // Update the QN8027 device registers.
+    updateGpioBootPins ();      // Update the User Programmable GPIO Pins.
+    updateOnAirSign ();         // Update the Optional "On Air" 12V LED Sign.
 
-    rebootSystem();         // Check to see if Reboot has been requested.
+    rebootSystem ();            // Check to see if Reboot has been requested.
 
-    #ifdef HTTP_ENB
-    processWebClient();     // Process Any Available HTTP RDS commands.
-    #endif // ifdef HTTP_ENB
+    # ifdef HTTP_ENB
+    processWebClient ();        // Process Any Available HTTP RDS commands.
+    # endif // ifdef HTTP_ENB
 
-#endif // def OldWay 
-    //_ DEBUG_END;
+    #endif // def OldWay
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************

@@ -38,16 +38,16 @@
 
 
 // *********************************************************************************************
-void cRadio::AddAdjControls(uint16_t adjTab, ControlColor color)
+void cRadio::AddAdjControls (uint16_t adjTab, ControlColor color)
 {
     // DEBUG_START;
 
-    ESPUI.addControl(ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
-    FrequencyAdjust.AddAdjustControls(adjTab, color);
+    ESPUI.addControl (ControlType::Separator, ADJUST_FRQ_CTRL_STR, emptyString, ControlColor::None, adjTab);
+    FrequencyAdjust.AddAdjustControls (adjTab, color);
 
-    ESPUI.addControl(ControlType::Separator, ADJUST_AUDIO_SEP_STR, emptyString, ControlColor::None, adjTab);
-    TestTone.AddControls(adjTab, color);
-    AudioMute.AddControls(adjTab, color);
+    ESPUI.addControl (ControlType::Separator, ADJUST_AUDIO_SEP_STR, emptyString, ControlColor::None, adjTab);
+    TestTone.AddControls (adjTab, color);
+    AudioMute.AddControls (adjTab, color);
 
     // DEBUG_END;
 }
@@ -58,7 +58,7 @@ void cRadio::AddDiagControls (uint16_t diagTab, ControlColor color)
     // DEBUG_START;
 
 
-        
+
     // DEBUG_END;
 }
 
@@ -67,12 +67,12 @@ void cRadio::AddHomeControls (uint16_t homeTab, ControlColor color)
 {
     // DEBUG_START;
 
-    String tempStr;
-    
-    RfCarrier.AddHomeControls(homeTab, color);
-    FrequencyAdjust.AddHomeControls(homeTab, color);
-    ESPUI.addControl(ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
-    RdsText.AddControls(homeTab, color);
+    String  tempStr;
+
+    RfCarrier.AddHomeControls (homeTab, color);
+    FrequencyAdjust.AddHomeControls (homeTab, color);
+    ESPUI.addControl (ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
+    RdsText.AddControls (homeTab, color);
 
     // DEBUG_END;
 }
@@ -82,27 +82,27 @@ void cRadio::AddRadioControls (uint16_t radioTab, ControlColor color)
 {
     // DEBUG_START;
 
-    ESPUI.addControl(ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
-    FrequencyAdjust.AddRadioControls(radioTab, color);
-    RfCarrier.AddControls(radioTab, color);
+    ESPUI.addControl (ControlType::Separator, RADIO_SEP_RF_SET_STR, emptyString, ControlColor::None, radioTab);
+    FrequencyAdjust.AddRadioControls (radioTab, color);
+    RfCarrier.AddControls (radioTab, color);
 
-    ESPUI.addControl(ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
-    AudioMode.AddControls(radioTab, color);
+    ESPUI.addControl (ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
+    AudioMode.AddControls (radioTab, color);
     #ifdef ADV_RADIO_FEATURES
-        PreEmphasis.AddControls(radioTab, color);
+    PreEmphasis.AddControls (radioTab, color);
     #endif // ifdef ADV_RADIO_FEATURES
 
-    ESPUI.addControl(ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString, ControlColor::None, radioTab);
-    AnalogAudioGain.AddControls(radioTab, color);
-    AudioInputImpedance.AddControls(radioTab, color);
+    ESPUI.addControl (ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString, ControlColor::None, radioTab);
+    AnalogAudioGain.AddControls (radioTab, color);
+    AudioInputImpedance.AddControls (radioTab, color);
     #ifdef ADV_RADIO_FEATURES
-        DigitalAudioGain.AddControls(radioTab, color);
+    DigitalAudioGain.AddControls (radioTab, color);
     #endif // ifdef ADV_RADIO_FEATURES
 
-    ESPUI.addControl(ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString, ControlColor::None, radioTab);
-    PeakAudio.AddControls(radioTab, color);
+    ESPUI.addControl (ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString, ControlColor::None, radioTab);
+    PeakAudio.AddControls (radioTab, color);
     #ifdef ADV_RADIO_FEATURES
-        AudioGain.AddControls(radioTab, color);
+    AudioGain.AddControls (radioTab, color);
     #endif // ifdef ADV_RADIO_FEATURES
 
     // DEBUG_END;
@@ -113,10 +113,10 @@ void cRadio::AddRdsControls (uint16_t rdsTab, ControlColor color)
 {
     // DEBUG_START;
 
-    ProgramServiceName.AddControls(rdsTab, color);
-    PiCode.AddControls(rdsTab, color);
-    PtyCode.AddControls(rdsTab, color);
-    RdsReset.AddControls(rdsTab, color);
+    ProgramServiceName.AddControls (rdsTab, color);
+    PiCode.AddControls (rdsTab, color);
+    PtyCode.AddControls (rdsTab, color);
+    RdsReset.AddControls (rdsTab, color);
 
     // DEBUG_END;
 }

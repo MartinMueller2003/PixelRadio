@@ -20,88 +20,88 @@
 #include "ControllerLOCAL.h"
 #include "language.h"
 
-#if __has_include("memdebug.h")
-#  include "memdebug.h"
+#if __has_include ("memdebug.h")
+# include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 // class c_ControllerLOCAL : public c_ControllerCommon
 
 // *********************************************************************************************
-c_ControllerLOCAL::c_ControllerLOCAL() : c_ControllerCommon("LOCAL", c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
+c_ControllerLOCAL::c_ControllerLOCAL () : c_ControllerCommon ("LOCAL", c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
 {
-
-} // c_ControllerLOCAL
+}       // c_ControllerLOCAL
 
 // *********************************************************************************************
-c_ControllerLOCAL::~c_ControllerLOCAL() {}
-
-// *********************************************************************************************
-void c_ControllerLOCAL::AddControls(uint16_t ctrlTab)
+c_ControllerLOCAL::~c_ControllerLOCAL ()
 {
-   // DEBUG_START;
-
-   c_ControllerCommon::AddControls(ctrlTab);
-
-   // Messages.SetTitle(Name + " " + N_Messages);
-   Messages.AddControls(EspuiParentElementId);
-   Messages.ActivateMessageSet(Name);
-
-   // DEBUG_END;
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::CreateDefaultMsgSet()
+void c_ControllerLOCAL::AddControls (uint16_t ctrlTab)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   Messages.clear();
-   Messages.AddMessage(F("LOCAL"), F("Welcome to Our Drive-by Holiday Light Show"));
-   Messages.AddMessage(F("LOCAL"), F("For Safety Keep Automobile Running Lights On"));
-   Messages.AddMessage(F("LOCAL"), F("Please Drive Slowly and Watch Out for Children and Pets"));
+    c_ControllerCommon::AddControls (ctrlTab);
 
-   // DEBUG_END;
+    // Messages.SetTitle(Name + " " + N_Messages);
+    Messages.AddControls (EspuiParentElementId);
+    Messages.ActivateMessageSet (Name);
+
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::GetNextRdsMessage(c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerLOCAL::CreateDefaultMsgSet ()
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   if (ControllerEnabled)
-   {
-      Messages.GetNextRdsMessage(Response);
-   }
-   // DEBUG_END;
+    Messages.clear ();
+    Messages.   AddMessage (    F ("LOCAL"),    F ("Welcome to Our Drive-by Holiday Light Show"));
+    Messages.   AddMessage (    F ("LOCAL"),    F ("For Safety Keep Automobile Running Lights On"));
+    Messages.   AddMessage (    F ("LOCAL"),    F ("Please Drive Slowly and Watch Out for Children and Pets"));
+
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::restoreConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   c_ControllerCommon::restoreConfiguration(config);
-   Messages.RestoreConfig(config);
-
-   // do we need to create a set of default messages?
-   if(Messages.empty())
-   {
-      CreateDefaultMsgSet();
-   }
-   
-   // DEBUG_END;
-} // restoreConfiguration
+    if (ControllerEnabled)
+    {
+        Messages.GetNextRdsMessage (Response);
+    }
+    // DEBUG_END;
+}
 
 // *********************************************************************************************
-void c_ControllerLOCAL::saveConfiguration(ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::restoreConfiguration (ArduinoJson::JsonObject &config)
 {
-   // DEBUG_START;
+    // DEBUG_START;
 
-   c_ControllerCommon::saveConfiguration(config);
-   Messages.SaveConfig(config);
+    c_ControllerCommon::restoreConfiguration (config);
+    Messages.RestoreConfig (config);
 
-   // DEBUG_END;
-} // saveConfiguration
+    // do we need to create a set of default messages?
+    if (Messages.empty ())
+    {
+        CreateDefaultMsgSet ();
+    }
+    // DEBUG_END;
+}       // restoreConfiguration
+
+// *********************************************************************************************
+void c_ControllerLOCAL::saveConfiguration (ArduinoJson::JsonObject &config)
+{
+    // DEBUG_START;
+
+    c_ControllerCommon::saveConfiguration (config);
+    Messages.SaveConfig (config);
+
+    // DEBUG_END;
+}       // saveConfiguration
 
 // *********************************************************************************************
 // EOF
