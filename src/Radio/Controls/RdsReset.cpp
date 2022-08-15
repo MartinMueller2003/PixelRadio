@@ -40,42 +40,42 @@ cRdsReset::cRdsReset() : cControlCommon(emptyString)
 // *********************************************************************************************
 void cRdsReset::AddControls(uint16_t value, ControlColor color)
 {
-    // DEBUG_START;
+    DEBUG_START;
 
-    // DEBUG_V(String("value: ") + String(value))
-    // DEBUG_V(String("color: ") + String(color))
+    DEBUG_V(String("value: ") + String(value))
+    DEBUG_V(String("color: ") + String(color))
 
-    if(DataValue)
-    {
-      ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, value);
+    ESPUI.addControl(ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, value);
 
-      cControlCommon::AddControls(value, ControlType::Button, color);
-      ESPUI.updateControlValue(ControlId, RDS_RESET_STR);
-      ESPUI.updateControlLabel(ControlId, RDS_RESET_STR);
-      ESPUI.setPanelStyle(ControlId, String(F("font-size: 1.35em;")));
-      ESPUI.setElementStyle(ControlId, String(F("color: black;")));
-    }
-    ++ DataValue;
+    cControlCommon::AddControls(value, ControlType::Button, color);
+    ESPUI.updateControlValue(ControlId, RDS_RESET_STR);
+    ESPUI.updateControlLabel(ControlId, RDS_RESET_STR);
+    ESPUI.setPanelStyle(ControlId, String(F("font-size: 1.35em;")));
+    ESPUI.setElementStyle(ControlId, String(F("color: black;")));
 
-    // DEBUG_END;
+    DEBUG_END;
 }
 
 // *********************************************************************************************
 bool cRdsReset::set(String & value, String & ResponseMessage)
 {
-  DEBUG_START;
+    DEBUG_START;
 
-  // do something here
-  DEBUG_V(String("value: ") + String(value));
+    // do something here
+    DEBUG_V(String("value: ") + String(value));
 
-  PiCode.ResetToDefaults();
-  PtyCode.ResetToDefaults();
-  ProgramServiceName.ResetToDefaults();
+    if(DataValue)
+    {
+      PiCode.ResetToDefaults();
+      PtyCode.ResetToDefaults();
+      ProgramServiceName.ResetToDefaults();
 
-  Log.infoln(String(F("Reset RDS Settings to defaults.")).c_str());
+      Log.infoln(String(F("Reset RDS Settings to defaults.")).c_str());
+    }
+    ++ DataValue;
 
-  DEBUG_END;
-  return true;
+    DEBUG_END;
+    return true;
 }
 
 // *********************************************************************************************
