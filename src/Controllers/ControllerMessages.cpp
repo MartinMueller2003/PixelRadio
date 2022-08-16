@@ -117,7 +117,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 emptyString,
                 ControlColor::Turquoise,
                 ctrlTab,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     // Serial.println(String("ChoiceList parm: 0x") + String(uint32_t(parm), HEX));
                     if (parm)
@@ -134,7 +134,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 " Delete ",
                 ControlColor::None,
                 MessageElementIds.ActiveChoiceListElementId,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     // Serial.println(String("Delete Button parm: 0x") + String(uint32_t(parm), HEX));
                     if (nullptr != parm)
@@ -151,7 +151,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 " Update ",
                 ControlColor::None,
                 MessageElementIds.ActiveChoiceListElementId,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     // Serial.println(String("Update Button parm: 0x") + String(uint32_t(parm), HEX));
                     if (nullptr != parm)
@@ -177,7 +177,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 DefaultTextFieldValue,
                 ControlColor::None,
                 MessageElementIds.ActiveChoiceListElementId,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     // Serial.println(String("Text Entry parm: 0x") + String(uint32_t(parm), HEX));
                     if (nullptr != parm)
@@ -202,7 +202,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 " Create ",
                 ControlColor::None,
                 MessageElementIds.ActiveChoiceListElementId,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     // Serial.println(String("Create Button parm: 0x") + String(uint32_t(parm), HEX));
                     if (nullptr != parm)
@@ -242,7 +242,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                     DisplayFseqName ? "1" : "0",
                     ControlColor::None,
                     MessageElementIds.ActiveChoiceListElementId,
-                    [](Control * sender, int type, void * parm)
+                    [] (Control * sender, int type, void * parm)
                     {
                         if (nullptr != parm)
                         {

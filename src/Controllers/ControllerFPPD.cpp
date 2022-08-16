@@ -60,7 +60,7 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
             String (SequenceLearningEnabled ? F ("1") : F ("0")),
             ControlColor::Turquoise,
             ControlLabelElementId,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {
@@ -100,7 +100,7 @@ void c_ControllerFPPD::begin ()
     Sequences.begin ();
 
     FPPDiscovery.begin (
-        [](String &FppdFileName, void * param)
+        [] (String &FppdFileName, void * param)
         {
             if (param)
             {

@@ -23,7 +23,7 @@ class cPeakAudio : public cControlCommon
 public:
 
     cPeakAudio ();
-    virtual     ~cPeakAudio ()
+    virtual ~cPeakAudio ()
     {
     }
 

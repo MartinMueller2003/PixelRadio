@@ -23,7 +23,7 @@ class cPreEmphasis : public cControlCommon
 public:
 
     cPreEmphasis ();
-    virtual     ~cPreEmphasis ()
+    virtual ~cPreEmphasis ()
     {
     }
 

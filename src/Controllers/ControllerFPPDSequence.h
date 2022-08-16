@@ -27,7 +27,7 @@ class c_ControllerFPPDSequence
 public:
 
     c_ControllerFPPDSequence ();
-    virtual  ~c_ControllerFPPDSequence ();
+    virtual ~c_ControllerFPPDSequence ();
 
     void        RestoreConfig (ArduinoJson::JsonObject &config);
     void        SaveConfig (ArduinoJson::JsonObject &config);

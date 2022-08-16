@@ -48,7 +48,7 @@ void cControlCommon::AddControls (
             emptyString,
             color,
             value,
-            [](Control * sender, int type, void * UserInfo)
+            [] (Control * sender, int type, void * UserInfo)
             {
                 if (UserInfo)
                 {

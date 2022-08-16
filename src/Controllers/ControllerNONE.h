@@ -25,7 +25,7 @@ class c_ControllerNONE : public c_ControllerCommon
 public:
 
     c_ControllerNONE ();
-    virtual  ~c_ControllerNONE ();
+    virtual ~c_ControllerNONE ();
     void AddControls (uint16_t ctrlTab)
     {
     }

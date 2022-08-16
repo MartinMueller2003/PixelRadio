@@ -23,7 +23,7 @@ class cRfPower : public cControlCommon
 public:
 
     cRfPower ();
-    virtual     ~cRfPower ()
+    virtual ~cRfPower ()
     {
     }
 

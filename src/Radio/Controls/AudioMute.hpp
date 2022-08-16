@@ -23,7 +23,7 @@ class cAudioMute : public cControlCommon
 public:
 
     cAudioMute ();
-    virtual     ~cAudioMute ()
+    virtual ~cAudioMute ()
     {
     }
 

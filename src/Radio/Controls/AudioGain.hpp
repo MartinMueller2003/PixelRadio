@@ -23,7 +23,7 @@ class cAudioGain : public cControlCommon
 public:
 
     cAudioGain ();
-    virtual     ~cAudioGain ()
+    virtual ~cAudioGain ()
     {
     }
 

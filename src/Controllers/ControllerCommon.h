@@ -54,7 +54,7 @@ protected:
 public:
 
     c_ControllerCommon (String MyName, c_ControllerMgr::ControllerTypeId_t MyId);
-    virtual           ~c_ControllerCommon ();
+    virtual ~c_ControllerCommon ();
     virtual void begin ()
     {
     }

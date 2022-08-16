@@ -26,7 +26,7 @@ class c_ControllerHTTP : public c_ControllerCommon
 public:
 
     c_ControllerHTTP ();
-    virtual  ~c_ControllerHTTP ();
+    virtual ~c_ControllerHTTP ();
     void        saveConfiguration (ArduinoJson::JsonObject &config);
     void        restoreConfiguration (ArduinoJson::JsonObject &config);
     void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)

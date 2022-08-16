@@ -28,7 +28,7 @@ public:
     {
     }
 
-    virtual     ~cRadio ()
+    virtual ~cRadio ()
     {
     }
 

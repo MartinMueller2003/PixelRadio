@@ -19,7 +19,7 @@ class c_WiFiDriverUi
 public:
 
     c_WiFiDriverUi ();
-    virtual     ~c_WiFiDriverUi ();
+    virtual ~c_WiFiDriverUi ();
 
     void        addControls (uint16_t _WiFiTabId);
     void        addHomeControls (uint16_t _WiFiTabId);

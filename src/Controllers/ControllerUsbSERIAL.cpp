@@ -57,7 +57,7 @@ void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
             BaudRateStr,
             ControlColor::Turquoise,
             ControlLabelElementId,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {

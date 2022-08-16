@@ -26,7 +26,7 @@ public:
     {
     }
 
-    virtual     ~cQN8027RadioApi ()
+    virtual ~cQN8027RadioApi ()
     {
     }
 

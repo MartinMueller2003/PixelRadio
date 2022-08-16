@@ -29,7 +29,7 @@ class c_ControllerMQTT : public c_ControllerCommon
 public:
 
     c_ControllerMQTT (void);
-    virtual  ~c_ControllerMQTT (void);
+    virtual ~c_ControllerMQTT (void);
     void        Begin (void);
     void        poll (void);
     void        saveConfiguration (ArduinoJson::JsonObject &config);

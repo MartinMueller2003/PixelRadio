@@ -23,7 +23,7 @@ class cRfCarrier : public cControlCommon
 public:
 
     cRfCarrier ();
-    virtual     ~cRfCarrier ()
+    virtual ~cRfCarrier ()
     {
     }
 

@@ -24,7 +24,7 @@ class cRdsText : public cControlCommon
 public:
 
     cRdsText ();
-    virtual     ~cRdsText ()
+    virtual ~cRdsText ()
     {
     }
 

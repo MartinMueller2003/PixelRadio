@@ -29,7 +29,7 @@ class c_ControllerUsbSERIAL : public c_ControllerCommon
 public:
 
     c_ControllerUsbSERIAL ();
-    virtual  ~c_ControllerUsbSERIAL ();
+    virtual ~c_ControllerUsbSERIAL ();
     void begin ()
     {
         initSerialControl ();

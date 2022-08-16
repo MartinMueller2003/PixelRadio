@@ -23,7 +23,7 @@ class cPiCode : public cControlCommon
 public:
 
     cPiCode ();
-    virtual     ~cPiCode ()
+    virtual ~cPiCode ()
     {
     }
 

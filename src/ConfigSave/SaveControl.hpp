@@ -24,7 +24,7 @@ class cSaveControl : public cControlCommon
 public:
 
     cSaveControl ();
-    virtual     ~cSaveControl ()
+    virtual ~cSaveControl ()
     {
     }
 

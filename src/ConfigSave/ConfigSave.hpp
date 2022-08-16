@@ -27,7 +27,7 @@ public:
     {
     }
 
-    virtual     ~cConfigSave ()
+    virtual ~cConfigSave ()
     {
     }
 

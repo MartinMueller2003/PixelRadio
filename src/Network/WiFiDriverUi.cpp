@@ -92,7 +92,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 ssid,
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -108,7 +108,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 F (WIFI_PASS_HIDE_STR),
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -127,7 +127,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 UseDhcp ? "1" : "0",
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -148,7 +148,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 staticIp.toString (),
                 ControlColor::Carrot,
                 wifiStaticSettingsID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -165,7 +165,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 staticNetmask.toString (),
                 ControlColor::Carrot,
                 wifiStaticSettingsID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -187,7 +187,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 staticGateway.toString (),
                 ControlColor::Carrot,
                 wifiStaticSettingsID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -205,7 +205,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 staticDnsIp.toString (),
                 ControlColor::Carrot,
                 wifiStaticSettingsID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -223,7 +223,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 StaHostname,
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -239,7 +239,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 ApHostname,
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -257,7 +257,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 mdnsName,
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -278,7 +278,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 userNameStr,
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -301,7 +301,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 userPassStr,
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -327,7 +327,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 ApIp.toString (),
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -342,7 +342,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 (ap_fallbackIsEnabled) ? "1" : "0",
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -358,7 +358,7 @@ void c_WiFiDriverUi::addControls (uint16_t _WiFiTabID)
                 (RebootOnWiFiFailureToConnect) ? "1" : "0",
                 ControlColor::Carrot,
                 WiFiTabID,
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {

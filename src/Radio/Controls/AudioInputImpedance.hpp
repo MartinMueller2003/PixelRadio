@@ -23,7 +23,7 @@ class cAudioInputImpedance : public cControlCommon
 public:
 
     cAudioInputImpedance ();
-    virtual     ~cAudioInputImpedance ()
+    virtual ~cAudioInputImpedance ()
     {
     }
 

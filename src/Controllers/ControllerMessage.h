@@ -42,7 +42,7 @@ public:
     {
     }   // Empty Copy constructor
 
-    virtual  ~c_ControllerMessage ();
+    virtual ~c_ControllerMessage ();
     void        Activate (bool value);
     void        AddControls (MessageElementIds_t * _MessageElementIds);
     void        CbDuration (Control * sender, int type);

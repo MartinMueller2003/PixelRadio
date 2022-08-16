@@ -23,7 +23,7 @@ class cProgramServiceName : public cControlCommon
 public:
 
     cProgramServiceName ();
-    virtual     ~cProgramServiceName ()
+    virtual ~cProgramServiceName ()
     {
     }
 

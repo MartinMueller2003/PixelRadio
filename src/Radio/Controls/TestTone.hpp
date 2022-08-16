@@ -25,7 +25,7 @@ class cTestTone : public cControlCommon
 public:
 
     cTestTone ();
-    virtual     ~cTestTone ()
+    virtual ~cTestTone ()
     {
     }
 

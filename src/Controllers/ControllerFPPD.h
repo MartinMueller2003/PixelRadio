@@ -26,7 +26,7 @@ class c_ControllerFPPD : public c_ControllerCommon
 public:
 
     c_ControllerFPPD ();
-    virtual  ~c_ControllerFPPD ();
+    virtual ~c_ControllerFPPD ();
 
     void        begin ();
     void        ProcessFppdFile (String &FppdFileName);

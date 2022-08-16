@@ -23,7 +23,7 @@ class cAnalogAudioGain : public cControlCommon
 public:
 
     cAnalogAudioGain ();
-    virtual     ~cAnalogAudioGain ()
+    virtual ~cAnalogAudioGain ()
     {
     }
 

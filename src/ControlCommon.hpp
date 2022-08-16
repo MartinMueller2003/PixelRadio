@@ -24,7 +24,7 @@ class cControlCommon
 public:
 
     cControlCommon (String _ConfigName);
-    virtual             ~cControlCommon ()
+    virtual ~cControlCommon ()
     {
     }
 

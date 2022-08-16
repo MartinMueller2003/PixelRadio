@@ -23,7 +23,7 @@ class cRdsReset : public cControlCommon
 public:
 
     cRdsReset ();
-    virtual     ~cRdsReset ()
+    virtual ~cRdsReset ()
     {
     }
 

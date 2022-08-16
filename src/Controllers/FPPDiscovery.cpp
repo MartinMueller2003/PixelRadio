@@ -52,28 +52,28 @@ void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
 
     // register for changes in the WiFi State
     WiFi.onEvent (
-        [](WiFiEvent_t)
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
         WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
     WiFi.onEvent (
-        [](WiFiEvent_t)
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
         WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     WiFi.onEvent (
-        [](WiFiEvent_t)
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
         WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
     WiFi.onEvent (
-        [](WiFiEvent_t)
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },

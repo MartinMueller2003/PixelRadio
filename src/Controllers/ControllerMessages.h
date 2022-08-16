@@ -33,7 +33,7 @@ class c_ControllerMessages
 public:
 
     c_ControllerMessages ();
-    virtual  ~c_ControllerMessages ();
+    virtual ~c_ControllerMessages ();
     void        RestoreConfig (ArduinoJson::JsonObject &config);
     void        SaveConfig (ArduinoJson::JsonObject &config);
     void        SaveConfig (ArduinoJson::JsonObject &config, String &SetName);

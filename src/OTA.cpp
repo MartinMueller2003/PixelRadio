@@ -42,7 +42,7 @@ void otaInit (String &mdnsname)
     ArduinoOTA.setTimeout (OTA_TIMEOUT);                // Default is 1000mS, increased to prevent OTA timeouts.
     ArduinoOTA
     .onStart (
-        []()
+        [] ()
         {
             oldProg             = -1;
             String typeStr      = emptyString;
@@ -72,7 +72,7 @@ void otaInit (String &mdnsname)
         })
 
     .onEnd (
-        []()
+        [] ()
         {
             delay (10);
             // WiFi.setTxPower(RUN_WIFI_PWR);
@@ -93,7 +93,7 @@ void otaInit (String &mdnsname)
         })
 
     .onProgress (
-        [](unsigned int progress, unsigned int total)
+        [] (unsigned int progress, unsigned int total)
         {
             prog = (progress / (total / 100)) % 2;      // Progress value changes in 2% increments.
 
@@ -105,7 +105,7 @@ void otaInit (String &mdnsname)
         })
 
     .onError (
-        [](ota_error_t error)
+        [] (ota_error_t error)
         {
             Log.warningln (" -> OTA Error[%u]: ", error);
 

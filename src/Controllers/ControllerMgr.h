@@ -76,7 +76,7 @@ private:
 public:
 
     c_ControllerMgr ();
-    virtual              ~c_ControllerMgr ();
+    virtual ~c_ControllerMgr ();
     void                poll ();
     void                begin ();
     void                AddControls (uint16_t ctrlTab);

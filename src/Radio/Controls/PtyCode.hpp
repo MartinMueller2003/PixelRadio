@@ -23,7 +23,7 @@ class cPtyCode : public cControlCommon
 public:
 
     cPtyCode ();
-    virtual   ~cPtyCode ()
+    virtual ~cPtyCode ()
     {
     }
 

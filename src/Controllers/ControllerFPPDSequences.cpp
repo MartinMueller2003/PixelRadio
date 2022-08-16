@@ -71,7 +71,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 emptyString,
                 ControlColor::Turquoise,
                 EspuiParentElementId,
-                [](Control * sender, int type, void * param)
+                [] (Control * sender, int type, void * param)
                 {
                     if (param)
                     {
@@ -87,7 +87,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 " Delete ",
                 ControlColor::None,
                 EspuiChoiceListElementId,
-                [](Control * sender, int type, void * param)
+                [] (Control * sender, int type, void * param)
                 {
                     if (param)
                     {
@@ -103,7 +103,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 " Update ",
                 ControlColor::None,
                 EspuiChoiceListElementId,
-                [](Control * sender, int type, void * param)
+                [] (Control * sender, int type, void * param)
                 {
                     if (param)
                     {
@@ -128,7 +128,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 DefaultTextFieldValue,
                 ControlColor::None,
                 EspuiChoiceListElementId,
-                [](Control * sender, int type, void * param)
+                [] (Control * sender, int type, void * param)
                 {
                     if (param)
                     {
@@ -147,7 +147,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 " Create ",
                 ControlColor::None,
                 EspuiChoiceListElementId,
-                [](Control * sender, int type, void * param)
+                [] (Control * sender, int type, void * param)
                 {
                     if (param)
                     {

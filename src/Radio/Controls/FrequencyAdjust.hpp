@@ -23,7 +23,7 @@ class cFrequencyAdjust : public cControlCommon
 public:
 
     cFrequencyAdjust ();
-    virtual     ~cFrequencyAdjust ()
+    virtual ~cFrequencyAdjust ()
     {
     }
 

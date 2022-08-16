@@ -23,7 +23,7 @@ class cAudioMode : public cControlCommon
 public:
 
     cAudioMode ();
-    virtual     ~cAudioMode ()
+    virtual ~cAudioMode ()
     {
     }
 

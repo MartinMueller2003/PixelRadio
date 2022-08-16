@@ -70,7 +70,7 @@ void c_ControllerCommon::AddControls (uint16_t tabId)
             String (ControllerEnabled ? F ("1") : F ("0")),
             ControlColor::Turquoise,
             ControlLabelElementId,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {

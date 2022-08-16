@@ -180,7 +180,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             mqttNameStr,
             ControlColor::Turquoise,
             ctrlTab,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {
@@ -195,7 +195,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             RemoteIp.toString (),
             ControlColor::Turquoise,
             ctrlTab,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {
@@ -222,7 +222,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             mqttUserStr,
             ControlColor::Turquoise,
             ctrlTab,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {
@@ -238,7 +238,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             MQTT_PASS_HIDE_STR,
             ControlColor::Turquoise,
             ctrlTab,
-            [](Control * sender, int type, void * param)
+            [] (Control * sender, int type, void * param)
             {
                 if (param)
                 {
@@ -490,7 +490,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         Log.infoln ((String (F ("Attempting MQTT Reconnection #")) + String (ClientConnectionRetryCount)).c_str ());
         mqttClient.setServer (RemoteIp, mqttPort);
         mqttClient.setCallback (
-            [](const char * topic, byte * payload, unsigned int length)
+            [] (const char * topic, byte * payload, unsigned int length)
             {
                 c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
                 pMe->mqttClientCallback (topic, payload, length);

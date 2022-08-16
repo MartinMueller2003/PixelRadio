@@ -25,7 +25,7 @@ class c_WiFiDriver : public c_WiFiDriverUi
 public:
 
     c_WiFiDriver    ();
-    virtual     ~c_WiFiDriver   ();
+    virtual ~c_WiFiDriver   ();
 
     void        Begin           ();
     void        GetStatus       (JsonObject &json);

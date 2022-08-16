@@ -138,7 +138,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         {
             DurationControl->user               = nullptr;
             DurationControl->extendedCallback   =
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
@@ -154,7 +154,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         {
             MsgEnabledControl->user             = nullptr;
             MsgEnabledControl->extendedCallback =
-                [](Control * sender, int type, void * parm)
+                [] (Control * sender, int type, void * parm)
                 {
                     if (nullptr != parm)
                     {
