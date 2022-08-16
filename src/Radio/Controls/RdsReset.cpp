@@ -42,8 +42,8 @@ void cRdsReset::AddControls (uint16_t value, ControlColor color)
 {
     DEBUG_START;
 
-        DEBUG_V (       String ("value: ") + String (value))
-        DEBUG_V (       String ("color: ") + String (color))
+    DEBUG_V (String ("value: ") + String (value))
+    DEBUG_V (String ("color: ") + String (color))
 
     ESPUI.addControl (ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, value);
 
@@ -51,7 +51,7 @@ void cRdsReset::AddControls (uint16_t value, ControlColor color)
     ESPUI.updateControlValue (ControlId, RDS_RESET_STR);
     ESPUI.updateControlLabel (ControlId, RDS_RESET_STR);
     ESPUI.setPanelStyle (ControlId, String (F ("font-size: 1.35em;")));
-    ESPUI.setElementStyle (ControlId, String (F ("color: black;")));
+    ESPUI.setElementStyle (ControlId, String (F ("color: white;")));
 
     DEBUG_END;
 }
