@@ -443,7 +443,7 @@ void buildGUI (void)
     // Home Tab
     ESPUI.addControl (ControlType::Separator, HOME_FM_SEP_STR, emptyString, ControlColor::None, homeTab);
     Radio.AddHomeControls (homeTab, ControlColor::Peterriver);
-    WiFiDriver.addHomeControls (homeTab);
+    WiFiDriver.addHomeControls (homeTab, ControlColor::Peterriver);
 
     // **************
     // Adjust Tab
@@ -469,7 +469,7 @@ void buildGUI (void)
     //
     // *************
     //  WiFi Tab
-    WiFiDriver.addControls (wifiTab);
+    WiFiDriver.addControls (wifiTab, ControlColor::Carrot);
     ConfigSave.AddControls (wifiTab, ControlColor::Carrot);
 
     //

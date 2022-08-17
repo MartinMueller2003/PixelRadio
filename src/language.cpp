@@ -34,6 +34,8 @@ const PROGMEM char      CSS_LABEL_STYLE_RED          [] = "background-color: uns
 const PROGMEM char      CSS_LABEL_STYLE_TRANSPARENT  [] = "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
 const PROGMEM char      CSS_LABEL_STYLE_WHITE        [] = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
 
+const PROGMEM char      UNITS_DBM_STR              [] = " dBm";
+
 const PROGMEM char      N_About                    []   = "About";
 const PROGMEM char      N_About_PixelRadio         []   = "About PixelRadio";
 const PROGMEM char      N_BAUDRATE                 []   = "BAUDRATE";

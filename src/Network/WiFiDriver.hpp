@@ -29,14 +29,16 @@ public:
 
     void        Begin           ();
     void        GetStatus       (JsonObject &json);
+    String      GetDefaultWpaKey();
+    String      GetDefaultSsid();
     bool        restoreConfiguration (JsonObject &json);
     void        saveConfiguration (JsonObject &json);
-
+    void        WiFiReset();
+ 
     IPAddress   getIpAddress    ()
     {
         return CurrentIpAddress;
     }
-
     void setIpAddress    (IPAddress NewAddress)
     {
         CurrentIpAddress = NewAddress;
@@ -103,11 +105,6 @@ public:
         return RebootOnWiFiFailureToConnect;
     }
 
-    String GetConfig_ssid  ()
-    {
-        return ssid;
-    }
-
     String GetConfig_passphrase ()
     {
         return passphrase;
@@ -117,9 +114,9 @@ public:
     void        SetHostname     (String &name);
     void        Disable         ();
     void        Enable          ();
-    bool        UsingDhcp       ()
+    bool        xUsingDhcp       ()
     {
-        return UseDhcp && !ValidateStaticSettings ();
+        return DHCP.get();
     }
 
 private:

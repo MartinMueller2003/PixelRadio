@@ -28,7 +28,7 @@
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
-// class c_ControllerMQTT : public c_ControllerCommon
+static const PROGMEM String WIFI_PASS_HIDE_STR = "{PASSWORD HIDDEN}";
 
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT () : c_ControllerCommon ("MQTT", c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)

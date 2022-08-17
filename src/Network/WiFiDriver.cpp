@@ -88,7 +88,7 @@ c_WiFiDriver::~c_WiFiDriver ()
     // DEBUG_START;
 
     // DEBUG_END;
-}       // ~c_WiFiDriver
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::AnnounceState ()
@@ -101,10 +101,9 @@ void c_WiFiDriver::AnnounceState ()
     Log.verboseln ((String (F ("WiFi Entering State: ")) + StateName).c_str ());
 
     // DEBUG_END;
-}       // AnnounceState
+}
 
 // -----------------------------------------------------------------------------
-///< Start the module
 void c_WiFiDriver::Begin ()
 {
     // DEBUG_START;
@@ -166,6 +165,7 @@ void c_WiFiDriver::Begin ()
         {
             this->onWiFiStaConn (event, info);
         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+
     WiFi.       onEvent (
         [this] (WiFiEvent_t event, arduino_event_info_t info)
         {
@@ -177,6 +177,7 @@ void c_WiFiDriver::Begin ()
         {
             this->onWiFiConnect    (event, info);
         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+
     WiFi.       onEvent (
         [this] (WiFiEvent_t event, arduino_event_info_t info)
         {
@@ -278,6 +279,18 @@ void c_WiFiDriver::Enable ()
 }       // Enable
 
 // -----------------------------------------------------------------------------
+String c_WiFiDriver::GetDefaultWpaKey()
+{
+    return default_passphrase;
+}
+
+// -----------------------------------------------------------------------------
+String c_WiFiDriver::GetDefaultSsid()
+{
+    return default_ssid;
+}
+
+// -----------------------------------------------------------------------------
 void c_WiFiDriver::GetHostname (String &name)
 {
     name = WiFi.getHostname ();
@@ -286,11 +299,12 @@ void c_WiFiDriver::GetHostname (String &name)
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::GetStatus (JsonObject &jsonStatus)
 {
+    #ifdef OldWay
     // DEBUG_START;
     GetHostname (StaHostname);
     jsonStatus[F ("WIFI_HOSTNAME")] = StaHostname;
 
-    jsonStatus[F ("WIFI_RSSI")]         = getRSSI ();
+    jsonStatus[F ("WIFI_RSSI")]         = WiFiRssi.get ();
     jsonStatus[F ("WIFI_IP_ADDR_STR")]  = getIpAddress ().toString ();
     jsonStatus[F ("WIFI_SUBNET_STR")]   = getIpSubNetMask ().toString ();
     jsonStatus[F ("WIFI_MAC_STR")]      = WiFi.macAddress ();
@@ -298,19 +312,20 @@ void c_WiFiDriver::GetStatus (JsonObject &jsonStatus)
     jsonStatus[F ("WIFI_CONNECTED")]    = IsWiFiConnected ();
 
     // DEBUG_END;
-}       // GetStatus
+    #endif // def OldWay
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::onWiFiStaConn (const WiFiEvent_t event, const WiFiEventInfo_t info)
 {
     // DEBUG_V ("ESP has associated with the AP");
-}       // onWiFiStaConn
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::onWiFiStaDisc (const WiFiEvent_t event, const WiFiEventInfo_t info)
 {
     // DEBUG_V ("ESP has disconnected from the AP");
-}       // onWiFiStaDisc
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::onWiFiConnect (const WiFiEvent_t event, const WiFiEventInfo_t info)
@@ -320,7 +335,7 @@ void c_WiFiDriver::onWiFiConnect (const WiFiEvent_t event, const WiFiEventInfo_t
     pCurrentFsmState->OnConnect ();
 
     // DEBUG_END;
-}       // onWiFiConnect
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::onWiFiDisconnect (const WiFiEvent_t event, const WiFiEventInfo_t info)
@@ -330,7 +345,7 @@ void c_WiFiDriver::onWiFiDisconnect (const WiFiEvent_t event, const WiFiEventInf
     pCurrentFsmState->OnDisconnect ();
 
     // DEBUG_END;
-}       // onWiFiDisconnect
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::Poll ()
@@ -347,32 +362,22 @@ void c_WiFiDriver::Poll ()
 
     if (ResetWiFi)
     {
+        // DEBUG_V("Reset Triggered");
         ResetWiFi = false;
         reset ();
     }
     // _ DEBUG_END;
-}       // Poll
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::reset ()
 {
     // DEBUG_START;
 
-    // Reset address in case we're switching from static to dhcp
-    // WiFi.config (0u, 0u, 0u);
-    // DEBUG_V("");
-
-    if (IsWiFiConnected ())
-    {
-        // DEBUG_V("");
-        // NetworkMgr.SetWiFiIsConnected (false);
-    }
-    // DEBUG_V("");
-
     fsm_WiFi_state_Boot_imp.Init ();
 
     // DEBUG_END;
-}       // reset
+}
 
 // -----------------------------------------------------------------------------
 bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
@@ -381,17 +386,12 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
 
     bool        ConfigChanged = false;
 
-    String      TempIp          = staticIp.toString ();
-    String      TempGateway     = staticGateway.toString ();
-    String      TempNetmask     = staticNetmask.toString ();
-    String      TempApIp        = ApIp.toString ();
+    String      TempApIp = ApIp.toString ();
 
-    ConfigChanged       |= ReadFromJSON (ssid,                            json, F ("WIFI_SSID_STR"));
-    ConfigChanged       |= ReadFromJSON (passphrase,                      json, F ("WIFI_WPA_KEY_STR"));
-    ConfigChanged       |= ReadFromJSON (TempIp,                          json, F ("WIFI_IP_ADDR_STR"));
-    ConfigChanged       |= ReadFromJSON (TempNetmask,                     json, F ("WIFI_SUBNET_STR"));
-    ConfigChanged       |= ReadFromJSON (TempGateway,                     json, F ("WIFI_GATEWAY_STR"));
-    ConfigChanged       |= ReadFromJSON (UseDhcp,                         json, F ("WIFI_DHCP_FLAG"));
+    SSID.restoreConfiguration(json);
+    WPA.restoreConfiguration(json);
+    DHCP.restoreConfiguration(json);
+
     ConfigChanged       |= ReadFromJSON (sta_timeout,                     json, F ("WIFI_STA_TIMEOUT"));
     ConfigChanged       |= ReadFromJSON (ap_fallbackIsEnabled,            json, F ("WIFI_AP_FALLBACK"));
     ConfigChanged       |= ReadFromJSON (ap_timeout,                      json, F ("WIFI_AP_TIMEOUT"));
@@ -401,9 +401,6 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
     ConfigChanged       |= ReadFromJSON (TempApIp,                        json, F ("AP_IP_ADDR_STR"));
     ConfigChanged       |= ReadFromJSON (mdnsName,                        json, F ("MDNS_NAME_STR"));
 
-    staticIp.fromString (TempIp);
-    staticGateway.fromString (TempGateway);
-    staticNetmask.fromString (TempNetmask);
     ApIp.fromString (TempApIp);
 
     // DEBUG_V ("     ip: " + ip);
@@ -414,19 +411,17 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
     // DEBUG_V (String("ConfigChanged: ") + String(ConfigChanged));
     // DEBUG_END;
     return ConfigChanged;
-}       // SetConfig
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::saveConfiguration (JsonObject &json)
 {
     // DEBUG_START;
 
-    json["WIFI_SSID_STR"]       = ssid;
-    json["WIFI_WPA_KEY_STR"]    = passphrase;
-    json["WIFI_IP_ADDR_STR"]    = staticIp.toString ();
-    json["WIFI_SUBNET_STR"]     = staticNetmask.toString ();
-    json["WIFI_GATEWAY_STR"]    = staticGateway.toString ();
-    json["WIFI_DHCP_FLAG"]      = UseDhcp;
+    SSID.saveConfiguration(json);
+    WPA.saveConfiguration(json);
+    DHCP.restoreConfiguration(json);
+
     json["WIFI_STA_TIMEOUT"]    = sta_timeout;
     json["WIFI_AP_FALLBACK"]    = ap_fallbackIsEnabled;
     json["WIFI_AP_TIMEOUT"]     = ap_timeout;
@@ -437,7 +432,7 @@ void c_WiFiDriver::saveConfiguration (JsonObject &json)
     json["MDNS_NAME_STR"]       = mdnsName;
 
     // DEBUG_END;
-}       // GetConfig
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::SetFsmState (fsm_WiFi_state * NewState)
@@ -447,7 +442,7 @@ void c_WiFiDriver::SetFsmState (fsm_WiFi_state * NewState)
     // DEBUG_V (String ("        NewState: 0x") + String (uint32_t (NewState), HEX));
     pCurrentFsmState = NewState;
     // DEBUG_END;
-}       // SetFsmState
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::SetHostname (String &)
@@ -458,7 +453,7 @@ void c_WiFiDriver::SetHostname (String &)
     reset ();
 
     // DEBUG_END;
-}       // SetHostname
+}
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::SetUpIp ()
@@ -467,38 +462,19 @@ void c_WiFiDriver::SetUpIp ()
 
     do  // once
     {
-        if (true == UseDhcp)
+        if (DHCP.get())
         {
             Log.verboseln (String (F ("Using DHCP")).c_str ());
             break;
         }
-        IPAddress  temp = (uint32_t)0;
-        // DEBUG_V ("   temp: " + temp.toString ());
-        // DEBUG_V ("     ip: " + ip.toString());
-        // DEBUG_V ("staticNetmask: " + staticNetmask.toString ());
-        // DEBUG_V ("gateway: " + gateway.toString ());
-
-        if (temp == staticIp)
-        {
-            Log.errorln (String (F ("STATIC SELECTED WITHOUT IP. Using DHCP assigned address")).c_str ());
-            break;
-        }
-
-        if ((staticIp == WiFi.localIP ()) &&
-            (staticNetmask == WiFi.subnetMask ()) &&
-            (staticGateway == WiFi.gatewayIP ()))
-        {
-            // DEBUG_V("correct IP is already set");
-            break;
-        }
-        // We didn't use DNS, so just set it to our configured gateway
-        WiFi.config (staticIp, staticGateway, staticNetmask, staticGateway);
 
         Log.infoln (String (F ("Using Static IP")).c_str ());
+        WiFi.config (DHCP.GetStaticIP(), DHCP.GetStaticGateway(), DHCP.GetStaticNetmask(), DHCP.GetStaticDNS());
+
     } while (false);
 
     // DEBUG_END;
-}       // SetUpIp
+}
 
 // -----------------------------------------------------------------------------
 int c_WiFiDriver::ValidateConfig ()
@@ -506,20 +482,6 @@ int c_WiFiDriver::ValidateConfig ()
     // DEBUG_START;
 
     int  response = 0;
-
-    if (0 == ssid.length ())
-    {
-        ssid = ssid;
-        // DEBUG_V ();
-        response++;
-    }
-
-    if (0 == passphrase.length ())
-    {
-        passphrase = passphrase;
-        // DEBUG_V ();
-        response++;
-    }
 
     if (sta_timeout < 5)
     {
@@ -537,13 +499,20 @@ int c_WiFiDriver::ValidateConfig ()
     // DEBUG_END;
 
     return response;
-}       // ValidateConfig
+}
+
+// -----------------------------------------------------------------------------
+void c_WiFiDriver::WiFiReset()
+{
+    // DEBUG_V();
+    ResetWiFi = true;
+    // DEBUG_V();
+}
 
 /*****************************************************************************/
 //  FSM Code
 /*****************************************************************************/
 /*****************************************************************************/
-// Waiting for polling to start
 void fsm_WiFi_state_Boot::Poll ()
 {
     // _ DEBUG_START;
@@ -553,10 +522,9 @@ void fsm_WiFi_state_Boot::Poll ()
     fsm_WiFi_state_ConnectingUsingConfig_imp.Init ();
 
     // _ DEBUG_END;
-}       // fsm_WiFi_state_boot
+}
 
 /*****************************************************************************/
-// Waiting for polling to start
 void fsm_WiFi_state_Boot::Init ()
 {
     // DEBUG_START;
@@ -567,11 +535,10 @@ void fsm_WiFi_state_Boot::Init ()
     pWiFiDriver->ConnectionStatusMessage = F ("Disconnected");
 
     // DEBUG_END;
-}       // fsm_WiFi_state_Boot::Init
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingUsingConfig::Poll ()
 {
     // _ DEBUG_START;
@@ -589,18 +556,17 @@ void fsm_WiFi_state_ConnectingUsingConfig::Poll ()
         }
     }
     // _ DEBUG_END;
-}       // fsm_WiFi_state_ConnectingUsingConfig::Poll
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingUsingConfig::Init ()
 {
     // DEBUG_START;
     // DEBUG_V (String ("       this: ") + String (uint32_t (this), HEX));
     // DEBUG_V (String ("pWiFiDriver: ") + String (uint32_t (pWiFiDriver), HEX));
     // DEBUG_V();
-    String      CurrentSsid             = pWiFiDriver->GetConfig_ssid ();
-    String      CurrentPassphrase       = pWiFiDriver->GetConfig_passphrase ();
+    String      CurrentSsid         = SSID.getStr ();
+    String      CurrentPassphrase   = WPA.getStr ();
 
     if (CurrentSsid.isEmpty ())
     {
@@ -616,10 +582,9 @@ void fsm_WiFi_state_ConnectingUsingConfig::Init ()
         pWiFiDriver->connectWifi (CurrentSsid, CurrentPassphrase);
     }
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectingUsingConfig::Init
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingUsingConfig::OnConnect ()
 {
     // DEBUG_START;
@@ -627,11 +592,10 @@ void fsm_WiFi_state_ConnectingUsingConfig::OnConnect ()
     fsm_WiFi_state_ConnectedToAP_imp.Init ();
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectingUsingConfig::OnConnect
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingUsingDefaults::Poll ()
 {
     // _ DEBUG_START;
@@ -649,10 +613,9 @@ void fsm_WiFi_state_ConnectingUsingDefaults::Poll ()
         }
     }
     // _ DEBUG_END;
-}       // fsm_WiFi_state_ConnectingUsingDefaults::Poll
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingUsingDefaults::Init ()
 {
     // DEBUG_START;
@@ -665,10 +628,9 @@ void fsm_WiFi_state_ConnectingUsingDefaults::Init ()
     pWiFiDriver->connectWifi (default_ssid, default_passphrase);
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectingUsingDefaults::Init
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingUsingDefaults::OnConnect ()
 {
     // DEBUG_START;
@@ -677,11 +639,10 @@ void fsm_WiFi_state_ConnectingUsingDefaults::OnConnect ()
     fsm_WiFi_state_ConnectedToAP_imp.Init ();
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectingUsingDefaults::OnConnect
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingAsAP::Poll ()
 {
     // _ DEBUG_START;
@@ -699,10 +660,9 @@ void fsm_WiFi_state_ConnectingAsAP::Poll ()
         }
     }
     // _ DEBUG_END;
-}       // fsm_WiFi_state_ConnectingAsAP::Poll
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingAsAP::Init ()
 {
     // DEBUG_START;
@@ -740,10 +700,9 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
     }
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectingAsAP::Init
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectingAsAP::OnConnect ()
 {
     // DEBUG_START;
@@ -751,11 +710,10 @@ void fsm_WiFi_state_ConnectingAsAP::OnConnect ()
     fsm_WiFi_state_ConnectedToSta_imp.Init ();
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectingAsAP::OnConnect
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectedToAP::Poll ()
 {
     // _ DEBUG_START;
@@ -777,10 +735,9 @@ void fsm_WiFi_state_ConnectedToAP::Poll ()
         pWiFiDriver->UpdateStatusFields ();
     }
     // _ DEBUG_END;
-}       // fsm_WiFi_state_ConnectedToAP::Poll
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectedToAP::Init ()
 {
     // DEBUG_START;
@@ -794,7 +751,7 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
     pWiFiDriver->setIpAddress (WiFi.localIP ());
     pWiFiDriver->setIpSubNetMask (WiFi.subnetMask ());
     pWiFiDriver->ConnectionStatusMessage =
-        (pWiFiDriver->UsingDhcp ()) ? F ("STA Mode (DHCP)") : F ("STA Mode (Static)");
+        (DHCP.get()) ? F ("STA Mode (DHCP)") : F ("STA Mode (Static)");
     pWiFiDriver->UpdateStatusFields ();
 
     Log.infoln (String (String (F ("Connected with IP: ")) + pWiFiDriver->getIpAddress ().toString ()).c_str ());
@@ -827,10 +784,9 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
     #endif // ifdef OTA_ENB
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectedToAP::Init
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectedToAP::OnDisconnect ()
 {
     // DEBUG_START;
@@ -839,11 +795,10 @@ void fsm_WiFi_state_ConnectedToAP::OnDisconnect ()
     fsm_WiFi_state_ConnectionFailed_imp.Init ();
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectedToAP::OnDisconnect
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectedToSta::Poll ()
 {
     // _ DEBUG_START;
@@ -861,10 +816,9 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
         pWiFiDriver->UpdateStatusFields ();
     }
     // _ DEBUG_END;
-}       // fsm_WiFi_state_ConnectedToSta::Poll
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectedToSta::Init ()
 {
     // DEBUG_START;
@@ -888,10 +842,9 @@ void fsm_WiFi_state_ConnectedToSta::Init ()
         Log.errorln (String (F ("WIFI: AP mode DNS Failed to start. No Web Sockets available.")).c_str ());
     }
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectedToSta::Init
+}
 
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectedToSta::OnDisconnect ()
 {
     // DEBUG_START;
@@ -902,11 +855,10 @@ void fsm_WiFi_state_ConnectedToSta::OnDisconnect ()
     fsm_WiFi_state_ConnectionFailed_imp.Init ();
 
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectedToSta::OnDisconnect
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_ConnectionFailed::Init ()
 {
     // DEBUG_START;
@@ -938,11 +890,10 @@ void fsm_WiFi_state_ConnectionFailed::Init ()
         }
     }
     // DEBUG_END;
-}       // fsm_WiFi_state_ConnectionFailed::Init
+}
 
 /*****************************************************************************/
 /*****************************************************************************/
-// Wait for events
 void fsm_WiFi_state_Disabled::Init ()
 {
     // DEBUG_START;
@@ -955,7 +906,7 @@ void fsm_WiFi_state_Disabled::Init ()
         pWiFiDriver->SetIsWiFiConnected (false);
     }
     // DEBUG_END;
-}       // fsm_WiFi_state_Disabled::Init
+}
 
 // -----------------------------------------------------------------------------
 c_WiFiDriver  WiFiDriver;

@@ -55,7 +55,7 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
             HOME_RDS_TIMER_STR.c_str (),
             emptyString,
             color,
-            TabId);
+            value);
     ESPUI.setPanelStyle (homeRdsTmrID, String (F ("font-size: 1.25em;")));
 
     UpdateStatus ();

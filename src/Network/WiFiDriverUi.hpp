@@ -14,6 +14,13 @@
 
 #include <ESPUI.h>
 
+#include "DHCP.hpp"
+#include "RssiStatus.hpp"
+#include "SSID.hpp"
+#include "WiFiStatus.hpp"
+#include "WiFiIpStatus.hpp"
+#include "WPA.hpp"
+
 class c_WiFiDriverUi
 {
 public:
@@ -21,31 +28,25 @@ public:
     c_WiFiDriverUi ();
     virtual ~c_WiFiDriverUi ();
 
-    void        addControls (uint16_t _WiFiTabId);
-    void        addHomeControls (uint16_t _WiFiTabId);
+    void        addControls (uint16_t _WiFiTabId, ControlColor Color);
+    void        addHomeControls (uint16_t _WiFiTabId, ControlColor Color);
 
     void        CbSetApFallback (Control * sender, int type);
     void        CbSetApIpAddr (Control * sender, int type);
     void        CbSetApName (Control * sender, int type);
     void        CbSetApReboot (Control * sender, int type);
-    void        CbSetDhcp (Control * sender, int type);
-    void        CbSetDns (Control * sender, int type);
     void        CbSetMdnsName (Control * sender, int type);
-    void        CbSetSSID (Control * sender, int type);
     void        CbSetStaName (Control * sender, int type);
-    void        CbSetStaticGateway (Control * sender, int type);
-    void        CbSetStaticIp (Control * sender, int type);
-    void        CbSetStaticNetmask (Control * sender, int type);
     void        CbSetUiLoginName (Control * sender, int type);
     void        CbSetUiLoginPassword (Control * sender, int type);
     void        CbSetWPAkey (Control * sender, int type);
 
-    bool        ValidateStaticSettings ();
+    String&     getConnectionStatus () { return ConnectionStatusMessage; }
+    IPAddress   getIpAddress() { return CurrentIpAddress; }
 
 protected:
 
-    void        UpdateStatusFields ();
-    int8_t      getRSSI         ();
+    void UpdateStatusFields ();
 
     #define AP_NAME_DEF_STR     "PixelRadioAP"
     #define STA_NAME_DEF_STR    "PixelRadio"
@@ -70,13 +71,7 @@ protected:
     IPAddress CurrentGateway    = IPAddress (0, 0, 0, 0);
     IPAddress CurrentDns        = IPAddress (0, 0, 0, 0);
     bool ResetWiFi              = false;
-    String ssid;
     String passphrase;
-    IPAddress staticIp                  = IPAddress ((uint32_t)0);
-    IPAddress staticNetmask             = IPAddress ((uint32_t)0);
-    IPAddress staticGateway             = IPAddress ((uint32_t)0);
-    IPAddress staticDnsIp               = IPAddress ((uint32_t)0);
-    bool UseDhcp                        = true;
     bool ap_fallbackIsEnabled           = true;
     uint32_t ap_timeout                 = AP_TIMEOUT;           ///< How long to wait in AP mode with no connection before rebooting
     uint32_t sta_timeout                = CLIENT_TIMEOUT;       ///< Timeout when connected as client (station)
@@ -85,23 +80,16 @@ protected:
 
 private:
 
-    void SetStaticFieldsVisibility ();
 
     #define AP_NAME_MAX_SZ    F ("18")
     #define STA_NAME_MAX_SZ   F ("18")
     #define MDNS_NAME_MAX_SZ  F ("18")
-    #define SSID_MAX_SZ       F ("32")  // Maximum permitted SSID Size according to standards.
     #define USER_NM_MAX_SZ    F ("10")
     #define USER_PW_MAX_SZ    F ("10")
-    #define PASSPHRASE_MAX_SZ F ("48")
 
-    uint16_t HomeTabID  = Control::noParent;
-    uint16_t WiFiTabID  = Control::noParent;
+    uint16_t HomeTabID = Control::noParent;
 
-    uint16_t wifiStaticSettingsID       = Control::noParent;
-    uint16_t wifiStatusRssiID           = Control::noParent;
-    uint16_t wifiStatusStaApID          = Control::noParent;
-    uint16_t wifiStatusIpAddrID         = Control::noParent;
+    uint16_t wifiStaticSettingsID = Control::noParent;
 
     uint16_t wifiApBootID               = Control::noParent;
     uint16_t wifiApFallID               = Control::noParent;
@@ -112,8 +100,6 @@ private:
     uint16_t wifiDevUserID              = Control::noParent;
     uint16_t wifiDevUserMsgID           = Control::noParent;
     uint16_t wifiDevPwID                = Control::noParent;
-    uint16_t wifiDhcpID                 = Control::noParent;
-    uint16_t wifiDhcpMsgID              = Control::noParent;
     uint16_t wifiStaticDnsID            = Control::noParent;
     uint16_t wifiStaticSubnetID         = Control::noParent;
     uint16_t wifiStaticGatewayID        = Control::noParent;
@@ -121,11 +107,13 @@ private:
 
     uint16_t wifiMdnsNameID     = Control::noParent;
     uint16_t wifiNetID          = Control::noParent;
-    uint16_t wifiSsidID         = Control::noParent;
     uint16_t wifiStaNameID      = Control::noParent;
     uint16_t wifiWpaKeyID       = Control::noParent;
 
-    uint16_t homeRssiID         = Control::noParent;
-    uint16_t homeStaID          = Control::noParent;
-    uint16_t homeStaMsgID       = Control::noParent;
-};      // c_WiFiDriverUi
+    cRssiStatus WiFiRssi;
+    cRssiStatus HomeRssi;
+    cWiFiStatus WiFiStatus;
+    cWiFiStatus HomeStatus;
+    cWiFiIpStatus WiFiIpStatus;
+    cWiFiIpStatus HomeIpStatus;
+};

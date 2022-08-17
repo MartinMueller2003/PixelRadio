@@ -81,7 +81,6 @@
 #define DIAG_LOG_VERB_STR    "LOG_LEVEL_VERBOSE"
 #define DIAG_LOG_DEF_STR      DIAG_LOG_VERB_STR;
 
-#define DHCP_LOCKED_STR  "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used."
 
 // #define DIG_AUD_GAIN0_STR     "DIAG0"
 // #define DIG_AUD_GAIN1_STR     "DIAG1"
@@ -114,7 +113,6 @@
 #define HOME_SEP_RDS_STR    "RADIO DATA SYSTEM (RDS)"
 #define HOME_STA_STR        "STA / AP STATUS"
 #define HOME_TAB_STR        "Home"
-#define HOME_WIFI_STR       "WIFI RSSI"
 
 #define MQTT_SUBSCR_NM_STR   "BROKER SUBSCRIBE NAME"
 #define MQTT_DISABLED_STR    "CONNECTION FAILED!<br>DISABLED MQTT CONTROLLER"
@@ -157,8 +155,6 @@
 
 #define SAVE_BACKUP_STR        "BACKUP SETTINGS TO SD CARD"
 
-#define UNITS_DBM_STR  " dBm"
-
 #define WIFI_ADDR_SEP_STR      "WIFI ADDRESS SETTINGS"
 #define WIFI_DISABLE_STR       "WiFi Disabled"
 #define WIFI_AP_FALLBK_STR     "AP FALLBACK ENABLE"
@@ -174,23 +170,14 @@
 #define WIFI_DEV_USER_PW_STR   "LOGIN USER PASSWORD"
 #define WIFI_DEV_CRED_SEP_STR  "DEVICE LOGIN CREDENTIALS"
 #define WIFI_DHCP_LBL_STR      " (DHCP)"
-#define WIFI_DNS_STR           "WIFI DNS"
-#define WIFI_GATEWAY_STR       "WIFI GATEWAY"
-#define WIFI_IP_ADDR_STR       "STATIC IP ADDRESS"
 #define WIFI_NAME_SEP_STR      "NAME SETTINGS"
-#define WIFI_PASS_HIDE_STR     "{PASSWORD HIDDEN}"
 #define WIFI_RSSI_STR          "RSSI"
-#define WIFI_SSID_STR          "WIFI SSID"
 #define WIFI_STATUS_SEP_STR    "WIFI STATUS"
 #define WIFI_STATIC_LBL_STR    " (STATIC)"
 #define WIFI_STA_MODE_STR      "Station Mode"
-#define WIFI_STA_STATUS_STR    "STA / AP STATUS"
-#define WIFI_SUBNET_STR        "SUBNET MASK"
 #define WIFI_TAB_STR           "WiFi"
 #define WIFI_UNKNOWN_STR       "(- ? -)"
-#define WIFI_WEB_DHCP_STR      "WEBSERVER DHCP"
 #define WIFI_WEBSRV_NAME_STR   "WEBSERVER NAME"
-#define WIFI_WPA_KEY_STR       "WIFI WPA KEY"
 
 extern const PROGMEM char       SERIAL_096_STR[];
 extern const PROGMEM char       SERIAL_192_STR[];
@@ -203,6 +190,8 @@ extern const PROGMEM char       CSS_LABEL_STYLE_RED[];
 extern const PROGMEM char       CSS_LABEL_STYLE_MAROON[];
 extern const PROGMEM char       CSS_LABEL_STYLE_TRANSPARENT[];
 extern const PROGMEM char       CSS_LABEL_STYLE_WHITE[];
+
+extern const PROGMEM char       UNITS_DBM_STR[];
 
 extern const PROGMEM char       N_About[];
 extern const PROGMEM char       N_About_PixelRadio[];

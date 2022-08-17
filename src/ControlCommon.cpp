@@ -40,8 +40,6 @@ void cControlCommon::AddControls (
 {
     // DEBUG_START;
 
-    TabId = value;
-
     ControlId = ESPUI.addControl (
             uiControltype,
             emptyString.c_str (),
@@ -130,6 +128,14 @@ void cControlCommon::saveConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
+void cControlCommon::SetConfigName(String value)
+{
+    // DEBUG_START;
+
+    ConfigName = value;
+
+    // DEBUG_END;
+}
 
 // *********************************************************************************************
 // OEF
