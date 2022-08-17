@@ -13,15 +13,15 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 #include "PeakAudio.hpp"
 #include "QN8027RadioApi.hpp"
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
-static const PROGMEM String     RADIO_AUDLVL_STR        = "PEAK AUDIO LEVEL";
-static const PROGMEM uint32_t   AUDIO_MEAS_TIME         = uint32_t (2000);
-static const PROGMEM uint32_t   AUDIO_LEVEL_MAX         = uint32_t (675);
+static const PROGMEM String RADIO_AUDLVL_STR    = "PEAK AUDIO LEVEL";
+static const PROGMEM uint32_t   AUDIO_MEAS_TIME = uint32_t (2000);
+static const PROGMEM uint32_t   AUDIO_LEVEL_MAX = uint32_t (675);
 
 // *********************************************************************************************
 cPeakAudio::cPeakAudio () : cControlCommon (emptyString)
@@ -81,7 +81,7 @@ void cPeakAudio::poll ()
 }
 
 // *********************************************************************************************
-cPeakAudio  PeakAudio;
+cPeakAudio PeakAudio;
 
 // *********************************************************************************************
 // OEF

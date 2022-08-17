@@ -25,24 +25,24 @@
  */
 
 // *************************************************************************************************************************
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <LittleFS.h>
-#include <SPI.h>
-#include <SD.h>
-#include "PixelRadio.h"
 #include "globals.h"
+#include "PixelRadio.h"
 #include "radio.hpp"
 #include "WiFiDriver.hpp"
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <LittleFS.h>
+#include <SD.h>
+#include <SPI.h>
 
 // *************************************************************************************************************************
 const uint16_t  JSON_CFG_SZ     = 10000;
 const uint16_t  JSON_CRED_SIZE  = 300;
 
-const char      * sdTypeStr[] = {
+const char * sdTypeStr[] = {
     "Not Installed", "V1", "V2", "SDHC", "Unknown"
 };
-const uint8_t   SD_TYPE_CNT = sizeof (sdTypeStr) / sizeof (sdTypeStr[0]);
+const uint8_t SD_TYPE_CNT = sizeof (sdTypeStr) / sizeof (sdTypeStr[0]);
 
 // *************************************************************************************************************************
 // checkEmergencyCredentials(): Restore credentials if credentials.txt is available. For use during boot.
@@ -51,7 +51,7 @@ bool checkEmergencyCredentials (const char * fileName)
 {
     bool        successFlg = true;
     File        file;
-    SPIClass  SPI2 (HSPI);
+    SPIClass SPI2 (HSPI);
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
     pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
@@ -80,8 +80,8 @@ bool checkEmergencyCredentials (const char * fileName)
     Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
     file = SD.open (fileName, FILE_READ);
 
-    DynamicJsonDocument         doc (JSON_CRED_SIZE);
-    DeserializationError        error = deserializeJson (doc, file);
+    DynamicJsonDocument doc (JSON_CRED_SIZE);
+    DeserializationError error = deserializeJson (doc, file);
 
     file.close ();
     SD.remove (fileName);       // Erase File for security protection.
@@ -99,7 +99,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
     if (((const char *)doc["WIFI_SSID_STR"] != NULL) && ((const char *)doc["WIFI_WPA_KEY_STR"] != NULL))
     {
-        JsonObject  root = doc.as <JsonObject>();
+        JsonObject root = doc.as <JsonObject>();
         WiFiDriver.restoreConfiguration (root);
         Log.    warningln (     "-> User Provided New WiFi Credentials.");
         Log.    warningln (     "-> Will Use DHCP Mode on this Session.");
@@ -128,7 +128,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 {
     bool        successFlg = false;
     File        file;
-    SPIClass  SPI2 (HSPI);
+    SPIClass SPI2 (HSPI);
 
     if (saveMode == LITTLEFS_MODE)
     {
@@ -187,20 +187,20 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     // MUST set the capacity to match your requirements.
     // Use https://arduinojson.org/assistant to compute the capacity.
 
-    DynamicJsonDocument  doc (JSON_CFG_SZ);
+    DynamicJsonDocument doc (JSON_CFG_SZ);
 
     // *****************************************************************
 
     doc["USER_NAME_STR"]        = userNameStr;
     doc["USER_PW_STR"]          = userPassStr;
 
-    JsonObject  root = doc.as <JsonObject>();
+    JsonObject root = doc.as <JsonObject>();
 
     ControllerMgr.saveConfiguration (root);
     WiFiDriver.saveConfiguration (root);
 
-    #ifdef OldWay
-    #endif // def OldWay
+#ifdef OldWay
+#endif // def OldWay
     doc["USB_VOLUME"] = usbVol; // Use Serial Control, "VOL=0" to "VOL=30".
 
     doc["GPIO19_STR"]   = gpio19BootStr;
@@ -240,8 +240,8 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 // restoreConfiguration(): Restore configuration from local file system (LittleFS). On exit, return true if successful.
 bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 {
-    File  file;
-    SPIClass  SPI2 (HSPI);
+    File file;
+    SPIClass SPI2 (HSPI);
 
     if (restoreMode == LITTLEFS_MODE)
     {
@@ -300,10 +300,10 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         Log.verboseln ("-> Located Configuration File (%s)", fileName);
     }
     // empirically Arduino Json needs 3.5 x the json text size to parse the file.
-    uint32_t  DocSize = uint32_t (file.size ()) * 4;
-    DynamicJsonDocument         raw_doc (DocSize);
+    uint32_t DocSize = uint32_t (file.size ()) * 4;
+    DynamicJsonDocument raw_doc (DocSize);
 
-    DeserializationError        error = deserializeJson (raw_doc, file);
+    DeserializationError error = deserializeJson (raw_doc, file);
 
     // serializeJsonPretty(doc, Serial); // Debug Output
 
@@ -321,7 +321,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
         return false;
     }
-    JsonObject  doc = raw_doc.as <JsonObject>();
+    JsonObject doc = raw_doc.as <JsonObject>();
 
         ReadFromJSON (  userNameStr,    doc,    F ("USER_NAME_STR"));
         ReadFromJSON (  userPassStr,    doc,    F ("USER_PASSWORD_STR"));

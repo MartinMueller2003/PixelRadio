@@ -18,12 +18,12 @@
 
 // *********************************************************************************************
 #include "ControllerMessage.h"
-#include <map>
 #include "Language.h"
 #include "PixelRadio.h"
+#include <map>
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -65,7 +65,7 @@ void c_ControllerMessage::Activate (bool value)
             // DEBUG_V("No control structure defined yet");
             break;
         }
-        Control  * MsgSelectControl = ESPUI.getControl (MessageElementId);
+        Control * MsgSelectControl = ESPUI.getControl (MessageElementId);
 
         if (!MsgSelectControl)
         {
@@ -122,8 +122,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         if (Control::noParent == MessageElementId)
         {
             // DEBUG_V(String("Create Choice List Entry on Active Choice list"));
-            MessageElementId = ESPUI.addControl (
-                    ControlType::Option,
+            MessageElementId = ESPUI.addControl (ControlType::Option,
                     MessageText.c_str (),
                     MessageText,
                     ControlColor::Turquoise,
@@ -132,7 +131,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         // DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
 
         // DEBUG_V("Attach callbacks to the Message Details Pane.");
-        Control  * DurationControl = ESPUI.getControl (MessageElementIds->DisplayDurationElementId);
+        Control * DurationControl = ESPUI.getControl (MessageElementIds->DisplayDurationElementId);
 
         if (DurationControl)
         {
@@ -148,7 +147,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
 
             ESPUI.updateControl (DurationControl);
         }
-        Control  * MsgEnabledControl = ESPUI.getControl (MessageElementIds->EnabledElementId);
+        Control * MsgEnabledControl = ESPUI.getControl (MessageElementIds->EnabledElementId);
 
         if (MsgEnabledControl)
         {
@@ -260,7 +259,7 @@ void c_ControllerMessage::SelectMessage ()
         }
         Activate (true);
 
-        Control  * control = ESPUI.getControl (MessageElementIds->ActiveChoiceListElementId);
+        Control * control = ESPUI.getControl (MessageElementIds->ActiveChoiceListElementId);
 
         if (control)
         {

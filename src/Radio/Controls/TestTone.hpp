@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 class fsm_Tone_state;
 
@@ -25,9 +25,7 @@ class cTestTone : public cControlCommon
 public:
 
     cTestTone ();
-    virtual ~cTestTone ()
-    {
-    }
+    virtual ~cTestTone ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        Init ();
@@ -48,7 +46,7 @@ protected:
     friend class fsm_Tone_state_SendingTone;
     fsm_Tone_state * pCurrentFsmState   = nullptr;
     uint32_t FsmTimerExpirationTime     = 0;
-};
+};      // class cTestTone
 
 class fsm_Tone_state
 {
@@ -61,24 +59,16 @@ protected:
 public:
 
     fsm_Tone_state ()
-    {
-    }
+    {}
 
     virtual ~fsm_Tone_state ()
-    {
-    }
+    {}
 
     virtual void        Poll (uint32_t) = 0;
     virtual void        Init (void)     = 0;
-    uint16_t            getCurrentToneFrequency ()
-    {
-        return *CurrentTone;
-    }
+    uint16_t            getCurrentToneFrequency ()      {return *CurrentTone;}
 
-    void SetParent (cTestTone * parent)
-    {
-        pTestTone = parent;
-    }
+    void                SetParent (cTestTone * parent)  {pTestTone = parent;}
 };      // fsm_Tone_state
 
 /*****************************************************************************/
@@ -88,16 +78,14 @@ class fsm_Tone_state_Idle : public fsm_Tone_state
 public:
 
     fsm_Tone_state_Idle ()
-    {
-    }
+    {}
 
     virtual ~fsm_Tone_state_Idle ()
-    {
-    }
+    {}
 
     virtual void        Poll (uint32_t now);
     virtual void        Init (void);
-};
+};      // class fsm_Tone_state_Idle
 
 /*****************************************************************************/
 class fsm_Tone_state_SendingTone : public fsm_Tone_state
@@ -105,19 +93,17 @@ class fsm_Tone_state_SendingTone : public fsm_Tone_state
 public:
 
     fsm_Tone_state_SendingTone ()
-    {
-    }
+    {}
 
     virtual ~fsm_Tone_state_SendingTone ()
-    {
-    }
+    {}
 
     virtual void        Poll (uint32_t now);
     virtual void        Init (void);
-};
+};      // class fsm_Tone_state_SendingTone
 
 
-extern cTestTone  TestTone;
+extern cTestTone TestTone;
 
 // *********************************************************************************************
 // OEF

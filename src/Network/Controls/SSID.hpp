@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cSSID : public cControlCommon
@@ -23,16 +23,14 @@ class cSSID : public cControlCommon
 public:
 
     cSSID ();
-    virtual ~cSSID ()
-    {
-    }
+    virtual ~cSSID ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &Response);
-};
+};      // class cSSID
 
-extern cSSID  SSID;
+extern cSSID SSID;
 
 // *********************************************************************************************
 // OEF

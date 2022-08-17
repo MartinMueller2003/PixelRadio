@@ -13,20 +13,20 @@
  */
 
 // *********************************************************************************************
+#include "AudioGain.hpp"
+#include "AudioInputImpedance.hpp"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "AudioInputImpedance.hpp"
-#include "AudioGain.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 #define INP_IMP05K_STR   " 5K Ohms"
 #define INP_IMP10K_STR   "10K Ohms"
 #define INP_IMP20K_STR   "20K Ohms (default)"
 #define INP_IMP40K_STR   "40K Ohms"
 
-static std::map <String, uint8_t>  MapOfImpedances
+static std::map <String, uint8_t> MapOfImpedances
 {
     {
         INP_IMP05K_STR,  5
@@ -67,8 +67,7 @@ void cAudioInputImpedance::AddControls (uint16_t value, ControlColor color)
 
     for (auto &CurrentOption : MapOfImpedances)
     {
-        ESPUI.addControl (
-            ControlType::Option,
+        ESPUI.addControl (ControlType::Option,
             CurrentOption.first.c_str (),
             CurrentOption.first,
             ControlColor::None,
@@ -85,7 +84,7 @@ bool cAudioInputImpedance::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -118,7 +117,7 @@ bool cAudioInputImpedance::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cAudioInputImpedance  AudioInputImpedance;
+cAudioInputImpedance AudioInputImpedance;
 
 // *********************************************************************************************
 // OEF

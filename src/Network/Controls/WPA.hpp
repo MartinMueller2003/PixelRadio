@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cWPA : public cControlCommon
@@ -23,16 +23,14 @@ class cWPA : public cControlCommon
 public:
 
     cWPA ();
-    virtual ~cWPA ()
-    {
-    }
+    virtual ~cWPA ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &Response);
-};
+};      // class cWPA
 
-extern cWPA  WPA;
+extern cWPA WPA;
 
 // *********************************************************************************************
 // OEF

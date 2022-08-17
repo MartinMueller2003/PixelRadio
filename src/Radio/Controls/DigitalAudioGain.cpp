@@ -13,15 +13,15 @@
  */
 
 // *********************************************************************************************
+#include "AudioGain.hpp"
+#include "DigitalAudioGain.hpp"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "DigitalAudioGain.hpp"
-#include "AudioGain.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
-static std::map <String, uint8_t>  MapOfGainValues
+static std::map <String, uint8_t> MapOfGainValues
 {
     {
         "0 dB (default)",  0
@@ -59,8 +59,7 @@ void cDigitalAudioGain::AddControls (uint16_t value, ControlColor color)
 
     for (auto &CurrentOption : MapOfGainValues)
     {
-        ESPUI.addControl (
-            ControlType::Option,
+        ESPUI.addControl (ControlType::Option,
             CurrentOption.first.c_str (),
             CurrentOption.first,
             ControlColor::None,
@@ -76,7 +75,7 @@ bool cDigitalAudioGain::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -116,7 +115,7 @@ bool cDigitalAudioGain::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cDigitalAudioGain  DigitalAudioGain;
+cDigitalAudioGain DigitalAudioGain;
 
 // *********************************************************************************************
 // OEF

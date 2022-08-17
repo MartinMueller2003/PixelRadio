@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
+#include "RfPower.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "RfPower.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 // *********************************************************************************************
 // *********************************************************************************************
@@ -35,7 +35,7 @@
 #define RF_PWR_HIGH_STR  "High (default)"
 #define RF_PWR_DEF_STR   RF_PWR_HIGH_STR;
 
-static std::map <String, uint8_t>  MapOfPowerLevels
+static std::map <String, uint8_t> MapOfPowerLevels
 {
     {
         RF_PWR_LOW_STR,  27
@@ -74,8 +74,7 @@ void cRfPower::AddControls (uint16_t value, ControlColor color)
 
     for (auto &CurrentOption : MapOfPowerLevels)
     {
-        ESPUI.addControl (
-            ControlType::Option,
+        ESPUI.addControl (ControlType::Option,
             CurrentOption.first.c_str (),
             CurrentOption.first,
             ControlColor::None,
@@ -92,13 +91,13 @@ bool cRfPower::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
     ResponseMessage = F ("RF Power: ");
 
-    std::map <String, uint8_t>::iterator  CurrentMapEntry = MapOfPowerLevels.end ();
+    std::map <String, uint8_t>::iterator CurrentMapEntry = MapOfPowerLevels.end ();
 
     do  // once
     {
@@ -140,7 +139,7 @@ bool cRfPower::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cRfPower  RfPower;
+cRfPower RfPower;
 
 // *********************************************************************************************
 // OEF

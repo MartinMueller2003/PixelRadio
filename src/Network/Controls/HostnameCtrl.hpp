@@ -1,6 +1,5 @@
-#pragma once
 /*
-   File: PtyCode.cpp
+   File: HostnameCtrl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -13,29 +12,25 @@
    This Code was formatted with the uncrustify extension.
  */
 
-// *********************************************************************************************
+#pragma once
+
 #include "ControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cPtyCode : public cControlCommon
+class cHostnameCtrl : public cControlCommon
 {
 public:
 
-    cPtyCode ();
-    virtual ~cPtyCode ()    {}
+    cHostnameCtrl ();
+    virtual ~cHostnameCtrl ();
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &Response);
-    void        setPtyCodeOptionValues ();
+};      // class cHostnameCtrl
 
-private:
-
-    void        updateUiPtyCode ();
-};      // class cPtyCode
-
-extern cPtyCode PtyCode;
+extern cHostnameCtrl HostnameCtrl;
 
 // *********************************************************************************************
 // OEF

@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 #include "WiFiDriver.hpp"
 #include "WiFiStatus.hpp"
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
-static const PROGMEM String  WIFI_STA_STATUS_STR = "WiFi STA/AP STATUS";
+static const PROGMEM String WIFI_STA_STATUS_STR = "WiFi STA/AP STATUS";
 
 // *********************************************************************************************
 cWiFiStatus::cWiFiStatus () : cControlCommon (emptyString)

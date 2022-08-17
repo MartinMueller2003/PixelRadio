@@ -13,15 +13,15 @@
  */
 
 // *********************************************************************************************
+#include "globals.h"
+#include "language.h"
+#include "PixelRadio.h"
+#include "radio.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <EEPROM.h>
 #include <SPI.h>
 #include <Wire.h>
-#include "radio.hpp"
-#include "PixelRadio.h"
-#include "globals.h"
-#include "language.h"
 
 // *********************************************************************************************
 
@@ -29,43 +29,48 @@
 // *********************************************************************************************
 uint8_t i2cScanner (void)
 {
-    #ifdef OldWay
-    byte        count = 0;
-    String      devStr;
+#ifdef OldWay
+        byte count = 0;
+        String devStr;
 
-    Log.infoln (String (F ("Scanning i2c for Devices ...")).c_str ());
+        Log.infoln (String (F ("Scanning i2c for Devices ...")).c_str ());
 
-    for (byte addr = 0x01; addr < 0x7f; addr++)
-    {
-        Wire.beginTransmission (addr);          // Begin I2C transmission Address (i)
-
-        if (Wire.endTransmission (true) == 0)   // Receive 0 = success (ACK response)
+        for (byte addr = 0x01; addr < 0x7f; addr++)
         {
-            switch (addr)
+            Wire.beginTransmission (addr);              // Begin I2C transmission Address (i)
+
+            if (Wire.endTransmission (true) == 0)       // Receive 0 = success (ACK response)
             {
-                case QN8027_I2C_ADDR:
-                    devStr = "FM Tx QN8027";
-                    break;
+                switch (addr)
+                {
+                    case QN8027_I2C_ADDR:
+                    {
+                        devStr = "FM Tx QN8027";
+                        break;
+                    }
 
-                default:
-                    devStr = "Unknown";
+                    default:
+                    {
+                        devStr = "Unknown";
+                    }
+                }       // switch
+
+                Log.infoln (String (F ("-> Found i2c address: 0x%02X (%s)")).c_str (), addr, devStr.c_str ());
+                count++;
             }
-
-            Log.infoln (String (F ("-> Found i2c address: 0x%02X (%s)")).c_str (), addr, devStr.c_str ());
-            count++;
         }
-    }
 
-    if (count == 0)
-    {
-        Log.errorln (String (F ("-> No i2c Devices Found.")).c_str ());
-    }
-    else
-    {
-        Log.infoln (String (F ("-> Scanning Complete, Found %u i2c Devices.")).c_str (), count);
-    }
-    return count;
-    #endif // def OldWay
+        if (count == 0)
+        {
+            Log.errorln (String (F ("-> No i2c Devices Found.")).c_str ());
+        }
+        else
+        {
+            Log.infoln (String (F ("-> Scanning Complete, Found %u i2c Devices.")).c_str (), count);
+        }
+        return count;
+
+#endif // def OldWay
 
     return 0;
 }
@@ -98,7 +103,7 @@ void initEprom (void)
 //                 Do not directly call this function in a ESPUI callback. Use main loop instead.
 void rebootSystem (void)
 {
-    String  tmpStr;
+    String tmpStr;
 
     if (rebootFlg)
     {
@@ -219,7 +224,7 @@ void spiSdCardShutDown (void)
 // strIsUint(): Check if string is unsigned integer. Return true if uint.
 bool strIsUint (String intStr)
 {
-    uint8_t  i;
+    uint8_t i;
 
     if (intStr.length () == 0)
     {
@@ -228,7 +233,7 @@ bool strIsUint (String intStr)
 
     for (i = 0; i < intStr.length (); i++)      // Arg must be integer >= 0.
     {
-        char  c = intStr.charAt (i);
+        char c = intStr.charAt (i);
 
         if ((c == '-') || (c < '0') || (c > '9'))
         {

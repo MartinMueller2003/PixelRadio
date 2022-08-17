@@ -20,7 +20,7 @@
 #include "ControllerNONE.h"
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -28,13 +28,11 @@
 
 // *********************************************************************************************
 c_ControllerNONE::c_ControllerNONE () : c_ControllerCommon ("NONE", c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
-{
-}       // c_ControllerNONE
+{}      // c_ControllerNONE
 
 // *********************************************************************************************
 c_ControllerNONE::~c_ControllerNONE ()
-{
-}
+{}
 
 // *********************************************************************************************
 void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject &config)

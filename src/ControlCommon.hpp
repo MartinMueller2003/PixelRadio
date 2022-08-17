@@ -14,9 +14,9 @@
  */
 
 // *********************************************************************************************
+#include "language.h"
 #include <Arduino.h>
 #include <ESPUI.h>
-#include "language.h"
 
 // *********************************************************************************************
 class cControlCommon
@@ -24,33 +24,22 @@ class cControlCommon
 public:
 
     cControlCommon (String _ConfigName);
-    virtual ~cControlCommon ()
-    {
-    }
+    virtual ~cControlCommon ();
 
     virtual void        AddControls (uint16_t TabId, ControlColor color) = 0;
-
-    virtual uint32_t    get ()
-    {
-        return DataValue;
-    }
-
-    virtual String &    getStr ()
-    {
-        return DataValueStr;
-    }
-
+    virtual uint32_t    get ();
+    virtual String&     getStr ();
     virtual void        restoreConfiguration (JsonObject &json);
     virtual void        saveConfiguration (JsonObject &json);
     virtual bool        set (String &value, String &Response) = 0;
-    virtual void        SetConfigName(String value);
+    virtual void        SetConfigName (String value);
 
     // Callbacks need to be public
     virtual void        Callback (Control * sender, int type);
 
 protected:
 
-    void AddControls (uint16_t value, ControlType uiControltype, ControlColor color);
+    void                AddControls (uint16_t value, ControlType uiControltype, ControlColor color);
     uint16_t ControlId          = Control::noParent;
     uint16_t StatusMessageId    = Control::noParent;
 
@@ -61,9 +50,9 @@ protected:
     String InactiveLabelStyle   = CSS_LABEL_STYLE_BLACK;
 
 private:
-    String ConfigName;
 
-};
+    String ConfigName;
+};      // class cControlCommon
 
 // *********************************************************************************************
 // OEF

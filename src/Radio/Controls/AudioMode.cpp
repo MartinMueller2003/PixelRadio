@@ -13,11 +13,11 @@
  */
 
 // *********************************************************************************************
+#include "AudioMode.hpp"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "AudioMode.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 static const PROGMEM String     RADIO_STEREO_FLAG               = "RADIO_STEREO_FLAG";
 static const PROGMEM char       RADIO_MONO_STR        []        = "MONO AUDIO";
@@ -62,7 +62,7 @@ bool cAudioMode::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -107,7 +107,7 @@ bool cAudioMode::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cAudioMode  AudioMode;
+cAudioMode AudioMode;
 
 // *********************************************************************************************
 // OEF

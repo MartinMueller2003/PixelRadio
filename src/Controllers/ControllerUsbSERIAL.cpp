@@ -22,18 +22,16 @@
 #include <ArduinoLog.h>
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // ================================================================================================
 c_ControllerUsbSERIAL::c_ControllerUsbSERIAL () : c_ControllerCommon ("USB SERIAL", c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
-{
-}       // c_ControllerUsbSERIAL
+{}      // c_ControllerUsbSERIAL
 
 // ================================================================================================
 c_ControllerUsbSERIAL::~c_ControllerUsbSERIAL ()
-{
-}
+{}
 
 // ************************************************************************************************
 void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
@@ -42,17 +40,15 @@ void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
 
     c_ControllerCommon::AddControls (ctrlTab);
 
-    uint16_t  LabelId;
-    LabelId = ESPUI.addControl (
-            ControlType::Label,
+    uint16_t LabelId;
+    LabelId = ESPUI.addControl (ControlType::Label,
             emptyString.c_str (),
             String (N_BAUDRATE),
             ControlColor::Turquoise,
             ControlLabelElementId);
     ESPUI.setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
 
-    ControlerEnabledElementId = ESPUI.addControl (
-            ControlType::Select,
+    ControlerEnabledElementId = ESPUI.addControl (ControlType::Select,
             emptyString.c_str (),
             BaudRateStr,
             ControlColor::Turquoise,
@@ -73,21 +69,29 @@ void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
     ESPUI.      addControl (    ControlType::Option,    SERIAL_576_STR, SERIAL_576_STR, ControlColor::None,     ControlerEnabledElementId);
     ESPUI.      addControl (    ControlType::Option,    SERIAL_115_STR, SERIAL_115_STR, ControlColor::None,     ControlerEnabledElementId);
     // DEBUG_V();
-    #ifdef OldWay
-    extern String  logLevelStr;
-    EspuiMsgId = ESPUI.addControl (
-            ControlType::Label,
-            "SERIAL_MSG",
-            (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
-            ControlColor::Turquoise,
-            ControlLabelElementId);
-    ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-    #endif // def OldWay
+#ifdef OldWay
+        extern String logLevelStr;
+        EspuiMsgId = ESPUI.addControl (ControlType::Label,
+                "SERIAL_MSG",
+                (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
+                ControlColor::Turquoise,
+                ControlLabelElementId);
+        ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
+#endif // def OldWay
 
     // DEBUG_END;
 }       // AddControls
 
-// ================================================================================================
+// ************************************************************************************************
+void c_ControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+    if (ControllerEnabled)
+    {
+        Messages.GetNextRdsMessage (Response);
+    }
+}
+
+// ************************************************************************************************
 void c_ControllerUsbSERIAL::initSerialControl (void)
 {
     // DEBUG_START;
@@ -106,21 +110,20 @@ void c_ControllerUsbSERIAL::initSerialControl (void)
     // DEBUG_END;
 }
 
-// ================================================================================================
-// gpioSerialControl(): Serial handler for GPIO Commands.
+// ************************************************************************************************
 void c_ControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
 {
     // DEBUG_START;
 
-    bool        successFlg = false;
-    String      Response;
+    bool successFlg = false;
+    String Response;
 
     // DEBUG_V(String("Serial Controller: Received GPIO Pin-") + String(pin) + " Command");
     // Log.infoln(charBuff);
 
-    #ifdef OldWay
-    successFlg = gpioCmd (paramStr, TypeId, pin);
-    #endif // def OldWay
+#ifdef OldWay
+        successFlg = gpioCmd (paramStr, TypeId, pin);
+#endif // def OldWay
 
     Response = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + F ("\": \"");
 
@@ -141,12 +144,10 @@ void c_ControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
 }
 
 // ************************************************************************************************
-// CbBaudrateControl(): Set the Baud Rate for the Serial Controller.
-// The "Off" setting disables the controller.
 void c_ControllerUsbSERIAL::CbBaudrateControl (Control * sender, int type)
 {
     // DEBUG_START;
-    uint32_t  OriginalBaudrate = BaudRate;
+    uint32_t OriginalBaudrate = BaudRate;
 
     // DEBUG_V(String("CbBaudrateControl ID: ") + String(sender->id) + ", Value: " + sender->value);
 
@@ -156,7 +157,7 @@ void c_ControllerUsbSERIAL::CbBaudrateControl (Control * sender, int type)
         {
             // had an error
             Log.errorln ((String (F ("serialCallback: ")) + F (BAD_VALUE_STR)).c_str ());
-            extern uint16_t  diagLogMsgID;
+            extern uint16_t diagLogMsgID;
             ESPUI.print (diagLogMsgID, ERROR_MSG_STR);  // Post warning message on Diagnostic Serial Log Panel.
             // DEBUG_V();
         }
@@ -169,9 +170,7 @@ void c_ControllerUsbSERIAL::CbBaudrateControl (Control * sender, int type)
     // DEBUG_END;
 }       // CbBaudrateControl
 
-// ================================================================================================
-// serialCommands(): Process the commands sent through the serial port.
-// This is the Command Line Interface (CLI).
+// ************************************************************************************************
 void c_ControllerUsbSERIAL::serialCommands (void)
 {
     // _ DEBUG_START;
@@ -193,7 +192,7 @@ void c_ControllerUsbSERIAL::serialCommands (void)
             paramStr = serial_manager.getParam ();
             // serial_manager.println((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
 
-            String  Response;
+            String Response;
             CommandProcessor.ProcessCommand (cmdStr, paramStr, Name, Response);
             serial_manager.print (Response);
             // DEBUG_V(String("Response.length: ") + String(Response.length()));
@@ -207,8 +206,8 @@ void c_ControllerUsbSERIAL::serialCommands (void)
 bool c_ControllerUsbSERIAL::SetBaudrate (String NewRate)
 {
     // DEBUG_START;
-    bool  Response              = true;
-    uint32_t  OriginalBaudrate  = BaudRate;
+    bool Response               = true;
+    uint32_t OriginalBaudrate   = BaudRate;
 
     do  // once
     {
@@ -258,8 +257,7 @@ bool c_ControllerUsbSERIAL::SetBaudrate (String NewRate)
         Serial.begin (BaudRate);
 
         while (!Serial && !Serial.available ())
-        {
-        }                       // Wait for Serial Port to be available.
+        {}                      // Wait for Serial Port to be available.
         Serial.println ();      // Push out any corrupted data due to baud change.
         // DEBUG_V("Change Baudrate - Done");
     }

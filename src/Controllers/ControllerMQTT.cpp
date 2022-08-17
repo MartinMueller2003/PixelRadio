@@ -17,14 +17,14 @@
  */
 
 // *********************************************************************************************
+#include "ControllerMgr.h"
+#include "ControllerMQTT.h"
+#include "language.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
-#include "ControllerMQTT.h"
-#include "ControllerMgr.h"
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -32,13 +32,11 @@ static const PROGMEM String WIFI_PASS_HIDE_STR = "{PASSWORD HIDDEN}";
 
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT () : c_ControllerCommon ("MQTT", c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
-{
-}       // c_ControllerMQTT
+{}      // c_ControllerMQTT
 
 // *********************************************************************************************
 c_ControllerMQTT::~c_ControllerMQTT ()
-{
-}
+{}
 
 // *********************************************************************************************
 void c_ControllerMQTT::Begin ()
@@ -46,16 +44,25 @@ void c_ControllerMQTT::Begin ()
     // DEBUG_START;
     mqttClient.setClient (wifiClient);
 
-    #ifdef OldWay
+#ifdef OldWay
 
-    if (wifiConnect ())
-    {
-        // Connected to Web Server.
-        Init ();        // Init MQTT services.
-    }
-    #endif // def OldWay
+        if (wifiConnect ())
+        {
+            // Connected to Web Server.
+            Init ();    // Init MQTT services.
+        }
+#endif // def OldWay
     // DEBUG_END;
 }       // Begin
+
+// *********************************************************************************************
+void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+{
+    if (ControllerEnabled)
+    {
+        Messages.GetNextRdsMessage (Response);
+    }
+}
 
 // *************************************************************************************************************************
 // mqttInit (): Initialize MQTT and subscribe with broker.
@@ -82,12 +89,11 @@ void c_ControllerMQTT::Init (void)
         // DEBUG_V();
         Log.traceln (F ("Initializing MQTT"));
         mqttClient.setServer (RemoteIp, mqttPort);
-        mqttClient.setCallback (
-            [] (const char * topic, byte * payload, unsigned int length)
-            {
-                c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
-                pMe->mqttClientCallback (topic, payload, length);
-            }); // Topic Subscription callback handler.
+        mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
+        {
+            c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
+            pMe->mqttClientCallback (topic, payload, length);
+        });     // Topic Subscription callback handler.
 
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
         // DEBUG_V();
@@ -142,7 +148,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
     // DEBUG_START;
 
     c_ControllerCommon::AddControls (ctrlTab);
-    String  tempStr;
+    String tempStr;
 
     if ((ControllerEnabled == true) &&
         ((INADDR_NONE != RemoteIp) || (!mqttNameStr.length ()) ||
@@ -152,21 +158,20 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
         MessageStr              = MQTT_MISSING_STR;
         ControllerEnabled       = false;        // Force DHCP mode.
     }
-    #ifdef OldWay
-    else if (getWifiMode () == WIFI_AP)
-    {
-        // DEBUG_V();
-        MessageStr = MQTT_NOT_AVAIL_STR;
-    }
-    #endif // def OldWay
+#ifdef OldWay
+        else if (getWifiMode () == WIFI_AP)
+        {
+            // DEBUG_V();
+            MessageStr = MQTT_NOT_AVAIL_STR;
+        }
+#endif // def OldWay
     else
     {
         // DEBUG_V();
         MessageStr = emptyString;
     }
 
-    EspuiMessageAreaId = ESPUI.addControl (
-            ControlType::Label,
+    EspuiMessageAreaId = ESPUI.addControl (ControlType::Label,
             "MSG_AREA",
             MessageStr,
             ControlColor::Turquoise,
@@ -174,8 +179,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
     ESPUI.setElementStyle (EspuiMessageAreaId, CSS_LABEL_STYLE_BLACK);
     // DEBUG_V();
 
-    EspuiNameID = ESPUI.addControl (
-            ControlType::Text,
+    EspuiNameID = ESPUI.addControl (ControlType::Text,
             MQTT_SUBSCR_NM_STR,
             mqttNameStr,
             ControlColor::Turquoise,
@@ -189,8 +193,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             },
             this);
 
-    EspuiIpID = ESPUI.addControl (
-            ControlType::Text,
+    EspuiIpID = ESPUI.addControl (ControlType::Text,
             CTRL_MQTT_IP_STR,
             RemoteIp.toString (),
             ControlColor::Turquoise,
@@ -205,8 +208,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             this);
     // DEBUG_V();
 
-    EspuiPortID = ESPUI.addControl (
-            ControlType::Label,
+    EspuiPortID = ESPUI.addControl (ControlType::Label,
             CTRL_MQTT_PORT_STR,
             String (mqttPort),
             ControlColor::Turquoise,
@@ -216,8 +218,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
 
     // DEBUG_V();
 
-    EspuiUserID = ESPUI.addControl (
-            ControlType::Text,
+    EspuiUserID = ESPUI.addControl (ControlType::Text,
             CTRL_MQTT_USER_STR,
             mqttUserStr,
             ControlColor::Turquoise,
@@ -232,8 +233,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             this);
     // DEBUG_V();
 
-    EspuiPwID = ESPUI.addControl (
-            ControlType::Text,
+    EspuiPwID = ESPUI.addControl (ControlType::Text,
             CTRL_MQTT_PW_STR,
             MQTT_PASS_HIDE_STR,
             ControlColor::Turquoise,
@@ -256,165 +256,165 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
 void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)
 {
     // DEBUG_START;
-    #ifdef OldWay
-    // char cBuff[length + 2];                    // Allocate Character buffer.
-    // char logBuff[length + strlen (topic) + 60]; // Allocate a big buffer space.
-    // char mqttBuff[140 + sizeof (VERSION_STR) + STA_NAME_MAX_SZ];
-    String      payloadStr;
-    String      topicStr;
+#ifdef OldWay
+        // char cBuff[length + 2];                    // Allocate Character buffer.
+        // char logBuff[length + strlen (topic) + 60]; // Allocate a big buffer space.
+        // char mqttBuff[140 + sizeof (VERSION_STR) + STA_NAME_MAX_SZ];
+        String  payloadStr;
+        String  topicStr;
 
-    payloadStr.reserve (MQTT_PAYLD_MAX_SZ + 1);
-    topicStr.reserve (MQTT_TOPIC_MAX_SZ + 1);
-    // DEBUG_V();
+        payloadStr.reserve (MQTT_PAYLD_MAX_SZ + 1);
+        topicStr.reserve (MQTT_TOPIC_MAX_SZ + 1);
+        // DEBUG_V();
 
-    if (length > MQTT_PAYLD_MAX_SZ)
-    {
-        // DEBUG_V();
-        Log.warningln (F ("MQTT Message Length (%u bytes) too long! Truncated to %u bytes."), length, MQTT_PAYLD_MAX_SZ);
-        length = MQTT_PAYLD_MAX_SZ;
-    }
-    // Log.verboseln ("MQTT Message Length: %u", length);
-
-    // Copy payload to local char array.
-    {
-        char  cBuff[length + 2];
-        memcpy (cBuff, payload, length);
-        cBuff[length]   = 0;
-        payloadStr      = cBuff;
-    }
-    payloadStr.trim (); // Remove leading/trailing spaces. Do NOT change to lowercase!
-    // DEBUG_V();
-
-    topicStr = topic;
-    topicStr.trim ();           // Remove leading/trailing spaces.
-    topicStr.toLowerCase ();    // Force lowercase, prevent case matching problems.
-
-    if (topicStr.length () > MQTT_TOPIC_MAX_SZ)
-    {
-        // DEBUG_V();
-        topicStr = topicStr.substring (0, MQTT_TOPIC_MAX_SZ);
-    }
-    // char buff[topicStr.length () + payloadStr.length () + 30];
-    // sprintf (buff, "MQTT Message Arrived, [Topic]: %s", topicStr.c_str ());
-    // Log.infoln (buff);
-    // sprintf (buff, "MQTT Message Arrived, Payload: %s", payloadStr.c_str ());
-    // Log.infoln (buff);
-
-    // *************************************************************************************************************************
-    // START OF MQTT COMMAND ACTIONS:
-    // DEBUG_V();
-
-    if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_AUDMODE_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received Audio Mode Command"));
-        audioModeCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_FREQ_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received Radio Frequency Command"));
-        frequencyCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO19_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received GPIO19 Command"));
-        gpioMqttControl (payloadStr, GPIO19_PIN);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO23_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received GPIO23 Command"));
-        gpioMqttControl (payloadStr, GPIO23_PIN);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO33_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received GPIO33 Command"));
-        gpioMqttControl (payloadStr, GPIO33_PIN);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_INFO_STR))
-    {
-        // DEBUG_V();
-        String  Message;
-        Log.infoln (F ("MQTT: Received System Information Command."));
-
-        if (infoCmd (payloadStr, MqttControllerId))
+        if (length > MQTT_PAYLD_MAX_SZ)
         {
             // DEBUG_V();
-            String  HostName;
-            WiFiDriver.GetHostname (HostName);
-            Message = String (F ("{\"")) + CMD_INFO_STR +
-                F (     "\": \"ok\", \"version\": \"") + VERSION_STR +
-                F (     "\", \"hostName\": \"") + HostName +
-                F (     "\", \"ip\": \"") + WiFi.localIP ().toString () +
-                F (     "\", \"rssi\": ") + WiFi.RSSI () +
-                F (     ", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
+            Log.warningln (F ("MQTT Message Length (%u bytes) too long! Truncated to %u bytes."), length, MQTT_PAYLD_MAX_SZ);
+            length = MQTT_PAYLD_MAX_SZ;
+        }
+        // Log.verboseln ("MQTT Message Length: %u", length);
+
+        // Copy payload to local char array.
+        {
+            char cBuff[length + 2];
+            memcpy (cBuff, payload, length);
+            cBuff[length]       = 0;
+            payloadStr          = cBuff;
+        }
+        payloadStr.trim ();     // Remove leading/trailing spaces. Do NOT change to lowercase!
+        // DEBUG_V();
+
+        topicStr = topic;
+        topicStr.trim ();               // Remove leading/trailing spaces.
+        topicStr.toLowerCase ();        // Force lowercase, prevent case matching problems.
+
+        if (topicStr.length () > MQTT_TOPIC_MAX_SZ)
+        {
+            // DEBUG_V();
+            topicStr = topicStr.substring (0, MQTT_TOPIC_MAX_SZ);
+        }
+        // char buff[topicStr.length () + payloadStr.length () + 30];
+        // sprintf (buff, "MQTT Message Arrived, [Topic]: %s", topicStr.c_str ());
+        // Log.infoln (buff);
+        // sprintf (buff, "MQTT Message Arrived, Payload: %s", payloadStr.c_str ());
+        // Log.infoln (buff);
+
+        // *************************************************************************************************************************
+        // START OF MQTT COMMAND ACTIONS:
+        // DEBUG_V();
+
+        if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_AUDMODE_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received Audio Mode Command"));
+            audioModeCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_FREQ_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received Radio Frequency Command"));
+            frequencyCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO19_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received GPIO19 Command"));
+            gpioMqttControl (payloadStr, GPIO19_PIN);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO23_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received GPIO23 Command"));
+            gpioMqttControl (payloadStr, GPIO23_PIN);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_GPIO33_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received GPIO33 Command"));
+            gpioMqttControl (payloadStr, GPIO33_PIN);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_INFO_STR))
+        {
+            // DEBUG_V();
+            String Message;
+            Log.infoln (F ("MQTT: Received System Information Command."));
+
+            if (infoCmd (payloadStr, MqttControllerId))
+            {
+                // DEBUG_V();
+                String HostName;
+                WiFiDriver.GetHostname (HostName);
+                Message = String (F ("{\"")) + CMD_INFO_STR +
+                        F (     "\": \"ok\", \"version\": \"") + VERSION_STR +
+                        F (     "\", \"hostName\": \"") + HostName +
+                        F (     "\", \"ip\": \"") + WiFi.localIP ().toString () +
+                        F (     "\", \"rssi\": ") + WiFi.RSSI () +
+                        F (     ", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
+            }
+            else
+            {
+                // DEBUG_V();
+                Message = String (F ("{\"")) + CMD_INFO_STR + F ("\": \"fail\"}");
+            }
+            // DEBUG_V();
+            topicStr = mqttNameStr + MQTT_INFORM_STR;
+            mqttClient.publish (topicStr.c_str (), Message.c_str ());
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_MUTE_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received Audio Mute Command"));
+            muteCmd (payloadStr, Name);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PICODE_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT Received RDS PI Code Command"));
+            piCodeCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PSN_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received RDS Program Station Name Command"));
+            programServiceNameCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_RADIOTEXT_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received RadioText Command"));
+            radioTextCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_REBOOT_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received System Reboot Command."));
+            rebootCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_START_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received RDS Restart Command."));
+            startCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_STOP_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received RDS Stop Command."));
+            stopCmd (payloadStr, MqttControllerId);
+        }
+        else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PERIOD_STR))
+        {
+            // DEBUG_V();
+            Log.infoln (F ("MQTT: Received RDS Display Time Command"));
+            rdsTimePeriodCmd (payloadStr, MqttControllerId);
         }
         else
         {
             // DEBUG_V();
-            Message = String (F ("{\"")) + CMD_INFO_STR + F ("\": \"fail\"}");
+            Log.errorln ((String (F ("MQTT: Received Unknown Command (")) + topicStr + F ("), Ignored.")).c_str ());
         }
-        // DEBUG_V();
-        topicStr = mqttNameStr + MQTT_INFORM_STR;
-        mqttClient.publish (topicStr.c_str (), Message.c_str ());
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_MUTE_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received Audio Mute Command"));
-        muteCmd (payloadStr, Name);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PICODE_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT Received RDS PI Code Command"));
-        piCodeCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PSN_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received RDS Program Station Name Command"));
-        programServiceNameCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_RADIOTEXT_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received RadioText Command"));
-        radioTextCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_REBOOT_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received System Reboot Command."));
-        rebootCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_START_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received RDS Restart Command."));
-        startCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_STOP_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received RDS Stop Command."));
-        stopCmd (payloadStr, MqttControllerId);
-    }
-    else if (topicStr == mqttNameStr + makeMqttCmdStr (CMD_PERIOD_STR))
-    {
-        // DEBUG_V();
-        Log.infoln (F ("MQTT: Received RDS Display Time Command"));
-        rdsTimePeriodCmd (payloadStr, MqttControllerId);
-    }
-    else
-    {
-        // DEBUG_V();
-        Log.errorln ((String (F ("MQTT: Received Unknown Command (")) + topicStr + F ("), Ignored.")).c_str ());
-    }
-    #endif // def OldWay
+#endif // def OldWay
     // DEBUG_END;
 }       // mqttClientCallback
 
@@ -424,10 +424,10 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
 void c_ControllerMQTT::mqttReconnect (bool resetFlg)
 {
     // DEBUG_START;
-    static uint8_t      ClientConnectionRetryCount = 0; // MQTT Connection Retry Counter. Each reconnect attempt is allowed
+    static uint8_t ClientConnectionRetryCount = 0;      // MQTT Connection Retry Counter. Each reconnect attempt is allowed
                                                         // several tries.
-    static long         previousWiFiMillis = millis (); // Timer for WiFi services.
-    String  topicStr;
+    static long previousWiFiMillis = millis ();         // Timer for WiFi services.
+    String topicStr;
 
     do                                                  // once
     {
@@ -489,12 +489,11 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         updateUiMqttMsg (MQTT_RETRY_STR);
         Log.infoln ((String (F ("Attempting MQTT Reconnection #")) + String (ClientConnectionRetryCount)).c_str ());
         mqttClient.setServer (RemoteIp, mqttPort);
-        mqttClient.setCallback (
-            [] (const char * topic, byte * payload, unsigned int length)
-            {
-                c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
-                pMe->mqttClientCallback (topic, payload, length);
-            }); // Topic Subscription callback handler.
+        mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
+        {
+            c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
+            pMe->mqttClientCallback (topic, payload, length);
+        });     // Topic Subscription callback handler.
 
         // DEBUG_V();
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
@@ -510,7 +509,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
             // DEBUG_V();
             OnlineFlag  = true;
             topicStr    = mqttNameStr + MQTT_CONNECT_STR;
-            String  Payload;
+            String Payload;
             Payload = String (F ("{\"reconnect\": ")) + String (ClientConnectionRetryCount) + F ("}");  // JSON Formatted payload.
             // DEBUG_V();
             mqttClient.publish (topicStr.c_str (), Payload.c_str ());                                   // Publish reconnect status.
@@ -543,8 +542,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         if (ClientConnectionRetryCount < MQTT_RETRY_CNT)
         {
             // DEBUG_V();
-            Log.warningln (
-                (String (F ("-> MQTT Connection Failure #")) + String (ClientConnectionRetryCount) + F (", Code= ") +
+            Log.warningln ((String (F ("-> MQTT Connection Failure #")) + String (ClientConnectionRetryCount) + F (", Code= ") +
                 returnClientCode (mqttClient.state ())).c_str ());
             updateUiMqttMsg (MQTT_RETRY_FAIL_STR + String (ClientConnectionRetryCount));
             break;
@@ -592,7 +590,7 @@ void c_ControllerMQTT::setMqttAuthenticationCallback (Control * sender, int type
     // DEBUG_V(String("   ID: ") + String(sender->id));
     // DEBUG_V(String("value: ") + sender->value);
 
-    String  shortHideStr = MQTT_PASS_HIDE_STR;
+    String shortHideStr = MQTT_PASS_HIDE_STR;
 
     // Log.verboseln ( (String (F ("setMqttAuthenticationCallback ID : " + String (sender->id) + " , Value  : " + sender->value + " s
     // "))).c_str ());
@@ -608,7 +606,7 @@ void c_ControllerMQTT::setMqttAuthenticationCallback (Control * sender, int type
     else if (sender->id == EspuiPwID)
     {
         // DEBUG_V();
-        String  tempStr = sender->value.substring (0, MQTT_PW_MAX_SZ);
+        String tempStr = sender->value.substring (0, MQTT_PW_MAX_SZ);
         shortHideStr = shortHideStr.substring (0, 6);   // Get first 5 chars of the "PW Hidden" text.
 
         if (tempStr.indexOf (shortHideStr) >= 0)
@@ -649,7 +647,7 @@ void c_ControllerMQTT::setRemoteIpAddrCallback (Control * sender, int type)
     if (sender->id == EspuiIpID)
     {
         // DEBUG_V();
-        String  tempStr = sender->value;
+        String tempStr = sender->value;
 
         if ((tempStr.length () == 0))
         {
@@ -662,8 +660,8 @@ void c_ControllerMQTT::setRemoteIpAddrCallback (Control * sender, int type)
         else
         {
             // DEBUG_V();
-            IPAddress  NewIpAddr                = INADDR_NONE;
-            bool  IpAddrConverstionStatus       = NewIpAddr.fromString (tempStr);       // Convert to IP Class Array.
+            IPAddress NewIpAddr                 = INADDR_NONE;
+            bool IpAddrConverstionStatus        = NewIpAddr.fromString (tempStr);       // Convert to IP Class Array.
             // DEBUG_V(String("   IP: ") + NewIpAddr.toString());
             // DEBUG_V(String("Status: ") + String(IpAddrConverstionStatus));
 
@@ -755,7 +753,7 @@ void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject &config)
     if (true == config.containsKey (F (N_MQTT_IP_STR)))
     {
         // DEBUG_V();
-        String  Temp = (const char *)config[F (N_MQTT_IP_STR)];
+        String Temp = (const char *)config[F (N_MQTT_IP_STR)];
         RemoteIp.fromString (Temp);
     }
     // DEBUG_END;
@@ -781,7 +779,7 @@ void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject &config)
 void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 {
     // DEBUG_START;
-    bool        successFlg = true;
+    bool successFlg = true;
     String      topicStr;
     String      CmdString;
 
@@ -789,9 +787,9 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 
     Log.infoln ((String (F ("-> MQTT Controller: Received GPIO Pin-")) + String (pin) + " Command").c_str ());
 
-    #ifdef OldWay
-    successFlg = gpioCmd (payloadStr, MqttControllerId, pin);
-    #endif // def OldWay
+#ifdef OldWay
+        successFlg = gpioCmd (payloadStr, MqttControllerId, pin);
+#endif // def OldWay
     // DEBUG_V();
 
     if (!successFlg)
@@ -816,10 +814,7 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 // ************************************************************************************************
 // makeMqttCmdStr (): Return the MQTT command string. On entry cmdStr has command keyword.
 //                   This is a companion to mqttCallback ().
-String c_ControllerMQTT::makeMqttCmdStr (String cmdStr)
-{
-    return String (MQTT_CMD_STR) + cmdStr;
-}       // makeMqttCmdStr
+String c_ControllerMQTT::makeMqttCmdStr (String cmdStr) {return String (MQTT_CMD_STR) + cmdStr;}        // makeMqttCmdStr
 
 // *************************************************************************************************************************
 // mqttSendMessages(): Broadcast system messages to MQTT broker.
@@ -907,64 +902,83 @@ void c_ControllerMQTT::poll (void)
  */
 String c_ControllerMQTT::returnClientCode (int code)
 {
-    String  Response;
+    String Response;
 
     switch (code)
     {
         case MQTT_CONNECTION_TIMEOUT:
+        {
             Response = F ("MQTT_CONNECTION_TIMEOUT");
             break;
+        }
 
         case MQTT_CONNECTION_LOST:
+        {
             Response = F ("MQTT_CONNECTION_LOST");
             break;
+        }
 
         case MQTT_CONNECT_FAILED:
+        {
             Response = F ("MQTT_CONNECT_FAILED");
             break;
+        }
 
         case MQTT_DISCONNECTED:
+        {
             Response = F ("MQTT_DISCONNECTED");
             break;
+        }
 
         case MQTT_CONNECTED:
+        {
             Response = F ("MQTT_CONNECTED");
             break;
+        }
 
         case MQTT_CONNECT_BAD_PROTOCOL:
+        {
             Response = F ("MQTT_CONNECT_BAD_PROTOCOL");
             break;
+        }
 
         case MQTT_CONNECT_BAD_CLIENT_ID:
+        {
             Response = F ("MQTT_CONNECT_BAD_CLIENT_ID");
             break;
+        }
 
         case MQTT_CONNECT_UNAVAILABLE:
+        {
             Response = F ("MQTT_CONNECT_UNAVAILABLE");
             break;
+        }
 
         case MQTT_CONNECT_BAD_CREDENTIALS:
+        {
             Response = F ("MQTT_CONNECT_BAD_CREDENTIALS");
             break;
+        }
 
         case MQTT_CONNECT_UNAUTHORIZED:
+        {
             Response = F ("MQTT_CONNECT_UNAUTHORIZED");
             break;
+        }
 
         default:
+        {
             Response = F ("Undefined");
             break;
-    }
+        }
+    }   // switch
 
     return Response;
 }       //
 
 // ************************************************************************************************
 // updateUiMqttMsg(): Update the MQTT CONTROL panel's status message on the ctrlTab.
-void c_ControllerMQTT::updateUiMqttMsg (String msgStr)
-{
-    ESPUI.print (EspuiMessageAreaId, msgStr);
-}
+void c_ControllerMQTT::updateUiMqttMsg (String msgStr) {ESPUI.print (EspuiMessageAreaId, msgStr);}
 
 // *********************************************************************************************
 // EOF

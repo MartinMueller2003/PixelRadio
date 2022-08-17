@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cDigitalAudioGain : public cControlCommon
@@ -23,15 +23,13 @@ class cDigitalAudioGain : public cControlCommon
 public:
 
     cDigitalAudioGain ();
-    virtual ~cDigitalAudioGain ()
-    {
-    }
+    virtual ~cDigitalAudioGain ()    {}
 
     void        AddControls (uint16_t Tab, ControlColor color);
     bool        set (String &value, String &ResponseMessage);
-};
+};      // class cDigitalAudioGain
 
-extern cDigitalAudioGain  DigitalAudioGain;
+extern cDigitalAudioGain DigitalAudioGain;
 
 // *********************************************************************************************
 // OEF

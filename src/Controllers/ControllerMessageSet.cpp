@@ -18,11 +18,10 @@
 
 // *********************************************************************************************
 #include "ControllerMessageSet.h"
-#include <map>
 #include "Language.h"
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -277,12 +276,12 @@ void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject &config)
         config.createNestedArray (N_list);
     }
     // DEBUG_V();
-    JsonArray  ListOfMessages = config[N_list];
+    JsonArray ListOfMessages = config[N_list];
 
     // DEBUG_V("add each message to the current message set");
     for (auto CurrentMessageConfig : ListOfMessages)
     {
-        String  MessageName;
+        String MessageName;
 
         if (!CurrentMessageConfig.containsKey (N_message))
         {
@@ -318,12 +317,12 @@ void c_ControllerMessageSet::SaveConfig (ArduinoJson::JsonObject &MsgSetConfig)
     MsgSetConfig[N_name] = MsgSetName;
 
     // DEBUG_V("Create List");
-    JsonArray  MessageArray = MsgSetConfig.createNestedArray (N_list);
+    JsonArray MessageArray = MsgSetConfig.createNestedArray (N_list);
 
     // DEBUG_V();
     for (auto &currentMessage : Messages)
     {
-        JsonObject  MessageConfig = MessageArray.createNestedObject ();
+        JsonObject MessageConfig = MessageArray.createNestedObject ();
         currentMessage.second.SaveConfig (MessageConfig);
     }
 
@@ -350,7 +349,7 @@ void c_ControllerMessageSet::ShowMsgDetailsPane (bool value)
         }
         // DEBUG_V(String("MessageDetailsElementId: 0x") + String(MessageElementIds->MessageDetailsElementId, HEX));
 
-        Control  * control = ESPUI.getControl (MessageElementIds->MessageDetailsElementId);
+        Control * control = ESPUI.getControl (MessageElementIds->MessageDetailsElementId);
 
         if (control)
         {

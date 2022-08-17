@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cRfPower : public cControlCommon
@@ -23,15 +23,13 @@ class cRfPower : public cControlCommon
 public:
 
     cRfPower ();
-    virtual ~cRfPower ()
-    {
-    }
+    virtual ~cRfPower ()    {}
 
     void        AddControls (uint16_t Tab, ControlColor color);
     bool        set (String &, String &);
-};
+};      // class cRfPower
 
-extern cRfPower  RfPower;
+extern cRfPower RfPower;
 
 // *********************************************************************************************
 // OEF

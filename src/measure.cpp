@@ -15,13 +15,13 @@
 
 // *********************************************************************************************
 
+#include "config.h"
+#include "globals.h"
+#include "PixelRadio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <driver/adc.h>
 #include <esp_adc_cal.h>
-#include "config.h"
-#include "PixelRadio.h"
-#include "globals.h"
 
 const uint16_t  DEFAULT_VREF            = 1100;
 const uint8_t   E_AVG_SIZE              = 16;                                   // Size of voltage averaging buffers.
@@ -33,7 +33,7 @@ const adc1_channel_t    VDC_ADC_PORT    = ADC1_CHANNEL_0;                       
 // Local Scope Vars
 static int      vbatAvgBuff[E_AVG_SIZE + 1];                                    // VDC data averaging buffer.
 static int      vdcAvgBuff[E_AVG_SIZE + 1];                                     // VDC data averaging buffer.
-static esp_adc_cal_characteristics_t  * adc_chars;
+static esp_adc_cal_characteristics_t * adc_chars;
 
 
 // *********************************************************************************************
@@ -50,7 +50,7 @@ void initVdcAdc (void)
 
     // Characterize ADC
     adc_chars = (esp_adc_cal_characteristics_t *)calloc (1, sizeof (esp_adc_cal_characteristics_t));
-    esp_adc_cal_value_t  val_type = esp_adc_cal_characterize (ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, DEFAULT_VREF, adc_chars);
+    esp_adc_cal_value_t val_type = esp_adc_cal_characterize (ADC_UNIT_1, ADC_ATTEN_DB_11, ADC_WIDTH_BIT_12, DEFAULT_VREF, adc_chars);
 
     if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF)
     {
@@ -71,7 +71,7 @@ void initVdcAdc (void)
 // Be sure to call initVdcAdc() in setup();
 void measureVbatVoltage (void)
 {
-    static int  avgIndex        = 0;    // Index of the current Amps reading
+    static int avgIndex         = 0;    // Index of the current Amps reading
     static uint32_t totalVdc    = 0;    // Current totalizer for Amps averaging
     uint32_t    voltage;
     uint32_t    reading;
@@ -96,7 +96,7 @@ void measureVbatVoltage (void)
 // Be sure to call initVdcAdc() in setup();
 void measureVdcVoltage (void)
 {
-    static int  avgIndex        = 0;    // Index of the current Amps reading
+    static int avgIndex         = 0;    // Index of the current Amps reading
     static uint32_t totalVdc    = 0;    // Current totalizer for Amps averaging
     uint32_t    voltage;
     uint32_t    reading;
@@ -112,7 +112,7 @@ void measureVdcVoltage (void)
     avgIndex    = avgIndex >= E_AVG_SIZE ? 0 : avgIndex;
 
     voltage = totalVdc / E_AVG_SIZE;
-    extern uint32_t  paVolts;
+    extern uint32_t paVolts;
 
     paVolts     = (voltage * VDC_SCALE) / 1000.0f;      // Apply Attenuator Scaling, covert from mV to VDC.
     paVolts     = constrain (paVolts, 0.0f, 99.0f);
@@ -134,8 +134,8 @@ void initVdcBuffer (void)
 // processMeasurements(): Periodically perform voltage measurements. Must be called in main loop.
 void processMeasurements (void)
 {
-    uint32_t  currentMillis             = millis ();    // Snapshot of System Timer.
-    static uint32_t  previousMeasMillis = millis ();    // Timer for Voltage Measurement.
+    uint32_t currentMillis              = millis ();    // Snapshot of System Timer.
+    static uint32_t previousMeasMillis  = millis ();    // Timer for Voltage Measurement.
 
     currentMillis = millis ();
 

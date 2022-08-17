@@ -14,13 +14,12 @@
    This Code was formatted with the uncrustify extension.
  *
  */
-
 #include <Arduino.h>
-#include "PixelRadio.h"
-#include <ESPAsyncWebServer.h>
-#include <AsyncUDP.h>
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
+#include <AsyncUDP.h>
+#include <ESPAsyncWebServer.h>
+#include "PixelRadio.h"
 
 class c_FPPDiscovery
 {
@@ -85,18 +84,14 @@ public:
 
     c_FPPDiscovery ();
     virtual ~c_FPPDiscovery ()
-    {
-    }
+    {}
 
     void        begin (FileChangeCb _FppdCb, void * _UserParam);
 
     void        ProcessFPPJson      (AsyncWebServerRequest * request);
     void        ProcessGET          (AsyncWebServerRequest * request);
     void        NetworkStateChanged (bool NewNetworkState);
-    String&     GetCurrentFileName  ()
-    {
-        return CurrentFileName;
-    }
-};
+    String&     GetCurrentFileName  () {return CurrentFileName;}
+};      // class c_FPPDiscovery
 
-extern c_FPPDiscovery  FPPDiscovery;
+extern c_FPPDiscovery FPPDiscovery;

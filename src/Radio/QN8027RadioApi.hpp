@@ -14,26 +14,19 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "QN8027Radio.h"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cQN8027RadioApi
 {
 public:
 
-    cQN8027RadioApi ()
-    {
-    }
-
-    virtual ~cQN8027RadioApi ()
-    {
-    }
+    cQN8027RadioApi ()    {}
+    virtual ~cQN8027RadioApi ()    {}
 
     void        begin ();
-
     uint16_t    GetPeakAudioLevel (void);
-
     void        setAudioImpedance (uint8_t value);
     void        setAudioMute (bool value);
     void        setDigitalGain (uint8_t value);
@@ -58,26 +51,23 @@ public:
         FM_TEST_MISSING,        // QN8027 Chip missing.
         FM_TEST_FAIL,           // QN8027 Chip Bad.
     } QN8027RadioFmTestStatus_e;
-    QN8027RadioFmTestStatus_e GetTestStatus ()
-    {
-        return TestStatus;
-    }
+    QN8027RadioFmTestStatus_e   GetTestStatus () {return TestStatus;}
 
 private:
 
-    bool        calibrateAntenna (void);
-    bool        checkRadioIsPresent (void);
-    void        initRadioChip (void);
-    void        waitForIdle (uint16_t waitMs);
+    bool                        calibrateAntenna (void);
+    bool                        checkRadioIsPresent (void);
+    void                        initRadioChip (void);
+    void                        waitForIdle (uint16_t waitMs);
 
     bool DeviceIsPresent = false;
     QN8027Radio FmRadio;
     SemaphoreHandle_t RadioSemaphore = NULL;
 
     QN8027RadioFmTestStatus_e TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_FAIL;
-};
+};      // class cQN8027RadioApi
 
-extern cQN8027RadioApi  QN8027RadioApi;
+extern cQN8027RadioApi QN8027RadioApi;
 
 // *********************************************************************************************
 // OEF

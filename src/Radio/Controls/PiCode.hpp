@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cPiCode : public cControlCommon
@@ -23,16 +23,14 @@ class cPiCode : public cControlCommon
 public:
 
     cPiCode ();
-    virtual ~cPiCode ()
-    {
-    }
+    virtual ~cPiCode ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &Response);
-};
+};      // class cPiCode
 
-extern cPiCode  PiCode;
+extern cPiCode PiCode;
 
 // *********************************************************************************************
 // OEF

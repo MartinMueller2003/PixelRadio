@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cIpAddressUi : public cControlCommon
@@ -23,21 +23,20 @@ class cIpAddressUi : public cControlCommon
 public:
 
     cIpAddressUi ();
-    virtual ~cIpAddressUi ()
-    {
-    }
+    virtual ~cIpAddressUi ();
 
-    void  AddControls (uint16_t TabId, ControlColor color);
-    void  AddControls (uint16_t TabId, ControlColor color, String & Title);
-    void  ResetToDefaults ();
-    bool  set (String &value, String &Response);
-    IPAddress GetIpAddress() { return IpAddress; }
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        AddControls (uint16_t TabId, ControlColor color, String &Title);
+    void        ResetToDefaults ();
+    bool        set (String &value, String &Response);
+    IPAddress   GetIpAddress ();
 
-  private:
+private:
+
     String Title;
-    IPAddress IpAddress = IPAddress(uint32_t(0));
-    bool Booting = true;
-};
+    IPAddress IpAddress = IPAddress (uint32_t (0));
+    bool Booting        = true;
+};      // class cIpAddressUi
 
 // *********************************************************************************************
 // OEF

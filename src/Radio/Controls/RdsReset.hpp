@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cRdsReset : public cControlCommon
@@ -23,16 +23,14 @@ class cRdsReset : public cControlCommon
 public:
 
     cRdsReset ();
-    virtual ~cRdsReset ()
-    {
-    }
+    virtual ~cRdsReset ()    {}
 
     void        AddControls (uint16_t adjTab, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &ResponseMessage);
-};
+};      // class cRdsReset
 
-extern cRdsReset  RdsReset;
+extern cRdsReset RdsReset;
 
 // *********************************************************************************************
 // OEF

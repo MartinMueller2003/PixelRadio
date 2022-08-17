@@ -18,8 +18,8 @@
  */
 
 // ************************************************************************************************
-#include <Arduino.h>
 #include "config.h"
+#include <Arduino.h>
 
 // ************************************************************************************************
 
@@ -161,7 +161,6 @@
 #define WIFI_AP_IP_ADDR_STR    "AP IP ADDRESS"
 #define WIFI_AP_IP_SEP_STR     "AP (HOTSPOT) SETTINGS"
 #define WIFI_AP_MODE_STR       "AP Mode (Hot Spot)"
-#define WIFI_AP_NAME_STR       "AP (HOTSPOT) NAME"
 #define WIFI_AP_REBOOT_STR     "AP REBOOT"
 #define WIFI_AP_STA_STR        "AP/STA Mode"
 #define WIFI_BLANK_MSG_STR     "LEAVE BLANK FOR AUTO LOGIN"
@@ -177,7 +176,6 @@
 #define WIFI_STA_MODE_STR      "Station Mode"
 #define WIFI_TAB_STR           "WiFi"
 #define WIFI_UNKNOWN_STR       "(- ? -)"
-#define WIFI_WEBSRV_NAME_STR   "WEBSERVER NAME"
 
 extern const PROGMEM char       SERIAL_096_STR[];
 extern const PROGMEM char       SERIAL_192_STR[];
@@ -191,7 +189,7 @@ extern const PROGMEM char       CSS_LABEL_STYLE_MAROON[];
 extern const PROGMEM char       CSS_LABEL_STYLE_TRANSPARENT[];
 extern const PROGMEM char       CSS_LABEL_STYLE_WHITE[];
 
-extern const PROGMEM char       UNITS_DBM_STR[];
+extern const PROGMEM char UNITS_DBM_STR[];
 
 extern const PROGMEM char       N_About[];
 extern const PROGMEM char       N_About_PixelRadio[];

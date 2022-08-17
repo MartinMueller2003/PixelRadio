@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cPeakAudio : public cControlCommon
@@ -23,31 +23,20 @@ class cPeakAudio : public cControlCommon
 public:
 
     cPeakAudio ();
-    virtual ~cPeakAudio ()
-    {
-    }
+    virtual ~cPeakAudio ()    {}
 
-    void restoreConfiguration (JsonObject &)
-    {
-    }
-
-    void saveConfiguration (JsonObject &)
-    {
-    }
-
+    void        restoreConfiguration (JsonObject &)     {}
+    void        saveConfiguration (JsonObject &)        {}
     void        AddControls (uint16_t Tab, ControlColor color);
     void        poll ();
-    bool        set (String &, String &)
-    {
-        return false;
-    }
+    bool        set (String &, String &)                {return false;}
 
 private:
 
     uint32_t NextReadingTime = 0;
-};
+};      // class cPeakAudio
 
-extern cPeakAudio  PeakAudio;
+extern cPeakAudio PeakAudio;
 
 // *********************************************************************************************
 // OEF

@@ -13,17 +13,17 @@
  */
 
 // *********************************************************************************************
+#include "language.h"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <Wire.h>
-#include "QN8027RadioApi.hpp"
-#include "language.h"
-#include "memdebug.h"
 
 // I2C:
 static const uint8_t    I2C_QN8027_ADDR = 0x2c;         // I2C Address of QN8027 FM Radio Chip.
 static const uint8_t    I2C_DEV_CNT     = 1;            // Number of expected i2c devices on bus.
-static const uint32_t   I2C_FREQ_HZ     = 100000;       // I2C master clock frequency
+static const uint32_t I2C_FREQ_HZ       = 100000;       // I2C master clock frequency
 
 // *********************************************************************************************
 void cQN8027RadioApi::begin ()
@@ -68,7 +68,7 @@ bool cQN8027RadioApi::calibrateAntenna (void)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
     uint8_t     regVal1;
     uint8_t     regVal2;
 
@@ -144,7 +144,7 @@ bool cQN8027RadioApi::checkRadioIsPresent (void)
 {
     // DEBUG_START;
 
-    bool  response = false;
+    bool response = false;
 
     Wire.beginTransmission (QN8027_I2C_ADDR);
 
@@ -162,7 +162,7 @@ void cQN8027RadioApi::initRadioChip (void)
 {
     // DEBUG_START;
 
-    uint8_t  regVal;
+    uint8_t regVal;
 
     Log.infoln (String (F ("Initializing QN8027 FM Radio Chip ...")).c_str ());
 
@@ -197,10 +197,10 @@ void cQN8027RadioApi::initRadioChip (void)
         FmRadio.setTxFreqDeviation (0x81);      // 75Khz, Total Broadcast channel Bandwidth
         FmRadio.setTxPilotFreqDeviation (9);    // Use default 9% (6.75KHz) Pilot Tone Deviation.
 
-        #ifdef OldWay
-        setRfPower ();
-        waitForIdle (25);
-        #endif // def OldWay
+#ifdef OldWay
+            setRfPower ();
+            waitForIdle (25);
+#endif // def OldWay
 
         for (uint8_t i = 0; i < RADIO_CAL_RETRY; i++)
         {       // Allow several attempts to get good port matching results.
@@ -265,7 +265,7 @@ uint16_t cQN8027RadioApi::GetPeakAudioLevel (void)
 {
     // DEBUG_START;
 
-    uint16_t  mV = 0;
+    uint16_t mV = 0;
 
     if (RadioSemaphore)
     {
@@ -539,67 +539,69 @@ void cQN8027RadioApi::setVgaGain (uint8_t value)
 void cQN8027RadioApi::waitForIdle (uint16_t waitMs)
 {
     // DEBUG_START;
-    #ifdef OldWay
-    uint8_t     stateCode1;
-    uint8_t     stateCode2;
+#ifdef OldWay
+        uint8_t stateCode1;
+        uint8_t stateCode2;
 
-    do  // once
-    {
-        stateCode1 = FmRadio.getStatus () & 0x07;
-        // DEBUG_V(String("stateCode1: 0x") + String(stateCode1, HEX));
-
-        // make sure the delay is a minimum of 5ms
-        if (5 > waitMs)
-            waitMs = 5;
-
-        do
+        do      // once
         {
-            waitMs -= 5;
+            stateCode1 = FmRadio.getStatus () & 0x07;
+            // DEBUG_V(String("stateCode1: 0x") + String(stateCode1, HEX));
 
-            delay (5);
-
-            stateCode2 = FmRadio.getStatus () & 0x07;
-            // DEBUG_V(String("stateCode2: 0x") + String(stateCode2, HEX));
-
-            if ((stateCode2 == 0x02) || (stateCode2 == 0x05))
+            // make sure the delay is a minimum of 5ms
+            if (5 > waitMs)
             {
-                break;
+                waitMs = 5;
             }
-            else if  (stateCode1 != stateCode2)
-            {
-                FmRadio.getStatus ();   // Clear next status byte.
-                break;
-            }
-        } while (5 <= waitMs);
-    } while (false);
 
-    // DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
-    #endif // def OldWay
+            do
+            {
+                waitMs -= 5;
+
+                delay (5);
+
+                stateCode2 = FmRadio.getStatus () & 0x07;
+                // DEBUG_V(String("stateCode2: 0x") + String(stateCode2, HEX));
+
+                if ((stateCode2 == 0x02) || (stateCode2 == 0x05))
+                {
+                    break;
+                }
+                else if  (stateCode1 != stateCode2)
+                {
+                    FmRadio.getStatus ();       // Clear next status byte.
+                    break;
+                }
+            } while (5 <= waitMs);
+        } while (false);
+
+        // DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
+#endif // def OldWay
     // DEBUG_END;
 }
 
 #ifdef OldWay
-// *********************************************************************************************
-// updateRadioSettings(): Update Any Radio Setting that has changed by the Web UI.
-// This routine must be placed in main loop();
-// QN8027 specific settings must not be changed in the Web UI Callbacks due to ESP32 core
-// limitations. So instead the callbacks set a flag that tells this routine to perform the action.
-void cQN8027RadioApi::updateRadioSettings (void)
-{
-    // DEBUG_START;
-
-    if (newAutoRfFlg)
+    // *********************************************************************************************
+    // updateRadioSettings(): Update Any Radio Setting that has changed by the Web UI.
+    // This routine must be placed in main loop();
+    // QN8027 specific settings must not be changed in the Web UI Callbacks due to ESP32 core
+    // limitations. So instead the callbacks set a flag that tells this routine to perform the action.
+    void cQN8027RadioApi::updateRadioSettings (void)
     {
-        newAutoRfFlg = false;
-        setRfAutoOff ();
+        // DEBUG_START;
+
+        if (newAutoRfFlg)
+        {
+            newAutoRfFlg = false;
+            setRfAutoOff ();
+        }
+        // DEBUG_END;
     }
-    // DEBUG_END;
-}
 
 #endif // def OldWay
 
 // *********************************************************************************************
-cQN8027RadioApi  QN8027RadioApi;
+cQN8027RadioApi QN8027RadioApi;
 
 // *********************************************************************************************
 // OEF

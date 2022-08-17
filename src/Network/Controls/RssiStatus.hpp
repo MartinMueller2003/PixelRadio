@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cRssiStatus : public cControlCommon
@@ -23,27 +23,16 @@ class cRssiStatus : public cControlCommon
 public:
 
     cRssiStatus ();
-    virtual ~cRssiStatus ()
-    {
-    }
+    virtual ~cRssiStatus ();
 
-    void restoreConfiguration (JsonObject &)
-    {
-    }
-
-    void saveConfiguration (JsonObject &)
-    {
-    }
-
+    void        restoreConfiguration (JsonObject &)     {}
+    void        saveConfiguration (JsonObject &)        {}
     void        AddControls (uint16_t Tab, ControlColor color);
     int32_t     getRssi ();
-    bool        set (String &, String &)
-    {
-        return true;
-    }
+    bool        set (String &, String &)                {return true;}
 
-    void set ();
-};
+    void        set ();
+};      // class cRssiStatus
 
 // *********************************************************************************************
 // OEF

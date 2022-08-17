@@ -85,8 +85,7 @@ struct FSEQRawRangeEntry
 {
     uint8_t     Start[3];
     uint8_t     Length[3];
-}
-__attribute__((packed));
+} __attribute__((packed));
 
 struct FSEQParsedRangeEntry
 {
@@ -110,8 +109,7 @@ struct FSEQRawHeader
     uint8_t     numSparseRanges;
     uint8_t     flags2;
     uint8_t     id[8];
-}
-__attribute__((packed));
+} __attribute__((packed));
 
 struct FSEQParsedHeader
 {
@@ -133,18 +131,18 @@ struct FSEQParsedHeader
 
 inline uint64_t read64 (uint8_t * buf, int idx)
 {
-    uint32_t  r1 = (int)(buf[idx + 3]) << 24;
+    uint32_t r1 = (int)(buf[idx + 3]) << 24;
 
     r1  |= (int)(buf[idx + 2]) << 16;
     r1  |= (int)(buf[idx + 1]) << 8;
     r1  |= (int)(buf[idx]);
 
-    uint32_t  r2 = (int)(buf[idx + 7]) << 24;
+    uint32_t r2 = (int)(buf[idx + 7]) << 24;
 
     r2  |= (int)(buf[idx + 6]) << 16;
     r2  |= (int)(buf[idx + 5]) << 8;
     r2  |= (int)(buf[idx + 4]);
-    uint64_t  r = r2;
+    uint64_t r = r2;
 
     r   <<= 32;
     r   |= r1;
@@ -155,7 +153,7 @@ inline uint64_t read64 (uint8_t * buf, int idx)
 // -----------------------------------------------------------------------------
 inline uint32_t read32 (uint8_t * buf, int idx)
 {
-    uint32_t  r = (int)(buf[idx + 3]) << 24;
+    uint32_t r = (int)(buf[idx + 3]) << 24;
 
     r   |= (int)(buf[idx + 2]) << 16;
     r   |= (int)(buf[idx + 1]) << 8;

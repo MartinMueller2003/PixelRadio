@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cAudioInputImpedance : public cControlCommon
@@ -23,15 +23,13 @@ class cAudioInputImpedance : public cControlCommon
 public:
 
     cAudioInputImpedance ();
-    virtual ~cAudioInputImpedance ()
-    {
-    }
+    virtual ~cAudioInputImpedance ()    {}
 
     void        AddControls (uint16_t Tab, ControlColor color);
     bool        set (String &, String &);
-};
+};      // class cAudioInputImpedance
 
-extern cAudioInputImpedance  AudioInputImpedance;
+extern cAudioInputImpedance AudioInputImpedance;
 
 // *********************************************************************************************
 // OEF

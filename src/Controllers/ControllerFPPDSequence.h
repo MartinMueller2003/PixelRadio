@@ -18,9 +18,9 @@
 
 // *********************************************************************************************
 #pragma once
+#include "ControllerMessages.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include "ControllerMessages.h"
 
 class c_ControllerFPPDSequence
 {
@@ -34,15 +34,9 @@ public:
     void        AddControls (uint16_t ctrlTab, uint16_t EspuiSequencesElementId);
     void        SetName (String &value);
     void        Activate (bool value);
-    void        SetMessages (c_ControllerMessages * value)
-    {
-        Messages = value;
-    }
+    void        SetMessages (c_ControllerMessages * value)                      {Messages = value;}
 
-    void GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
-    {
-        Messages->GetNextRdsMessage (Response);
-    }
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)     {Messages->GetNextRdsMessage (Response);}
 
 private:
 

@@ -18,6 +18,7 @@
 
 // *********************************************************************************************
 #pragma once
+
 #include "ControllerCommon.h"
 #include "ControllerFPPDSequences.h"
 
@@ -39,7 +40,7 @@ public:
 
 private:
 
-    void updateVisibility ();
+    void        updateVisibility ();
 
     uint16_t SequenceLearningEnabledElementId           = Control::noParent;
     uint16_t SequenceLearningLabelEnabledElementId      = Control::noParent;

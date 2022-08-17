@@ -13,16 +13,16 @@
  */
 
 // *********************************************************************************************
+#include "ConfigSave.hpp"
+#include "memdebug.h"
+#include "SaveControl.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <vector>
-#include "ConfigSave.hpp"
-#include "SaveControl.hpp"
-#include "memdebug.h"
 
 // *********************************************************************************************
 
-static std::vector <cSaveControl *>  ListOfSaveControls;
+static std::vector <cSaveControl *> ListOfSaveControls;
 
 // *********************************************************************************************
 
@@ -77,7 +77,7 @@ void cConfigSave::InitiateSaveOperation ()
 }
 
 // *********************************************************************************************
-cConfigSave  ConfigSave;
+cConfigSave ConfigSave;
 
 // *********************************************************************************************
 // OEF

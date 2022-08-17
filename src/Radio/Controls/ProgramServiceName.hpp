@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cProgramServiceName : public cControlCommon
@@ -23,16 +23,14 @@ class cProgramServiceName : public cControlCommon
 public:
 
     cProgramServiceName ();
-    virtual ~cProgramServiceName ()
-    {
-    }
+    virtual ~cProgramServiceName ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &Response);
-};
+};      // class cProgramServiceName
 
-extern cProgramServiceName  ProgramServiceName;
+extern cProgramServiceName ProgramServiceName;
 
 // *********************************************************************************************
 // OEF

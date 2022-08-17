@@ -13,12 +13,12 @@
  */
 
 // *********************************************************************************************
+#include "ControlCommon.hpp"
+#include "memdebug.h"
+#include "PixelRadio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <ESPUI.h>
-#include "PixelRadio.h"
-#include "ControlCommon.hpp"
-#include "memdebug.h"
 
 // *********************************************************************************************
 cControlCommon::cControlCommon (String _ConfigName)
@@ -34,14 +34,18 @@ cControlCommon::cControlCommon (String _ConfigName)
 }
 
 // *********************************************************************************************
+cControlCommon::~cControlCommon ()
+{}
+
+// *********************************************************************************************
 void cControlCommon::AddControls (
-    uint16_t value,
-    ControlType uiControltype, ControlColor color)
+    uint16_t            value,
+    ControlType         uiControltype,
+    ControlColor        color)
 {
     // DEBUG_START;
 
-    ControlId = ESPUI.addControl (
-            uiControltype,
+    ControlId = ESPUI.addControl (uiControltype,
             emptyString.c_str (),
             emptyString,
             color,
@@ -58,8 +62,7 @@ void cControlCommon::AddControls (
     ESPUI.setPanelStyle (ControlId, "font-size: 1.25em;");
     ESPUI.setElementStyle (ControlId, "color: black;");
 
-    StatusMessageId = ESPUI.addControl (
-            ControlType::Label,
+    StatusMessageId = ESPUI.addControl (ControlType::Label,
             emptyString.c_str (),
             emptyString,
             ControlColor::None,
@@ -68,9 +71,9 @@ void cControlCommon::AddControls (
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_TRANSPARENT);
 
     // force a UI Update
-    String      Response;
+    String Response;
     DataValue = !DataValue;
-    String      TempDataValueStr = DataValueStr;
+    String TempDataValueStr = DataValueStr;
     DataValueStr.clear ();
     set (TempDataValueStr, Response);
 
@@ -87,12 +90,12 @@ void cControlCommon::Callback (Control * sender, int type)
 
     do  // once
     {
-        if (B_UP == type)
+        if (0 >= type)
         {
             // DEBUG_V("Ignore button up events");
             break;
         }
-        String  Response;
+        String Response;
         ESPUI.setElementStyle (StatusMessageId, set (sender->value, Response) ? ActiveLabelStyle : InactiveLabelStyle);
         ESPUI.print (StatusMessageId, Response);
     } while (false);
@@ -101,15 +104,21 @@ void cControlCommon::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-void cControlCommon::restoreConfiguration (JsonObject &config)
+uint32_t        cControlCommon::get ()          {return DataValue;}
+
+// *********************************************************************************************
+String&         cControlCommon::getStr ()       {return DataValueStr;}
+
+// *********************************************************************************************
+void            cControlCommon::restoreConfiguration (JsonObject &config)
 {
     // DEBUG_START;
 
     if (!ConfigName.isEmpty ())
     {
-        String  NewValue = DataValueStr;
+        String NewValue = DataValueStr;
         ReadFromJSON (NewValue, config, ConfigName);
-        String  Response;
+        String Response;
         set (NewValue, Response);
     }
     // DEBUG_END;
@@ -128,7 +137,7 @@ void cControlCommon::saveConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-void cControlCommon::SetConfigName(String value)
+void cControlCommon::SetConfigName (String value)
 {
     // DEBUG_START;
 

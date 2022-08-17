@@ -13,14 +13,14 @@
  */
 
 // *********************************************************************************************
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
+#include "RdsText.hpp"
+#include "RfCarrier.hpp"
+#include "TestTone.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <vector>
-#include "TestTone.hpp"
-#include "RdsText.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 // *********************************************************************************************
 static const PROGMEM String     ADJUST_TEST_STR = "TEST TONES";
@@ -28,7 +28,7 @@ static const PROGMEM String     AUDIO_TEST_STR  = "PIXELRADIO AUDIO TEST";
 static const PROGMEM String     AUDIO_PSN_STR   = "TestTone";
 
 // Test Tone
-const uint8_t   TEST_TONE_CHNL  = 0;    // Test Tone PWM Channel.
+const uint8_t TEST_TONE_CHNL    = 0;    // Test Tone PWM Channel.
 const uint32_t  TEST_TONE_TIME  = 2000; // Test Tone Sequence Time, in mS.
 const uint16_t  TONE_A3         = 220;  // 220Hz Audio Tone.
 const uint16_t  TONE_A4         = 440;
@@ -41,7 +41,7 @@ const uint16_t  TONE_NONE       = 0;
 const int       TONE_OFF        = 1;
 const int       TONE_ON         = 0;
 
-static std::vector <uint16_t>  toneList
+static std::vector <uint16_t> toneList
 {
     TONE_NONE,
     TONE_A3,
@@ -54,8 +54,8 @@ static std::vector <uint16_t>  toneList
     TONE_A4,
 };
 
-fsm_Tone_state_Idle  fsm_Tone_state_Idle_imp;
-fsm_Tone_state_SendingTone  fsm_Tone_state_SendingTone_imp;
+fsm_Tone_state_Idle fsm_Tone_state_Idle_imp;
+fsm_Tone_state_SendingTone fsm_Tone_state_SendingTone_imp;
 
 // *********************************************************************************************
 cTestTone::cTestTone () : cControlCommon (emptyString)
@@ -93,11 +93,11 @@ bool cTestTone::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
-    uint32_t  NewDataValue;
+    uint32_t NewDataValue;
 
     do  // once
     {
@@ -159,7 +159,7 @@ void cTestTone::poll ()
 {
     // _ DEBUG_START;
 
-    uint32_t  now = millis ();
+    uint32_t now = millis ();
 
     do  // once
     {
@@ -217,11 +217,11 @@ void cTestTone::UpdateRdsTimeMsg ()
 {
     // DEBUG_START;
 
-    String  FrequencyMessage;
+    String FrequencyMessage;
 
     FrequencyMessage.reserve (128);
 
-    char  rdsBuff[25];
+    char rdsBuff[25];
 
     // DEBUG_V("Update the test tone clock. HH:MM:SS will be sent as RadioText.");
     seconds++;
@@ -229,11 +229,11 @@ void cTestTone::UpdateRdsTimeMsg ()
     FrequencyMessage = String (F ("Current Tone: ")) + String (pCurrentFsmState->getCurrentToneFrequency ()) + " hz";
     ESPUI.print (StatusMessageId, FrequencyMessage);
     sprintf (rdsBuff, "[ %02u:%02u:%02u ]", hours, minutes, seconds);
-    String  tmpStr;
+    String tmpStr;
 
     tmpStr.reserve (128);
     tmpStr = String (AUDIO_TEST_STR) + rdsBuff + String (F ("<br>")) + FrequencyMessage;
-    String  dummy;
+    String dummy;
 
     RdsText.set (tmpStr, dummy);
     tmpStr = AUDIO_PSN_STR;
@@ -353,7 +353,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 }
 
 // *********************************************************************************************
-cTestTone  TestTone;
+cTestTone TestTone;
 
 // *********************************************************************************************
 // OEF

@@ -13,15 +13,15 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
-#include "AudioGain.hpp"
 #include "AnalogAudioGain.hpp"
+#include "AudioGain.hpp"
 #include "AudioInputImpedance.hpp"
 #include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
-static const PROGMEM String     RADIO_AUDIO_GAIN_STR    = "AUDIO GAIN";
-static const PROGMEM int32_t    AUDIO_LEVEL_MAX         = uint32_t (675);
+static const PROGMEM String RADIO_AUDIO_GAIN_STR        = "AUDIO GAIN";
+static const PROGMEM int32_t AUDIO_LEVEL_MAX            = uint32_t (675);
 
 // *********************************************************************************************
 cAudioGain::cAudioGain () : cControlCommon (emptyString)
@@ -58,7 +58,7 @@ void cAudioGain::set ()
     // DEBUG_V(String("impedance: ") + String(impedance));
     // DEBUG_V(String("FinalGain: ") + String(FinalGain));
 
-    String  Result;
+    String Result;
 
     Result.reserve (128);
 
@@ -76,7 +76,7 @@ void cAudioGain::set ()
 }
 
 // *********************************************************************************************
-cAudioGain  AudioGain;
+cAudioGain AudioGain;
 
 // *********************************************************************************************
 // OEF

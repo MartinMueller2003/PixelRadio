@@ -22,11 +22,11 @@
 #pragma once
 
 #include "Arduino.h"
-#include "PixelRadio.h"
-#include <ESPUI.h>
-#include <ArduinoJson.h>
-#include "ControllerMgr.h"
 #include "ControllerMessages.h"
+#include "ControllerMgr.h"
+#include "PixelRadio.h"
+#include <ArduinoJson.h>
+#include <ESPUI.h>
 
 class c_ControllerCommon
 {
@@ -55,28 +55,17 @@ public:
 
     c_ControllerCommon (String MyName, c_ControllerMgr::ControllerTypeId_t MyId);
     virtual ~c_ControllerCommon ();
-    virtual void begin ()
-    {
-    }
 
-    virtual void poll ()
-    {
-    }
-
+    virtual void        begin ()        {}
+    virtual void        poll ()         {}
     virtual void        AddControls (uint16_t tabId);
     void                CbControllerEnabled (Control * sender, int type);
     virtual void        restoreConfiguration (ArduinoJson::JsonObject &config);
     virtual void        saveConfiguration (ArduinoJson::JsonObject &config);
-    String&             GetName ()
-    {
-        return Name;
-    }
+    String&             GetName ()              {return Name;}
 
     virtual void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response) = 0;
-    bool                ControllerIsEnabled ()
-    {
-        return ControllerEnabled;
-    }
+    bool                ControllerIsEnabled ()  {return ControllerEnabled;}
 };      // c_ControllerCommon
 
 // *********************************************************************************************

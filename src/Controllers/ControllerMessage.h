@@ -18,11 +18,12 @@
 
 // *********************************************************************************************
 #pragma once
-#include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <ESPUI.h>
+
 #include "ControllerMgr.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <ESPUI.h>
 
 class c_ControllerMessage
 {
@@ -38,30 +39,19 @@ public:
     };
 
     c_ControllerMessage ();
-    c_ControllerMessage (const c_ControllerMessage &source)
-    {
-    }   // Empty Copy constructor
+    c_ControllerMessage (const c_ControllerMessage &source) {}  // Empty Copy constructor
 
     virtual ~c_ControllerMessage ();
     void        Activate (bool value);
     void        AddControls (MessageElementIds_t * _MessageElementIds);
     void        CbDuration (Control * sender, int type);
     void        CbEnabled (Control * sender, int type);
-    uint16_t    GetElementId ()
-    {
-        return MessageElementId;
-    }
+    uint16_t    GetElementId () {return MessageElementId;}
 
     void        GetMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
-    uint32_t    GetDuration ()
-    {
-        return DurationSec;
-    }
+    uint32_t    GetDuration ()  {return DurationSec;}
 
-    bool IsEnabled ()
-    {
-        return Enabled;
-    }
+    bool        IsEnabled ()    {return Enabled;}
 
     void        RestoreConfig (ArduinoJson::JsonObject config);
     void        SaveConfig (ArduinoJson::JsonObject config);

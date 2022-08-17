@@ -13,18 +13,25 @@
  */
 
 // *********************************************************************************************
+#include "memdebug.h"
+#include "RssiStatus.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "RssiStatus.hpp"
-#include "memdebug.h"
 
-static const PROGMEM String  HOME_WIFI_STR = "WIFI RSSI";
+static const PROGMEM String HOME_WIFI_STR = "WIFI RSSI";
 
 // *********************************************************************************************
 cRssiStatus::cRssiStatus () : cControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
+    // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+cRssiStatus::~cRssiStatus ()
+{
+    // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
@@ -48,7 +55,7 @@ int32_t cRssiStatus::getRssi ()
 {
     // DEBUG_START;
 
-    int32_t  rssi;
+    int32_t rssi;
 
     rssi = int32_t (WiFi.RSSI ());
 
@@ -70,7 +77,7 @@ void cRssiStatus::set ()
 {
     // DEBUG_START;
 
-    String  Result;
+    String Result;
 
     Result.reserve (128);
 

@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cAudioGain : public cControlCommon
@@ -23,28 +23,16 @@ class cAudioGain : public cControlCommon
 public:
 
     cAudioGain ();
-    virtual ~cAudioGain ()
-    {
-    }
+    virtual ~cAudioGain ()    {}
 
-    void restoreConfiguration (JsonObject &)
-    {
-    }
-
-    void saveConfiguration (JsonObject &)
-    {
-    }
-
+    void        restoreConfiguration (JsonObject &)     {}
+    void        saveConfiguration (JsonObject &)        {}
     void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &)
-    {
-        return true;
-    }
+    bool        set (String &, String &)                {return true;}
+    void        set ();
+};      // class cAudioGain
 
-    void set ();
-};
-
-extern cAudioGain  AudioGain;
+extern cAudioGain AudioGain;
 
 // *********************************************************************************************
 // OEF

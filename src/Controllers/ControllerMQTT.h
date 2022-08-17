@@ -18,11 +18,12 @@
 
 // *********************************************************************************************
 #pragma once
+
+#include "credentials.h"
 #include "ControllerCommon.h"
+#include "ControllerMessages.h"
 #include <PubSubClient.h>
 #include <WiFi.h>
-#include "credentials.h"
-#include "ControllerMessages.h"
 
 class c_ControllerMQTT : public c_ControllerCommon
 {
@@ -40,11 +41,7 @@ public:
     void        setMqttNameCallback (Control * sender, int type);
     void        setRemoteIpAddrCallback (Control * sender, int type);
     void        mqttClientCallback (const char * topic, byte * payload, unsigned int length);
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
-    {
-        if (ControllerEnabled)
-            Messages.GetNextRdsMessage (Response);
-    }
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
 

@@ -13,11 +13,11 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
-#include "SaveControl.hpp"
 #include "ConfigSave.hpp"
 #include "memdebug.h"
+#include "SaveControl.hpp"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
 // *********************************************************************************************
 
@@ -52,9 +52,8 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor _color)
     cControlCommon::AddControls (TabId, ControlType::Button, color);
     ESPUI.updateControlLabel (ControlId, SAVE_SETTINGS_STR.c_str ());
     ESPUI.updateControlValue (ControlId, SAVE_SETTINGS_STR);
-    ESPUI.      setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (
-        ControlId,
+    ESPUI.      setElementStyle (       StatusMessageId, CSS_LABEL_STYLE_WHITE);
+    ESPUI.      setElementStyle (       ControlId,
         String (F ("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
 
     // DEBUG_END;
@@ -80,7 +79,7 @@ bool cSaveControl::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.clear ();
 

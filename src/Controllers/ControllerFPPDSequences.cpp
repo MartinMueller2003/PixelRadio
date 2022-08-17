@@ -21,7 +21,7 @@
 #include <map>
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 static const String     Name                    = F ("FPPD Sequences");
@@ -36,8 +36,7 @@ c_ControllerFPPDSequences::c_ControllerFPPDSequences ()
 
 // *********************************************************************************************
 c_ControllerFPPDSequences::~c_ControllerFPPDSequences ()
-{
-}
+{}
 
 // ************************************************************************************************
 void c_ControllerFPPDSequences::Activate ()
@@ -65,8 +64,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
     if (Control::noParent == EspuiChoiceListElementId)
     {
         // DEBUG_V("Adding Select");
-        EspuiChoiceListElementId = ESPUI.addControl (
-                ControlType::Select,
+        EspuiChoiceListElementId = ESPUI.addControl (ControlType::Select,
                 "FPPD Sequences",
                 emptyString,
                 ControlColor::Turquoise,
@@ -81,8 +79,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 this);
 
         // DEBUG_V("Adding Delete button");
-        EspuiButtonDeleteElementId = ESPUI.addControl (
-                ControlType::Button,
+        EspuiButtonDeleteElementId = ESPUI.addControl (ControlType::Button,
                 emptyString.c_str (),
                 " Delete ",
                 ControlColor::None,
@@ -97,8 +94,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 this);
 
         // DEBUG_V("Adding Update button");
-        EspuiButtonUpdateElementId = ESPUI.addControl (
-                ControlType::Button,
+        EspuiButtonUpdateElementId = ESPUI.addControl (ControlType::Button,
                 emptyString.c_str (),
                 " Update ",
                 ControlColor::None,
@@ -113,8 +109,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 this);
 
         // DEBUG_V("Adding Instruction Msg");
-        EspuiInstructionMsgElementId = ESPUI.addControl (
-                ControlType::Label,
+        EspuiInstructionMsgElementId = ESPUI.addControl (ControlType::Label,
                 DefaultTextFieldValue.c_str (),
                 DefaultTextFieldValue,
                 ControlColor::Turquoise,
@@ -122,8 +117,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
         ESPUI.setElementStyle (EspuiInstructionMsgElementId, CSS_LABEL_STYLE_BLACK);
 
         // DEBUG_V("Adding Text Entry");
-        EspuiTextEntryElementId = ESPUI.addControl (
-                ControlType::Text,
+        EspuiTextEntryElementId = ESPUI.addControl (ControlType::Text,
                 emptyString.c_str (),
                 DefaultTextFieldValue,
                 ControlColor::None,
@@ -141,8 +135,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
         ESPUI.addControl (ControlType::Max, emptyString.c_str (), "64", ControlColor::None, EspuiTextEntryElementId);
 
         // DEBUG_V("Adding Create");
-        EspuiButtonCreateElementId = ESPUI.addControl (
-                ControlType::Button,
+        EspuiButtonCreateElementId = ESPUI.addControl (ControlType::Button,
                 emptyString.c_str (),
                 " Create ",
                 ControlColor::None,
@@ -157,8 +150,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
                 this);
 
         // DEBUG_V("Adding Status Msg");
-        EspuiStatusMsgElementId = ESPUI.addControl (
-                ControlType::Label,
+        EspuiStatusMsgElementId = ESPUI.addControl (ControlType::Label,
                 emptyString.c_str (),
                 emptyString,
                 ControlColor::Turquoise,
@@ -213,7 +205,7 @@ void c_ControllerFPPDSequences::begin ()
 {
     // DEBUG_START;
 
-    String  SequenceName = N_default;
+    String SequenceName = N_default;
 
     AddSequence (SequenceName);
 
@@ -232,7 +224,7 @@ void c_ControllerFPPDSequences::CbButtonCreate (Control * sender, int type)
             // DEBUG_V("Ignore unwanted button action");
             break;
         }
-        Control  * TextControl = ESPUI.getControl (EspuiTextEntryElementId);
+        Control * TextControl = ESPUI.getControl (EspuiTextEntryElementId);
 
         if (!TextControl)
         {
@@ -373,8 +365,8 @@ void c_ControllerFPPDSequences::CbTextChange (Control *, int)
 {
     // DEBUG_START;
 
-    Control     * ChoiceList    = ESPUI.getControl (EspuiChoiceListElementId);
-    Control     * TextControl   = ESPUI.getControl (EspuiTextEntryElementId);
+    Control * ChoiceList        = ESPUI.getControl (EspuiChoiceListElementId);
+    Control * TextControl       = ESPUI.getControl (EspuiTextEntryElementId);
 
     // DEBUG_V(String("Choice value: ") + ChoiceList->value);
     // DEBUG_V(String("  Text value: ") + TextControl->value);
@@ -459,7 +451,7 @@ void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject &config)
     // DEBUG_START;
 
     // Make sure the default sequnce exists
-    String  SequenceName = N_default;
+    String SequenceName = N_default;
 
     AddSequence (SequenceName);
 
@@ -470,11 +462,11 @@ void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject &config)
     {
         config.createNestedArray (N_sequences);
     }
-    JsonArray  SequencesArray = config[N_sequences];
+    JsonArray SequencesArray = config[N_sequences];
 
     for (auto CurrentSequenceConfig : SequencesArray)
     {
-        String  Key;
+        String Key;
 
         if (false == CurrentSequenceConfig.containsKey (N_name))
         {
@@ -486,7 +478,7 @@ void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject &config)
         AddSequence (Key);
 
         // DEBUG_V();
-        JsonObject  Temp = CurrentSequenceConfig;
+        JsonObject Temp = CurrentSequenceConfig;
         Sequences[Key].RestoreConfig (Temp);
     }
 
@@ -505,14 +497,14 @@ void c_ControllerFPPDSequences::SaveConfig (ArduinoJson::JsonObject &config)
         // DEBUG_V("Create List");
         config.createNestedArray (N_sequences);
     }
-    JsonArray  SequenceConfigs = config[N_sequences];
+    JsonArray SequenceConfigs = config[N_sequences];
 
     // DEBUG_V();
 
     for (auto &CurrentSequence : Sequences)
     {
         // DEBUG_V(String("Create Sequence entry") + CurrentSequence.first);
-        JsonObject  SequenceConfig = SequenceConfigs.createNestedObject ();
+        JsonObject SequenceConfig = SequenceConfigs.createNestedObject ();
         CurrentSequence.second.SaveConfig (SequenceConfig);
     }
 

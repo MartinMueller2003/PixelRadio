@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cRfCarrier : public cControlCommon
@@ -23,9 +23,7 @@ class cRfCarrier : public cControlCommon
 public:
 
     cRfCarrier ();
-    virtual ~cRfCarrier ()
-    {
-    }
+    virtual ~cRfCarrier ()    {}
 
     void        AddHomeControls (uint16_t TabId, ControlColor color);
     void        AddControls (uint16_t TabId, ControlColor color);
@@ -33,13 +31,13 @@ public:
 
 private:
 
-    void UpdateStatus (String &ResponseMessage);
+    void        UpdateStatus (String &ResponseMessage);
 
     uint16_t HomeId                     = Control::noParent;
     uint16_t HomeStatusMessageId        = Control::noParent;
-};
+};      // class cRfCarrier
 
-extern cRfCarrier  RfCarrier;
+extern cRfCarrier RfCarrier;
 
 // *********************************************************************************************
 // OEF

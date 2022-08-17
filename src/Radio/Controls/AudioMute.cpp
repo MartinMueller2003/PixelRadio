@@ -13,12 +13,12 @@
  */
 
 // *********************************************************************************************
+#include "AudioMute.hpp"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "AudioMute.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 static const PROGMEM String     RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
 static const PROGMEM String     ADJUST_MUTE_STR = "AUDIO MUTE";
@@ -58,7 +58,7 @@ bool cAudioMute::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -104,7 +104,7 @@ bool cAudioMute::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cAudioMute  AudioMute;
+cAudioMute AudioMute;
 
 // *********************************************************************************************
 // OEF

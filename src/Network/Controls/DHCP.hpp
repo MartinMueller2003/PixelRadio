@@ -14,9 +14,9 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
 #include "IpAddressUi.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cDHCP : public cControlCommon
@@ -24,35 +24,35 @@ class cDHCP : public cControlCommon
 public:
 
     cDHCP ();
-    virtual ~cDHCP () {}
+    virtual ~cDHCP ();
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    uint32_t    get();
+    uint32_t    get ();
     bool        set (String &value, String &ResponseMessage);
-    void        TestIpSettings();
+    void        TestIpSettings ();
 
-    IPAddress GetStaticIP() { return StaticIp.GetIpAddress(); }
-    IPAddress GetStaticNetmask() { return StaticNetMask.GetIpAddress(); }
-    IPAddress GetStaticGateway() { return StaticGateWay.GetIpAddress(); }
-    IPAddress GetStaticDNS() { return StaticDns.GetIpAddress(); }
+    IPAddress   GetStaticIP ();
+    IPAddress   GetStaticNetmask ();
+    IPAddress   GetStaticGateway ();
+    IPAddress   GetStaticDNS ();
 
     void        restoreConfiguration (JsonObject &json);
     void        saveConfiguration (JsonObject &json);
 
-  private:
+private:
+
     void        SetStaticFieldsVisibility ();
-    bool        ValidateStaticSettings (String & ResponseMessage);
+    bool        ValidateStaticSettings (String &ResponseMessage);
 
-    uint16_t  wifiStaticSettingsID  = Control::noParent;
-    
-  cIpAddressUi StaticIp;
-  cIpAddressUi StaticNetMask;
-  cIpAddressUi StaticGateWay;
-  cIpAddressUi StaticDns;
-  
-};
+    uint16_t wifiStaticSettingsID = Control::noParent;
 
-extern cDHCP  DHCP;
+    cIpAddressUi StaticIp;
+    cIpAddressUi StaticNetMask;
+    cIpAddressUi StaticGateWay;
+    cIpAddressUi StaticDns;
+};      // class cDHCP
+
+extern cDHCP DHCP;
 
 // *********************************************************************************************
 // OEF

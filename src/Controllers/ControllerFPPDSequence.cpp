@@ -19,11 +19,11 @@
 // *********************************************************************************************
 
 #include "ControllerFPPDSequence.h"
-#include <ESPUI.h>
 #include "Language.h"
+#include <ESPUI.h>
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -91,8 +91,7 @@ void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentEle
     if (Control::noParent == EspuiElementId)
     {
         // DEBUG_V(String("Adding Control for ") + Name);
-        EspuiElementId = ESPUI.addControl (
-                ControlType::Option,
+        EspuiElementId = ESPUI.addControl (ControlType::Option,
                 Name.c_str (),
                 Name,
                 ControlColor::None,

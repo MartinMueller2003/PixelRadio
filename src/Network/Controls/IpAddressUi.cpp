@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
+#include "IpAddressUi.hpp"
+#include "memdebug.h"
+#include "PtyCode.hpp"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "IpAddressUi.hpp"
-#include "PtyCode.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 static const PROGMEM uint32_t IpAddress_MAX_SZ = 16;
 
@@ -29,18 +29,29 @@ cIpAddressUi::cIpAddressUi () : cControlCommon (emptyString)
     // _ DEBUG_START;
 
     DataValueStr.reserve (IpAddress_MAX_SZ + 2);
-    DataValueStr = F("0.0.0.0");
-    Title = F("Not Set");
+    DataValueStr        = F ("0.0.0.0");
+    Title               = F ("Not Set");
+
+    ActiveLabelStyle    = CSS_LABEL_STYLE_BLACK;
+    InactiveLabelStyle  = CSS_LABEL_STYLE_BLACK;
+
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cIpAddressUi::AddControls (uint16_t value, ControlColor color, String & _Title)
+cIpAddressUi::~cIpAddressUi ()
+{
+    // _ DEBUG_START;
+    // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+void cIpAddressUi::AddControls (uint16_t value, ControlColor color, String &_Title)
 {
     // DEBUG_START;
 
     Title = _Title;
-    AddControls(value, color);
+    AddControls (value, color);
 
     // DEBUG_END;
 }
@@ -51,31 +62,36 @@ void cIpAddressUi::AddControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     uint16_t TempId;
-    TempId = ESPUI.addControl(ControlType::Label, 
-                emptyString.c_str(), 
-                Title, ControlColor::Carrot, 
-                value);
-    ESPUI.setElementStyle(TempId, CSS_LABEL_STYLE_BLACK);
+
+    TempId = ESPUI.addControl (ControlType::Label,
+            emptyString.c_str (),
+            Title, ControlColor::Carrot,
+            value);
+    ESPUI.setElementStyle (TempId, CSS_LABEL_STYLE_BLACK);
 
     cControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, Title.c_str ());
-    ESPUI.addControl (ControlType::Max, 
-                emptyString.c_str (), 
-                String(IpAddress_MAX_SZ), 
-                ControlColor::None, 
-                ControlId);
+    ESPUI.addControl (ControlType::Max,
+        emptyString.c_str (),
+        String (IpAddress_MAX_SZ),
+        ControlColor::None,
+        ControlId);
 
     Booting = false;
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cIpAddressUi::ResetToDefaults ()
+IPAddress       cIpAddressUi::GetIpAddress () {return IpAddress;}
+
+// *********************************************************************************************
+void            cIpAddressUi::ResetToDefaults ()
 {
     // DEBUG_START;
 
-    String  value = F("0.0.0.0");
-    String  dummy;
+    String      value = F ("0.0.0.0");
+    String      dummy;
+
     set (value, dummy);
 
     // DEBUG_END;
@@ -98,10 +114,18 @@ bool cIpAddressUi::set (String &value, String &ResponseMessage)
 
     do  // once
     {
-        if(!TempIp.fromString(value))
+        if (!TempIp.fromString (value))
         {
-            ResponseMessage = String(F ("IP Address: '"))  + value + String(F("' is not valid"));
-            Log.infoln(ResponseMessage.c_str());
+            ResponseMessage = Title + (F (" value: '")) + value + String (F ("' is not valid"));
+            Log.infoln (ResponseMessage.c_str ());
+            Response = false;
+            break;
+        }
+
+        if (TempIp == IPAddress (uint32_t (0)))
+        {
+            ResponseMessage = Title + (F (" value: '")) + value + String (F ("' is not valid"));
+            Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
@@ -109,20 +133,20 @@ bool cIpAddressUi::set (String &value, String &ResponseMessage)
         if (TempIp == IpAddress)
         {
             // DEBUG_V("Address did not change");
-            Log.infoln((Title + F(" Unchanged")).c_str());
+            Log.infoln ((Title + F (" Unchanged")).c_str ());
             break;
         }
+        IpAddress       = TempIp;
+        DataValueStr    = IpAddress.toString ();
+        DataValue       = IpAddress;
 
-        IpAddress = TempIp;
-        DataValueStr = IpAddress.toString();
-        DataValue = IpAddress;
+        ESPUI.updateControlValue (ControlId, DataValueStr);
 
-        ESPUI.updateControlValue(ControlId, DataValueStr);
-        if(!Booting)
+        if (!Booting)
         {
-            DHCP.TestIpSettings();
+            DHCP.TestIpSettings ();
         }
-        Log.infoln((Title + F(" Set to: ") + DataValueStr).c_str());
+        Log.infoln ((Title + F (" Set to: ") + DataValueStr).c_str ());
 
         displaySaveWarning ();
     } while (false);

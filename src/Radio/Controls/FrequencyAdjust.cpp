@@ -13,12 +13,12 @@
  */
 
 // *********************************************************************************************
+#include "FrequencyAdjust.hpp"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "FrequencyAdjust.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 static const PROGMEM String     RADIO_FM_FRQ_STR        = "FM FREQUENCY";
 static const PROGMEM String     ADJUST_FRQ_ADJ_STR      = "FREQUENCY ADJUST";
@@ -44,8 +44,7 @@ void cFrequencyAdjust::AddRadioControls (uint16_t value, ControlColor color)
 
     RadioId = value;
 
-    RadioStatusID = ESPUI.addControl (
-            ControlType::Label,
+    RadioStatusID = ESPUI.addControl (ControlType::Label,
             RADIO_FM_FRQ_STR.c_str (),
             emptyString,
             color,
@@ -65,8 +64,7 @@ void cFrequencyAdjust::AddHomeControls (uint16_t value, ControlColor color)
 
     HomeId = value;
 
-    HomeStatusID = ESPUI.addControl (
-            ControlType::Label,
+    HomeStatusID = ESPUI.addControl (ControlType::Label,
             HOME_RAD_STAT_STR.c_str (),
             emptyString,
             color,
@@ -83,8 +81,7 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    AdjustStatusID = ESPUI.addControl (
-            ControlType::Label,
+    AdjustStatusID = ESPUI.addControl (ControlType::Label,
             RADIO_FM_FRQ_STR.c_str (),
             emptyString,
             color,
@@ -92,8 +89,7 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
     ESPUI.setPanelStyle (AdjustStatusID, F ("font-size: 3.0em;"));
     ESPUI.setElementStyle (AdjustStatusID, F ("max-width: 75%;"));
 
-    cControlCommon::AddControls (
-        value,
+    cControlCommon::AddControls (value,
         ControlType::Pad,
         color);
     ESPUI.updateControlLabel (ControlId, ADJUST_FRQ_ADJ_STR.c_str ());
@@ -112,7 +108,7 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
     // DEBUG_V(String("     type: ") + String(type));
     // DEBUG_V(String("DataValue: ") + String(DataValue));
 
-    uint32_t  NewData = DataValue;
+    uint32_t NewData = DataValue;
 
     do  // once
     {
@@ -175,12 +171,12 @@ bool cFrequencyAdjust::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
     // DEBUG_V(String("       value: ") + value);
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
 
-    uint32_t  NewData = uint32_t (atof (value.c_str ()) * 10.0f);
+    uint32_t NewData = uint32_t (atof (value.c_str ()) * 10.0f);
 
     // DEBUG_V(String("     NewData: ") + NewData);
 
@@ -228,7 +224,7 @@ void cFrequencyAdjust::UpdateStatus ()
 {
     // DEBUG_START;
 
-    float  tempFloat = float(DataValue) / 10.0f;
+    float tempFloat = float(DataValue) / 10.0f;
 
     QN8027RadioApi.setFrequency (tempFloat, RfCarrier.get ());
 
@@ -242,7 +238,7 @@ void cFrequencyAdjust::UpdateStatus ()
 }
 
 // *********************************************************************************************
-cFrequencyAdjust  FrequencyAdjust;
+cFrequencyAdjust FrequencyAdjust;
 
 // *********************************************************************************************
 // OEF

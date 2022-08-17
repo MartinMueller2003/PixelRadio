@@ -13,12 +13,12 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
 #include "language.h"
 #include "memdebug.h"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
 static const PROGMEM String     RADIO_RF_CARRIER_STR    = "RF CARRIER ENABLE";
 static const PROGMEM String     RADIO_RF_CARR_FLAG      = "RADIO_RF_CARR_FLAG";
@@ -68,15 +68,14 @@ void cRfCarrier::AddHomeControls (uint16_t value, ControlColor color)
 
     HomeId = value;
 
-    HomeStatusMessageId = ESPUI.addControl (
-            ControlType::Label,
+    HomeStatusMessageId = ESPUI.addControl (ControlType::Label,
             HOME_RAD_STAT_STR.c_str (),
             emptyString,
             color,
             HomeId);
     ESPUI.setPanelStyle (HomeStatusMessageId, F ("font-size: 3.0em;"));
 
-    String  Dummy;
+    String Dummy;
     UpdateStatus (Dummy);
 
     // DEBUG_END;
@@ -91,11 +90,11 @@ bool cRfCarrier::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
-    uint32_t  NewDataValue;
+    uint32_t NewDataValue;
 
     do  // once
     {
@@ -141,11 +140,11 @@ void cRfCarrier::UpdateStatus (String &ResponseMessage)
 
     QN8027RadioApi.setRfCarrier (DataValue);
 
-    extern uint32_t  paVolts;
+    extern uint32_t paVolts;
 
     if (DataValue)
     {
-        cQN8027RadioApi::QN8027RadioFmTestStatus_e  TestStatus = QN8027RadioApi.GetTestStatus ();
+        cQN8027RadioApi::QN8027RadioFmTestStatus_e TestStatus = QN8027RadioApi.GetTestStatus ();
 
         if (TestStatus == cQN8027RadioApi::QN8027RadioFmTestStatus_e::FM_TEST_FAIL)
         {
@@ -214,7 +213,7 @@ void cRfCarrier::UpdateStatus (String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cRfCarrier  RfCarrier;
+cRfCarrier RfCarrier;
 
 // *********************************************************************************************
 // OEF

@@ -13,14 +13,14 @@
  */
 
 // *********************************************************************************************
+#include "memdebug.h"
+#include "PreEmphasis.hpp"
+#include "PtyCode.hpp"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <vector>
-#include "PtyCode.hpp"
-#include "PreEmphasis.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 typedef struct
 {
@@ -30,7 +30,7 @@ typedef struct
 } PtyCodeEntry_t;
 
 // 0 = US, 1 = EU
-static std::vector <PtyCodeEntry_t>  ListOfPtyCodes =
+static std::vector <PtyCodeEntry_t> ListOfPtyCodes =
 {
     {
         0, Control::noParent,{
@@ -372,19 +372,19 @@ bool cPtyCode::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = false;
+    bool Response = false;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
 
-    uint32_t  CurrentRegion = PreEmphasis.get ();
+    uint32_t CurrentRegion = PreEmphasis.get ();
 
     do  // once
     {
         if (isdigit (value[0]))
         {
             // DEBUG_V("Value is a number");
-            uint32_t  NewData = atoi (value.c_str ());
+            uint32_t NewData = atoi (value.c_str ());
 
             if (ListOfPtyCodes.size () >= NewData)
             {
@@ -441,7 +441,7 @@ void cPtyCode::setPtyCodeOptionValues ()
     // DEBUG_V(String("M0: ") + ListOfPtyCodes[2].name[0]);
     // DEBUG_V(String("M1: ") + ListOfPtyCodes[2].name[1]);
 
-    uint32_t  CurrentRegion = PreEmphasis.get ();
+    uint32_t CurrentRegion = PreEmphasis.get ();
 
     if (Control::noParent != ControlId)
     {
@@ -452,14 +452,13 @@ void cPtyCode::setPtyCodeOptionValues ()
             if (Control::noParent == CurrentEntry.UiId)
             {
                 // DEBUG_V("Create Option");
-                CurrentEntry.UiId = ESPUI.addControl (
-                        ControlType::Option,
+                CurrentEntry.UiId = ESPUI.addControl (ControlType::Option,
                         emptyString.c_str (),
                         emptyString,
                         ControlColor::None,
                         ControlId);
             }
-            Control  * control = ESPUI.getControl (CurrentEntry.UiId);
+            Control * control = ESPUI.getControl (CurrentEntry.UiId);
 
             if (control)
             {
@@ -495,7 +494,7 @@ void cPtyCode::updateUiPtyCode ()
 }
 
 // *********************************************************************************************
-cPtyCode  PtyCode;
+cPtyCode PtyCode;
 
 // *********************************************************************************************
 // OEF

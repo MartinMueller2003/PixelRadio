@@ -82,20 +82,20 @@
 
 // ************************************************************************************************
 
-#include <ArduinoLog.h>
 #include "config.h"
-#include "PixelRadio.h"
+#include "ConfigSave.hpp"
+#include "ControllerMgr.h"
 #include "globals.h"
 #include "language.h"
-#include <ESPUI.h>
-#include "ControllerMgr.h"
 #include "memdebug.h"
+#include "PixelRadio.h"
 #include "radio.hpp"
-#include "ConfigSave.hpp"
+#include <ArduinoLog.h>
+#include <ESPUI.h>
 
 // ************************************************************************************************
 // Local Strings.
-String          tempStr;
+String tempStr;
 
 uint16_t        aboutTab        = Control::noParent;
 uint16_t        adjTab          = Control::noParent;
@@ -162,9 +162,9 @@ void initCustomCss (void)
     // START OF PANEL INLINE STYLES
     ESPUI.      setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
-    #ifdef OldWay
-    ESPUI.      setPanelStyle ( ctrlMqttPortID, "font-size: 1.25em;");
-    #endif // def OldWay
+#ifdef OldWay
+        ESPUI.  setPanelStyle ( ctrlMqttPortID, "font-size: 1.25em;");
+#endif // def OldWay
 
     ESPUI.      setPanelStyle ( diagBootID,     "color: black;");
     ESPUI.      setPanelStyle ( diagLogID,      "color: black;");
@@ -173,9 +173,9 @@ void initCustomCss (void)
     ESPUI.      setPanelStyle ( diagVbatID,     "color: black; font-size: 1.25em;");
     ESPUI.      setPanelStyle ( diagVdcID,      "color: black; font-size: 1.25em;");
 
-    #ifdef OldWay
-    ESPUI.      setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
-    #endif // def OldWay
+#ifdef OldWay
+        ESPUI.  setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
+#endif // def OldWay
 
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
@@ -207,9 +207,9 @@ void initCustomCss (void)
     ESPUI.      setElementStyle (       gpio33MsgID,            CSS_LABEL_STYLE_WHITE);
     ESPUI.      setElementStyle (       gpioSaveMsgID,          CSS_LABEL_STYLE_RED);
 
-    #ifdef OldWay
-    ESPUI.      setElementStyle (       homeOnAirID,            "max-width: 80%;");
-    #endif // def OldWay
+#ifdef OldWay
+        ESPUI.  setElementStyle (       homeOnAirID,            "max-width: 80%;");
+#endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
@@ -227,15 +227,15 @@ void initCustomCss (void)
 void displaySaveWarning (void)
 {
     ConfigSave.SetSaveNeeded ();
-    #ifdef OldWay
-    ESPUI.      print ( adjSaveMsgID,           SAVE_SETTINGS_MSG_STR);
-    ESPUI.      print ( backupSaveSetMsgID,     SAVE_SETTINGS_MSG_STR);
-    ESPUI.      print ( ctrlSaveMsgID,          SAVE_SETTINGS_MSG_STR);
-    ESPUI.      print ( gpioSaveMsgID,          SAVE_SETTINGS_MSG_STR);
-    ESPUI.      print ( radioSaveMsgID,         SAVE_SETTINGS_MSG_STR);
-    ESPUI.      print ( rdsSaveMsgID,           SAVE_SETTINGS_MSG_STR);
-    ESPUI.      print ( wifiSaveMsgID,          SAVE_SETTINGS_MSG_STR);
-    #endif // def OldWay
+#ifdef OldWay
+        ESPUI.  print ( adjSaveMsgID,           SAVE_SETTINGS_MSG_STR);
+        ESPUI.  print ( backupSaveSetMsgID,     SAVE_SETTINGS_MSG_STR);
+        ESPUI.  print ( ctrlSaveMsgID,          SAVE_SETTINGS_MSG_STR);
+        ESPUI.  print ( gpioSaveMsgID,          SAVE_SETTINGS_MSG_STR);
+        ESPUI.  print ( radioSaveMsgID,         SAVE_SETTINGS_MSG_STR);
+        ESPUI.  print ( rdsSaveMsgID,           SAVE_SETTINGS_MSG_STR);
+        ESPUI.  print ( wifiSaveMsgID,          SAVE_SETTINGS_MSG_STR);
+#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -275,11 +275,11 @@ void StartESPUI ()
     else
     {
         // DEBUG_V();
-        #ifdef OldWay
-        ESPUI.  begin ( "PixelRadio", userNameStr.c_str (), userPassStr.c_str ());
-        // DEBUG_V();
-        #endif // def OldWay
-        ESPUI.  begin ( "PixelRadio");
+#ifdef OldWay
+            ESPUI.      begin ( "PixelRadio", userNameStr.c_str (), userPassStr.c_str ());
+            // DEBUG_V();
+#endif // def OldWay
+        ESPUI.          begin ( "PixelRadio");
 
         // Don't use LITLEFS, browser refreshes will crash.
         // ESPUI.beginLITTLEFS(APP_NAME_STR, userNameStr.c_str(), userPassStr.c_str());
@@ -292,7 +292,7 @@ void StartESPUI ()
 bool updateUiGpioMsg (uint8_t pin, String &ControllerName, bool PinState)
 {
     // DEBUG_START;
-    uint16_t  msgID;
+    uint16_t msgID;
 
     switch (pin)
     {
@@ -313,7 +313,7 @@ bool updateUiGpioMsg (uint8_t pin, String &ControllerName, bool PinState)
             msgID = gpio33MsgID;
             break;
         }
-    }
+    }   // switch
 
     ESPUI.print (msgID, String (F ("{ SET TO ")) + ((PinState) ? GPIO_OUT_HI_STR : GPIO_OUT_LO_STR) + F (" BY ") + ControllerName + F (" }"));
 
@@ -325,8 +325,8 @@ bool updateUiGpioMsg (uint8_t pin, String &ControllerName, bool PinState)
 // updateUiFreeMemory(): Update the Free Heap Memory on the diagTab.
 void updateUiFreeMemory (void)
 {
-    char  logBuff[40];
-    static uint32_t  oldMillis = millis ();
+    char logBuff[40];
+    static uint32_t oldMillis = millis ();
 
     if (millis () > oldMillis + FREE_MEM_UPD_TIME)
     {
@@ -343,13 +343,13 @@ void updateUiFreeMemory (void)
 // updateUiDiagTimer(): Update Elapsed Time on diagTab Page. Show Days + HH:MM:SS.
 void updateUiDiagTimer (void)
 {
-    char  timeBuff[30];
+    char timeBuff[30];
     static uint8_t      seconds         = 0;
     static uint8_t      minutes         = 0;
     static uint8_t      hours           = 0;
     static int16_t      days            = 0;
-    static uint32_t     previousMillis  = millis ();
-    uint32_t  currentMillis             = millis ();
+    static uint32_t previousMillis      = millis ();
+    uint32_t currentMillis              = millis ();
 
     if ((currentMillis - previousMillis) >= 1000)
     {
@@ -383,7 +383,7 @@ void updateUiVolts (void)
 {
     extern uint32_t     paVolts;
     static uint32_t     previousMillis = 0;
-    char  logBuff[60];
+    char logBuff[60];
 
     if (previousMillis == 0)
     {
@@ -420,11 +420,11 @@ void buildGUI (void)
 {
     // DEBUG_START;
 
-    extern uint32_t  paVolts;
+    extern uint32_t paVolts;
 
     tempStr.reserve (125);      // Avoid memory re-allocation fragments on the Global String.
-    char        charBuff[25];
-    float       tempFloat;
+    char charBuff[25];
+    float tempFloat;
 
     // ************
     // Menu Tabs
@@ -520,8 +520,7 @@ void buildGUI (void)
 
     ESPUI.      addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     backupSaveID =
-        ESPUI.addControl (
-            ControlType::Button,
+        ESPUI.addControl (ControlType::Button,
             BACKUP_SAV_CFG_STR,
             BACKUP_SAVE_STR,
             ControlColor::Wetasphalt,
@@ -530,8 +529,7 @@ void buildGUI (void)
     backupSaveMsgID = ESPUI.addControl (ControlType::Label, "SAVE_MSG", emptyString, ControlColor::Wetasphalt, backupSaveID);
 
     backupRestoreID =
-        ESPUI.addControl (
-            ControlType::Button,
+        ESPUI.addControl (ControlType::Button,
             BACKUP_RES_CFG_STR,
             BACKUP_RESTORE_STR,
             ControlColor::Wetasphalt,
@@ -553,55 +551,48 @@ void buildGUI (void)
     tempStr     += " VDC";
     diagVdcID   = ESPUI.addControl (ControlType::Label, DIAG_VDC_STR, tempStr, ControlColor::Sunflower, diagTab);
 
-    ESPUI.      addControl (ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, diagTab);
+    ESPUI.      addControl (    ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, diagTab);
     diagLogID =
         ESPUI.addControl (ControlType::Select, DIAG_LOG_LVL_STR, logLevelStr, ControlColor::Sunflower, diagTab, &diagLogCallback);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (    ControlType::Option,
         DIAG_LOG_SILENT_STR,
         DIAG_LOG_SILENT_STR,
         ControlColor::None,
         diagLogID);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (ControlType::Option,
         DIAG_LOG_FATAL_STR,
         DIAG_LOG_FATAL_STR,
         ControlColor::None,
         diagLogID);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (ControlType::Option,
         DIAG_LOG_ERROR_STR,
         DIAG_LOG_ERROR_STR,
         ControlColor::None,
         diagLogID);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (ControlType::Option,
         DIAG_LOG_WARN_STR,
         DIAG_LOG_WARN_STR,
         ControlColor::None,
         diagLogID);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (ControlType::Option,
         DIAG_LOG_INFO_STR,
         DIAG_LOG_INFO_STR,
         ControlColor::None,
         diagLogID);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (ControlType::Option,
         DIAG_LOG_TRACE_STR,
         DIAG_LOG_TRACE_STR,
         ControlColor::None,
         diagLogID);
-    ESPUI.      addControl (
-        ControlType::Option,
+    ESPUI.      addControl (ControlType::Option,
         DIAG_LOG_VERB_STR,
         DIAG_LOG_VERB_STR,
         ControlColor::None,
         diagLogID);
-    #ifdef OldWay
-    tempStr             = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
-    diagLogMsgID        = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
-    #endif // def OldWay
+#ifdef OldWay
+        tempStr         = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
+        diagLogMsgID    = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
+#endif // def OldWay
 
     ESPUI.      addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, diagTab);
     // DEBUG_V();
@@ -613,8 +604,7 @@ void buildGUI (void)
     diagTimerID = ESPUI.addControl (ControlType::Label, DIAG_RUN_TIME_STR, emptyString, ControlColor::Sunflower, diagTab);
 
     diagBootID =
-        ESPUI.addControl (
-            ControlType::Button,
+        ESPUI.addControl (ControlType::Button,
             DIAG_REBOOT_STR,
             DIAG_LONG_PRESS_STR,
             ControlColor::Sunflower,
@@ -637,17 +627,15 @@ void buildGUI (void)
     tempStr     += N_br;
 
     /*(makeWebGif("/RadioLogo225x75_base64.gif", 225, 75, "white")),*/
-    static String  WebGif = (makeWebGif ("/RadioLogo225x75_base64.gif", 200, 66, "white"));
+    static String WebGif = (makeWebGif ("/RadioLogo225x75_base64.gif", 200, 66, "white"));
     // DEBUG_V(String("WebGif.Length: ") + String(WebGif.length()));
-    aboutLogoID = ESPUI.addControl (
-            ControlType::Label,
+    aboutLogoID = ESPUI.addControl (ControlType::Label,
             N_About,
             WebGif,
             ControlColor::None,
             aboutTab);
 
-    aboutVersionID = ESPUI.addControl (
-            ControlType::Label,
+    aboutVersionID = ESPUI.addControl (ControlType::Label,
             N_About_PixelRadio,
             tempStr,
             ControlColor::None,

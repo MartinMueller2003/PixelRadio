@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
+#include "AnalogAudioGain.hpp"
+#include "AudioGain.hpp"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "AnalogAudioGain.hpp"
-#include "AudioGain.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 #define VGA_GAIN0_STR     " 3dB"
 #define VGA_GAIN1_STR     " 6dB"
@@ -29,7 +29,7 @@
 #define VGA_GAIN5_STR     "18dB"
 #define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
 
-static std::map <String, uint8_t>  MapOfGainValues
+static std::map <String, uint8_t> MapOfGainValues
 {
     {
         VGA_GAIN0_STR,  0
@@ -75,8 +75,7 @@ void cAnalogAudioGain::AddControls (uint16_t value, ControlColor color)
 
     for (auto &CurrentOption : MapOfGainValues)
     {
-        ESPUI.addControl (
-            ControlType::Option,
+        ESPUI.addControl (ControlType::Option,
             CurrentOption.first.c_str (),
             CurrentOption.first,
             ControlColor::None,
@@ -92,7 +91,7 @@ bool cAnalogAudioGain::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -132,7 +131,7 @@ bool cAnalogAudioGain::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cAnalogAudioGain  AnalogAudioGain;
+cAnalogAudioGain AnalogAudioGain;
 
 // *********************************************************************************************
 // OEF

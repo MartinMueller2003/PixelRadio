@@ -1,5 +1,5 @@
 /*
-   File: SSID.cpp
+   File: HotspotName.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -13,46 +13,52 @@
  */
 
 // *********************************************************************************************
+#include "HotspotName.hpp"
 #include "memdebug.h"
-#include "PtyCode.hpp"
-#include "QN8027RadioApi.hpp"
-#include "RfCarrier.hpp"
-#include "SSID.hpp"
+#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-static const PROGMEM String WIFI_SSID_STR       = "WIFI SSID";
-static const PROGMEM uint32_t SSID_MAX_SZ       = 32;
+static const PROGMEM String     WIFI_AP_NAME_STR        = "AP (HOTSPOT) NAME";
+static const PROGMEM String     AP_NAME_DEF_STR         = "PixelRadioAP";
+static const PROGMEM uint32_t AP_NAME_MAX_SZ            = 18;
 
 // *********************************************************************************************
-cSSID::cSSID () : cControlCommon ("WIFI_SSID_STR")
+cHotspotName::cHotspotName () : cControlCommon ("AP_NAME_STR")
 {
     // _ DEBUG_START;
 
-    DataValueStr.reserve (SSID_MAX_SZ + 2);
-    DataValueStr = WiFiDriver.GetDefaultSsid ();
+    DataValueStr.reserve (AP_NAME_MAX_SZ + 2);
+    DataValueStr = AP_NAME_DEF_STR;
 
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cSSID::AddControls (uint16_t value, ControlColor color)
+cHotspotName::~cHotspotName ()
+{
+    // _ DEBUG_START;
+    // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+void cHotspotName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
     cControlCommon::AddControls (value, ControlType::Text, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_SSID_STR.c_str ());
-    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (SSID_MAX_SZ), ControlColor::None, ControlId);
+    ESPUI.updateControlLabel (ControlId, WIFI_AP_NAME_STR.c_str ());
+    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (AP_NAME_MAX_SZ), ControlColor::None, ControlId);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cSSID::ResetToDefaults ()
+void cHotspotName::ResetToDefaults ()
 {
     // DEBUG_START;
 
-    String      value = WiFiDriver.GetDefaultSsid ();
+    String      value = AP_NAME_DEF_STR;
     String      dummy;
 
     set (value, dummy);
@@ -61,12 +67,12 @@ void cSSID::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cSSID::set (String &value, String &ResponseMessage)
+bool cHotspotName::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("       value: ") + value);
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V ( String ("       value: ") + value);
+    // DEBUG_V ( String ("DataValueStr: ") + DataValueStr);
 
     bool Response = true;
 
@@ -75,34 +81,41 @@ bool cSSID::set (String &value, String &ResponseMessage)
 
     do  // once
     {
-        if (value.length () > SSID_MAX_SZ)
+        if (value.isEmpty ())
         {
-            ResponseMessage     = String (F ("New Value is too long: \""))  + value + String (F ("\""));
-            Response            = false;
+            ResponseMessage = String (F ("-> AP Hotspot cannot be empty."));
+            Log.warningln (ResponseMessage.c_str ());
+            ESPUI.updateControlValue (ControlId, DataValueStr);
+            break;
+        }
+
+        if (value.length () > AP_NAME_MAX_SZ)
+        {
+            ResponseMessage = String (F ("-> AP Hotspot cannot be longer than ")) + String (AP_NAME_MAX_SZ) + F (" characters.");
+            Log.warningln (ResponseMessage.c_str ());
+            ESPUI.updateControlValue (ControlId, DataValueStr);
             break;
         }
 
         if (value.equals (DataValueStr))
         {
-            // DEBUG_V("Name did not change");
-            Log.infoln (String (F ("WiFi SSID Unchanged")).c_str ());
+            // DEBUG_V ("Name did not change");
             break;
         }
         DataValueStr = value;
-
         ESPUI.updateControlValue (ControlId, DataValueStr);
-        WiFiDriver.WiFiReset ();
-        Log.infoln ((String (F ("WiFi SSID Set to: ")) + DataValueStr).c_str ());
+        Log.infoln ((String (F ("Webserver (AP) Name Set to: '")) + DataValueStr + F ("'")).c_str ());
 
         displaySaveWarning ();
     } while (false);
 
     // DEBUG_END;
+
     return Response;
 }
 
 // *********************************************************************************************
-cSSID SSID;
+cHotspotName HotspotName;
 
 // *********************************************************************************************
 // OEF

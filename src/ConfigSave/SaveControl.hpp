@@ -14,9 +14,9 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include "ESPUI.h"
 #include "ControlCommon.hpp"
+#include "ESPUI.h"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cSaveControl : public cControlCommon
@@ -24,9 +24,7 @@ class cSaveControl : public cControlCommon
 public:
 
     cSaveControl ();
-    virtual ~cSaveControl ()
-    {
-    }
+    virtual ~cSaveControl ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ClearSaveNeeded ();
@@ -37,7 +35,7 @@ private:
 
     ControlColor color  = ControlColor::None;
     bool IgnoreFirstSet = true;
-};
+};      // class cSaveControl
 
 // *********************************************************************************************
 // OEF

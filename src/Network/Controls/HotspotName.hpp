@@ -1,11 +1,11 @@
 #pragma once
 /*
-   File: ConfigSave.cpp
-   Project: PixelConfigSave, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+   File: HotspotName.cpp
+   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
    Revised:  Jun-13-2022
-   Revision History: See PixelConfigSave.cpp
+   Revision History: See PixelRadio.cpp
    Project Leader: T. Black (thomastech)
    Contributors: thomastech
 
@@ -14,25 +14,23 @@
  */
 
 // *********************************************************************************************
-#include "ESPUI.h"
+#include "ControlCommon.hpp"
 #include <Arduino.h>
-#include <ArduinoLog.h>
 
 // *********************************************************************************************
-class cConfigSave
+class cHotspotName : public cControlCommon
 {
 public:
 
-    cConfigSave ()    {}
-    virtual ~cConfigSave ()    {}
+    cHotspotName ();
+    virtual ~cHotspotName ();
 
-    void        AddControls (uint16_t adjTab, ControlColor color);
-    void        ClearSaveNeeded ();
-    void        InitiateSaveOperation ();
-    void        SetSaveNeeded ();
-};      // class cConfigSave
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String &value, String &Response);
+};      // class cHotspotName
 
-extern cConfigSave ConfigSave;
+extern cHotspotName HotspotName;
 
 // *********************************************************************************************
 // OEF

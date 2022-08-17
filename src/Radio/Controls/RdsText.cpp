@@ -13,14 +13,14 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "language.h"
+#include "memdebug.h"
+#include "QN8027RadioApi.hpp"
 #include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
-#include "QN8027RadioApi.hpp"
-#include "language.h"
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
 static const PROGMEM String     HOME_RDS_WAIT_STR       = "Waiting for RDS RadioText ...";
 static const PROGMEM String     HOME_CUR_TEXT_STR       = "CURRENT RADIOTEXT";
@@ -50,8 +50,7 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
     ESPUI.setPanelStyle (StatusMessageId, String (F ("font-size: 1.15em;")));
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
-    homeRdsTmrID = ESPUI.addControl (
-            ControlType::Label,
+    homeRdsTmrID = ESPUI.addControl (ControlType::Label,
             HOME_RDS_TIMER_STR.c_str (),
             emptyString,
             color,
@@ -68,7 +67,7 @@ void cRdsText::poll ()
 {
     // _ DEBUG_START;
 
-    unsigned long  now = millis ();
+    unsigned long now = millis ();
 
     do  // once
     {
@@ -105,7 +104,7 @@ void cRdsText::poll ()
             // _ DEBUG_V("Display the new message");
             LastMessageSent = RdsMsgInfo.Text;
             Log.traceln (String (F ("Refreshing RDS RadioText Message: %s")).c_str (), RdsMsgInfo.Text.c_str ());
-            String  dummy;
+            String dummy;
             set (RdsMsgInfo.Text, dummy);
         }
         updateRdsMsgRemainingTime (now);
@@ -141,9 +140,8 @@ void cRdsText::UpdateStatus ()
     }
     else
     {
-        ESPUI.  print (ControlId, String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR));
-        ESPUI.  print (
-            StatusMessageId,
+        ESPUI.  print ( ControlId, String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR));
+        ESPUI.  print ( StatusMessageId,
             String (String (RdsMsgInfo.DurationMilliSec ? String (F ("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
     }
     // DEBUG_END;
@@ -154,7 +152,7 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
 {
     // DEBUG_START;
 
-    uint32_t  timeCnt = 0;
+    uint32_t timeCnt = 0;
 
     do  // once
     {
@@ -185,7 +183,7 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
             ESPUI.print (homeRdsTmrID, RDS_EXPIRED_STR);
             break;
         }
-        unsigned long  TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
+        unsigned long TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
         // DEBUG_V(String("Update Timer: ") + String(TimeRemaining));
         ESPUI.print (homeRdsTmrID, String (TimeRemaining) + F (" Secs"));
     } while (false);
@@ -194,7 +192,7 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
 }
 
 // *********************************************************************************************
-cRdsText  RdsText;
+cRdsText RdsText;
 
 // *********************************************************************************************
 // OEF

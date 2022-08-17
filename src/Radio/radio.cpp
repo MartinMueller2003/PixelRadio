@@ -13,15 +13,15 @@
  */
 
 // *********************************************************************************************
+#include "globals.h"
+#include "language.h"
+#include "memdebug.h"
+#include "PixelRadio.h"
+#include "QN8027RadioApi.hpp"
+#include "radio.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <Wire.h>
-#include "PixelRadio.h"
-#include "globals.h"
-#include "language.h"
-#include "radio.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 #include "AnalogAudioGain.hpp"
 #include "AudioInputImpedance.hpp"
@@ -103,24 +103,25 @@ void cRadio::saveConfiguration (JsonObject &config)
 void cRadio::updateOnAirSign (void)
 {
     // DEBUG_START;
-    #ifdef OldWay
-    new way: call  GPIO and tell it to update the output and the UI.
+#ifdef OldWay
+        new way:
+        call GPIO and tell it to update the output and the UI.
 
-    if (rfCarrierFlg)
-    {
-        digitalWrite (ON_AIR_PIN, SIGN_ON);
-    }
-    else
-    {
-        digitalWrite (ON_AIR_PIN, SIGN_OFF);
-    }
-    #endif // def OldWay
+        if (rfCarrierFlg)
+        {
+            digitalWrite (ON_AIR_PIN, SIGN_ON);
+        }
+        else
+        {
+            digitalWrite (ON_AIR_PIN, SIGN_OFF);
+        }
+#endif // def OldWay
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-cRadio  Radio;
+cRadio Radio;
 
 // *********************************************************************************************
 // OEF

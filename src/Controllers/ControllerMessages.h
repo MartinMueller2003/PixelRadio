@@ -18,15 +18,15 @@
 
 // *********************************************************************************************
 #pragma once
-#include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <list>
-#include <map>
-#include <ESPUI.h>
+
 #include "ControllerMessage.h"
-#include "PixelRadio.h"
 #include "ControllerMessageSet.h"
+#include "PixelRadio.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <ESPUI.h>
+#include <map>
 
 class c_ControllerMessages
 {
@@ -49,15 +49,9 @@ public:
     void        CbChoiceList (Control * sender, int type);
     void        CbSwitchDisplayFseqName (Control * sender, int type);
     void        CbTextChange (Control * sender, int type);
-    void        clear ()
-    {
-        MessageSets.clear ();
-    }
+    void        clear ()        {MessageSets.clear ();}
 
-    bool empty ()
-    {
-        return MessageSets.empty ();
-    }
+    bool        empty ()        {return MessageSets.empty ();}
 
     void        SetShowFseqNameSelection (bool value);
     void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);

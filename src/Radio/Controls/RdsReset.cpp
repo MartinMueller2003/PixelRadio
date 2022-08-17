@@ -12,14 +12,14 @@
  */
 
 // *********************************************************************************************
+#include "memdebug.h"
+#include "PiCode.hpp"
+#include "ProgramServiceName.hpp"
+#include "PtyCode.hpp"
+#include "RdsReset.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <vector>
-#include "RdsReset.hpp"
-#include "PiCode.hpp"
-#include "PtyCode.hpp"
-#include "ProgramServiceName.hpp"
-#include "memdebug.h"
 
 // *********************************************************************************************
 
@@ -80,7 +80,7 @@ bool cRdsReset::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cRdsReset  RdsReset;
+cRdsReset RdsReset;
 
 // *********************************************************************************************
 // OEF

@@ -29,11 +29,7 @@ public:
     virtual ~c_ControllerHTTP ();
     void        saveConfiguration (ArduinoJson::JsonObject &config);
     void        restoreConfiguration (ArduinoJson::JsonObject &config);
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
-    {
-        if (ControllerEnabled)
-            Messages.GetNextRdsMessage (Response);
-    }
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
 

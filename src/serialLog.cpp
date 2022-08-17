@@ -34,10 +34,10 @@
  */
 
 // *************************************************************************************************************************
-  #include <ArduinoLog.h>
-  #include "PixelRadio.h"
-  #include "globals.h"
-  #include "language.h"
+#include "globals.h"
+#include "language.h"
+#include "PixelRadio.h"
+#include <ArduinoLog.h>
 
 // *************************************************************************************************************************
 
@@ -50,7 +50,7 @@ void    printTimestamp (Print * _logOutput);
 
 uint8_t getLogLevel (void)
 {
-    uint8_t  logLevel;
+    uint8_t logLevel;
 
     if (logLevelStr == DIAG_LOG_SILENT_STR)
     {
@@ -114,33 +114,47 @@ void printLogLevel (Print * _logOutput, int logLevel)
     {
         default:
         case 0:
+        {
             _logOutput->print ("{SILENT } ");
             break;
+        }
 
         case 1:
+        {
             _logOutput->print ("{FATAL  } ");
             break;
+        }
 
         case 2:
+        {
             _logOutput->print ("{ERROR  } ");
             break;
+        }
 
         case 3:
+        {
             _logOutput->print ("{WARNING} ");
             break;
+        }
 
         case 4:
+        {
             _logOutput->print ("{INFORM } ");
             break;
+        }
 
         case 5:
+        {
             _logOutput->print ("{TRACE  } ");
             break;
+        }
 
         case 6:
+        {
             _logOutput->print ("{VERBOSE} ");
             break;
-    }
+        }
+    }   // switch
 }
 
 // *************************************************************************************************************************
@@ -152,33 +166,30 @@ void printPrefix (Print * _logOutput, int logLevel)
 }
 
 // *************************************************************************************************************************
-void printSuffix (Print * _logOutput, int logLevel)
-{
-    _logOutput->print ("");
-}
+void    printSuffix (Print * _logOutput, int logLevel) {_logOutput->print ("");}
 
 // *************************************************************************************************************************
 
-void printTimestamp (Print * _logOutput)
+void    printTimestamp (Print * _logOutput)
 {
     // Division constants
-    const unsigned long         MSECS_IN_SEC    = 1000;
-    const unsigned long         SECS_IN_MIN     = 60;
-    const unsigned long         SECS_IN_HOUR    = 3600;
-    const unsigned long         SECS_IN_DAY     = 86400;
+    const unsigned long MSECS_IN_SEC    = 1000;
+    const unsigned long SECS_IN_MIN     = 60;
+    const unsigned long SECS_IN_HOUR    = 3600;
+    const unsigned long SECS_IN_DAY     = 86400;
 
     // Total time
-    const unsigned long         msecs   =  millis ();
-    const unsigned long         secs    =  msecs / MSECS_IN_SEC;
+    const unsigned long msecs   =  millis ();
+    const unsigned long secs    =  msecs / MSECS_IN_SEC;
 
     // Time in components
-    const unsigned long         MiliSeconds     =  msecs % MSECS_IN_SEC;
-    const unsigned long         Seconds         =  secs  % SECS_IN_MIN;
-    const unsigned long         Minutes         = (secs  / SECS_IN_MIN) % SECS_IN_MIN;
-    const unsigned long         Hours           = (secs  % SECS_IN_DAY) / SECS_IN_HOUR;
+    const unsigned long MiliSeconds     =  msecs % MSECS_IN_SEC;
+    const unsigned long Seconds         =  secs  % SECS_IN_MIN;
+    const unsigned long Minutes         = (secs  / SECS_IN_MIN) % SECS_IN_MIN;
+    const unsigned long Hours           = (secs  % SECS_IN_DAY) / SECS_IN_HOUR;
 
     // Time as string
-    char  timestamp[20];
+    char timestamp[20];
 
     sprintf (timestamp, "%02lu:%02lu:%02lu.%03lu ", Hours, Minutes, Seconds, MiliSeconds);
     _logOutput->print (timestamp);

@@ -18,6 +18,7 @@
 
 // *********************************************************************************************
 #pragma once
+
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
 

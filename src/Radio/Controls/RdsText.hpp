@@ -14,9 +14,9 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
 #include "ControllerMgr.h"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cRdsText : public cControlCommon
@@ -24,9 +24,7 @@ class cRdsText : public cControlCommon
 public:
 
     cRdsText ();
-    virtual ~cRdsText ()
-    {
-    }
+    virtual ~cRdsText ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        poll ();
@@ -44,9 +42,9 @@ private:
     uint32_t CurrentMsgEndTime          = 0;
     uint32_t CurrentMsgLastUpdateTime   = 0;
     String LastMessageSent;
-};
+};      // class cRdsText
 
-extern cRdsText  RdsText;
+extern cRdsText RdsText;
 
 // *********************************************************************************************
 // OEF

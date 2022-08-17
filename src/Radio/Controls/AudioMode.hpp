@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cAudioMode : public cControlCommon
@@ -23,15 +23,13 @@ class cAudioMode : public cControlCommon
 public:
 
     cAudioMode ();
-    virtual ~cAudioMode ()
-    {
-    }
+    virtual ~cAudioMode ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     bool        set (String &value, String &ResponseMessage);
-};
+};      // class cAudioMode
 
-extern cAudioMode  AudioMode;
+extern cAudioMode AudioMode;
 
 // *********************************************************************************************
 // OEF

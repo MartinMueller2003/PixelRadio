@@ -18,14 +18,15 @@
 
 // *********************************************************************************************
 #pragma once
-#include <Arduino.h>
-#include <ArduinoLog.h>
-#include <ArduinoJson.h>
-#include <list>
-#include <map>
-#include <ESPUI.h>
+
 #include "ControllerMessage.h"
 #include "PixelRadio.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <ESPUI.h>
+#include <list>
+#include <map>
 
 class c_ControllerMessageSet
 {
@@ -40,28 +41,19 @@ public:
     void        ActivateMessage (String MsgName);
     void        AddMessage (String MsgText);
     void        AddControls (c_ControllerMessage::MessageElementIds_t * MessageElementIds);
-    bool        empty ()
-    {
-        return Messages.empty ();
-    }
+    bool        empty ()                {return Messages.empty ();}
 
     void        EraseMsg (String MsgTxt);
-    bool        HasMsg (String &MsgTxt)
-    {
-        return Messages.end () != Messages.find (MsgTxt);
-    }
+    bool        HasMsg (String &MsgTxt) {return Messages.end () != Messages.find (MsgTxt);}
 
-    void SetName (String &value)
-    {
-        MsgSetName = value;
-    }
+    void        SetName (String &value) {MsgSetName = value;}
 
     void        UpdateMsgText (String &OriginalMessageText, String &NewMessageText);
     void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
 
 private:
 
-    void ShowMsgDetailsPane (bool value);
+    void        ShowMsgDetailsPane (bool value);
 
     c_ControllerMessage::MessageElementIds_t * MessageElementIds = nullptr;
 
@@ -69,7 +61,7 @@ private:
     String CurrentMsgName;
 
     std::map <String, c_ControllerMessage> Messages;
-   #define nullMessagesIterator static_cast <std::map <String, c_ControllerMessage>::iterator> (nullptr)
+#define nullMessagesIterator static_cast <std::map <String, c_ControllerMessage>::iterator> (nullptr)
     std::map <String, c_ControllerMessage>::iterator MessagesIterator   = nullMessagesIterator;
     SemaphoreHandle_t MessagesSemaphore                                 = NULL;
 };      // c_ControllerMessageSet

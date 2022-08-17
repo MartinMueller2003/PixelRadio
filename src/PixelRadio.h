@@ -17,12 +17,12 @@
  */
 
 // *********************************************************************************************
+#include "config.h"
+#include "ControllerMgr.h"
+#include "ESPUI.h"
+#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <WiFi.h>
-#include "ControllerMgr.h"
-#include "WiFiDriver.hpp"
-#include "config.h"
-#include "ESPUI.h"
 
 // *********************************************************************************************
 // VERSION STRING: Must be updated with each public release.
@@ -69,8 +69,8 @@ const uint8_t   CMD_TIME_MAX_SZ = 4;    // Time Command Arg length is 3 (5-900).
 
 // Controller Flags
 #ifdef OldWay
-const bool      AP_FALLBACK_DEF_FLG     = true;
-const bool      CTRL_DHCP_DEF_FLG       = true;
+    const bool  AP_FALLBACK_DEF_FLG     = true;
+    const bool  CTRL_DHCP_DEF_FLG       = true;
 #endif // def OldWay
 
 // const bool CTRL_SERIAL_DEF_FLG = true;
@@ -108,7 +108,7 @@ const uint32_t  ELAPSED_TMR_TIME        = 1000;         // RDS Elapsed Time Upda
 #define  CRED_FILE_NAME   "/credentials.txt"
 #define  LOGO_GIF_NAME    "/RadioLogo225x75_base64.gif" // Base64 gif file, 225 pixel W x 75 pixel H.
 const uint8_t LITTLEFS_MODE = 1;
-const uint8_t  SD_CARD_MODE = 2;
+const uint8_t SD_CARD_MODE = 2;
 
 // FM Radio: All FM Frequencies are X10.
 const uint16_t  FM_FREQ_DEF_X10 = 887;          // 88.7MHz FM.
@@ -121,7 +121,7 @@ const uint16_t  FM_FREQ_SKP_MHZ = 10;           // 1MHz.
 const float     PA_VOLT_MIN     = 8.1f;         // Minimum allowed voltage for Power Amp, 9V -10%.
 const float     PA_VOLT_MAX     = 9.9f;         // Maximum allowed voltage for Power Amp, 9V + 10%.
 // Free Memory
-const uint32_t  FREE_MEM_UPD_TIME = 1750;       // Update time for Free Memory (on diagTab), in mS.
+const uint32_t FREE_MEM_UPD_TIME = 1750;        // Update time for Free Memory (on diagTab), in mS.
 
 // GPIO Pins:
 // Note: GPIOs 34-39 do not support internal pullups or pulldowns.
@@ -151,13 +151,13 @@ const int       SIGN_ON         = 1;
 #define  HTTP_CMD_END_STR     "http/"                   // This string marks the End of HTTP Controller Command.
 
 
-const uint16_t  HTTP_RESPONSE_MAX_SZ = 225;             // Maximum Chars Allowed in HTTP client response.
+const uint16_t HTTP_RESPONSE_MAX_SZ = 225;              // Maximum Chars Allowed in HTTP client response.
 
 // Measurement:
-const int32_t  MEAS_TIME = 50;                          // Measurement Refresh Time, in mS.
+const int32_t MEAS_TIME = 50;                           // Measurement Refresh Time, in mS.
 
 // Radio
-const uint8_t  RADIO_CAL_RETRY = 3;                     // RF Port Calibration Retry Count (Maximum Retry Count).
+const uint8_t RADIO_CAL_RETRY = 3;                      // RF Port Calibration Retry Count (Maximum Retry Count).
 
 
 // Serial Controller
@@ -176,7 +176,7 @@ const uint16_t  OTA_TIMEOUT     = 3000;                 // Max allowed time to r
 // Volts:
 const float     MIN_VOLTS               = 4.5f;         // Minimum Power Supply volts.
 const float     VOLTS_HYSTERESIS        = 0.15f;        // Voltage Hysterisis.
-const uint16_t  VOLTS_UPD_TIME          = 3750;         // Power Supply Volts GUI Update time (on diagTab), in mS.
+const uint16_t VOLTS_UPD_TIME           = 3750;         // Power Supply Volts GUI Update time (on diagTab), in mS.
 // const uint32_t CLIENT_TIMEOUT = 500;   // Webserver Client Timeout, in mS.
 
 // Web Server
@@ -204,81 +204,81 @@ int16_t getCommandArg (
     uint8_t     maxSize);
 // uint8_t getControllerStatus(void);
 #ifdef OldWay
-bool gpioCmd (
-    String              payloadStr,
-    ControllerTypeId    controller,
-    uint8_t             pin);
-bool    logCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-bool    rebootCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-bool    startCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-bool    stopCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
+    bool        gpioCmd (
+        String                  payloadStr,
+        ControllerTypeId        controller,
+        uint8_t                 pin);
+    bool        logCmd (
+        String                  payloadStr,
+        ControllerTypeId        controller);
+    bool        rebootCmd (
+        String                  payloadStr,
+        ControllerTypeId        controller);
+    bool        startCmd (
+        String                  payloadStr,
+        ControllerTypeId        controller);
+    bool        stopCmd (
+        String                  payloadStr,
+        ControllerTypeId        controller);
 #endif // def OldWay
 
 // ESPUI (WebGUI) Prototypes
-void    buildGUI (void);
+void            buildGUI (void);
 #ifdef OldWay
-void    displayActiveController (uint8_t controller);
-void    displayRdsText (void);
+    void        displayActiveController (uint8_t controller);
+    void        displayRdsText (void);
 #endif // def OldWay
-void    displaySaveWarning (void);
-void    initCustomCss (void);
-void    startGUI (void);
-void    updateUiFreeMemory (void);
-bool    updateUiGpioMsg (gpio_num_t pin, String &ControllerName, bool PinState);
-void    updateUiIpaddress (String ipStr);
+void            displaySaveWarning (void);
+void            initCustomCss (void);
+void            startGUI (void);
+void            updateUiFreeMemory (void);
+bool            updateUiGpioMsg (gpio_num_t pin, String &ControllerName, bool PinState);
+void            updateUiIpaddress (String ipStr);
 #ifdef OldWay
-void    updateUiFrequency (int Freq10x);
+    void        updateUiFrequency (int Freq10x);
 #endif // def OldWay
-void    updateUiDiagTimer (void);
-void    updateUiVolts (void);
+void            updateUiDiagTimer (void);
+void            updateUiVolts (void);
 
 // ESPUI Callbacks
-void    apBootCallback (
+void            apBootCallback (
     Control     * sender,
     int         type);
-void    apFallBkCallback (
-    Control     * sender,
-    int         type);
-#ifdef OldWay
-void audioCallback (
-    Control     * sender,
-    int         type);
-#endif // def OldWay
-void backupCallback (
+void            apFallBkCallback (
     Control     * sender,
     int         type);
 #ifdef OldWay
-void    dhcpCallback (
-    Control     * sender,
-    int         type);
-void    controllerCallback (
-    Control     * sender,
-    int         type);
+    void        audioCallback (
+        Control * sender,
+        int     type);
 #endif // def OldWay
-void    diagBootCallback (
+void            backupCallback (
     Control     * sender,
     int         type);
-void    diagLogCallback (
+#ifdef OldWay
+    void        dhcpCallback (
+        Control * sender,
+        int     type);
+    void        controllerCallback (
+        Control * sender,
+        int     type);
+#endif // def OldWay
+void            diagBootCallback (
     Control     * sender,
     int         type);
-void    gainAdjustCallback (
+void            diagLogCallback (
     Control     * sender,
     int         type);
-void    gpioCallback (
+void            gainAdjustCallback (
     Control     * sender,
     int         type);
-void    saveSettingsCallback (
+void            gpioCallback (
     Control     * sender,
     int         type);
-void    setLoginCallback (
+void            saveSettingsCallback (
+    Control     * sender,
+    int         type);
+void            setLoginCallback (
     Control     * sender,
     int         type);
 
@@ -289,7 +289,7 @@ const String    makeWebGif (
     uint16_t    width,
     uint16_t    height,
     String      backGroundColorStr);
-void littlefsInit (void);
+void    littlefsInit (void);
 
 
 // JSON Prototypes
@@ -324,30 +324,30 @@ void            otaInit (String &mdnsname);
 
 // RDS Prototypes
 #ifdef OldWay
-void    processRDS (void);
-void    resetControllerRdsValues (void);
+    void        processRDS (void);
+    void        resetControllerRdsValues (void);
 #endif // def OldWay
 
 // Serial Log
-uint8_t getLogLevel (void);
-void    initSerialLog (bool verbose);
+uint8_t         getLogLevel (void);
+void            initSerialLog (bool verbose);
 
 // webServer Prototypes
-void    processWebClient (void);
+void            processWebClient (void);
 
 #ifdef OldWay
-String  urlDecode (String urlStr);
-uint8_t urlDecodeHex (char c);
+    String      urlDecode (String urlStr);
+    uint8_t     urlDecodeHex (char c);
 #endif // def OldWay
 
 template <typename J, typename N>
-bool ReadFromJSON (float &OutValue, J &Json, N Name)
+bool            ReadFromJSON (float &OutValue, J &Json, N Name)
 {
-    bool  HasBeenModified = false;
+    bool HasBeenModified = false;
 
     if (true == Json.containsKey (Name))
     {
-        float  temp = Json[Name];
+        float temp = Json[Name];
 
         if (fabs (temp - OutValue) > 0.000005F)
         {
@@ -361,11 +361,11 @@ bool ReadFromJSON (float &OutValue, J &Json, N Name)
 template <typename T, typename J, typename N>
 bool ReadFromJSON (T &OutValue, J &Json, N Name)
 {
-    bool  HasBeenModified = false;
+    bool HasBeenModified = false;
 
     if (true == Json.containsKey (Name))
     {
-        T  temp = Json[Name];
+        T temp = Json[Name];
 
         if (temp != OutValue)
         {

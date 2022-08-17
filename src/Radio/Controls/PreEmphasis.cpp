@@ -13,14 +13,14 @@
  */
 
 // *********************************************************************************************
+#include "memdebug.h"
+#include "PreEmphasis.hpp"
+#include "PtyCode.hpp"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
-#include "PreEmphasis.hpp"
-#include "PtyCode.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 #define PRE_EMPH_USA_STR    "North America (75uS)"      // North America / Japan.
 #define PRE_EMPH_EUR_STR    "Europe (50uS)"             // Europe, Australia, China.
@@ -37,7 +37,7 @@ static std::map <String, uint8_t> MapOfRegions
     },
 };
 
-static const PROGMEM String     PRE_EMPH_DEF_STR        = PRE_EMPH_USA_STR;
+static const PROGMEM String PRE_EMPH_DEF_STR            = PRE_EMPH_USA_STR;
 static const PROGMEM uint8_t    PRE_EMPH_DEF_VAL        = uint8_t (PRE_EMPH_USA_VAL);
 static const PROGMEM String     RADIO_PRE_EMPH_STR      = "RADIO_PRE_EMPH_STR";
 static const PROGMEM String     PRE_EMPH_STR            = "FM PRE-EMPHASIS";
@@ -63,8 +63,7 @@ void cPreEmphasis::AddControls (uint16_t value, ControlColor color)
 
     for (auto &CurrentOption : MapOfRegions)
     {
-        ESPUI.addControl (
-            ControlType::Option,
+        ESPUI.addControl (ControlType::Option,
             CurrentOption.first.c_str (),
             CurrentOption.first,
             ControlColor::None,
@@ -85,7 +84,7 @@ bool cPreEmphasis::set (String &value, String &ResponseMessage)
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -128,7 +127,7 @@ bool cPreEmphasis::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cPreEmphasis  PreEmphasis;
+cPreEmphasis PreEmphasis;
 
 // *********************************************************************************************
 // OEF

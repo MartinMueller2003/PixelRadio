@@ -14,23 +14,18 @@
  */
 
 // *********************************************************************************************
+#include "language.h"
+#include "PixelRadio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "PixelRadio.h"
-#include "language.h"
 
 // *********************************************************************************************
 class cRadio
 {
 public:
 
-    cRadio ()
-    {
-    }
-
-    virtual ~cRadio ()
-    {
-    }
+    cRadio ()    {}
+    virtual ~cRadio ()    {}
 
     void        AddAdjControls (uint16_t Tab, ControlColor color);
     void        AddDiagControls (uint16_t Tab, ControlColor color);
@@ -45,10 +40,10 @@ public:
 
 private:
 
-    void updateOnAirSign (void);
-};
+    void        updateOnAirSign (void);
+};      // class cRadio
 
-extern cRadio  Radio;
+extern cRadio Radio;
 
 // *********************************************************************************************
 // OEF

@@ -19,12 +19,12 @@
 // *********************************************************************************************
 #pragma once
 
+#include "ControllerFPPDSequence.h"
+#include "Language.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
-#include <map>
-#include "ControllerFPPDSequence.h"
 #include <ESPUI.h>
-#include "Language.h"
+#include <map>
 
 class c_ControllerFPPDSequences
 {
@@ -43,14 +43,11 @@ public:
     void        CbButtonUpdate (Control * sender, int type);
     void        CbChoiceList (Control * sender, int type);
     void        CbTextChange (Control * sender, int type);
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
-    {
-        ControllerMessages.GetNextRdsMessage (Response);
-    }
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response) {ControllerMessages.GetNextRdsMessage (Response);}
 
 private:
 
-    void Activate ();
+    void        Activate ();
 
     String SelectedSequenceName = N_default;
 

@@ -12,9 +12,10 @@
    Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
    This Code was formatted with the uncrustify extension.
  */
+#pragma once
 
 // *********************************************************************************************
-#pragma once
+#include <Arduino.h>
 
 // *********************************************************************************************
 
@@ -23,9 +24,9 @@ extern bool     newGpio19Flg;
 extern bool     newGpio23Flg;
 extern bool     newGpio33Flg;
 extern bool     rebootFlg;
-extern uint8_t  usbVol;
+extern uint8_t usbVol;
 
-extern float    vbatVolts;
+extern float vbatVolts;
 
 // GUI Strings
 extern String   gpio19BootStr;

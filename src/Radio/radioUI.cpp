@@ -12,12 +12,12 @@
    This Code was formatted with the uncrustify extension.
  */
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "language.h"
+#include "memdebug.h"
 #include "PixelRadio.h"
 #include "radio.hpp"
-#include "memdebug.h"
-#include "language.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
 #include "AnalogAudioGain.hpp"
 #include "AudioGain.hpp"
@@ -28,13 +28,13 @@
 #include "FrequencyAdjust.hpp"
 #include "PeakAudio.hpp"
 #include "PiCode.hpp"
+#include "PreEmphasis.hpp"
 #include "ProgramServiceName.hpp"
 #include "PtyCode.hpp"
-#include "RdsText.hpp"
 #include "RdsReset.hpp"
+#include "RdsText.hpp"
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
-#include "PreEmphasis.hpp"
 
 
 // *********************************************************************************************
@@ -67,7 +67,7 @@ void cRadio::AddHomeControls (uint16_t homeTab, ControlColor color)
 {
     // DEBUG_START;
 
-    String  tempStr;
+    String tempStr;
 
     RfCarrier.AddHomeControls (homeTab, color);
     FrequencyAdjust.AddHomeControls (homeTab, color);
@@ -88,22 +88,22 @@ void cRadio::AddRadioControls (uint16_t radioTab, ControlColor color)
 
     ESPUI.addControl (ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
     AudioMode.AddControls (radioTab, color);
-    #ifdef ADV_RADIO_FEATURES
-    PreEmphasis.AddControls (radioTab, color);
-    #endif // ifdef ADV_RADIO_FEATURES
+#ifdef ADV_RADIO_FEATURES
+        PreEmphasis.AddControls (radioTab, color);
+#endif // ifdef ADV_RADIO_FEATURES
 
     ESPUI.addControl (ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString, ControlColor::None, radioTab);
     AnalogAudioGain.AddControls (radioTab, color);
     AudioInputImpedance.AddControls (radioTab, color);
-    #ifdef ADV_RADIO_FEATURES
-    DigitalAudioGain.AddControls (radioTab, color);
-    #endif // ifdef ADV_RADIO_FEATURES
+#ifdef ADV_RADIO_FEATURES
+        DigitalAudioGain.AddControls (radioTab, color);
+#endif // ifdef ADV_RADIO_FEATURES
 
     ESPUI.addControl (ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString, ControlColor::None, radioTab);
     PeakAudio.AddControls (radioTab, color);
-    #ifdef ADV_RADIO_FEATURES
-    AudioGain.AddControls (radioTab, color);
-    #endif // ifdef ADV_RADIO_FEATURES
+#ifdef ADV_RADIO_FEATURES
+        AudioGain.AddControls (radioTab, color);
+#endif // ifdef ADV_RADIO_FEATURES
 
     // DEBUG_END;
 }

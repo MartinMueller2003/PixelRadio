@@ -21,7 +21,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -29,13 +29,11 @@
 
 // *********************************************************************************************
 c_ControllerLOCAL::c_ControllerLOCAL () : c_ControllerCommon ("LOCAL", c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
-{
-}       // c_ControllerLOCAL
+{}      // c_ControllerLOCAL
 
 // *********************************************************************************************
 c_ControllerLOCAL::~c_ControllerLOCAL ()
-{
-}
+{}
 
 // *********************************************************************************************
 void c_ControllerLOCAL::AddControls (uint16_t ctrlTab)

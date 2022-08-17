@@ -14,8 +14,8 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
 #include "ControlCommon.hpp"
+#include <Arduino.h>
 
 // *********************************************************************************************
 class cPreEmphasis : public cControlCommon
@@ -23,15 +23,13 @@ class cPreEmphasis : public cControlCommon
 public:
 
     cPreEmphasis ();
-    virtual ~cPreEmphasis ()
-    {
-    }
+    virtual ~cPreEmphasis ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     bool        set (String &value, String &Response);
-};
+};      // class cPreEmphasis
 
-extern cPreEmphasis  PreEmphasis;
+extern cPreEmphasis PreEmphasis;
 
 // *********************************************************************************************
 // OEF

@@ -42,13 +42,13 @@
 
 // *********************************************************************************************
 
+#include "config.h"
+#include "PixelRadio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <LittleFS.h>
-#include <SPI.h>
 #include <SD.h>
-#include "config.h"
-#include "PixelRadio.h"
+#include <SPI.h>
 
 // *********************************************************************************************
 // instalLogoImageFile(): Check to see if a logo image file needs to be copied to the ESP32
@@ -57,10 +57,10 @@
 //
 void instalLogoImageFile (void)
 {
-    char  logBuff[60 + sizeof (LOGO_GIF_NAME)];
+    char logBuff[60 + sizeof (LOGO_GIF_NAME)];
     int16_t     sdcFileSize;
     int16_t     lfsFileSize;
-    SPIClass    SPI2 (HSPI);
+    SPIClass SPI2 (HSPI);
 
     if (LittleFS.exists (LOGO_GIF_NAME))
     {
@@ -86,7 +86,7 @@ void instalLogoImageFile (void)
 
         return;         // No SD Card, nothing to do, exit.
     }
-    File  sdcImageFile; // SD Card Image File.
+    File sdcImageFile;  // SD Card Image File.
 
     sdcImageFile        = SD.open (LOGO_GIF_NAME, FILE_READ);
     sdcFileSize         = sdcImageFile.size ();
@@ -112,13 +112,13 @@ void instalLogoImageFile (void)
     Log.infoln (logBuff);
 
     // lfsImageFile.close();
-    File  lfsImageFile; // LittleFS Image File.
+    File lfsImageFile;  // LittleFS Image File.
 
     lfsImageFile = LittleFS.open (LOGO_GIF_NAME, FILE_WRITE);
 
     while (sdcImageFile.available ())
     {
-        char  data = sdcImageFile.read ();
+        char data = sdcImageFile.read ();
         lfsImageFile.print (data);
     }
     lfsImageFile.close ();
@@ -152,7 +152,7 @@ void instalLogoImageFile (void)
 // littlefsInit(): Initialize LittleFS file system.
 void littlefsInit (void)
 {
-    char  logBuff[100];
+    char logBuff[100];
 
     unsigned long       filesz          = 0;
     const char          * content1      = "  This text was written to LittleFS because the Filesystem is missing\r\n";
@@ -173,7 +173,7 @@ void littlefsInit (void)
         sprintf (logBuff, "-> Total Free: %u bytes", LittleFS.totalBytes () - LittleFS.usedBytes ());
         Log.verboseln (logBuff);
 
-        File  file1 = LittleFS.open ("/test.txt", FILE_READ);
+        File file1 = LittleFS.open ("/test.txt", FILE_READ);
 
         if (!file1)
         {
@@ -222,7 +222,7 @@ void littlefsInit (void)
         }
         // Let's read the test.txt file from LittleFS.
         // Data files like this one should be uploaded to the Filesystem Image, see comment section at top of file.
-        File  file2 = LittleFS.open ("/test.txt", FILE_READ);
+        File file2 = LittleFS.open ("/test.txt", FILE_READ);
 
         if (!file2)
         {
@@ -251,12 +251,12 @@ void littlefsInit (void)
 // makeWebGif(): Get base64 GIF from file system (LittleFS) and save in String encoded for HTML.
 const String makeWebGif (String fileName, uint16_t width, uint16_t height, String backGroundColorStr)
 {
-    uint16_t    fileSz = 0;
-    char        logBuff[90];
-    String      imageStr;
+    uint16_t fileSz = 0;
+    char logBuff[90];
+    String imageStr;
 
     imageStr.clear ();
-    File  imageFile = LittleFS.open (fileName, FILE_READ);
+    File imageFile = LittleFS.open (fileName, FILE_READ);
 
     if (!imageFile)
     {

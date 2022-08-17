@@ -1,5 +1,5 @@
 /*
-   File: WPA.cpp
+   File: HostnameCtrl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -13,46 +13,52 @@
  */
 
 // *********************************************************************************************
+#include "HostnameCtrl.hpp"
 #include "memdebug.h"
-#include "PtyCode.hpp"
-#include "QN8027RadioApi.hpp"
-#include "RfCarrier.hpp"
-#include "WPA.hpp"
+#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-const PROGMEM String WIFI_PASS_HIDE_STR         = "{PASSWORD HIDDEN}";
-static const PROGMEM String WIFI_WPA_KEY_STR    = "WIFI WPA KEY";
-static const PROGMEM uint32_t PASSPHRASE_MAX_SZ = 48;
+static const PROGMEM String     WIFI_WEBSRV_NAME_STR    = "WEBSERVER NAME";
+static const PROGMEM String     STA_NAME_DEF_STR        = "PixelRadio";
+static const PROGMEM uint32_t STA_NAME_MAX_SZ           = 18;
 
 // *********************************************************************************************
-cWPA::cWPA () : cControlCommon ("WIFI_WPA_KEY_STR")
+cHostnameCtrl::cHostnameCtrl () : cControlCommon ("STA_NAME_STR")
 {
     // _ DEBUG_START;
-    DataValueStr.reserve (PASSPHRASE_MAX_SZ + 2);
-    DataValueStr = WiFiDriver.GetDefaultWpaKey ();
+
+    DataValueStr.reserve (STA_NAME_MAX_SZ + 2);
+    DataValueStr = STA_NAME_DEF_STR;
+
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cWPA::AddControls (uint16_t value, ControlColor color)
+cHostnameCtrl::~cHostnameCtrl ()
+{
+    // _ DEBUG_START;
+    // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+void cHostnameCtrl::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
     cControlCommon::AddControls (value, ControlType::Text, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_WPA_KEY_STR.c_str ());
-    ESPUI.updateControlValue (ControlId, WIFI_PASS_HIDE_STR);
-    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (PASSPHRASE_MAX_SZ), ControlColor::None, ControlId);
+    ESPUI.updateControlLabel (ControlId, WIFI_WEBSRV_NAME_STR.c_str ());
+    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (STA_NAME_MAX_SZ), ControlColor::None, ControlId);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cWPA::ResetToDefaults ()
+void cHostnameCtrl::ResetToDefaults ()
 {
     // DEBUG_START;
 
-    String      value = WiFiDriver.GetDefaultWpaKey ();
+    String      value = STA_NAME_DEF_STR;
     String      dummy;
 
     set (value, dummy);
@@ -61,9 +67,10 @@ void cWPA::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cWPA::set (String &value, String &ResponseMessage)
+bool cHostnameCtrl::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
+
     // DEBUG_V(String("       value: ") + value);
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
 
@@ -74,9 +81,9 @@ bool cWPA::set (String &value, String &ResponseMessage)
 
     do  // once
     {
-        if (value.length () > PASSPHRASE_MAX_SZ)
+        if (value.length () > STA_NAME_MAX_SZ)
         {
-            ResponseMessage     = String (F ("New Passphrase Value is too long: '"))  + value + String (F ("'"));
+            ResponseMessage     = String (F ("New Value is too long: \""))  + value + String (F ("\""));
             Response            = false;
             break;
         }
@@ -84,13 +91,14 @@ bool cWPA::set (String &value, String &ResponseMessage)
         if (value.equals (DataValueStr))
         {
             // DEBUG_V("Name did not change");
+            Log.infoln (String (F ("WiFi Hostname Unchanged")).c_str ());
             break;
         }
         DataValueStr = value;
-        ESPUI.updateControlValue (ControlId, WIFI_PASS_HIDE_STR);
-        Log.infoln ((String (F ("WiFi WPA ")) + ResponseMessage).c_str ());
 
+        ESPUI.updateControlValue (ControlId, DataValueStr);
         WiFiDriver.WiFiReset ();
+        Log.infoln ((String (F ("WiFi Hostname Set to: ")) + DataValueStr).c_str ());
 
         displaySaveWarning ();
     } while (false);
@@ -100,7 +108,7 @@ bool cWPA::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cWPA WPA;
+cHostnameCtrl HostnameCtrl;
 
 // *********************************************************************************************
 // OEF

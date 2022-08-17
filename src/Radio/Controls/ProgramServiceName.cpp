@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 #include "ProgramServiceName.hpp"
 #include "PtyCode.hpp"
-#include "RfCarrier.hpp"
 #include "QN8027RadioApi.hpp"
-#include "memdebug.h"
+#include "RfCarrier.hpp"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
 static const PROGMEM String     RDS_PSN_DEF_STR         = "PixeyFM";
 static const PROGMEM String     RDS_PROG_SERV_STR       = "RDS_PROG_SERV_STR";
@@ -65,7 +65,7 @@ bool cProgramServiceName::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
@@ -113,7 +113,7 @@ bool cProgramServiceName::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cProgramServiceName  ProgramServiceName;
+cProgramServiceName ProgramServiceName;
 
 // *********************************************************************************************
 // OEF

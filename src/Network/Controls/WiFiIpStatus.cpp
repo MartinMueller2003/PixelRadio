@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 #include "WiFiDriver.hpp"
 #include "WiFiIpStatus.hpp"
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
 
-static const PROGMEM String  IP_ADDR_STATUS_STR = "IP ADDRESS";
+static const PROGMEM String IP_ADDR_STATUS_STR = "IP ADDRESS";
 
 // *********************************************************************************************
 cWiFiIpStatus::cWiFiIpStatus () : cControlCommon (emptyString)
@@ -49,7 +49,7 @@ void cWiFiIpStatus::set ()
 {
     // DEBUG_START;
 
-    ESPUI.print (ControlId, WiFiDriver.getIpAddress ().toString());
+    ESPUI.print (ControlId, WiFiDriver.getIpAddress ().toString ());
 
     // DEBUG_END;
 }

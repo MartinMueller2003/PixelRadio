@@ -22,7 +22,7 @@
 #include <ArduinoLog.h>
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -30,12 +30,19 @@
 
 // *********************************************************************************************
 c_ControllerHTTP::c_ControllerHTTP () : c_ControllerCommon ("HTTP", c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)
-{
-}       // c_ControllerHTTP
+{}      // c_ControllerHTTP
 
 // *********************************************************************************************
 c_ControllerHTTP::~c_ControllerHTTP ()
+{}
+
+// *********************************************************************************************
+void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
 {
+    if (ControllerEnabled)
+    {
+        Messages.GetNextRdsMessage (Response);
+    }
 }
 
 // *********************************************************************************************

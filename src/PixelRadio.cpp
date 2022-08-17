@@ -54,21 +54,21 @@
  */
 
 // ************************************************************************************************
-#include <Arduino.h>
-#include <ArduinoOTA.h>
-#include <ArduinoLog.h>
-#include <WiFi.h>
 #include "config.h"
 #include "credentials.h"
-#include "PixelRadio.h"
-#include "language.h"
-#include "Radio.hpp"
 #include "ControllerMgr.h"
-#include "WiFiDriver.hpp"
-#include "radio.hpp"
-#include "PeakAudio.hpp"
-#include "TestTone.hpp"
+#include "language.h"
 #include "memdebug.h"
+#include "PeakAudio.hpp"
+#include "PixelRadio.h"
+#include "radio.hpp"
+#include "Radio.hpp"
+#include "TestTone.hpp"
+#include "WiFiDriver.hpp"
+#include <Arduino.h>
+#include <ArduinoLog.h>
+#include <ArduinoOTA.h>
+#include <WiFi.h>
 
 // ************************************************************************************************
 // Global Section
@@ -90,16 +90,16 @@ String  gpio33CtrlStr   = "";           // GPIO-33 State if Changed by Serial/MQ
 
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
-uint8_t         usbVol = (atoi (USB_VOL_DEF_STR));      // Control. Unused, for future expansion.
+uint8_t usbVol = (atoi (USB_VOL_DEF_STR));      // Control. Unused, for future expansion.
 
-uint32_t        baudRate = ESP_BAUD_DEF;                // Control.
+uint32_t baudRate = ESP_BAUD_DEF;               // Control.
 
-String          gpio19BootStr   = GPIO_DEF_STR;         // Control.
-String          gpio23BootStr   = GPIO_DEF_STR;         // Control.
-String          gpio33BootStr   = GPIO_DEF_STR;         // Control.
-String          logLevelStr     = DIAG_LOG_DEF_STR;     // Control, Serial Log Level.
-String          userNameStr     = LOGIN_USER_NAME_STR;  // Control.
-String          userPassStr     = LOGIN_USER_PW_STR;    // Control.
+String  gpio19BootStr   = GPIO_DEF_STR;         // Control.
+String  gpio23BootStr   = GPIO_DEF_STR;         // Control.
+String  gpio33BootStr   = GPIO_DEF_STR;         // Control.
+String  logLevelStr     = DIAG_LOG_DEF_STR;     // Control, Serial Log Level.
+String  userNameStr     = LOGIN_USER_NAME_STR;  // Control.
+String  userPassStr     = LOGIN_USER_PW_STR;    // Control.
 
 // *********************************************************************************************
 
@@ -130,8 +130,7 @@ void setup ()
     // Serial1.println("COM1 NOW ALIVE");
 
     while (!Serial && !Serial.available ())
-    {
-    }   // Wait for ESP32 Device Serial Port to be available.
+    {}  // Wait for ESP32 Device Serial Port to be available.
     Serial.println ("\r\n\r\n");
     Serial.flush ();
 
@@ -165,15 +164,15 @@ void setup ()
     // Restore System Settings from File System.
     restoreConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);
 
-    #ifdef OldWay
-    resetControllerRdsValues ();                        // Must be called after restoreConfiguration().
+#ifdef OldWay
+        resetControllerRdsValues ();                    // Must be called after restoreConfiguration().
 
-    setGpioBootPins ();                                 // Must be called after restoreConfiguration().
+        setGpioBootPins ();                             // Must be called after restoreConfiguration().
 
         digitalWrite (  MUX_PIN,        TONE_ON);       // Turn off Music (Mux) LED.
 
         digitalWrite (  MUX_PIN,        TONE_OFF);      // Turn on Music (Mux) LED, restore Line-In to external audio.
-    #endif // def OldWay
+#endif // def OldWay
 
     // Startup the I2C Devices).
     i2cScanner ();      // Scan the i2c bus and report all devices.
@@ -206,24 +205,24 @@ void loop ()
     Radio.Poll ();
     PeakAudio.poll ();
 
-    #ifdef OldWay
-    processMeasurements ();     // Measure the two system voltages.
+#ifdef OldWay
+        processMeasurements ();         // Measure the two system voltages.
 
-    updateUiFreeMemory ();      // Update the Memory value on UI diagTab.
-    updateUiDiagTimer ();       // Upddate the Elapsed Timer on UI diagTab.
-    updateUiVolts ();           // Update the two system voltages on UI diagTab.
+        updateUiFreeMemory ();          // Update the Memory value on UI diagTab.
+        updateUiDiagTimer ();           // Upddate the Elapsed Timer on UI diagTab.
+        updateUiVolts ();               // Update the two system voltages on UI diagTab.
 
-    updateRadioSettings ();     // Update the QN8027 device registers.
-    updateGpioBootPins ();      // Update the User Programmable GPIO Pins.
-    updateOnAirSign ();         // Update the Optional "On Air" 12V LED Sign.
+        updateRadioSettings ();         // Update the QN8027 device registers.
+        updateGpioBootPins ();          // Update the User Programmable GPIO Pins.
+        updateOnAirSign ();             // Update the Optional "On Air" 12V LED Sign.
 
-    rebootSystem ();            // Check to see if Reboot has been requested.
+        rebootSystem ();                // Check to see if Reboot has been requested.
 
-    # ifdef HTTP_ENB
-    processWebClient ();        // Process Any Available HTTP RDS commands.
-    # endif // ifdef HTTP_ENB
+    #    ifdef HTTP_ENB
+            processWebClient ();        // Process Any Available HTTP RDS commands.
+    #    endif // ifdef HTTP_ENB
 
-    #endif // def OldWay
+#endif // def OldWay
     // _ DEBUG_END;
 }
 

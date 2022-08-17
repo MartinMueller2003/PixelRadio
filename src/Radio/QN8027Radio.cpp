@@ -128,9 +128,9 @@
    value of onOffCtrl variable can be:  ON or OFF.
  */
 
+#include "QN8027Radio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "QN8027Radio.h"
 
 // #define DEBUG_MODE
 
@@ -154,7 +154,7 @@ void QN8027Radio::setFrequency (float frequency)
     uint8_t     frequencyH      = frequencyB >> 8;
 
     freqH = frequencyH;
-    uint8_t  frequencyL = frequencyB & 0XFF;
+    uint8_t frequencyL = frequencyB & 0XFF;
 
     // freqL = frequencyL;
         write1Byte (    SYSTEM_REG,     frequencyH);
@@ -175,7 +175,7 @@ float QN8027Radio::getFrequency ()
 // Mod by TEB, Dec-30-2021
 uint8_t QN8027Radio::read1Byte (uint8_t regAddr)
 {
-    uint8_t  readData = 0xff;
+    uint8_t readData = 0xff;
 
     //    noInterrupts();  // Mod by TEB, Feb-01-2022
     Wire.beginTransmission (QN8027_I2C_ADDR);
@@ -236,12 +236,9 @@ void QN8027Radio::sendRDS (char By0, char By1, char By2, char By3, char By4, cha
 /*
    Resets all registers(settings) to default.
  */
-void QN8027Radio::updateSYSTEM_REG ()
-{
-    write1Byte (SYSTEM_REG, (radioStatus | monoAudio | muteAudio | rdsReady | freqH));
-}
+void    QN8027Radio::updateSYSTEM_REG () {write1Byte (SYSTEM_REG, (radioStatus | monoAudio | muteAudio | rdsReady | freqH));}
 
-void QN8027Radio::reset ()
+void    QN8027Radio::reset ()
 {
     write1Byte (SYSTEM_REG, 0x80);
     delayMicroseconds (100);
@@ -264,9 +261,13 @@ void QN8027Radio::reCalibrate ()
 void QN8027Radio::mute (uint8_t onOffCtrl)      // also should set PAPower to 20
 {
     if (onOffCtrl == ON)
+    {
         muteAudio = 8;
+    }
     else if (onOffCtrl == OFF)
+    {
         muteAudio = 0;
+    }
     updateSYSTEM_REG ();
     // write1Byte(SYSTEM_REG,(radioStatus | monoAudio | muteAudio | rdsReady | freqH));
 }
@@ -276,9 +277,13 @@ void QN8027Radio::mute (uint8_t onOffCtrl)      // also should set PAPower to 20
 void QN8027Radio::MonoAudio (uint8_t onOffCtrl)
 {
     if (onOffCtrl == ON)
+    {
         monoAudio = 16;
+    }
     else if (onOffCtrl == OFF)
+    {
         monoAudio = 0;
+    }
     updateSYSTEM_REG ();
 
     // write1Byte(SYSTEM_REG,(radioStatus | monoAudio | muteAudio | rdsReady | freqH));
@@ -289,22 +294,23 @@ void QN8027Radio::MonoAudio (uint8_t onOffCtrl)
 void QN8027Radio::Switch (uint8_t onOffCtrl)
 {
     if (onOffCtrl == ON)
+    {
         radioStatus = 32;
+    }
     else if (onOffCtrl == OFF)
+    {
         radioStatus = 0;
+    }
     updateSYSTEM_REG ();
     // write1Byte(SYSTEM_REG,(radioStatus | monoAudio | muteAudio | rdsReady | freqH));
 }
 
 // ---------------------------GPLT_REG----------------------------------------------------------
-void QN8027Radio::updateGPLT_REG ()
-{
-    write1Byte (GPLT_REG, (preEmphTime | privateMode | PAAutoOffTime | TxPilotFreqDeviation));
-}
+void    QN8027Radio::updateGPLT_REG () {write1Byte (GPLT_REG, (preEmphTime | privateMode | PAAutoOffTime | TxPilotFreqDeviation));}
 
 // I really dont know why is this option there. it gave mono audio with narrow CarrierWave bandwidth in my tests.
 // you can provide ON or OFF in parameter to this function.
-void QN8027Radio::scrambleAudio (uint8_t onOffCtrl)
+void    QN8027Radio::scrambleAudio (uint8_t onOffCtrl)
 {
     if (onOffCtrl == ON)
     {
@@ -350,23 +356,17 @@ void QN8027Radio::setTxPilotFreqDeviation (uint8_t PGain)
 
 // Change the PI Code. Be sure to use a valid PI Code.
 // See https://picodes.nrscstandards.org/ and https://www.fmsystems-inc.com/rds-pi-code-formula-station-callsigns/
-void QN8027Radio::setPiCode (uint16_t piCodeVal)
-{
-    piCode = piCodeVal;
-}
+void    QN8027Radio::setPiCode (uint16_t piCodeVal)     {piCode = piCodeVal;}
 
 // Change the PTY Code. Be sure to use a valid PTY Code.
-void QN8027Radio::setPtyCode (uint8_t ptyCodeVal)
-{
-    ptyCode = ptyCodeVal;
-}
+void    QN8027Radio::setPtyCode (uint8_t ptyCodeVal)    {ptyCode = ptyCodeVal;}
 
 /*
    ON  : RF power Amplifier will be off automatically after 60 second of no audio input at pin 6 and pin 7 (which is default)
    OFF : PA will never off. No effect of audio input silence.
    NOTE: Sending RDS data and/or using clearAudioPeak() will prevent automatic shut off.
  */
-void QN8027Radio::radioNoAudioAutoOFF (uint8_t onOffCtrl)
+void    QN8027Radio::radioNoAudioAutoOFF (uint8_t onOffCtrl)
 {
     if (onOffCtrl == ON)
     {
@@ -381,10 +381,7 @@ void QN8027Radio::radioNoAudioAutoOFF (uint8_t onOffCtrl)
 }
 
 // ------------------------XTL_REG-------------------------------------------------------------
-void QN8027Radio::updateXTL_REG ()
-{
-    write1Byte (XTL_REG, (clockSource | CrystalCurrentuA));
-}
+void    QN8027Radio::updateXTL_REG () {write1Byte (XTL_REG, (clockSource | CrystalCurrentuA));}
 
 /*
    Type::meaning
@@ -393,7 +390,7 @@ void QN8027Radio::updateXTL_REG ()
    2	:: single end sin wave          between pin1 and ground.
    3	:: differential sin wave        between pin1 and pin2
  */
-void QN8027Radio::setClockSource (uint8_t Type)
+void    QN8027Radio::setClockSource (uint8_t Type)
 {
     clockSource = Type << 6;
     updateXTL_REG ();
@@ -414,10 +411,7 @@ void QN8027Radio::setCrystalCurrent (float percentOfMax)        // current betwe
 }
 
 // -----------------------VGA_REG--------------------------------------------------------------
-void QN8027Radio::updateVGA_REG ()
-{
-    write1Byte (VGA_REG, (crystalFreqMHz | TxInputBufferGain | TxDigitalGain | LRInputImpdKOhm));
-}
+void    QN8027Radio::updateVGA_REG () {write1Byte (VGA_REG, (crystalFreqMHz | TxInputBufferGain | TxDigitalGain | LRInputImpdKOhm));}
 
 /*
    if clock input source is XTAL then you can set which XTAL was used.
@@ -425,7 +419,7 @@ void QN8027Radio::updateVGA_REG ()
    12  :: 12 MHz
    24  :: 24 MHz (default)
  */
-void QN8027Radio::setCrystalFreq (uint8_t Freq)
+void    QN8027Radio::setCrystalFreq (uint8_t Freq)
 {
     if (Freq == 24)
     {
@@ -447,7 +441,9 @@ void QN8027Radio::setCrystalFreq (uint8_t Freq)
 void QN8027Radio::setTxInputBufferGain (uint8_t IBGain)
 {
     if (IBGain > 5)
+    {
         IBGain = 5;
+    }
     TxInputBufferGain = IBGain << 4;
     updateVGA_REG ();
     // write1Byte(VGA_REG,(crystalFreqMHz | TxInputBufferGain | TxDigitalGain | LRInputImpdKOhm));
@@ -462,7 +458,9 @@ void QN8027Radio::setTxInputBufferGain (uint8_t IBGain)
 void QN8027Radio::setTxDigitalGain (uint8_t DGain)
 {
     if (DGain > 2)
+    {
         DGain = 2;
+    }
     TxDigitalGain = DGain << 2;
     updateVGA_REG ();
     // write1Byte(VGA_REG,(crystalFreqMHz | TxInputBufferGain | TxDigitalGain | LRInputImpdKOhm));
@@ -473,25 +471,35 @@ void QN8027Radio::setAudioInpImp (uint8_t impdInKOhms)
     switch (impdInKOhms)
     {
         case 5:
+        {
             LRInputImpdKOhm = 0;
             break;
+        }
 
         case 10:
+        {
             LRInputImpdKOhm = 1;
             break;
+        }
 
         case 20:
+        {
             LRInputImpdKOhm = 2;
             break;
+        }
 
         case 40:
+        {
             LRInputImpdKOhm = 3;
             break;
+        }
 
         default:
+        {
             LRInputImpdKOhm = 2;
             break;
-    }
+        }
+    }   // switch
     updateVGA_REG ();
     // write1Byte(VGA_REG,(crystalFreqMHz | TxInputBufferGain | TxDigitalGain | LRInputImpdKOhm));
 }
@@ -504,14 +512,11 @@ void QN8027Radio::setAudioInpImp (uint8_t impdInKOhms)
    default is 129 which means 74.82 KHz
    maximum bandwidth can be 148 KHz by setting Fdev value to 255
  */
-void QN8027Radio::setTxFreqDeviation (uint8_t Fdev)
-{
-    write1Byte (FDEV_REG, Fdev);
-}
+void    QN8027Radio::setTxFreqDeviation (uint8_t Fdev) {write1Byte (FDEV_REG, Fdev);}
 
 // ---------------------------RDS_REG-------------------------------------------------------
 /* set RDS channel ON or OFF */
-void QN8027Radio::RDS (uint8_t onOffCtrl)
+void    QN8027Radio::RDS (uint8_t onOffCtrl)
 {
     if (onOffCtrl == ON)
     {
@@ -595,7 +600,7 @@ void QN8027Radio::setTxPower (uint8_t setX)
  */
 uint8_t QN8027Radio::getFSMStatus ()
 {
-    uint8_t  tmp = read1Byte (STATUS_REG);
+    uint8_t tmp = read1Byte (STATUS_REG);
 
     return tmp & 7;
 }
@@ -605,7 +610,7 @@ uint8_t QN8027Radio::getFSMStatus ()
  */
 uint8_t QN8027Radio::getAudioInpPeak ()
 {
-    uint8_t  tmp = read1Byte (STATUS_REG);
+    uint8_t tmp = read1Byte (STATUS_REG);
 
     clearAudioPeak ();
 
@@ -614,7 +619,7 @@ uint8_t QN8027Radio::getAudioInpPeak ()
 
 uint8_t QN8027Radio::getStatus ()
 {
-    uint8_t  tmp = read1Byte (STATUS_REG);
+    uint8_t tmp = read1Byte (STATUS_REG);
 
     clearAudioPeak ();
 
@@ -623,16 +628,10 @@ uint8_t QN8027Radio::getStatus ()
 
 // Read the PI Code.
 // See https://picodes.nrscstandards.org/ and https://www.fmsystems-inc.com/rds-pi-code-formula-station-callsigns/
-uint16_t QN8027Radio::getPiCode (void)
-{
-    return piCode;
-}
+uint16_t        QN8027Radio::getPiCode (void)   {return piCode;}
 
 // Read the PTY Code, Mod By dkulp, Jun-13-2022
-uint8_t QN8027Radio::getPTYCode (void)
-{
-    return ptyCode;
-}
+uint8_t         QN8027Radio::getPTYCode (void)  {return ptyCode;}
 
 // -------------------RDS sending---------------------------------------------------------------
 /*
@@ -640,7 +639,7 @@ uint8_t QN8027Radio::getPTYCode (void)
    PSN must be maximum 8 byte long String.
    PSN shorter than 8 bytes will contain a null termination. This tells the RDS Receiver when to end decoding.
  */
-void QN8027Radio::sendStationName (String SN)
+void            QN8027Radio::sendStationName (String SN)
 {
     char        char_array[PSN_SIZE + 1];
     int         str_len;
@@ -659,11 +658,13 @@ void QN8027Radio::sendStationName (String SN)
     for (int i = 0; i < rds_len; i += 2)
     {
         if (i >= PSN_SIZE)
-            break;                                      // Prevent RDS buffer overflow. Mod By TEB, Jan-31-2022.
-        uint8_t         ptyHi = (ptyCode & 0x18) >> 3;  // top 2 bits of PTY are in bottom 2 bits of byte 3, Mod By dkulp,
-                                                        // Jun-13-2022
-        uint8_t         ptyLo = (ptyCode << 5) & 0xE0;  // bottom 3 bits of PTY are in top 3 bits of byte 4, Mod By dkulp,
-                                                        // Jun-13-2022
+        {
+            break;                              // Prevent RDS buffer overflow. Mod By TEB, Jan-31-2022.
+        }
+        uint8_t ptyHi = (ptyCode & 0x18) >> 3;  // top 2 bits of PTY are in bottom 2 bits of byte 3, Mod By dkulp,
+                                                // Jun-13-2022
+        uint8_t ptyLo = (ptyCode << 5) & 0xE0;  // bottom 3 bits of PTY are in top 3 bits of byte 4, Mod By dkulp,
+                                                // Jun-13-2022
         sendRDS (highByte (piCode), lowByte (piCode), ptyHi, ptyLo | (0x08 + (i / 2)), 0xE0, 0xCD, char_array[i], char_array[i + 1]);
         waitForRDSSend ();
     }
@@ -673,27 +674,27 @@ void QN8027Radio::sendStationName (String SN)
    waits for previous Group send. when previous group will finish sending, this function will return.
    Typical Group send time is ~70mS. Equivalent bit rate is ~475 baud.
  */
-const uint8_t  RDS_SEND_DELAY = 5;
+const uint8_t RDS_SEND_DELAY = 5;
 void QN8027Radio::waitForRDSSend ()
 {
-    #ifdef OldWay
-    uint8_t     status  = rdsSentStatus;
-    uint8_t     timeout = 0;
+#ifdef OldWay
+        uint8_t status  = rdsSentStatus;
+        uint8_t timeout = 0;
 
-    do
-    {
-        status  = read1Byte (STATUS_REG);
-        status  = status & 8;
-
-        if (timeout++ > (100 / RDS_SEND_DELAY)) // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
+        do
         {
-            Log.errorln ("-> Abort: waitForRDSSend() function time-out!");
-            break;
-        }
-        delay (RDS_SEND_DELAY);         // This wait time allows the RDS buffer contents to be sent.
-    }while (status == rdsSentStatus);   // Wait for rdsSentStatus to toggle.
-    rdsSentStatus = status;
-    #endif // def OldWay
+            status      = read1Byte (STATUS_REG);
+            status      = status & 8;
+
+            if (timeout++ > (100 / RDS_SEND_DELAY))     // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
+            {
+                Log.errorln ("-> Abort: waitForRDSSend() function time-out!");
+                break;
+            }
+            delay (RDS_SEND_DELAY);             // This wait time allows the RDS buffer contents to be sent.
+        }while (status == rdsSentStatus);       // Wait for rdsSentStatus to toggle.
+        rdsSentStatus = status;
+#endif // def OldWay
 }
 
 /*Sends Song Artist Album Name. RT must be maximum 64 Byte long*/
@@ -717,13 +718,14 @@ void QN8027Radio::sendRadioText (String RT)
     for (int i = 0; i < rds_len; i += 4)
     {
         if (i >= RADIOTEXT_SIZE)
-            break;                                      // Prevent RDS buffer overflow. Mod By TEB, Jan-31-2022.
-        uint8_t         ptyHi = (ptyCode & 0x18) >> 3;  // top 2 bits of PTY are in bottom 2 bits of byte 3, Mod By dkulp,
-                                                        // Jun-13-2022
-        uint8_t         ptyLo = (ptyCode << 5) & 0xE0;  // bottom 3 bits of PTY are in top 3 bits of byte 4, Mod By dkulp,
-                                                        // Jun-13-2022
-        sendRDS (
-            highByte (piCode),
+        {
+            break;                              // Prevent RDS buffer overflow. Mod By TEB, Jan-31-2022.
+        }
+        uint8_t ptyHi = (ptyCode & 0x18) >> 3;  // top 2 bits of PTY are in bottom 2 bits of byte 3, Mod By dkulp,
+                                                // Jun-13-2022
+        uint8_t ptyLo = (ptyCode << 5) & 0xE0;  // bottom 3 bits of PTY are in top 3 bits of byte 4, Mod By dkulp,
+                                                // Jun-13-2022
+        sendRDS (highByte (piCode),
             lowByte (piCode),
             0x20 | ptyHi,
             ptyLo | (i / 4),

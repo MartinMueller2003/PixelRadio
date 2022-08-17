@@ -22,20 +22,18 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
-# include "memdebug.h"
+    #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-static const String  DefaultSequenceMsg = "No Sequence";
+static const String DefaultSequenceMsg = "No Sequence";
 
 // *********************************************************************************************
 c_ControllerFPPD::c_ControllerFPPD () : c_ControllerCommon ("FPPD", c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
-{
-}       // c_ControllerFPPD
+{}      // c_ControllerFPPD
 
 // *********************************************************************************************
 c_ControllerFPPD::~c_ControllerFPPD ()
-{
-}
+{}
 
 // ************************************************************************************************
 void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
@@ -44,18 +42,16 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
 
     c_ControllerCommon::AddControls (ctrlTab);
 
-    uint16_t  LabelId;
+    uint16_t LabelId;
 
-    LabelId = ESPUI.addControl (
-            ControlType::Label,
+    LabelId = ESPUI.addControl (ControlType::Label,
             "Sequence Learning",
             "Sequence Learning",
             ControlColor::Turquoise,
             ControlLabelElementId);
     ESPUI.setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
 
-    SequenceLearningEnabledElementId = ESPUI.addControl (
-            ControlType::Switcher,
+    SequenceLearningEnabledElementId = ESPUI.addControl (ControlType::Switcher,
             "Sequence Learning",
             String (SequenceLearningEnabled ? F ("1") : F ("0")),
             ControlColor::Turquoise,
@@ -69,16 +65,14 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
             },
             this);
 
-    LabelId = ESPUI.addControl (
-            ControlType::Label,
+    LabelId = ESPUI.addControl (ControlType::Label,
             emptyString.c_str (),
             "Cuurent Sequence", // String("Current Sequence"),
             ControlColor::Turquoise,
             ControlLabelElementId);
     ESPUI.      setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
 
-    CurrentSequenceElementId = ESPUI.addControl (
-            ControlType::Label,
+    CurrentSequenceElementId = ESPUI.addControl (ControlType::Label,
             emptyString.c_str (),
             DefaultSequenceMsg,
             ControlColor::Turquoise,
@@ -99,8 +93,7 @@ void c_ControllerFPPD::begin ()
 
     Sequences.begin ();
 
-    FPPDiscovery.begin (
-        [] (String &FppdFileName, void * param)
+    FPPDiscovery.begin ([] (String &FppdFileName, void * param)
         {
             if (param)
             {
@@ -147,7 +140,7 @@ void c_ControllerFPPD::ProcessFppdFile (String &FppdFileName)
     {
         // DEBUG_V(String("New File: '") + FppdFileName + "'");
         CurrentPlayingSequence = FppdFileName;
-        Control  * control = ESPUI.getControl (CurrentSequenceElementId);
+        Control * control = ESPUI.getControl (CurrentSequenceElementId);
 
         if (control)
         {

@@ -13,13 +13,13 @@
  */
 
 // *********************************************************************************************
+#include "language.h"
+#include "memdebug.h"
+#include "PiCode.hpp"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
-#include "PiCode.hpp"
-#include "RfCarrier.hpp"
-#include "QN8027RadioApi.hpp"
-#include "memdebug.h"
 
 static const PROGMEM String     RDS_PI_CODE_STR = "PI CODE";
 static const PROGMEM String     RDS_PI_CODE     = "RDS_PI_CODE";
@@ -68,12 +68,12 @@ bool cPiCode::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
 
-    bool  Response = true;
+    bool Response = true;
 
     ResponseMessage.reserve (128);
     ResponseMessage.clear ();
 
-    uint32_t  NewPiCodeValue = 0;
+    uint32_t NewPiCodeValue = 0;
 
     do  // once
     {
@@ -114,7 +114,7 @@ bool cPiCode::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-cPiCode  PiCode;
+cPiCode PiCode;
 
 // *********************************************************************************************
 // OEF
