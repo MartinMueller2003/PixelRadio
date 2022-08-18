@@ -17,6 +17,7 @@
 #include "MdnsName.hpp"
 #include "SSID.hpp"
 #include "WPA.hpp"
+#include "ApIpAddress.hpp"
 #include "PixelRadio.h"
 #include "WiFiDriver.hpp"
 #include <ArduinoLog.h>
@@ -374,21 +375,17 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
 
     bool ConfigChanged = false;
 
-    String TempApIp = ApIp.toString ();
-
     SSID.restoreConfiguration (json);
     WPA.restoreConfiguration (json);
     DHCP.restoreConfiguration (json);
     HostnameCtrl.restoreConfiguration (json);
     HotspotName.restoreConfiguration (json);
+    ApIpAddress.restoreConfiguration (json);
 
     ConfigChanged       |= ReadFromJSON (sta_timeout,                     json, F ("WIFI_STA_TIMEOUT"));
     ConfigChanged       |= ReadFromJSON (ap_fallbackIsEnabled,            json, F ("WIFI_AP_FALLBACK"));
     ConfigChanged       |= ReadFromJSON (ap_timeout,                      json, F ("WIFI_AP_TIMEOUT"));
     ConfigChanged       |= ReadFromJSON (RebootOnWiFiFailureToConnect,    json, F ("WIFI_REBOOT_FLAG"));
-    ConfigChanged       |= ReadFromJSON (TempApIp,                        json, F ("AP_IP_ADDR_STR"));
-
-    ApIp.fromString (TempApIp);
 
     // DEBUG_V ("     ip: " + ip);
     // DEBUG_V ("gateway: " + gateway);
@@ -410,12 +407,12 @@ void c_WiFiDriver::saveConfiguration (JsonObject &json)
     DHCP.saveConfiguration (json);
     HostnameCtrl.saveConfiguration (json);
     HotspotName.saveConfiguration (json);
+    ApIpAddress.restoreConfiguration (json);
 
     json["WIFI_STA_TIMEOUT"]    = sta_timeout;
     json["WIFI_AP_FALLBACK"]    = ap_fallbackIsEnabled;
     json["WIFI_AP_TIMEOUT"]     = ap_timeout;
     json["WIFI_REBOOT_FLAG"]    = RebootOnWiFiFailureToConnect;
-    json["AP_IP_ADDR_STR"]      = ApIp.toString ();
 
     // DEBUG_END;
 }
@@ -821,7 +818,7 @@ void fsm_WiFi_state_ConnectedToSta::Init ()
 
     pWiFiDriver->SetIsWiFiConnected (true);
 
-    if (!pWiFiDriver->dnsServer.start (uint16_t (DNS_PORT), String ("*"), pWiFiDriver->ApIp))
+    if (!pWiFiDriver->dnsServer.start (uint16_t (DNS_PORT), String ("*"), ApIpAddress.GetIpAddress ()))
     {
         Log.errorln (String (F ("WIFI: AP mode DNS Failed to start. No Web Sockets available.")).c_str ());
     }

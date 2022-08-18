@@ -14,6 +14,7 @@
 
 #include "PixelRadio.h"
 #include "DHCP.hpp"
+#include "WPA.hpp"
 #include "WiFiDriverUi.hpp"
 #include <DNSServer.h>
 #include <ESPmDNS.h>
@@ -53,7 +54,7 @@ public:
     uint32_t    Get_ap_timeout ()                       {return ap_timeout;}
     bool        Get_ap_fallbackIsEnabled ()             {return ap_fallbackIsEnabled;}
     bool        Get_RebootOnWiFiFailureToConnect ()     {return RebootOnWiFiFailureToConnect;}
-    String      GetConfig_passphrase ()                 {return passphrase;}
+    String      GetConfig_passphrase ()                 {return WPA.getStr ();}
     void        GetHostname (String &name);
     void        SetHostname (String &name);
     void        Disable ();

@@ -81,6 +81,9 @@
  */
 
 // ************************************************************************************************
+#include <Arduino.h>
+#include <ArduinoLog.h>
+#include <ESPUI.h>
 
 #include "config.h"
 #include "ConfigSave.hpp"
@@ -90,8 +93,8 @@
 #include "memdebug.h"
 #include "PixelRadio.h"
 #include "radio.hpp"
-#include <ArduinoLog.h>
-#include <ESPUI.h>
+#include "LoginUser.hpp"
+#include "LoginPassword.hpp"
 
 // ************************************************************************************************
 // Local Strings.
@@ -263,7 +266,7 @@ void startGUI (void)
 void StartESPUI ()
 {
     // DEBUG_START;
-    if ((userNameStr.isEmpty ()) || (userPassStr.isEmpty ()))
+    if ((LoginUser.getStr ().isEmpty ()) || (LoginPassword.getStr ().isEmpty ()))
     {   // Missing credentials, use automatic login.
         // DEBUG_V();
         ESPUI.begin ("PixelRadio");
@@ -275,14 +278,11 @@ void StartESPUI ()
     else
     {
         // DEBUG_V();
-#ifdef OldWay
-            ESPUI.      begin ( "PixelRadio", userNameStr.c_str (), userPassStr.c_str ());
-            // DEBUG_V();
-#endif // def OldWay
-        ESPUI.          begin ( "PixelRadio");
+        ESPUI.begin ("PixelRadio", LoginUser.getStr ().c_str (), LoginPassword.getStr ().c_str ());
+        // DEBUG_V();
 
         // Don't use LITLEFS, browser refreshes will crash.
-        // ESPUI.beginLITTLEFS(APP_NAME_STR, userNameStr.c_str(), userPassStr.c_str());
+        // ESPUI.beginLITTLEFS ( APP_NAME_STR, LoginUser.getStr().c_str (), LoginPassword.getStr().c_str ());
     }
     // DEBUG_END;
 }

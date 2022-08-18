@@ -15,8 +15,12 @@
 #include "DHCP.hpp"
 #include "HostnameCtrl.hpp"
 #include "HotspotName.hpp"
+#include "LoginPassword.hpp"
+#include "LoginUser.hpp"
+#include "MdnsName.hpp"
 #include "SSID.hpp"
 #include "WPA.hpp"
+#include "ApIpAddress.hpp"
 #include "language.h"
 #include "memdebug.h"
 #include "PixelRadio.h"
@@ -70,70 +74,18 @@ void c_WiFiDriverUi::addControls (uint16_t WiFiTabID, ControlColor color)
 
 #ifdef MDNS_ENB
         // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
+        MdnsName.AddControls (WiFiTabID, color);
         // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
 #endif // ifdef MDNS_ENB
 
     // -----------------------------------------------------------------------------
-    ESPUI.      addControl (ControlType::Separator, WIFI_DEV_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
-
-    wifiDevUserID = ESPUI.addControl (ControlType::Text,
-            WIFI_DEV_USER_NM_STR,
-            userNameStr,
-            ControlColor::Carrot,
-            WiFiTabID,
-            [] (Control * sender, int type, void * parm)
-            {
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_WiFiDriverUi *> (parm)->CbSetUiLoginName (sender, type);
-                }
-            },
-            this);
-    ESPUI.      addControl (ControlType::Max, emptyString.c_str (), USER_NM_MAX_SZ, ControlColor::None, wifiDevUserID);
-    wifiDevUserMsgID = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            F (WIFI_BLANK_MSG_STR),
-            ControlColor::Alizarin,
-            wifiDevUserID);
-    ESPUI.setElementStyle (wifiDevUserMsgID, CSS_LABEL_STYLE_MAROON);
-
-    wifiDevPwID = ESPUI.addControl (ControlType::Text,
-            WIFI_DEV_USER_PW_STR,
-            userPassStr,
-            ControlColor::Carrot,
-            WiFiTabID,
-            [] (Control * sender, int type, void * parm)
-            {
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_WiFiDriverUi *> (parm)->CbSetUiLoginPassword (sender, type);
-                }
-            },
-            this);
-    ESPUI.addControl (ControlType::Max, emptyString.c_str (), USER_PW_MAX_SZ, ControlColor::None, wifiDevPwID);
-    wifiDevPwMsgID = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            F (WIFI_BLANK_MSG_STR),
-            ControlColor::Alizarin,
-            wifiDevPwID);
-    ESPUI.setElementStyle (wifiDevPwMsgID, CSS_LABEL_STYLE_MAROON);
+    ESPUI.addControl (ControlType::Separator, WIFI_DEV_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
+    LoginUser.AddControls (WiFiTabID, color);
+    LoginPassword.AddControls (WiFiTabID, color);
 
     // -----------------------------------------------------------------------------
     ESPUI.addControl (ControlType::Separator, WIFI_AP_IP_SEP_STR, emptyString.c_str (), ControlColor::None, WiFiTabID);
-
-    wifiApIpID = ESPUI.addControl (ControlType::Text,
-            WIFI_AP_IP_ADDR_STR,
-            ApIp.toString (),
-            ControlColor::Carrot,
-            WiFiTabID,
-            [] (Control * sender, int type, void * parm)
-            {
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_WiFiDriverUi *> (parm)->CbSetApIpAddr (sender, type);
-                }
-            },
-            this);
+    ApIpAddress.AddControls (WiFiTabID, color);
 
     wifiApFallID = ESPUI.addControl (ControlType::Switcher,
             WIFI_AP_FALLBK_STR,
@@ -211,33 +163,6 @@ void c_WiFiDriverUi::CbSetApFallback (Control * sender, int type)
 }
 
 // -----------------------------------------------------------------------------
-void c_WiFiDriverUi::CbSetApIpAddr (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    String NewValue = sender->value;
-
-    // DEBUG_V(String("Sender ID: ") + String(sender->id));
-    // DEBUG_V(String("     type: ") + String(type));
-    // DEBUG_V(String(" NewValue: ") + String(NewValue));
-
-    do  // once
-    {
-        if (NewValue.equals (ApIp.toString ()))
-        {
-            // DEBUG_V("IP did not change");
-            break;
-        }
-        ApIp.fromString (NewValue);
-        ESPUI.updateControlValue (sender, ApIp.toString ());
-
-        displaySaveWarning ();
-    } while (false);
-
-    // DEBUG_END;
-}
-
-// -----------------------------------------------------------------------------
 void c_WiFiDriverUi::CbSetApReboot (Control * sender, int type)
 {
     // DEBUG_START;
@@ -259,60 +184,6 @@ void c_WiFiDriverUi::CbSetApReboot (Control * sender, int type)
         }
         RebootOnWiFiFailureToConnect = NewRebootOnWiFiFailureToConnect;
         Log.infoln ((String (F ("AP Reboot Set to: ")) + (NewRebootOnWiFiFailureToConnect ? F ("On") : F ("Off"))).c_str ());
-        displaySaveWarning ();
-    } while (false);
-
-    // DEBUG_END;
-}
-
-// -----------------------------------------------------------------------------
-void c_WiFiDriverUi::CbSetUiLoginName (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    String NewValue = sender->value;
-
-    // DEBUG_V(String("Sender ID: ") + String(sender->id));
-    // DEBUG_V(String("     type: ") + String(type));
-    // DEBUG_V(String(" NewValue: ") + String(NewValue));
-
-    do  // once
-    {
-        if (NewValue.equals (userNameStr))
-        {
-            // DEBUG_V("UserName did not change");
-            break;
-        }
-        userNameStr = NewValue;
-        Log.infoln ((String (F ("Device User Name Set to: '")) + userNameStr + "'").c_str ());
-
-        displaySaveWarning ();
-    } while (false);
-
-    // DEBUG_END;
-}
-
-// -----------------------------------------------------------------------------
-void c_WiFiDriverUi::CbSetUiLoginPassword (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    String NewValue = sender->value;
-
-    // DEBUG_V(String("Sender ID: ") + String(sender->id));
-    // DEBUG_V(String("     type: ") + String(type));
-    // DEBUG_V(String(" NewValue: ") + String(NewValue));
-
-    do  // once
-    {
-        if (NewValue.equals (userPassStr))
-        {
-            // DEBUG_V("User Password did not change");
-            break;
-        }
-        userPassStr = NewValue;
-        Log.infoln ((String (F ("Device Password Set to: '")) + userPassStr + "'").c_str ());
-
         displaySaveWarning ();
     } while (false);
 

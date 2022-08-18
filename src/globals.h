@@ -36,5 +36,3 @@ extern String   gpio19CtrlStr;
 extern String   gpio23CtrlStr;
 extern String   gpio33CtrlStr;
 extern String   logLevelStr;
-extern String   userNameStr;
-extern String   userPassStr;

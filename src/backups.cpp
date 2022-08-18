@@ -29,6 +29,8 @@
 #include "PixelRadio.h"
 #include "radio.hpp"
 #include "WiFiDriver.hpp"
+#include "LoginUser.hpp"
+#include "LoginPassword.hpp"
 #include <ArduinoJson.h>
 #include <ArduinoLog.h>
 #include <LittleFS.h>
@@ -190,14 +192,12 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     DynamicJsonDocument doc (JSON_CFG_SZ);
 
     // *****************************************************************
-
-    doc["USER_NAME_STR"]        = userNameStr;
-    doc["USER_PW_STR"]          = userPassStr;
-
     JsonObject root = doc.as <JsonObject>();
 
     ControllerMgr.saveConfiguration (root);
     WiFiDriver.saveConfiguration (root);
+    LoginUser.saveConfiguration (root);
+    LoginPassword.saveConfiguration (root);
 
 #ifdef OldWay
 #endif // def OldWay
@@ -323,12 +323,11 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     }
     JsonObject doc = raw_doc.as <JsonObject>();
 
-        ReadFromJSON (  userNameStr,    doc,    F ("USER_NAME_STR"));
-        ReadFromJSON (  userPassStr,    doc,    F ("USER_PASSWORD_STR"));
-
     ControllerMgr.restoreConfiguration (doc);
     WiFiDriver.restoreConfiguration (doc);
     Radio.restoreConfiguration (doc);
+    LoginUser.restoreConfiguration (doc);
+    LoginPassword.restoreConfiguration (doc);
 
     if (doc.containsKey ("USB_VOLUME"))
     {
