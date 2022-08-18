@@ -19,8 +19,10 @@
 #include "LoginUser.hpp"
 #include "MdnsName.hpp"
 #include "SSID.hpp"
-#include "WPA.hpp"
+#include "WpaKey.hpp"
+#include "ApFallback.hpp"
 #include "ApIpAddress.hpp"
+#include "ApReboot.hpp"
 #include "language.h"
 #include "memdebug.h"
 #include "PixelRadio.h"
@@ -61,7 +63,7 @@ void c_WiFiDriverUi::addControls (uint16_t WiFiTabID, ControlColor color)
     // -----------------------------------------------------------------------------
     ESPUI.addControl (ControlType::Separator, WIFI_CRED_SEP_STR, emptyString, color, WiFiTabID);
     SSID.AddControls (WiFiTabID, color);
-    WPA.AddControls (WiFiTabID, color);
+    WpaKey.AddControls (WiFiTabID, color);
 
     // -----------------------------------------------------------------------------
     ESPUI.addControl (ControlType::Separator, WIFI_ADDR_SEP_STR, emptyString.c_str (), ControlColor::None, WiFiTabID);
@@ -86,35 +88,8 @@ void c_WiFiDriverUi::addControls (uint16_t WiFiTabID, ControlColor color)
     // -----------------------------------------------------------------------------
     ESPUI.addControl (ControlType::Separator, WIFI_AP_IP_SEP_STR, emptyString.c_str (), ControlColor::None, WiFiTabID);
     ApIpAddress.AddControls (WiFiTabID, color);
-
-    wifiApFallID = ESPUI.addControl (ControlType::Switcher,
-            WIFI_AP_FALLBK_STR,
-            (ap_fallbackIsEnabled) ? "1" : "0",
-            ControlColor::Carrot,
-            WiFiTabID,
-            [] (Control * sender, int type, void * parm)
-            {
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_WiFiDriverUi *> (parm)->CbSetApFallback (sender, type);
-                }
-            },
-            this);
-
-    // ESPUI.addControl(ControlType::Separator, WIFI_BOOT_SEP_STR, "", ControlColor::None, wifiTab);
-    wifiApBootID = ESPUI.addControl (ControlType::Switcher,
-            WIFI_AP_REBOOT_STR,
-            (RebootOnWiFiFailureToConnect) ? "1" : "0",
-            ControlColor::Carrot,
-            WiFiTabID,
-            [] (Control * sender, int type, void * parm)
-            {
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_WiFiDriverUi *> (parm)->CbSetApReboot (sender, type);
-                }
-            },
-            this);
+    ApFallback.AddControls (WiFiTabID, color);
+    ApReboot.AddControls (WiFiTabID, color);
 
     UpdateStatusFields ();
 
@@ -130,62 +105,6 @@ void c_WiFiDriverUi::addHomeControls (uint16_t HomeTabID, ControlColor color)
     HomeRssi.AddControls (HomeTabID, color);
     HomeStatus.AddControls (HomeTabID, color);
     HomeIpStatus.AddControls (HomeTabID, color);
-
-    // DEBUG_END;
-}
-
-// -----------------------------------------------------------------------------
-void c_WiFiDriverUi::CbSetApFallback (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    String NewValue = sender->value;
-
-    // DEBUG_V(String("Sender ID: ") + String(sender->id));
-    // DEBUG_V(String("     type: ") + String(type));
-    // DEBUG_V(String(" NewValue: ") + String(NewValue));
-
-    do  // once
-    {
-        bool NewApFallback = (S_ACTIVE == type);
-
-        if (NewApFallback == ap_fallbackIsEnabled)
-        {
-            // DEBUG_V("No change in value");
-            break;
-        }
-        ap_fallbackIsEnabled = NewApFallback;
-        Log.infoln ((String (F ("AP Fallback Set to: ")) + (ap_fallbackIsEnabled ? F ("On") : F ("Off"))).c_str ());
-        displaySaveWarning ();
-    } while (false);
-
-    // DEBUG_END;
-}
-
-// -----------------------------------------------------------------------------
-void c_WiFiDriverUi::CbSetApReboot (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    String NewValue = sender->value;
-
-    // DEBUG_V(String("Sender ID: ") + String(sender->id));
-    // DEBUG_V(String("     type: ") + String(type));
-    // DEBUG_V(String(" NewValue: ") + String(NewValue));
-
-    do  // once
-    {
-        bool NewRebootOnWiFiFailureToConnect = (S_ACTIVE == type);
-
-        if (NewRebootOnWiFiFailureToConnect == RebootOnWiFiFailureToConnect)
-        {
-            // DEBUG_V("No change in value");
-            break;
-        }
-        RebootOnWiFiFailureToConnect = NewRebootOnWiFiFailureToConnect;
-        Log.infoln ((String (F ("AP Reboot Set to: ")) + (NewRebootOnWiFiFailureToConnect ? F ("On") : F ("Off"))).c_str ());
-        displaySaveWarning ();
-    } while (false);
 
     // DEBUG_END;
 }

@@ -16,8 +16,10 @@
 #include "HostnameCtrl.hpp"
 #include "MdnsName.hpp"
 #include "SSID.hpp"
-#include "WPA.hpp"
+#include "WpaKey.hpp"
 #include "ApIpAddress.hpp"
+#include "ApFallback.hpp"
+#include "ApReboot.hpp"
 #include "PixelRadio.h"
 #include "WiFiDriver.hpp"
 #include <ArduinoLog.h>
@@ -376,16 +378,16 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
     bool ConfigChanged = false;
 
     SSID.restoreConfiguration (json);
-    WPA.restoreConfiguration (json);
+    WpaKey.restoreConfiguration (json);
     DHCP.restoreConfiguration (json);
     HostnameCtrl.restoreConfiguration (json);
     HotspotName.restoreConfiguration (json);
     ApIpAddress.restoreConfiguration (json);
+    ApFallback.restoreConfiguration (json);
+    ApReboot.restoreConfiguration (json);
 
     ConfigChanged       |= ReadFromJSON (sta_timeout,                     json, F ("WIFI_STA_TIMEOUT"));
-    ConfigChanged       |= ReadFromJSON (ap_fallbackIsEnabled,            json, F ("WIFI_AP_FALLBACK"));
     ConfigChanged       |= ReadFromJSON (ap_timeout,                      json, F ("WIFI_AP_TIMEOUT"));
-    ConfigChanged       |= ReadFromJSON (RebootOnWiFiFailureToConnect,    json, F ("WIFI_REBOOT_FLAG"));
 
     // DEBUG_V ("     ip: " + ip);
     // DEBUG_V ("gateway: " + gateway);
@@ -403,16 +405,16 @@ void c_WiFiDriver::saveConfiguration (JsonObject &json)
     // DEBUG_START;
 
     SSID.saveConfiguration (json);
-    WPA.saveConfiguration (json);
+    WpaKey.saveConfiguration (json);
     DHCP.saveConfiguration (json);
     HostnameCtrl.saveConfiguration (json);
     HotspotName.saveConfiguration (json);
     ApIpAddress.restoreConfiguration (json);
+    ApFallback.restoreConfiguration (json);
+    ApReboot.restoreConfiguration (json);
 
     json["WIFI_STA_TIMEOUT"]    = sta_timeout;
-    json["WIFI_AP_FALLBACK"]    = ap_fallbackIsEnabled;
     json["WIFI_AP_TIMEOUT"]     = ap_timeout;
-    json["WIFI_REBOOT_FLAG"]    = RebootOnWiFiFailureToConnect;
 
     // DEBUG_END;
 }
@@ -547,7 +549,7 @@ void fsm_WiFi_state_ConnectingUsingConfig::Init ()
     // DEBUG_V (String ("pWiFiDriver: ") + String (uint32_t (pWiFiDriver), HEX));
     // DEBUG_V();
     String      CurrentSsid             = SSID.getStr ();
-    String      CurrentPassphrase       = WPA.getStr ();
+    String      CurrentPassphrase       = WpaKey.getStr ();
 
     if (CurrentSsid.isEmpty ())
     {
@@ -651,7 +653,7 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
     pWiFiDriver->SetFsmState (this);
     pWiFiDriver->AnnounceState ();
 
-    if (true == pWiFiDriver->Get_ap_fallbackIsEnabled ())
+    if (0 != ApFallback.get ())
     {
         WiFi.enableSTA (false);
         WiFi.enableAP (true);
@@ -855,7 +857,7 @@ void fsm_WiFi_state_ConnectionFailed::Init ()
     }
     else
     {
-        if (true == pWiFiDriver->Get_RebootOnWiFiFailureToConnect ())
+        if (0  != ApReboot.get ())
         {
             // extern bool reboot;
             Log.infoln (String (F ("WiFi Requesting Reboot")).c_str ());

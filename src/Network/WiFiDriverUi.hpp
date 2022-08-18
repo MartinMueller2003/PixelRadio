@@ -27,8 +27,6 @@ public:
     void        addControls (uint16_t _WiFiTabId, ControlColor Color);
     void        addHomeControls (uint16_t _WiFiTabId, ControlColor Color);
 
-    void        CbSetApFallback (Control * sender, int type);
-    void        CbSetApReboot (Control * sender, int type);
     String&     getConnectionStatus ()  {return ConnectionStatusMessage;}
     IPAddress   getIpAddress ()         {return CurrentIpAddress;}
 
@@ -39,23 +37,17 @@ protected:
 #define CLIENT_TIMEOUT      500 // Webserver Client Timeout, in mS.
 #define AP_TIMEOUT          60
 
-    IPAddress CurrentIpAddress          = IPAddress (0, 0, 0, 0);
-    IPAddress CurrentNetmask            = IPAddress (0, 0, 0, 0);
-    IPAddress CurrentGateway            = IPAddress (0, 0, 0, 0);
-    IPAddress CurrentDns                = IPAddress (0, 0, 0, 0);
-    bool ResetWiFi                      = false;
-    bool ap_fallbackIsEnabled           = true;
-    uint32_t ap_timeout                 = AP_TIMEOUT;           ///< How long to wait in AP mode with no connection before rebooting
-    uint32_t sta_timeout                = CLIENT_TIMEOUT;       ///< Timeout when connected as client (station)
-    bool RebootOnWiFiFailureToConnect   = true;
+    IPAddress CurrentIpAddress  = IPAddress (0, 0, 0, 0);
+    IPAddress CurrentNetmask    = IPAddress (0, 0, 0, 0);
+    IPAddress CurrentGateway    = IPAddress (0, 0, 0, 0);
+    IPAddress CurrentDns        = IPAddress (0, 0, 0, 0);
+    bool ResetWiFi              = false;
+    uint32_t ap_timeout         = AP_TIMEOUT;           ///< How long to wait in AP mode with no connection before rebooting
+    uint32_t sta_timeout        = CLIENT_TIMEOUT;       ///< Timeout when connected as client (station)
     String ConnectionStatusMessage;
 
 private:
-    uint16_t wifiStaticSettingsID       = Control::noParent;
-    uint16_t wifiApBootID               = Control::noParent;
-    uint16_t wifiApFallID               = Control::noParent;
-    uint16_t wifiApID                   = Control::noParent;
-    uint16_t wifiNetID                  = Control::noParent;
+    uint16_t wifiNetID = Control::noParent;
 
     cRssiStatus WiFiRssi;
     cRssiStatus HomeRssi;

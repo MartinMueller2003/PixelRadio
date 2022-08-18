@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: WPA.cpp
+   File: WpaKey.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -18,19 +18,19 @@
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cWPA : public cControlCommon
+class cWpaKey : public cControlCommon
 {
 public:
 
-    cWPA ();
-    virtual ~cWPA ()    {}
+    cWpaKey ();
+    virtual ~cWpaKey ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
     bool        set (String &value, String &Response);
-};      // class cWPA
+};      // class cWpaKey
 
-extern cWPA WPA;
+extern cWpaKey WpaKey;
 
 // *********************************************************************************************
 // OEF

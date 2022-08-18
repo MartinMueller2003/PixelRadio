@@ -67,12 +67,6 @@ const uint8_t   CMD_TIME_MAX_SZ = 4;    // Time Command Arg length is 3 (5-900).
 
 #define CMD_SYS_CODE_STR  "system"
 
-// Controller Flags
-#ifdef OldWay
-    const bool  AP_FALLBACK_DEF_FLG     = true;
-    const bool  CTRL_DHCP_DEF_FLG       = true;
-#endif // def OldWay
-
 // const bool CTRL_SERIAL_DEF_FLG = true;
 const bool      RDS_TEXTX_DEF_FLG       = true;
 const bool      RF_AUTO_OFF_DEF_FLG     = false;
@@ -223,62 +217,29 @@ int16_t getCommandArg (
 #endif // def OldWay
 
 // ESPUI (WebGUI) Prototypes
-void            buildGUI (void);
-#ifdef OldWay
-    void        displayActiveController (uint8_t controller);
-    void        displayRdsText (void);
-#endif // def OldWay
-void            displaySaveWarning (void);
-void            initCustomCss (void);
-void            startGUI (void);
-void            updateUiFreeMemory (void);
-bool            updateUiGpioMsg (gpio_num_t pin, String &ControllerName, bool PinState);
-void            updateUiIpaddress (String ipStr);
-#ifdef OldWay
-    void        updateUiFrequency (int Freq10x);
-#endif // def OldWay
-void            updateUiDiagTimer (void);
-void            updateUiVolts (void);
+void    buildGUI (void);
+void    displaySaveWarning (void);
+void    initCustomCss (void);
+void    startGUI (void);
+void    updateUiFreeMemory (void);
+bool    updateUiGpioMsg (gpio_num_t pin, String &ControllerName, bool PinState);
+void    updateUiDiagTimer (void);
+void    updateUiVolts (void);
 
 // ESPUI Callbacks
-void            apBootCallback (
+void    backupCallback (
     Control     * sender,
     int         type);
-void            apFallBkCallback (
+void    diagBootCallback (
     Control     * sender,
     int         type);
-#ifdef OldWay
-    void        audioCallback (
-        Control * sender,
-        int     type);
-#endif // def OldWay
-void            backupCallback (
+void    diagLogCallback (
     Control     * sender,
     int         type);
-#ifdef OldWay
-    void        dhcpCallback (
-        Control * sender,
-        int     type);
-    void        controllerCallback (
-        Control * sender,
-        int     type);
-#endif // def OldWay
-void            diagBootCallback (
+void    gpioCallback (
     Control     * sender,
     int         type);
-void            diagLogCallback (
-    Control     * sender,
-    int         type);
-void            gainAdjustCallback (
-    Control     * sender,
-    int         type);
-void            gpioCallback (
-    Control     * sender,
-    int         type);
-void            saveSettingsCallback (
-    Control     * sender,
-    int         type);
-void            setLoginCallback (
+void    saveSettingsCallback (
     Control     * sender,
     int         type);
 
@@ -321,12 +282,6 @@ const String    returnClientCode (int code);
 
 // OTA Prototypes
 void            otaInit (String &mdnsname);
-
-// RDS Prototypes
-#ifdef OldWay
-    void        processRDS (void);
-    void        resetControllerRdsValues (void);
-#endif // def OldWay
 
 // Serial Log
 uint8_t         getLogLevel (void);

@@ -1,5 +1,5 @@
 /*
-   File: WPA.cpp
+   File: WpaKey.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -17,7 +17,7 @@
 #include "PtyCode.hpp"
 #include "QN8027RadioApi.hpp"
 #include "RfCarrier.hpp"
-#include "WPA.hpp"
+#include "WpaKey.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
@@ -26,7 +26,7 @@ static const PROGMEM String WIFI_WPA_KEY_STR    = "WIFI WPA KEY";
 static const PROGMEM uint32_t PASSPHRASE_MAX_SZ = 48;
 
 // *********************************************************************************************
-cWPA::cWPA () : cControlCommon ("WIFI_WPA_KEY_STR")
+cWpaKey::cWpaKey () : cControlCommon ("WIFI_WPA_KEY_STR")
 {
     // _ DEBUG_START;
     DataValueStr.reserve (PASSPHRASE_MAX_SZ + 2);
@@ -35,7 +35,7 @@ cWPA::cWPA () : cControlCommon ("WIFI_WPA_KEY_STR")
 }
 
 // *********************************************************************************************
-void cWPA::AddControls (uint16_t value, ControlColor color)
+void cWpaKey::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
@@ -48,7 +48,7 @@ void cWPA::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-void cWPA::ResetToDefaults ()
+void cWpaKey::ResetToDefaults ()
 {
     // DEBUG_START;
 
@@ -61,7 +61,7 @@ void cWPA::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cWPA::set (String &value, String &ResponseMessage)
+bool cWpaKey::set (String &value, String &ResponseMessage)
 {
     // DEBUG_START;
     // DEBUG_V(String("       value: ") + value);
@@ -76,7 +76,7 @@ bool cWPA::set (String &value, String &ResponseMessage)
     {
         if (value.length () > PASSPHRASE_MAX_SZ)
         {
-            ResponseMessage     = String (F ("New Passphrase Value is too long: '"))  + value + String (F ("'"));
+            ResponseMessage     = String (F ("New WPA Passphrase Value is too long: '"))  + value + String (F ("'"));
             Response            = false;
             break;
         }
@@ -87,20 +87,21 @@ bool cWPA::set (String &value, String &ResponseMessage)
             break;
         }
         DataValueStr = value;
-        ESPUI.updateControlValue (ControlId, WIFI_PASS_HIDE_STR);
-        Log.infoln ((String (F ("WiFi WPA ")) + ResponseMessage).c_str ());
+        Log.infoln ((String (F ("WiFi WPA Key ")) + ResponseMessage).c_str ());
 
         WiFiDriver.WiFiReset ();
 
         displaySaveWarning ();
     } while (false);
 
+    ESPUI.updateControlValue (ControlId, WIFI_PASS_HIDE_STR);
+
     // DEBUG_END;
     return Response;
 }
 
 // *********************************************************************************************
-cWPA WPA;
+cWpaKey WpaKey;
 
 // *********************************************************************************************
 // OEF

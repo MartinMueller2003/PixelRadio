@@ -85,14 +85,14 @@ void cControlCommon::Callback (Control * sender, int type)
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("value: ") + String(sender->value));
-    // DEBUG_V(String(" type: ") + String(type));
+    // DEBUG_V (       String ("value: ") + String (sender->value));
+    // DEBUG_V (       String (" type: ") + String (type));
 
     do  // once
     {
-        if (0 >= type)
+        if ((P_CENTER_UP >= type) && (B_UP <= type))
         {
-            // DEBUG_V("Ignore button up events");
+            // DEBUG_V ("Ignore button up events");
             break;
         }
         String Response;
