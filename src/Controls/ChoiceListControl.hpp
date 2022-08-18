@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: AnalogAudioGain.cpp
+   File: ChoiceListControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,20 +15,25 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ChoiceListControl.hpp"
+#include "ControlCommon.hpp"
+#include <map>
 
 // *********************************************************************************************
-class cAnalogAudioGain : public cChoiceListControl
+class cChoiceListControl : public cControlCommon
 {
 public:
+#define ChoiceList_t std::map <String, String>
 
-    cAnalogAudioGain ();
-    virtual ~cAnalogAudioGain ()    {}
+    cChoiceListControl (const String &ConfigName, const String &Title, ChoiceList_t &ChoiceList);
+    virtual ~cChoiceListControl ()    {}
 
-    bool set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
-};      // class cAnalogAudioGain
+    virtual void        AddControls (uint16_t value, ControlColor color);
+    virtual bool        validate (const String &value, String &ResponseMessage);
+    virtual uint32_t    get32 ();
 
-extern cAnalogAudioGain AnalogAudioGain;
+private:
+    ChoiceList_t &ChoiceList;
+};      // class cChoiceListControl
 
 // *********************************************************************************************
 // OEF

@@ -22,6 +22,19 @@
 
 // *********************************************************************************************
 
+const PROGMEM char CSS_LABEL_STYLE_BLACK_BW        [] =
+    "background-color: white; color: black; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_GREEN_BW        [] =
+    "background-color: white; color: green; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_MAROON_BW       [] =
+    "background-color: white; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_RED_BW          [] =
+    "background-color: white; color: red; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT_BW  [] =
+    "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char CSS_LABEL_STYLE_WHITE_BW        [] =
+    "background-color: black; color: white; margin-top: .1rem; margin-bottom: .1rem;";
+
 const PROGMEM char * CssStyles [] =
 {
     CSS_LABEL_STYLE_BLACK,
@@ -30,6 +43,12 @@ const PROGMEM char * CssStyles [] =
     CSS_LABEL_STYLE_RED,
     CSS_LABEL_STYLE_TRANSPARENT,
     CSS_LABEL_STYLE_WHITE,
+    CSS_LABEL_STYLE_BLACK_BW,
+    CSS_LABEL_STYLE_GREEN_BW,
+    CSS_LABEL_STYLE_MAROON_BW,
+    CSS_LABEL_STYLE_RED_BW,
+    CSS_LABEL_STYLE_TRANSPARENT_BW,
+    CSS_LABEL_STYLE_WHITE_BW,
 };
 
 const PROGMEM String PanelStyles [] =
@@ -77,13 +96,13 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
     setControlPanelStyle (ControlPanelStyle);
     setControlStyle (ControlStyle);
 
-    StatusMessageId = ESPUI.addControl (ControlType::Label,
+    MessageId = ESPUI.addControl (ControlType::Label,
             emptyString.c_str (),
             emptyString,
             ControlColor::None,
             ControlId);
     setMessagePanelStyle (MessagePanelStyle);
-    setMessageStyle (ControlStyle);
+    setMessageStyle (MessageStyle);
 
     // force a UI Update
     String Response;
@@ -184,6 +203,8 @@ bool cControlCommon::set (const String &value, String &ResponseMessage, bool For
 
         DataValueStr = value;
         ESPUI.print (ControlId, DataValueStr);
+
+        displaySaveWarning ();
     } while (false);
 
     // DEBUG_V ( String ("ResponseMsg: '") + ResponseMessage + "'");
@@ -225,7 +246,7 @@ void cControlCommon::setMessage (const String &value, eCssStyle style)
 
     // DEBUG_V ( String ("value: ") + value);
     // DEBUG_V ( String ("style: ") + String (style));
-    ESPUI.print (StatusMessageId, value);
+    ESPUI.print (MessageId, value);
     setMessageStyle (style);
 
     // DEBUG_END;
@@ -237,8 +258,8 @@ void cControlCommon::setMessageStyle (eCssStyle style)
     // DEBUG_START;
     // DEBUG_V (String ("style: ") + String (style));
 
-    StatusStyle = style;
-    ESPUI.setElementStyle (StatusMessageId, CssStyles[int(style)]);
+    MessageStyle = style;
+    ESPUI.setElementStyle (MessageId, CssStyles[int(style)]);
 
     // DEBUG_END;
 }

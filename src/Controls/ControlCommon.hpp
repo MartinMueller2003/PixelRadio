@@ -43,6 +43,12 @@ protected:
         CssStyleRed,
         CssStyleTransparent,
         CssStyleWhite,
+        CssStyleBlack_bw,
+        CssStyleGreen_bw,
+        CssStyleMaroon_bw,
+        CssStyleRed_bw,
+        CssStyleTransparent_bw,
+        CssStyleWhite_bw,
     };
 
     virtual void        setMessage (const String &value, eCssStyle style);
@@ -50,9 +56,9 @@ protected:
     virtual void        setMessageStyle (eCssStyle style);
 
     uint16_t ControlId          = Control::noParent;
-    uint16_t StatusMessageId    = Control::noParent;
-    eCssStyle ControlStyle      = CssStyleBlack;
-    eCssStyle StatusStyle       = CssStyleBlack;
+    uint16_t MessageId          = Control::noParent;
+    eCssStyle ControlStyle      = eCssStyle::CssStyleBlack;
+    eCssStyle MessageStyle      = eCssStyle::CssStyleBlack;
 
     enum ePanelStyle
     {
