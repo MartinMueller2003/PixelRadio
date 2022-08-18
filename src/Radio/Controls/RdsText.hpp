@@ -14,12 +14,12 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include "ControllerMgr.h"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cRdsText : public cControlCommon
+class cRdsText : public cOldControlCommon
 {
 public:
 

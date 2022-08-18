@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cApIpAddress : public cControlCommon
+class cApIpAddress : public cOldControlCommon
 {
 public:
 

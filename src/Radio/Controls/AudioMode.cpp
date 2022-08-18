@@ -25,7 +25,7 @@ static const PROGMEM char       RADIO_STEREO_STR      []        = "STEREO AUDIO"
 static const PROGMEM String     RADIO_AUDIO_MODE_STR            = "AUDIO MODE";
 
 // *********************************************************************************************
-cAudioMode::cAudioMode () : cControlCommon (RADIO_STEREO_FLAG)
+cAudioMode::cAudioMode () : cOldControlCommon (RADIO_STEREO_FLAG)
 {
     // _ DEBUG_START;
 
@@ -43,7 +43,7 @@ void cAudioMode::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
     ESPUI.updateControlLabel (ControlId, RADIO_AUDIO_MODE_STR.c_str ());
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_BLACK);
 

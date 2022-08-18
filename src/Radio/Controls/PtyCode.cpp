@@ -326,7 +326,7 @@ static const PROGMEM String     RDS_PTY_CODE_STR        = "PTY CODE<br>Station G
 static const PROGMEM String     RDS_PTY_CODE            = "RDS_PTY_CODE";
 
 // *********************************************************************************************
-cPtyCode::cPtyCode () : cControlCommon (RDS_PTY_CODE)
+cPtyCode::cPtyCode () : cOldControlCommon (RDS_PTY_CODE)
 {
     // _ DEBUG_START;
 
@@ -341,7 +341,7 @@ void cPtyCode::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Select, color);
+    cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, RDS_PTY_CODE_STR.c_str ());
     ESPUI.setPanelStyle (ControlId, "font-size: 1.15em;");
 

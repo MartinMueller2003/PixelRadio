@@ -26,7 +26,7 @@ static const PROGMEM uint32_t IpAddress_MAX_SZ  = 16;
 static const PROGMEM IPAddress DefaultIpAddress = IPAddress (192, 168, 4, 1);
 
 // *********************************************************************************************
-cApIpAddress::cApIpAddress () : cControlCommon ("AP_IP_ADDR_STR")
+cApIpAddress::cApIpAddress () : cOldControlCommon ("AP_IP_ADDR_STR")
 {
     // _ DEBUG_START;
 
@@ -52,7 +52,7 @@ void cApIpAddress::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_AP_IP_ADDR_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (IpAddress_MAX_SZ), ControlColor::None, ControlId);
 

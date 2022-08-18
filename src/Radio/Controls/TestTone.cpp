@@ -58,7 +58,7 @@ fsm_Tone_state_Idle fsm_Tone_state_Idle_imp;
 fsm_Tone_state_SendingTone fsm_Tone_state_SendingTone_imp;
 
 // *********************************************************************************************
-cTestTone::cTestTone () : cControlCommon (emptyString)
+cTestTone::cTestTone () : cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
@@ -77,7 +77,7 @@ void cTestTone::AddControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
 
-    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
     ESPUI.updateControlLabel (ControlId, ADJUST_TEST_STR.c_str ());
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
 

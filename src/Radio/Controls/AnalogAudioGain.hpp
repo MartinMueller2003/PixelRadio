@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cAnalogAudioGain : public cControlCommon
+class cAnalogAudioGain : public cOldControlCommon
 {
 public:
 

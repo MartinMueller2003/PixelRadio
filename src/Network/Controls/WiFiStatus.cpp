@@ -22,7 +22,7 @@
 static const PROGMEM String WIFI_STA_STATUS_STR = "WiFi STA/AP STATUS";
 
 // *********************************************************************************************
-cWiFiStatus::cWiFiStatus () : cControlCommon (emptyString)
+cWiFiStatus::cWiFiStatus () : cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
@@ -34,7 +34,7 @@ void cWiFiStatus::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Label, color);
+    cOldControlCommon::AddControls (value, ControlType::Label, color);
     ESPUI.updateControlLabel (ControlId, WIFI_STA_STATUS_STR.c_str ());
     ESPUI.updateControlValue (ControlId, F ("0"));
     ESPUI.setElementStyle (ControlId, F ("max-width: 80%;"));

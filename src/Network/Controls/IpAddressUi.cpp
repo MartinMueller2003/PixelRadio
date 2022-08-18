@@ -24,7 +24,7 @@
 static const PROGMEM uint32_t IpAddress_MAX_SZ = 16;
 
 // *********************************************************************************************
-cIpAddressUi::cIpAddressUi () : cControlCommon (emptyString)
+cIpAddressUi::cIpAddressUi () : cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
@@ -69,7 +69,7 @@ void cIpAddressUi::AddControls (uint16_t value, ControlColor color)
             value);
     ESPUI.setElementStyle (TempId, CSS_LABEL_STYLE_BLACK);
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, Title.c_str ());
     ESPUI.addControl (ControlType::Max,
         emptyString.c_str (),

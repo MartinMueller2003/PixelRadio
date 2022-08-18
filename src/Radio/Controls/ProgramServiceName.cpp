@@ -26,7 +26,7 @@ static const PROGMEM String     RDS_PROG_SERV_STR       = "RDS_PROG_SERV_STR";
 static const PROGMEM String     RDS_PROG_SERV_NM_STR    = "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)";
 
 // *********************************************************************************************
-cProgramServiceName::cProgramServiceName () : cControlCommon (RDS_PROG_SERV_STR)
+cProgramServiceName::cProgramServiceName () : cOldControlCommon (RDS_PROG_SERV_STR)
 {
     // _ DEBUG_START;
     DataValueStr.reserve (10);
@@ -39,7 +39,7 @@ void cProgramServiceName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, RDS_PROG_SERV_NM_STR.c_str ());
     ESPUI.      addControl (    ControlType::Min,       emptyString.c_str (),   "4",    ControlColor::None,     ControlId);
     ESPUI.      addControl (    ControlType::Max,       emptyString.c_str (),   "8",    ControlColor::None,     ControlId);

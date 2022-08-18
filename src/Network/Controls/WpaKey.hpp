@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cWpaKey : public cControlCommon
+class cWpaKey : public cOldControlCommon
 {
 public:
 

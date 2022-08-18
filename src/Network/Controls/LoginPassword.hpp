@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cLoginPassword : public cControlCommon
+class cLoginPassword : public cOldControlCommon
 {
 public:
 

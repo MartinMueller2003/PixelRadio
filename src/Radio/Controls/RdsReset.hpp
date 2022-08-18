@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cRdsReset : public cControlCommon
+class cRdsReset : public cOldControlCommon
 {
 public:
 

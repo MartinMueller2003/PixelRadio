@@ -13,11 +13,11 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
+#include <ArduinoLog.h>
 #include "ConfigSave.hpp"
 #include "memdebug.h"
 #include "SaveControl.hpp"
-#include <Arduino.h>
-#include <ArduinoLog.h>
 
 // *********************************************************************************************
 
@@ -25,7 +25,7 @@ static const PROGMEM String     SAVE_SETTINGS_STR       = "SAVE SETTINGS";
 static const PROGMEM String     SAVE_SETTINGS_MSG_STR   = "[ Settings Changed, Save Required ]";
 
 // *********************************************************************************************
-cSaveControl::cSaveControl () : cControlCommon (emptyString)
+cSaveControl::cSaveControl () : cOldControlCommon (emptyString)
 {
     // DEBUG_START;
 
@@ -49,7 +49,7 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor _color)
 
     ESPUI.addControl (ControlType::Separator, SAVE_SETTINGS_STR.c_str (), emptyString, ControlColor::None, TabId);
 
-    cControlCommon::AddControls (TabId, ControlType::Button, color);
+    cOldControlCommon::AddControls (TabId, ControlType::Button, color);
     ESPUI.updateControlLabel (ControlId, SAVE_SETTINGS_STR.c_str ());
     ESPUI.updateControlValue (ControlId, SAVE_SETTINGS_STR);
     ESPUI.      setElementStyle (       StatusMessageId, CSS_LABEL_STYLE_WHITE);

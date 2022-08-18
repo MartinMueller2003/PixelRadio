@@ -25,7 +25,7 @@ static const PROGMEM String     DISABLED_STR            = "Disabled";
 static const PROGMEM String     WIFI_AP_FALLBK_STR      = "AP FALLBACK";
 
 // *********************************************************************************************
-cApFallback::cApFallback () : cControlCommon ("WIFI_AP_FALLBACK")
+cApFallback::cApFallback () : cOldControlCommon ("WIFI_AP_FALLBACK")
 {
     // _ DEBUG_START;
 
@@ -43,7 +43,7 @@ void cApFallback::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
     ESPUI.updateControlLabel (ControlId, WIFI_AP_FALLBK_STR.c_str ());
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_BLACK);
 

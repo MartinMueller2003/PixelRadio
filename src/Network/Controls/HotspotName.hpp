@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cHotspotName : public cControlCommon
+class cHotspotName : public cOldControlCommon
 {
 public:
 

@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cPreEmphasis : public cControlCommon
+class cPreEmphasis : public cOldControlCommon
 {
 public:
 

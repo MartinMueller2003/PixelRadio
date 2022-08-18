@@ -14,12 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
-#include "ESPUI.h"
 #include <Arduino.h>
+#include "OldControlCommon.hpp"
 
 // *********************************************************************************************
-class cSaveControl : public cControlCommon
+class cSaveControl : public cOldControlCommon
 {
 public:
 

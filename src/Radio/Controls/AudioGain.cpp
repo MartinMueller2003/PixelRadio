@@ -24,7 +24,7 @@ static const PROGMEM String RADIO_AUDIO_GAIN_STR        = "AUDIO GAIN";
 static const PROGMEM int32_t AUDIO_LEVEL_MAX            = uint32_t (675);
 
 // *********************************************************************************************
-cAudioGain::cAudioGain () : cControlCommon (emptyString)
+cAudioGain::cAudioGain () : cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
@@ -36,7 +36,7 @@ void cAudioGain::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Label, color);
+    cOldControlCommon::AddControls (value, ControlType::Label, color);
     ESPUI.updateControlLabel (ControlId, RADIO_AUDIO_GAIN_STR.c_str ());
     ESPUI.setPanelStyle (ControlId, F ("font-size: 1.15em;"));
     ESPUI.setElementStyle (ControlId, F ("width: 35%;"));

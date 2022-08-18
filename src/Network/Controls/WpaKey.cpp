@@ -26,7 +26,7 @@ static const PROGMEM String WIFI_WPA_KEY_STR    = "WIFI WPA KEY";
 static const PROGMEM uint32_t PASSPHRASE_MAX_SZ = 48;
 
 // *********************************************************************************************
-cWpaKey::cWpaKey () : cControlCommon ("WIFI_WPA_KEY_STR")
+cWpaKey::cWpaKey () : cOldControlCommon ("WIFI_WPA_KEY_STR")
 {
     // _ DEBUG_START;
     DataValueStr.reserve (PASSPHRASE_MAX_SZ + 2);
@@ -39,7 +39,7 @@ void cWpaKey::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_WPA_KEY_STR.c_str ());
     ESPUI.updateControlValue (ControlId, WIFI_PASS_HIDE_STR);
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (PASSPHRASE_MAX_SZ), ControlColor::None, ControlId);

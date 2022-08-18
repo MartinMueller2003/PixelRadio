@@ -27,7 +27,7 @@ static const PROGMEM String     UNITS_MHZ_STR           = " MHz";
 static const PROGMEM String     HOME_RAD_STAT_STR       = "RADIO STATUS";
 
 // *********************************************************************************************
-cFrequencyAdjust::cFrequencyAdjust ()  : cControlCommon (String (RADIO_FM_FREQ))
+cFrequencyAdjust::cFrequencyAdjust ()  : cOldControlCommon (String (RADIO_FM_FREQ))
 {
     // _ DEBUG_START;
 
@@ -89,7 +89,7 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
     ESPUI.setPanelStyle (AdjustStatusID, F ("font-size: 3.0em;"));
     ESPUI.setElementStyle (AdjustStatusID, F ("max-width: 75%;"));
 
-    cControlCommon::AddControls (value,
+    cOldControlCommon::AddControls (value,
         ControlType::Pad,
         color);
     ESPUI.updateControlLabel (ControlId, ADJUST_FRQ_ADJ_STR.c_str ());

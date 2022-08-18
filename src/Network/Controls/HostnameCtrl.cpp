@@ -24,7 +24,7 @@ static const PROGMEM String     STA_NAME_DEF_STR        = "PixelRadio";
 static const PROGMEM uint32_t STA_NAME_MAX_SZ           = 18;
 
 // *********************************************************************************************
-cHostnameCtrl::cHostnameCtrl () : cControlCommon ("STA_NAME_STR")
+cHostnameCtrl::cHostnameCtrl () : cOldControlCommon ("STA_NAME_STR")
 {
     // _ DEBUG_START;
 
@@ -46,7 +46,7 @@ void cHostnameCtrl::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_WEBSRV_NAME_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (STA_NAME_MAX_SZ), ControlColor::None, ControlId);
 

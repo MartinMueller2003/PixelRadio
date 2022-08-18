@@ -29,7 +29,7 @@ static const PROGMEM String     WIFI_GATEWAY_STR        = "WIFI_GATEWAY_STR";
 static const PROGMEM String     WIFI_DNS_STR            = "WIFI_DNS_STR";
 
 // *********************************************************************************************
-cDHCP::cDHCP () : cControlCommon (WIFI_DHCP_FLAG)
+cDHCP::cDHCP () : cOldControlCommon (WIFI_DHCP_FLAG)
 {
     // _ DEBUG_START;
 
@@ -63,7 +63,7 @@ void cDHCP::AddControls (uint16_t value, ControlColor color)
 
     IpAddressTitle.reserve (128);
 
-    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
     ESPUI.updateControlLabel (ControlId, WIFI_WEB_DHCP_STR.c_str ());
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_BLACK);
 
@@ -188,7 +188,7 @@ void cDHCP::restoreConfiguration (JsonObject &json)
 {
     // DEBUG_START;
 
-    cControlCommon::restoreConfiguration (json);
+    cOldControlCommon::restoreConfiguration (json);
     StaticIp.restoreConfiguration (json);
     StaticNetMask.restoreConfiguration (json);
     StaticGateWay.restoreConfiguration (json);
@@ -202,7 +202,7 @@ void cDHCP::saveConfiguration (JsonObject &json)
 {
     // DEBUG_START;
 
-    cControlCommon::saveConfiguration (json);
+    cOldControlCommon::saveConfiguration (json);
     StaticIp.saveConfiguration (json);
     StaticNetMask.saveConfiguration (json);
     StaticGateWay.saveConfiguration (json);

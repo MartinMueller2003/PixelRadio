@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cProgramServiceName : public cControlCommon
+class cProgramServiceName : public cOldControlCommon
 {
 public:
 

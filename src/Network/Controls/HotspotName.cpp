@@ -24,7 +24,7 @@ static const PROGMEM String     AP_NAME_DEF_STR         = "PixelRadioAP";
 static const PROGMEM uint32_t AP_NAME_MAX_SZ            = 18;
 
 // *********************************************************************************************
-cHotspotName::cHotspotName () : cControlCommon ("AP_NAME_STR")
+cHotspotName::cHotspotName () : cOldControlCommon ("AP_NAME_STR")
 {
     // _ DEBUG_START;
 
@@ -46,7 +46,7 @@ void cHotspotName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_AP_NAME_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (AP_NAME_MAX_SZ), ControlColor::None, ControlId);
 

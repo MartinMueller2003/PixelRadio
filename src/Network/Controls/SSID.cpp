@@ -25,7 +25,7 @@ static const PROGMEM String WIFI_SSID_STR       = "WIFI SSID";
 static const PROGMEM uint32_t SSID_MAX_SZ       = 32;
 
 // *********************************************************************************************
-cSSID::cSSID () : cControlCommon ("WIFI_SSID_STR")
+cSSID::cSSID () : cOldControlCommon ("WIFI_SSID_STR")
 {
     // _ DEBUG_START;
 
@@ -40,7 +40,7 @@ void cSSID::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_SSID_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (SSID_MAX_SZ), ControlColor::None, ControlId);
 

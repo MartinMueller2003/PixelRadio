@@ -30,7 +30,7 @@ static const PROGMEM String     RDS_DISABLED_STR        = "{ DISABLED }";
 static const PROGMEM String     RDS_EXPIRED_STR         = "{ EXPIRED }";
 
 // *********************************************************************************************
-cRdsText::cRdsText () : cControlCommon (emptyString)
+cRdsText::cRdsText () : cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
@@ -42,7 +42,7 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Label, color);
+    cOldControlCommon::AddControls (value, ControlType::Label, color);
     ESPUI.updateControlLabel (ControlId, HOME_CUR_TEXT_STR.c_str ());
     ESPUI.setPanelStyle (ControlId, String (F ("font-size: 1.25em;")));
     ESPUI.setElementStyle (ControlId, CSS_LABEL_STYLE_WHITE);

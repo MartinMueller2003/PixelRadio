@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cFrequencyAdjust : public cControlCommon
+class cFrequencyAdjust : public cOldControlCommon
 {
 public:
 

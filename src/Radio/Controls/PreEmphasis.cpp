@@ -43,7 +43,7 @@ static const PROGMEM String     RADIO_PRE_EMPH_STR      = "RADIO_PRE_EMPH_STR";
 static const PROGMEM String     PRE_EMPH_STR            = "FM PRE-EMPHASIS";
 
 // *********************************************************************************************
-cPreEmphasis::cPreEmphasis () : cControlCommon (RADIO_PRE_EMPH_STR)
+cPreEmphasis::cPreEmphasis () : cOldControlCommon (RADIO_PRE_EMPH_STR)
 {
     // DEBUG_START;
 
@@ -58,7 +58,7 @@ void cPreEmphasis::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Select, color);
+    cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, PRE_EMPH_STR.c_str ());
 
     for (auto &CurrentOption : MapOfRegions)

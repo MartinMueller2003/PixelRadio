@@ -27,12 +27,12 @@ const PROGMEM char      SERIAL_192_STR             []   = " 19.2K Baud";
 const PROGMEM char      SERIAL_576_STR             []   = " 57.6K Baud";
 const PROGMEM char      SERIAL_115_STR             []   = "115.2K Baud";
 
-const PROGMEM char      CSS_LABEL_STYLE_BLACK        [] = "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char      CSS_LABEL_STYLE_GREEN        [] = "background-color: unset; color: green; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char      CSS_LABEL_STYLE_MAROON       [] = "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char      CSS_LABEL_STYLE_RED          [] = "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char      CSS_LABEL_STYLE_TRANSPARENT  [] = "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char      CSS_LABEL_STYLE_WHITE        [] = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char      CSS_LABEL_STYLE_BLACK      []   = "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char      CSS_LABEL_STYLE_GREEN       []  = "background-color: unset; color: green; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char      CSS_LABEL_STYLE_MAROON      []  = "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char      CSS_LABEL_STYLE_RED        []   = "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char      CSS_LABEL_STYLE_TRANSPARENT []  = "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char      CSS_LABEL_STYLE_WHITE       []  = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
 
 const PROGMEM char UNITS_DBM_STR              [] = " dBm";
 

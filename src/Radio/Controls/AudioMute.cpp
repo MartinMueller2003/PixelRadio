@@ -24,7 +24,7 @@ static const PROGMEM String     RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
 static const PROGMEM String     ADJUST_MUTE_STR = "AUDIO MUTE";
 
 // *********************************************************************************************
-cAudioMute::cAudioMute () : cControlCommon (ADJUST_MUTE_STR)
+cAudioMute::cAudioMute () : cOldControlCommon (ADJUST_MUTE_STR)
 {
     // _ DEBUG_START;
 
@@ -42,7 +42,7 @@ void cAudioMute::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
     ESPUI.updateControlLabel (ControlId, ADJUST_MUTE_STR.c_str ());
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
 

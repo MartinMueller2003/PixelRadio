@@ -52,7 +52,7 @@ static const PROGMEM String     RADIO_RF_POWER_STR      = "RF POWER";
 static const PROGMEM String     RADIO_POWER_STR         = "RADIO_POWER_STR";
 
 // *********************************************************************************************
-cRfPower::cRfPower () : cControlCommon (RADIO_POWER_STR)
+cRfPower::cRfPower () : cOldControlCommon (RADIO_POWER_STR)
 {
     // _ DEBUG_START;
 
@@ -69,7 +69,7 @@ void cRfPower::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Select, color);
+    cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, RADIO_RF_POWER_STR.c_str ());
 
     for (auto &CurrentOption : MapOfPowerLevels)

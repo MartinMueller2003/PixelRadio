@@ -37,7 +37,7 @@ static const PROGMEM String     RADIO_VSWR_STR          = "HI-VSWR";
 static const PROGMEM String     RADIO_FAIL_STR          = "-FAIL-";
 
 // *********************************************************************************************
-cRfCarrier::cRfCarrier () : cControlCommon (RADIO_RF_CARR_FLAG)
+cRfCarrier::cRfCarrier () : cOldControlCommon (RADIO_RF_CARR_FLAG)
 {
     // _ DEBUG_START;
 
@@ -55,7 +55,7 @@ void cRfCarrier::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Switcher, color);
+    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
     ESPUI.updateControlLabel (ControlId, RADIO_RF_CARRIER_STR.c_str ());
 
     // DEBUG_END;

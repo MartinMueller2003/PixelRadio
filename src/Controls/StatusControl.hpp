@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: ApFallback.cpp
+   File: StatusControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -14,22 +14,22 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cApFallback : public cOldControlCommon
+class cStatusControl : public cControlCommon
 {
 public:
 
-    cApFallback ();
-    virtual ~cApFallback ()    {}
+    cStatusControl (const String &Title);
+    virtual ~cStatusControl ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String &value, String &ResponseMessage);
-};      // class cApFallback
+    void                restoreConfiguration (JsonObject &)     {}
+    void                saveConfiguration (JsonObject &)        {}
 
-extern cApFallback ApFallback;
+    virtual bool        set (const String &value);
+};      // class cStatusControl
 
 // *********************************************************************************************
 // OEF

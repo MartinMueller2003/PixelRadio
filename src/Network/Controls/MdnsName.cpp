@@ -28,7 +28,7 @@ static const PROGMEM uint32_t MDNS_NAME_MAX_SZ  = 18;
 #endif // ifdef OTA_ENB
 
 // *********************************************************************************************
-cMdnsName::cMdnsName () : cControlCommon ("MDNS_NAME_STR")
+cMdnsName::cMdnsName () : cOldControlCommon ("MDNS_NAME_STR")
 {
     // _ DEBUG_START;
 
@@ -50,7 +50,7 @@ void cMdnsName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_MDNS_NAME_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (MDNS_NAME_MAX_SZ), ControlColor::None, ControlId);
 

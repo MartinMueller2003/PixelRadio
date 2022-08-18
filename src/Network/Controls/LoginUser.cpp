@@ -24,7 +24,7 @@ static const PROGMEM String WIFI_DEV_USER_NM_STR        = "LOGIN USER NAME";
 static const PROGMEM uint32_t USER_NM_MAX_SZ            = 10;
 
 // *********************************************************************************************
-cLoginUser::cLoginUser () : cControlCommon ("USER_NAME_STR")
+cLoginUser::cLoginUser () : cOldControlCommon ("USER_NAME_STR")
 {
     // _ DEBUG_START;
 
@@ -46,7 +46,7 @@ void cLoginUser::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_DEV_USER_NM_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (USER_NM_MAX_SZ), ControlColor::None, ControlId);
 

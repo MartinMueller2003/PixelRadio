@@ -25,7 +25,7 @@ static const PROGMEM uint32_t USER_PW_MAX_SZ            = 10;
 const PROGMEM String WIFI_BLANK_MSG_STR                 = "LEAVE BLANK FOR AUTO LOGIN";
 
 // *********************************************************************************************
-cLoginPassword::cLoginPassword () : cControlCommon ("USER_PW_STR")
+cLoginPassword::cLoginPassword () : cOldControlCommon ("USER_PW_STR")
 {
     // _ DEBUG_START;
 
@@ -49,7 +49,7 @@ void cLoginPassword::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, ControlType::Text, color);
+    cOldControlCommon::AddControls (value, ControlType::Text, color);
     ESPUI.updateControlLabel (ControlId, WIFI_DEV_USER_PW_STR.c_str ());
     ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (USER_PW_MAX_SZ), ControlColor::None, ControlId);
     ESPUI.updateControlLabel (StatusMessageId, WIFI_BLANK_MSG_STR.c_str ());

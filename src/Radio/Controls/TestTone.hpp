@@ -14,13 +14,13 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 class fsm_Tone_state;
 
 // *********************************************************************************************
-class cTestTone : public cControlCommon
+class cTestTone : public cOldControlCommon
 {
 public:
 

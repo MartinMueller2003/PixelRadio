@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cHostnameCtrl : public cControlCommon
+class cHostnameCtrl : public cOldControlCommon
 {
 public:
 

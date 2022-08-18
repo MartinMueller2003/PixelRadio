@@ -14,23 +14,18 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
 #include <Arduino.h>
+#include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cRssiStatus : public cControlCommon
+class cRssiStatus : public cStatusControl
 {
 public:
 
     cRssiStatus ();
     virtual ~cRssiStatus ();
 
-    void        restoreConfiguration (JsonObject &)     {}
-    void        saveConfiguration (JsonObject &)        {}
-    void        AddControls (uint16_t Tab, ControlColor color);
     int32_t     getRssi ();
-    bool        set (String &, String &)                {return true;}
-
     void        set ();
 };      // class cRssiStatus
 

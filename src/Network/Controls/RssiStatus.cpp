@@ -13,17 +13,19 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
-#include "RssiStatus.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "memdebug.h"
+#include "RssiStatus.hpp"
 
 static const PROGMEM String HOME_WIFI_STR = "WIFI RSSI";
 
 // *********************************************************************************************
-cRssiStatus::cRssiStatus () : cControlCommon (emptyString)
+cRssiStatus::cRssiStatus () : cStatusControl (HOME_WIFI_STR)
 {
     // _ DEBUG_START;
+
+    ControlStyle = cControlCommon::eCssStyle::CssStyleWhite;
 
     // _ DEBUG_END;
 }
@@ -33,21 +35,6 @@ cRssiStatus::~cRssiStatus ()
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cRssiStatus::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cControlCommon::AddControls (value, ControlType::Label, color);
-    ESPUI.updateControlLabel (ControlId, HOME_WIFI_STR.c_str ());
-    ESPUI.updateControlValue (ControlId, F ("0"));
-    ESPUI.setElementStyle (ControlId, F ("max-width: 25%;"));
-    ESPUI.setPanelStyle (ControlId, F ("font-size: 1.25em;"));
-    set ();
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -84,8 +71,7 @@ void cRssiStatus::set ()
     Result      = String (getRssi ());
     Result      += UNITS_DBM_STR;
     // DEBUG_V (String ("Result: ") + Result);
-
-    ESPUI.print (ControlId, Result);
+    cStatusControl::set (Result);
 
     // DEBUG_END;
 }

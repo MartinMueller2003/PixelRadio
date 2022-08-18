@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cRfCarrier : public cControlCommon
+class cRfCarrier : public cOldControlCommon
 {
 public:
 

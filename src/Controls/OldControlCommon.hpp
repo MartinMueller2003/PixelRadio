@@ -19,12 +19,12 @@
 #include <ESPUI.h>
 
 // *********************************************************************************************
-class cControlCommon
+class cOldControlCommon
 {
 public:
 
-    cControlCommon (String _ConfigName);
-    virtual ~cControlCommon ();
+    cOldControlCommon (String _ConfigName);
+    virtual ~cOldControlCommon ();
 
     virtual void        AddControls (uint16_t TabId, ControlColor color) = 0;
     virtual uint32_t    get ();
@@ -52,7 +52,7 @@ protected:
 private:
 
     String ConfigName;
-};      // class cControlCommon
+};      // class cOldControlCommon
 
 // *********************************************************************************************
 // OEF

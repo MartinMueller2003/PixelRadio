@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cWiFiStatus : public cControlCommon
+class cWiFiStatus : public cOldControlCommon
 {
 public:
 

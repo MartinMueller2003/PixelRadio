@@ -14,12 +14,12 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include "IpAddressUi.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cDHCP : public cControlCommon
+class cDHCP : public cOldControlCommon
 {
 public:
 

@@ -27,7 +27,7 @@
 #define RDS_RESET_STR         "RESET RDS SETTINGS"
 
 // *********************************************************************************************
-cRdsReset::cRdsReset () : cControlCommon (emptyString)
+cRdsReset::cRdsReset () : cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 
@@ -47,7 +47,7 @@ void cRdsReset::AddControls (uint16_t value, ControlColor color)
 
     ESPUI.addControl (ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, value);
 
-    cControlCommon::AddControls (value, ControlType::Button, color);
+    cOldControlCommon::AddControls (value, ControlType::Button, color);
     ESPUI.updateControlValue (ControlId, RDS_RESET_STR);
     ESPUI.updateControlLabel (ControlId, RDS_RESET_STR);
     ESPUI.setPanelStyle (ControlId, String (F ("font-size: 1.35em;")));

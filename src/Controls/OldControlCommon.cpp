@@ -13,7 +13,7 @@
  */
 
 // *********************************************************************************************
-#include "ControlCommon.hpp"
+#include "OldControlCommon.hpp"
 #include "memdebug.h"
 #include "PixelRadio.h"
 #include <Arduino.h>
@@ -21,7 +21,7 @@
 #include <ESPUI.h>
 
 // *********************************************************************************************
-cControlCommon::cControlCommon (String _ConfigName)
+cOldControlCommon::cOldControlCommon (String _ConfigName)
 {
     // _ DEBUG_START;
 
@@ -34,11 +34,11 @@ cControlCommon::cControlCommon (String _ConfigName)
 }
 
 // *********************************************************************************************
-cControlCommon::~cControlCommon ()
+cOldControlCommon::~cOldControlCommon ()
 {}
 
 // *********************************************************************************************
-void cControlCommon::AddControls (
+void cOldControlCommon::AddControls (
     uint16_t            value,
     ControlType         uiControltype,
     ControlColor        color)
@@ -54,7 +54,7 @@ void cControlCommon::AddControls (
             {
                 if (UserInfo)
                 {
-                    static_cast <cControlCommon *> (UserInfo)->Callback (sender, type);
+                    static_cast <cOldControlCommon *> (UserInfo)->Callback (sender, type);
                 }
             },
             this);
@@ -81,7 +81,7 @@ void cControlCommon::AddControls (
 }
 
 // ************************************************************************************************
-void cControlCommon::Callback (Control * sender, int type)
+void cOldControlCommon::Callback (Control * sender, int type)
 {
     // DEBUG_START;
 
@@ -104,13 +104,13 @@ void cControlCommon::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-uint32_t        cControlCommon::get ()          {return DataValue;}
+uint32_t        cOldControlCommon::get ()       {return DataValue;}
 
 // *********************************************************************************************
-String&         cControlCommon::getStr ()       {return DataValueStr;}
+String&         cOldControlCommon::getStr ()    {return DataValueStr;}
 
 // *********************************************************************************************
-void            cControlCommon::restoreConfiguration (JsonObject &config)
+void            cOldControlCommon::restoreConfiguration (JsonObject &config)
 {
     // DEBUG_START;
 
@@ -125,7 +125,7 @@ void            cControlCommon::restoreConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-void cControlCommon::saveConfiguration (JsonObject &config)
+void cOldControlCommon::saveConfiguration (JsonObject &config)
 {
     // DEBUG_START;
 
@@ -137,7 +137,7 @@ void cControlCommon::saveConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-void cControlCommon::SetConfigName (String value)
+void cOldControlCommon::SetConfigName (String value)
 {
     // DEBUG_START;
 
