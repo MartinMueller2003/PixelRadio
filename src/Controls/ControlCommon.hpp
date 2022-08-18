@@ -31,11 +31,10 @@ public:
     virtual String&     get ();
     virtual void        restoreConfiguration (JsonObject &json);
     virtual void        saveConfiguration (JsonObject &json);
-    virtual bool        set (const String &value, String &ResponseMessage, bool ForceUpdate             = true);
-    virtual bool        validate (const String &value, String &ResponseMessage, bool ForceUpdate        = true);
+    virtual bool        set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
+    virtual bool        validate (const String &value, String &ResponseMessage);
 
 protected:
-
     enum eCssStyle
     {
         CssStyleBlack = 0,
@@ -46,12 +45,14 @@ protected:
         CssStyleWhite,
     };
 
+    virtual void        setMessage (const String &value, eCssStyle style);
+    virtual void        setControlStyle (eCssStyle style);
+    virtual void        setMessageStyle (eCssStyle style);
+
     uint16_t ControlId          = Control::noParent;
     uint16_t StatusMessageId    = Control::noParent;
-
-    eCssStyle ControlStyle              = CssStyleBlack;
-    eCssStyle ActiveLabelStyle          = CssStyleBlack;
-    eCssStyle InactiveLabelStyle        = CssStyleBlack;
+    eCssStyle ControlStyle      = CssStyleBlack;
+    eCssStyle StatusStyle       = CssStyleBlack;
 
     enum ePanelStyle
     {
@@ -60,17 +61,20 @@ protected:
         PanelStyle135,
         PanelStyle300,
     };
+    virtual void        setControlPanelStyle (ePanelStyle style);
+    virtual void        setMessagePanelStyle (ePanelStyle style);
+
     ePanelStyle ControlPanelStyle       = PanelStyle125;
     ePanelStyle MessagePanelStyle       = PanelStyle125;
 
     String DataValueStr;
 
     bool SkipSetLog = false;
+    const String &Title;
 
 private:
     ControlType uiControltype;
     const String &ConfigName;
-    const String &Title;
 };      // class cControlCommon
 
 // *********************************************************************************************

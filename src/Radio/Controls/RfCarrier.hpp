@@ -14,27 +14,23 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "BinaryControl.hpp"
 
 // *********************************************************************************************
-class cRfCarrier : public cOldControlCommon
+class cRfCarrier : public cBinaryControl
 {
 public:
 
     cRfCarrier ();
     virtual ~cRfCarrier ()    {}
 
-    void        AddHomeControls (uint16_t TabId, ControlColor color);
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String &value, String &ResponseMessage);
+    void                AddHomeControls (uint16_t TabId, ControlColor color);
+    virtual bool        set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
 
 private:
 
-    void        UpdateStatus (String &ResponseMessage);
-
-    uint16_t HomeId                     = Control::noParent;
-    uint16_t HomeStatusMessageId        = Control::noParent;
+    uint16_t HomeStatusMessageId;
 };      // class cRfCarrier
 
 extern cRfCarrier RfCarrier;

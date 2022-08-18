@@ -14,22 +14,17 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cAudioGain : public cOldControlCommon
+class cAudioGain : public cStatusControl
 {
 public:
 
     cAudioGain ();
     virtual ~cAudioGain ()    {}
-
-    void        restoreConfiguration (JsonObject &)     {}
-    void        saveConfiguration (JsonObject &)        {}
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &)                {return true;}
-    void        set ();
+    void set ();
 };      // class cAudioGain
 
 extern cAudioGain AudioGain;

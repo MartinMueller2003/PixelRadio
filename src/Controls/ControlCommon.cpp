@@ -74,16 +74,16 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
             },
             this);
 
-    ESPUI.setPanelStyle (ControlId, PanelStyles[int(ControlPanelStyle)]);
-    ESPUI.setElementStyle (ControlId, CssStyles[int(ControlStyle)]);
+    setControlPanelStyle (ControlPanelStyle);
+    setControlStyle (ControlStyle);
 
     StatusMessageId = ESPUI.addControl (ControlType::Label,
             emptyString.c_str (),
             emptyString,
             ControlColor::None,
             ControlId);
-    ESPUI.setPanelStyle (StatusMessageId, PanelStyles[int(MessagePanelStyle)]);
-    ESPUI.setElementStyle (StatusMessageId, CssStyles[int(InactiveLabelStyle)]);
+    setMessagePanelStyle (MessagePanelStyle);
+    setMessageStyle (ControlStyle);
 
     // force a UI Update
     String Response;
@@ -97,8 +97,8 @@ void cControlCommon::Callback (Control * sender, int type)
 {
     // DEBUG_START;
 
-    // DEBUG_V (       String ("value: ") + String (sender->value));
-    // DEBUG_V (       String (" type: ") + String (type));
+    // DEBUG_V (String ("value: ") + String (sender->value));
+    // DEBUG_V ( String (" type: ") + String (type));
 
     do  // once
     {
@@ -107,10 +107,8 @@ void cControlCommon::Callback (Control * sender, int type)
             // DEBUG_V ("Ignore button up events");
             break;
         }
-        String Response;
-        eCssStyle SelectedStyle = set (sender->value, Response) ? ActiveLabelStyle : InactiveLabelStyle;
-        ESPUI.setElementStyle (StatusMessageId, CssStyles[int(SelectedStyle)]);
-        ESPUI.print (StatusMessageId, Response);
+        String Dummy;
+        set (sender->value, Dummy);
     } while (false);
 
     // DEBUG_END;
@@ -150,8 +148,8 @@ void cControlCommon::saveConfiguration (JsonObject &config)
 bool cControlCommon::set (const String &value, String &ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
-    // DEBUG_V (       String ("      value: ") + value);
-    // DEBUG_V (       String ("ForceUpdate: ") + String (ForceUpdate));
+    // DEBUG_V ( String ("      value: ") + value);
+    // DEBUG_V ( String ("ForceUpdate: ") + String (ForceUpdate));
 
     bool Response = true;
     ResponseMessage.reserve (128);
@@ -188,8 +186,8 @@ bool cControlCommon::set (const String &value, String &ResponseMessage, bool For
         ESPUI.print (ControlId, DataValueStr);
     } while (false);
 
-    // DEBUG_V (       String ("ResponseMsg: '") + ResponseMessage + "'");
-    // DEBUG_V (       String ("   Response: ")  + String (Response));
+    // DEBUG_V ( String ("ResponseMsg: '") + ResponseMessage + "'");
+    // DEBUG_V ( String ("   Response: ")  + String (Response));
 
     // DEBUG_END;
 
@@ -197,7 +195,68 @@ bool cControlCommon::set (const String &value, String &ResponseMessage, bool For
 }
 
 // *********************************************************************************************
-bool cControlCommon::validate (const String &, String &, bool)
+void cControlCommon::setControlStyle (eCssStyle style)
+{
+    // DEBUG_START;
+    // DEBUG_V ( String ("style: ") + String (style));
+
+    ControlStyle = style;
+    ESPUI.setElementStyle (ControlId, CssStyles[int(style)]);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cControlCommon::setControlPanelStyle (ePanelStyle style)
+{
+    // DEBUG_START;
+    // DEBUG_V ( String ("style: ") + String (style));
+
+    ControlPanelStyle = style;
+    ESPUI.setPanelStyle (ControlId, PanelStyles[int(style)]);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cControlCommon::setMessage (const String &value, eCssStyle style)
+{
+    // DEBUG_START;
+
+    // DEBUG_V ( String ("value: ") + value);
+    // DEBUG_V ( String ("style: ") + String (style));
+    ESPUI.print (StatusMessageId, value);
+    setMessageStyle (style);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cControlCommon::setMessageStyle (eCssStyle style)
+{
+    // DEBUG_START;
+    // DEBUG_V (String ("style: ") + String (style));
+
+    StatusStyle = style;
+    ESPUI.setElementStyle (StatusMessageId, CssStyles[int(style)]);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cControlCommon::setMessagePanelStyle (ePanelStyle style)
+{
+    // DEBUG_START;
+    // DEBUG_V (String ("style: ") + String (style));
+
+    MessagePanelStyle = style;
+    ESPUI.setPanelStyle (MessagePanelStyle, PanelStyles[int(style)]);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+bool cControlCommon::validate (const String &, String &)
 {
     // DEBUG_START;
 

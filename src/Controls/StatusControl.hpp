@@ -29,6 +29,7 @@ public:
     void                saveConfiguration (JsonObject &)        {}
 
     virtual bool        set (const String &value);
+    virtual void        set (const String &value, eCssStyle style);
 };      // class cStatusControl
 
 // *********************************************************************************************

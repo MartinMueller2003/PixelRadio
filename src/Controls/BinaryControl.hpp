@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: PeakAudio.cpp
+   File: BinaryControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,24 +15,22 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "StatusControl.hpp"
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cPeakAudio : public cStatusControl
+class cBinaryControl : public cControlCommon
 {
 public:
 
-    cPeakAudio ();
-    virtual ~cPeakAudio ()    {}
+    cBinaryControl (const String &ConfigName, const String &Title);
+    virtual ~cBinaryControl ()    {}
 
-    void poll ();
+    virtual bool        set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
+    virtual bool        validate (const String &value, String &ResponseMessage);
 
-private:
-
-    uint32_t NextReadingTime = 0;
-};      // class cPeakAudio
-
-extern cPeakAudio PeakAudio;
+protected:
+    bool DataValue = false;
+};      // class cBinaryControl
 
 // *********************************************************************************************
 // OEF

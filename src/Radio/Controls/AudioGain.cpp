@@ -13,36 +13,21 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
+#include <ArduinoLog.h>
 #include "AnalogAudioGain.hpp"
 #include "AudioGain.hpp"
 #include "AudioInputImpedance.hpp"
 #include "memdebug.h"
-#include <Arduino.h>
-#include <ArduinoLog.h>
 
 static const PROGMEM String RADIO_AUDIO_GAIN_STR        = "AUDIO GAIN";
 static const PROGMEM int32_t AUDIO_LEVEL_MAX            = uint32_t (675);
 
 // *********************************************************************************************
-cAudioGain::cAudioGain () : cOldControlCommon (emptyString)
+cAudioGain::cAudioGain () : cStatusControl (RADIO_AUDIO_GAIN_STR)
 {
     // _ DEBUG_START;
-
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cAudioGain::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Label, color);
-    ESPUI.updateControlLabel (ControlId, RADIO_AUDIO_GAIN_STR.c_str ());
-    ESPUI.setPanelStyle (ControlId, F ("font-size: 1.15em;"));
-    ESPUI.setElementStyle (ControlId, F ("width: 35%;"));
-    set ();
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -68,8 +53,9 @@ void cAudioGain::set ()
     }
     Result      += String (FinalGain);
     Result      += F (" dB");
-    // DEBUG_V(String("ControlId: ") + String(ControlId));
-    ESPUI.print (ControlId, Result);
+
+    cStatusControl::set (Result);
+
     // DEBUG_V(Result);
 
     // DEBUG_END;

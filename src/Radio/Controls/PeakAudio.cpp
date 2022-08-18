@@ -13,36 +13,22 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
+#include <ArduinoLog.h>
 #include "memdebug.h"
 #include "PeakAudio.hpp"
 #include "QN8027RadioApi.hpp"
-#include <Arduino.h>
-#include <ArduinoLog.h>
 
 static const PROGMEM String RADIO_AUDLVL_STR    = "PEAK AUDIO LEVEL";
 static const PROGMEM uint32_t   AUDIO_MEAS_TIME = uint32_t (2000);
 static const PROGMEM uint32_t   AUDIO_LEVEL_MAX = uint32_t (675);
 
 // *********************************************************************************************
-cPeakAudio::cPeakAudio () : cOldControlCommon (emptyString)
+cPeakAudio::cPeakAudio () : cStatusControl (RADIO_AUDLVL_STR)
 {
     // _ DEBUG_START;
 
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cPeakAudio::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Label, color);
-
-    ESPUI.updateControlLabel (ControlId, RADIO_AUDLVL_STR.c_str ());
-    ESPUI.setPanelStyle (ControlId, F ("font-size: 1.15em;"));
-    ESPUI.setElementStyle (ControlId, F ("width: 35%;"));
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -73,7 +59,9 @@ void cPeakAudio::poll ()
         }
         Result  += String (currentReading);
         Result  += F ("mV");
-        ESPUI.print (ControlId, Result);
+
+        cStatusControl::set (Result);
+
         Log.verboseln (String (F ("Peak Audio Amplitude %03umV.")).c_str (), currentReading);
     } while (false);
 

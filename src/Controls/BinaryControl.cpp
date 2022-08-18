@@ -1,5 +1,5 @@
 /*
-   File: StatusControl.cpp
+   File: BinaryControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,38 +15,51 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "StatusControl.hpp"
+#include "BinaryControl.hpp"
 #include "memdebug.h"
 
 // *********************************************************************************************
-cStatusControl::cStatusControl (const String &_Title) :
-    cControlCommon (emptyString, ControlType::Label, _Title)
+cBinaryControl::cBinaryControl (const String &ConfigName, const String &_Title) :
+    cControlCommon (ConfigName, ControlType::Switcher, _Title)
 {
     // _ DEBUG_START;
-
-    SkipSetLog = true;
 
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cStatusControl::set (const String &value, eCssStyle style)
+bool cBinaryControl::set (const String &value, String &ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    cControlCommon::setControlStyle (style);
-    set (value);
+    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+
+    if (Response)
+    {
+        DataValue = value.equals (F ("1"));
+    }
+    // DEBUG_V (String ("DataValue: ") + String (DataValue));
 
     // DEBUG_END;
+
+    return Response;
 }
 
 // *********************************************************************************************
-bool cStatusControl::set (const String &value)
+bool cBinaryControl::validate (const String &value, String &ResponseMessage)
 {
     // DEBUG_START;
+    // DEBUG_V (String ("value: ") + value);
 
-    String      Dummy;
-    bool        Response = cControlCommon::set (value, Dummy);
+    bool Response = true;
+
+    if (!value.equals (F ("0")) && !value.equals (F ("1")))
+    {
+        ResponseMessage = Title + F (": Invalid Binary Value '") + value + F ("'");
+        Response        = false;
+    }
+    // DEBUG_V (       String ("Response: ") + String (Response));
+    // DEBUG_V (       String (" Message: ") + ResponseMessage);
 
     // DEBUG_END;
 
