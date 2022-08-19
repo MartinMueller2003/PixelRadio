@@ -14,20 +14,16 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cHotspotName : public cOldControlCommon
+class cHotspotName : public cControlCommon
 {
 public:
 
     cHotspotName ();
     virtual ~cHotspotName ();
-
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
 };      // class cHotspotName
 
 extern cHotspotName HotspotName;

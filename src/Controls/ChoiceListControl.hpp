@@ -24,7 +24,7 @@ class cChoiceListControl : public cControlCommon
 public:
 #define ChoiceList_t std::map <String, String>
 
-    cChoiceListControl (const String & ConfigName, const String & Title, ChoiceList_t & ChoiceList);
+    cChoiceListControl (const String & ConfigName, const String & Title, const String & DefaultValue, ChoiceList_t & ChoiceList);
     virtual ~cChoiceListControl ()    {}
 
     virtual void        AddControls (uint16_t value, ControlColor color);

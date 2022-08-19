@@ -15,10 +15,10 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "OldControlCommon.hpp"
+#include "BinaryControl.hpp"
 
 // *********************************************************************************************
-class cDHCP : public cOldControlCommon
+class cDHCP : public cBinaryControl
 {
 public:
 
@@ -26,8 +26,9 @@ public:
     virtual ~cDHCP ();
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    uint32_t    get ();
-    bool        set (String & value, String & ResponseMessage);
+    bool        getBool ();
+    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    void        SetControlMessage (String & ResponseMessage);
     void        TestIpSettings ();
 
     void        restoreConfiguration (JsonObject & json);

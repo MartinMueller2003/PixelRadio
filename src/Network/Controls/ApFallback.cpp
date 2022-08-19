@@ -22,13 +22,9 @@ static const PROGMEM String     WIFI_AP_FALLBK_STR      = "AP FALLBACK";
 static const PROGMEM String     WIFI_AP_FALLBACK        = "WIFI_AP_FALLBACK";
 
 // *********************************************************************************************
-cApFallback::cApFallback () :   cBinaryControl (WIFI_AP_FALLBACK, WIFI_AP_FALLBK_STR)
+cApFallback::cApFallback () :   cBinaryControl (WIFI_AP_FALLBACK, WIFI_AP_FALLBK_STR, true)
 {
     // _ DEBUG_START;
-
-    DataValueStr        = "1";
-    DataValue           = true;
-
     // _ DEBUG_END;
 }
 

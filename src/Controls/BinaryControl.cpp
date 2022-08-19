@@ -23,10 +23,12 @@ static const PROGMEM String     ENABLED_STR     = "Enabled";
 static const PROGMEM String     DISABLED_STR    = "Disabled";
 
 // *********************************************************************************************
-cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title) :
-    cControlCommon (ConfigName, ControlType::Switcher, _Title)
+cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title, bool DefaultValue) :
+    cControlCommon (ConfigName, ControlType::Switcher, _Title, String (DefaultValue), 10)
 {
     // _ DEBUG_START;
+
+    DataValue = DefaultValue;
 
     // _ DEBUG_END;
 }

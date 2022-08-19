@@ -22,9 +22,10 @@ class cBinaryControl : public cControlCommon
 {
 public:
 
-    cBinaryControl (const String & ConfigName, const String & Title);
+    cBinaryControl (const String & ConfigName, const String & Title, bool DefaultValue);
     virtual ~cBinaryControl ()    {}
 
+    virtual bool        getBool () {return DataValue;}
     virtual void        restoreConfiguration (JsonObject & json);
     virtual void        saveConfiguration (JsonObject & json);
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);

@@ -15,11 +15,13 @@
 #include <esp_wifi.h>
 #include <Int64String.h>
 
+#include "WiFiDriver.hpp"
+
 #include "HotspotName.hpp"
-#include "memdebug.h"
 #include "HostnameCtrl.hpp"
 #include "MdnsName.hpp"
 #include "SSID.hpp"
+#include "DHCP.hpp"
 #include "WpaKey.hpp"
 #include "ApIpAddress.hpp"
 #include "ApFallback.hpp"
@@ -29,7 +31,8 @@
 #include "StaticGatewayAddress.hpp"
 #include "StaticNetmask.hpp"
 #include "StaticDnsAddress.hpp"
-#include "WiFiDriver.hpp"
+
+#include "memdebug.h"
 
 // -----------------------------------------------------------------------------
 /*
@@ -224,10 +227,10 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
         WiFi.disconnect (true);
         // DEBUG_V("");
 
-        if (!HostnameCtrl.getStr ().isEmpty ())
+        if (!HostnameCtrl.get ().isEmpty ())
         {
             // DEBUG_V(String("Setting WiFi Hostname: ") + Hostname.getStr());
-            WiFi.hostname (HostnameCtrl.getStr ());
+            WiFi.hostname (HostnameCtrl.get ());
         }
         // DEBUG_V("Setting WiFi Mode to STA");
         WiFi.enableAP (false);
@@ -241,7 +244,7 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
         Log.infoln ((String (F ("Connecting to '")) +
                      current_ssid +
                      String (F ("' as ")) +
-                     HostnameCtrl.getStr ()).c_str ());
+                     HostnameCtrl.get ()).c_str ());
 
         WiFi.setSleep (false);
         // DEBUG_V("");
@@ -665,7 +668,7 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
     {
         WiFi.enableSTA (false);
         WiFi.enableAP (true);
-        String FinalSsid = HotspotName.getStr ();
+        String FinalSsid = HotspotName.get ();
 
 #ifdef ADD_CHIP_ID
             FinalSsid += int64String (ESP.getEfuseMac (), HEX);

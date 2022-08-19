@@ -21,13 +21,9 @@ static const PROGMEM String     WIFI_AP_REBOOT_STR      = "AP REBOOT";
 static const PROGMEM String     WIFI_REBOOT_FLAG        = "WIFI_REBOOT_FLAG";
 
 // *********************************************************************************************
-cApReboot::cApReboot () :   cBinaryControl (WIFI_REBOOT_FLAG, WIFI_AP_REBOOT_STR)
+cApReboot::cApReboot () :   cBinaryControl (WIFI_REBOOT_FLAG, WIFI_AP_REBOOT_STR, true)
 {
     // _ DEBUG_START;
-
-    DataValueStr        = "1";
-    DataValue           = true;
-
     // _ DEBUG_END;
 }
 

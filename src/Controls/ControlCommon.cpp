@@ -62,12 +62,19 @@ const PROGMEM String PanelStyles [] =
 // *********************************************************************************************
 cControlCommon::cControlCommon (const String    & _ConfigName,
                                 ControlType     _uiControltype,
-                                const String    & _Title) :
+                                const String    & _Title,
+                                const String    & _DefaultValue,
+                                uint32_t        _MaxDataLength) :
     ConfigName (_ConfigName),
     uiControltype (_uiControltype),
-    Title (_Title)
+    Title (_Title),
+    DefaultValue (_DefaultValue),
+    MaxDataLength (_MaxDataLength)
 {
     // _ DEBUG_START;
+
+    DataValueStr = DefaultValue;
+
     // _ DEBUG_END;
 }
 
@@ -93,6 +100,11 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
                                   },
                                   this);
 
+    if (MaxDataLength)
+    {
+        DataValueStr.reserve (MaxDataLength + 2);
+        ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (MaxDataLength), color, ControlId);
+    }
     setControlPanelStyle (ControlPanelStyle);
     // setControlStyle (ControlStyle);
 
@@ -138,7 +150,18 @@ void cControlCommon::Callback (Control * sender, int type)
 String  &cControlCommon::get () {return DataValueStr;}
 
 // *********************************************************************************************
-void    cControlCommon::restoreConfiguration (JsonObject & config)
+void    cControlCommon::ResetToDefaults ()
+{
+    // DEBUG_START;
+
+    String dummy;
+    set (DefaultValue, dummy);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cControlCommon::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
@@ -220,6 +243,19 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
 }
 
 // *********************************************************************************************
+void cControlCommon::setControl (const String & value, eCssStyle style)
+{
+    // DEBUG_START;
+
+    // DEBUG_V ( String ("value: ") + value);
+    // DEBUG_V ( String ("style: ") + String (style));
+    ESPUI.print (ControlId, value);
+    setControlStyle (style);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 void cControlCommon::setControlLabel (const String & value)
 {
     // DEBUG_START;
@@ -289,11 +325,20 @@ void cControlCommon::setMessagePanelStyle (ePanelStyle style)
 }
 
 // *********************************************************************************************
-bool cControlCommon::validate (const String &, String &, bool)
+bool cControlCommon::validate (const String & value, String &, bool)
 {
     // DEBUG_START;
 
-    return true;
+    bool Response = true;
+
+    if (MaxDataLength)
+    {
+        if (value.length () > MaxDataLength)
+        {
+            Response = false;
+        }
+    }
+    return Response;
 
     // DEBUG_END;
 }

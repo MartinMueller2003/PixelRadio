@@ -21,13 +21,12 @@
 static const PROGMEM uint32_t IpAddress_MAX_SZ = 16;
 
 // *********************************************************************************************
-cIpAddressControl::cIpAddressControl (const String & ConfigName, const String & Title) :
-    cControlCommon (ConfigName, ControlType::Text, Title)
+cIpAddressControl::cIpAddressControl (const String & ConfigName, const String & Title, const IPAddress DefaultValue) :
+    cControlCommon (ConfigName, ControlType::Text, Title, DefaultValue.toString (), IpAddress_MAX_SZ)
 {
     // _ DEBUG_START;
 
-    DataValueStr.reserve (IpAddress_MAX_SZ + 2);
-    DataValueStr = F ("0.0.0.0");
+    IpAddress = DefaultValue;
 
     // _ DEBUG_END;
 }
@@ -45,20 +44,6 @@ IPAddress cIpAddressControl::GetIpAddress ()
     // DEBUG_V (String (": ") + IpAddress.toString ());
 
     return IpAddress;
-}
-
-// *********************************************************************************************
-void cIpAddressControl::ResetToDefaults ()
-{
-    // DEBUG_START;
-
-    String value = F ("0.0.0.0");
-    IpAddress = IPAddress (uint32_t (0));
-    String dummy;
-
-    set (value, dummy, true);
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -84,6 +69,8 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
             setMessage (ResponseMessage, eCssStyle::CssStyleRed_bw);
             break;
         }
+        setControl (TempIp.toString (), eCssStyle::CssStyleBlack_bw);
+        setMessage (emptyString, eCssStyle::CssStyleTransparent);
 
         if (!ForceUpdate && (TempIp == IpAddress))
         {
@@ -91,9 +78,6 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
             Log.infoln ((Title + F (": Unchanged")).c_str ());
             break;
         }
-        setControlStyle (eCssStyle::CssStyleBlack_bw);
-        setMessage (emptyString, eCssStyle::CssStyleTransparent);
-
         IpAddress       = TempIp;
         DataValueStr    = IpAddress.toString ();
     } while (false);

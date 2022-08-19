@@ -24,7 +24,6 @@ public:
 
     cApIpAddress ();
     virtual ~cApIpAddress ();
-    void ResetToDefaults ();
 
 private:
 };      // class cApIpAddress

@@ -14,20 +14,19 @@
 
 #pragma once
 
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cHostnameCtrl : public cOldControlCommon
+class cHostnameCtrl : public cControlCommon
 {
 public:
 
     cHostnameCtrl ();
     virtual ~cHostnameCtrl ();
 
-    void        AddControls (uint16_t TabId, ControlColor color);
     void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
+    bool        set (const String & value, String & Response, bool ForceUpdate = false);
 };      // class cHostnameCtrl
 
 extern cHostnameCtrl HostnameCtrl;

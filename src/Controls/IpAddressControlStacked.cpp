@@ -21,8 +21,8 @@
 static const PROGMEM uint32_t IpAddress_MAX_SZ = 16;
 
 // *********************************************************************************************
-cIpAddressControlStacked::cIpAddressControlStacked (const String & ConfigName, const String & Title) :
-    cIpAddressControl (ConfigName, Title)
+cIpAddressControlStacked::cIpAddressControlStacked (const String & ConfigName, const String & Title, IPAddress DefaultValue) :
+    cIpAddressControl (ConfigName, Title, DefaultValue)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

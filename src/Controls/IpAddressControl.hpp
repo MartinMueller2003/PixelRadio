@@ -22,10 +22,9 @@ class cIpAddressControl : public cControlCommon
 {
 public:
 
-    cIpAddressControl (const String & ConfigName, const String & Title);
+    cIpAddressControl (const String & ConfigName, const String & Title, IPAddress DefaultValue);
     virtual ~cIpAddressControl ();
 
-    void                ResetToDefaults ();
     IPAddress           GetIpAddress ();
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
     virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);

@@ -23,7 +23,7 @@ static const PROGMEM String WIFI_GATEWAY_STR = "WIFI_GATEWAY_STR";
 static const PROGMEM String WIFI_IP_ADDR = "Gateway IP Address";
 
 // *********************************************************************************************
-cStaticGatewayAddress::cStaticGatewayAddress () :   cIpAddressControlStacked (WIFI_GATEWAY_STR, WIFI_IP_ADDR)
+cStaticGatewayAddress::cStaticGatewayAddress () :   cIpAddressControlStacked (WIFI_GATEWAY_STR, WIFI_IP_ADDR, IPAddress (uint32_t (0)))
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

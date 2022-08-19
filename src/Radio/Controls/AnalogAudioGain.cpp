@@ -28,7 +28,6 @@
 #define VGA_GAIN3_STR     "12dB (default)"
 #define VGA_GAIN4_STR     "15dB"
 #define VGA_GAIN5_STR     "18dB"
-#define VGA_GAIN_DEF_STR  VGA_GAIN3_STR;
 
 static std::map <String, String> MapOfGainValues
 {
@@ -42,14 +41,12 @@ static std::map <String, String> MapOfGainValues
 
 static const PROGMEM String     RADIO_VGA_AUDIO_STR     = "ANALOG (VGA) AUDIO GAIN";
 static const PROGMEM String     ANALOG_GAIN_STR         = "ANALOG_GAIN_STR";
+static const PROGMEM String     Default                 = VGA_GAIN3_STR;
 
 // *********************************************************************************************
-cAnalogAudioGain::cAnalogAudioGain () :   cChoiceListControl (ANALOG_GAIN_STR, RADIO_VGA_AUDIO_STR, MapOfGainValues)
+cAnalogAudioGain::cAnalogAudioGain () :   cChoiceListControl (ANALOG_GAIN_STR, RADIO_VGA_AUDIO_STR, Default, MapOfGainValues)
 {
     // _ DEBUG_START;
-
-    DataValueStr = VGA_GAIN_DEF_STR;
-
     // _ DEBUG_END;
 }
 

@@ -23,7 +23,7 @@ class cIpAddressControlStacked : public cIpAddressControl
 {
 public:
 
-    cIpAddressControlStacked (const String & ConfigName, const String & Title);
+    cIpAddressControlStacked (const String & ConfigName, const String & Title, IPAddress DefaultValue);
     virtual ~cIpAddressControlStacked ();
 
     virtual void AddControls (uint16_t TabId, ControlColor color);

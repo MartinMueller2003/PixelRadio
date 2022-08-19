@@ -29,16 +29,11 @@ static const PROGMEM String     WIFI_WEB_DHCP_STR       = "WEBSERVER DHCP";
 static const PROGMEM String     DHCP_LOCKED_STR         = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
 
 // *********************************************************************************************
-cDHCP::cDHCP () :   cOldControlCommon (WIFI_DHCP_FLAG)
+cDHCP::cDHCP () :   cBinaryControl (WIFI_DHCP_FLAG, WIFI_WEB_DHCP_STR, true)
 {
     // _ DEBUG_START;
 
     // use DHCP by default
-    DataValueStr        = "1";
-    DataValue           = true;
-
-    ActiveLabelStyle    = CSS_LABEL_STYLE_BLACK;
-    InactiveLabelStyle  = CSS_LABEL_STYLE_BLACK;
 
     // _ DEBUG_END;
 }
@@ -51,18 +46,13 @@ cDHCP::~cDHCP ()
 }
 
 // *********************************************************************************************
-void cDHCP::AddControls (uint16_t value, ControlColor color)
+void cDHCP::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
-    String IpAddressTitle;
 
-    IpAddressTitle.reserve (128);
+    cBinaryControl::AddControls (TabId, color);
 
-    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_WEB_DHCP_STR.c_str ());
-    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_BLACK);
-
-    wifiStaticSettingsID = ESPUI.addControl (ControlType::Label, STATIC_NETWORK_SETTINGS.c_str (), emptyString, color, value);
+    wifiStaticSettingsID = ESPUI.addControl (ControlType::Label, STATIC_NETWORK_SETTINGS.c_str (), emptyString, color, TabId);
 
     StaticIpAddress.AddControls (wifiStaticSettingsID, color);
     StaticNetmask.AddControls (wifiStaticSettingsID, color);
@@ -71,20 +61,17 @@ void cDHCP::AddControls (uint16_t value, ControlColor color)
 
     String      Dummy;
     String      NewVal;
-
-    NewVal              = String (DataValue);
-    DataValue           = !DataValue;
-    DataValueStr        = String (DataValue);
-    set (NewVal, Dummy);
+    NewVal = String (DataValue);
+    set (NewVal, Dummy, true);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-uint32_t cDHCP::get ()
+bool cDHCP::getBool ()
 {
     // DEBUG_START;
-    bool response = true;
+    bool response = true;       // using DHCP
 
     String Dummy;
 
@@ -97,7 +84,7 @@ uint32_t cDHCP::get ()
             // DEBUG_V("IP Settings wont support static settings");
             break;
         }
-        response = (0 != DataValue);
+        response = DataValue;
     } while (false);
 
     // DEBUG_END;
@@ -105,55 +92,41 @@ uint32_t cDHCP::get ()
 }
 
 // *********************************************************************************************
-bool cDHCP::set (String & value, String & ResponseMessage)
+bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
     // DEBUG_V(String("       value: ") + value);
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+    // DEBUG_V (String ("OldDataValue: ") + String (DataValue));
 
-    bool Response       = true;
-    uint32_t OldState   = get ();
-
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
+    bool        OldState        = getBool ();
+    bool        OldDataValue    = DataValue;
+    bool        Response        = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
+    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("    OldState: ") + String (OldState));
+    // DEBUG_V (       String ("    NewState: ") + String (getBool ()));
 
     do  // once
     {
-        if (!value.equals (F ("1")) && !value.equals (F ("0")))
+        if (!Response)
         {
-            // DEBUG_V("Un-Supported value");
-            ResponseMessage = String (F ("DHCP Invalid set value: '")) + value + F ("'");
-            Log.infoln (ResponseMessage.c_str ());
-            Response = false;
+            // DEBUG_V ("New Value is not valid");
             break;
         }
-        // DEBUG_V("Valid Value");
-        uint32_t NewUseDhcp = value.equals (F ("1"));
 
-        if (NewUseDhcp == DataValue)
+        if (!ForceUpdate && (OldDataValue == DataValue))
         {
-            // DEBUG_V("No change in value");
+            // DEBUG_V ("No change in value");
             break;
         }
-        DataValue       = NewUseDhcp;
-        DataValueStr    = String (DataValue);
-        // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-        // DEBUG_V(String("   DataValue: ") + String(DataValue));
-
-        ESPUI.updateControlValue (ControlId, DataValueStr);
-        Log.infoln ((String (F ("WiFi Connection Set to: ")) + (DataValue ? F ("DHCP") : F ("Static IP"))).c_str ());
-
         SetStaticFieldsVisibility ();
-        ValidateStaticSettings (ResponseMessage);
+        SetControlMessage (ResponseMessage);
 
-        if (OldState != get ())
+        if (OldState != getBool ())
         {
             WiFiDriver.WiFiReset ();
         }
-        displaySaveWarning ();
-
         // For some reason the initial load of the UI does not work properly
         ESPUI.jsonDom (0);
     } while (false);
@@ -167,7 +140,7 @@ void cDHCP::restoreConfiguration (JsonObject & json)
 {
     // DEBUG_START;
 
-    cOldControlCommon::restoreConfiguration (json);
+    cBinaryControl::restoreConfiguration (json);
     StaticIpAddress.restoreConfiguration (json);
     StaticNetmask.restoreConfiguration (json);
     StaticGatewayAddress.restoreConfiguration (json);
@@ -181,7 +154,7 @@ void cDHCP::saveConfiguration (JsonObject & json)
 {
     // DEBUG_START;
 
-    cOldControlCommon::saveConfiguration (json);
+    cBinaryControl::saveConfiguration (json);
     StaticIpAddress.saveConfiguration (json);
     StaticNetmask.saveConfiguration (json);
     StaticGatewayAddress.saveConfiguration (json);
@@ -201,35 +174,43 @@ void cDHCP::SetStaticFieldsVisibility ()
 }
 
 // *********************************************************************************************
+void cDHCP::SetControlMessage (String & ResponseMessage)
+{
+    // DEBUG_START;
+
+    do  // once
+    {
+        // are we in DHCP mode?
+        if (DataValue)
+        {
+            // DEBUG_V ("DHCP mode");
+            // setMessage (emptyString, eCssStyle::CssStyleTransparent);
+            break;
+        }
+        // DEBUG_V ("Static mode");
+
+        if (!ValidateStaticSettings (ResponseMessage))
+        {
+            // DEBUG_V ("Static mode but values are not valid");
+            setMessage (DHCP_LOCKED_STR, eCssStyle::CssStyleBlack);
+
+            break;
+        }
+        // DEBUG_V ("Static mode and values are valid");
+        setMessage (F ("Using Static Settings"), eCssStyle::CssStyleTransparent);
+    } while (false);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 void cDHCP::TestIpSettings ()
 {
     // DEBUG_START;
 
     String ResponseMessage;
-
     ResponseMessage.reserve (128);
-
-    do  // once
-    {
-        // are we in DHCP mode?
-        if (DataValue != 0)
-        {
-            // DEBUG_V("DHCP mode");
-            ESPUI.print (StatusMessageId, emptyString);
-            break;
-        }
-
-        // DEBUG_V("Static mode");
-        if (!ValidateStaticSettings (ResponseMessage))
-        {
-            // DEBUG_V("Static mode but values are not valid");
-            ESPUI.print (StatusMessageId, DHCP_LOCKED_STR);
-            break;
-        }
-        // DEBUG_V("Static mode and values are valid");
-        ESPUI.print (StatusMessageId, emptyString);
-        WiFiDriver.WiFiReset ();
-    } while (false);
+    SetControlMessage (ResponseMessage);
 
     // DEBUG_END;
 }
@@ -243,7 +224,7 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
 
     do  // once
     {
-        if (DataValue != 0)
+        if (DataValue)
         {
             // DEBUG_V("Dont check the rest of the settings if they dont matter");
             response = true;
@@ -277,7 +258,7 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
         response = true;
     } while (false);
 
-    if (!response && (DataValue == 0))
+    if (!response && (!DataValue))
     {
         ResponseMessage = DHCP_LOCKED_STR;
     }

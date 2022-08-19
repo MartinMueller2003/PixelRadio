@@ -13,24 +13,22 @@
  */
 
 // *********************************************************************************************
-#include "HostnameCtrl.hpp"
-#include "memdebug.h"
-#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
+#include "HostnameCtrl.hpp"
+#include "memdebug.h"
+#include "WiFiDriver.hpp"
+
 static const PROGMEM String     WIFI_WEBSRV_NAME_STR    = "WEBSERVER NAME";
 static const PROGMEM String     STA_NAME_DEF_STR        = "PixelRadio";
+static const PROGMEM String     STA_NAME_STR            = "STA_NAME_STR";
 static const PROGMEM uint32_t STA_NAME_MAX_SZ           = 18;
 
 // *********************************************************************************************
-cHostnameCtrl::cHostnameCtrl () :   cOldControlCommon ("STA_NAME_STR")
+cHostnameCtrl::cHostnameCtrl () :   cControlCommon (STA_NAME_STR, ControlType::Text, WIFI_WEBSRV_NAME_STR, STA_NAME_DEF_STR, STA_NAME_MAX_SZ)
 {
     // _ DEBUG_START;
-
-    DataValueStr.reserve (STA_NAME_MAX_SZ + 2);
-    DataValueStr = STA_NAME_DEF_STR;
-
     // _ DEBUG_END;
 }
 
@@ -39,18 +37,6 @@ cHostnameCtrl::~cHostnameCtrl ()
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cHostnameCtrl::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Text, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_WEBSRV_NAME_STR.c_str ());
-    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (STA_NAME_MAX_SZ), ControlColor::None, ControlId);
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -67,43 +53,33 @@ void cHostnameCtrl::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cHostnameCtrl::set (String & value, String & ResponseMessage)
+bool cHostnameCtrl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    // DEBUG_START;
+    DEBUG_START;
+        DEBUG_V (       String ("       value: ") + value);
+        DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
 
-    // DEBUG_V(String("       value: ") + value);
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-
-    bool Response = true;
-
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
+    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
 
     do  // once
     {
-        if (value.length () > STA_NAME_MAX_SZ)
+        if (!Response)
         {
-            ResponseMessage     = String (F ("New Value is too long: \""))  + value + String (F ("\""));
-            Response            = false;
+            DEBUG_V ("New data is not valid");
             break;
         }
 
         if (value.equals (DataValueStr))
         {
-            // DEBUG_V("Name did not change");
-            Log.infoln (String (F ("WiFi Hostname Unchanged")).c_str ());
+            DEBUG_V ("Name did not change");
             break;
         }
-        DataValueStr = value;
-
-        ESPUI.updateControlValue (ControlId, DataValueStr);
+        DEBUG_V ("New Name Accepted");
         WiFiDriver.WiFiReset ();
-        Log.infoln ((String (F ("WiFi Hostname Set to: ")) + DataValueStr).c_str ());
-
-        displaySaveWarning ();
     } while (false);
 
-    // DEBUG_END;
+    DEBUG_END;
+
     return Response;
 }
 

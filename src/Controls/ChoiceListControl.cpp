@@ -19,9 +19,12 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cChoiceListControl::cChoiceListControl (const String & ConfigName, const String & Title, ChoiceList_t & _ChoiceList) :
+cChoiceListControl::cChoiceListControl (const String    & ConfigName,
+                                        const String    & Title,
+                                        const String    & DefaultValue,
+                                        ChoiceList_t    & _ChoiceList) :
     ChoiceList (_ChoiceList),
-    cControlCommon (ConfigName, ControlType::Select, Title)
+    cControlCommon (ConfigName, ControlType::Select, Title, DefaultValue, 64)
 {
     // _ DEBUG_START;
     setControlStyle (CssStyleBlack_bw);

@@ -20,7 +20,7 @@
 
 // *********************************************************************************************
 cStatusControl::cStatusControl (const String & _Title) :
-    cControlCommon (emptyString, ControlType::Label, _Title)
+    cControlCommon (emptyString, ControlType::Label, _Title, emptyString, 0)
 {
     // _ DEBUG_START;
 

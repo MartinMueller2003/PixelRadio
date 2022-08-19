@@ -23,12 +23,18 @@ class cControlCommon
 {
 public:
 
-    cControlCommon (const String & ConfigName, ControlType uiControltype, const String & Title);
+    cControlCommon (
+        const String    & ConfigName,
+        ControlType     uiControltype,
+        const String    & Title,
+        const String    & DefaultValue,
+        uint32_t        MaxStrLen);
     virtual ~cControlCommon ();
 
     virtual void        AddControls (uint16_t TabId, ControlColor color);
     virtual void        Callback (Control * sender, int type);
     virtual String      &get ();
+    virtual void        ResetToDefaults ();
     virtual void        restoreConfiguration (JsonObject & json);
     virtual void        saveConfiguration (JsonObject & json);
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
@@ -51,6 +57,7 @@ protected:
         CssStyleWhite_bw,
     };
 
+    virtual void        setControl (const String & value, eCssStyle style);
     virtual void        setMessage (const String & value, eCssStyle style);
     virtual void        setControlStyle (eCssStyle style);
     virtual void        setMessageStyle (eCssStyle style);
@@ -80,9 +87,11 @@ protected:
     bool Booting        = true;
     const String & ConfigName;
     const String & Title;
+    const String DefaultValue;
 
 private:
     ControlType uiControltype;
+    uint32_t MaxDataLength = 0;
 };      // class cControlCommon
 
 // *********************************************************************************************

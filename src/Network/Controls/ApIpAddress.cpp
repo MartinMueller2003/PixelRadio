@@ -20,15 +20,11 @@
 
 static const PROGMEM String     WIFI_AP_IP_ADDR_STR     = "AP IP Address";
 static const PROGMEM String     AP_IP_ADDR_STR          = "AP_IP_ADDR_STR";
-static const PROGMEM IPAddress DefaultIpAddress         = IPAddress (192, 168, 4, 1);
 
 // *********************************************************************************************
-cApIpAddress::cApIpAddress () :   cIpAddressControl (AP_IP_ADDR_STR, WIFI_AP_IP_ADDR_STR)
+cApIpAddress::cApIpAddress () :   cIpAddressControl (AP_IP_ADDR_STR, WIFI_AP_IP_ADDR_STR, IPAddress (192, 168, 4, 1))
 {
     // _ DEBUG_START;
-
-    DataValueStr = DefaultIpAddress.toString ();
-
     // _ DEBUG_END;
 }
 
@@ -37,19 +33,6 @@ cApIpAddress::~cApIpAddress ()
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cApIpAddress::ResetToDefaults ()
-{
-    // DEBUG_START;
-
-    String      value = DefaultIpAddress.toString ();
-    String      dummy;
-
-    set (value, dummy, true);
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
