@@ -21,7 +21,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -63,7 +63,7 @@ void c_ControllerLOCAL::CreateDefaultMsgSet ()
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -75,7 +75,7 @@ void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Respon
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -91,7 +91,7 @@ void c_ControllerLOCAL::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerLOCAL::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerLOCAL::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

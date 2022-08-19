@@ -23,7 +23,7 @@
 #include <ESPUI.h>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -92,10 +92,10 @@ void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentEle
     {
         // DEBUG_V(String("Adding Control for ") + Name);
         EspuiElementId = ESPUI.addControl (ControlType::Option,
-                Name.c_str (),
-                Name,
-                ControlColor::None,
-                EspuiParentElementId);
+                                           Name.c_str (),
+                                           Name,
+                                           ControlColor::None,
+                                           EspuiParentElementId);
     }
     else
     {
@@ -110,7 +110,7 @@ void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentEle
 }       // AddControls
 
 // *********************************************************************************************
-void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject &config)
+void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -127,7 +127,7 @@ void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject &config)
 }       // RestoreConfig
 
 // *********************************************************************************************
-void c_ControllerFPPDSequence::SaveConfig (ArduinoJson::JsonObject &config)
+void c_ControllerFPPDSequence::SaveConfig (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -137,7 +137,7 @@ void c_ControllerFPPDSequence::SaveConfig (ArduinoJson::JsonObject &config)
 }       // SaveConfig
 
 // ************************************************************************************************
-void c_ControllerFPPDSequence::SetName (String &value)
+void c_ControllerFPPDSequence::SetName (String & value)
 {
     // DEBUG_START;
 

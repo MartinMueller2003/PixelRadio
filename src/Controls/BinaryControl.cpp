@@ -19,7 +19,7 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cBinaryControl::cBinaryControl (const String &ConfigName, const String &_Title) :
+cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title) :
     cControlCommon (ConfigName, ControlType::Switcher, _Title)
 {
     // _ DEBUG_START;
@@ -28,7 +28,7 @@ cBinaryControl::cBinaryControl (const String &ConfigName, const String &_Title) 
 }
 
 // *********************************************************************************************
-bool cBinaryControl::set (const String &value, String &ResponseMessage, bool ForceUpdate)
+bool cBinaryControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -46,7 +46,7 @@ bool cBinaryControl::set (const String &value, String &ResponseMessage, bool For
 }
 
 // *********************************************************************************************
-bool cBinaryControl::validate (const String &value, String &ResponseMessage)
+bool cBinaryControl::validate (const String & value, String & ResponseMessage, bool)
 {
     // DEBUG_START;
     // DEBUG_V (String ("value: ") + value);

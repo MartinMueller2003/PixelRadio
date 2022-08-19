@@ -67,7 +67,7 @@ void cHostnameCtrl::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cHostnameCtrl::set (String &value, String &ResponseMessage)
+bool cHostnameCtrl::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

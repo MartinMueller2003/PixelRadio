@@ -85,9 +85,9 @@ cCommandProcessor::cCommandProcessor ()
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
-    String      &RawCommand,
-    String      &ControllerName,
-    String      &Response)
+    String      & RawCommand,
+    String      & ControllerName,
+    String      & Response)
 {
     DEBUG_START;
 
@@ -103,10 +103,10 @@ bool cCommandProcessor::ProcessCommand (
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
-    String      &Command,
-    String      &Parameter,
-    String      &ControllerName,
-    String      &Response)
+    String      & Command,
+    String      & Parameter,
+    String      & ControllerName,
+    String      & Response)
 {
     DEBUG_START;
     bool response = false;
@@ -138,7 +138,7 @@ bool cCommandProcessor::ProcessCommand (
 
 // *************************************************************************************************************************
 // AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
-bool cCommandProcessor::audioMode (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::audioMode (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -177,7 +177,7 @@ bool cCommandProcessor::audioMode (String &payloadStr, String &ControllerName, S
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::frequency (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::frequency (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -210,7 +210,7 @@ bool cCommandProcessor::frequency (String &payloadStr, String &ControllerName, S
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::gpio19 (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::gpio19 (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
 
@@ -222,7 +222,7 @@ bool cCommandProcessor::gpio19 (String &payloadStr, String &ControllerName, Stri
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::gpio23 (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::gpio23 (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
 
@@ -234,7 +234,7 @@ bool cCommandProcessor::gpio23 (String &payloadStr, String &ControllerName, Stri
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::gpio33 (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::gpio33 (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
 
@@ -247,7 +247,7 @@ bool cCommandProcessor::gpio33 (String &payloadStr, String &ControllerName, Stri
 
 // *************************************************************************************************************************
 // gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
-bool cCommandProcessor::gpio (String &payloadStr, String &ControllerName, gpio_num_t pin, String &Response)
+bool cCommandProcessor::gpio (String & payloadStr, String & ControllerName, gpio_num_t pin, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -264,7 +264,7 @@ bool cCommandProcessor::gpio (String &payloadStr, String &ControllerName, gpio_n
             if (payloadStr.equals (F (CMD_GPIO_READ_STR)))
             {
                 Log.infoln ((String (F ("-> ")) + ControllerName + F (" Controller: Read GPIO Pin-") + String (pin) + F (", Value= ") +
-                    String (digitalRead (pin))).c_str ());
+                             String (digitalRead (pin))).c_str ());
                 break;
             }
 
@@ -272,17 +272,17 @@ bool cCommandProcessor::gpio (String &payloadStr, String &ControllerName, gpio_n
                 !payloadStr.equals (CMD_GPIO_OUT_LOW_STR))
             {
                 Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid GPIO Payload (") + payloadStr + F (
-                    "), Ignored.")).c_str ());
+                                  "), Ignored.")).c_str ());
                 response = false;
                 break;
             }
             bool NewPinState = payloadStr.equals (CMD_GPIO_OUT_HIGH_STR) ? HIGH : LOW;
             digitalWrite (pin, NewPinState);
             Log.infoln ((String (F ("-> ")) + ControllerName + F (" Controller: Setting GPIO Pin-") + String (pin) + F (" to ") +
-                ((pin) ? F (CMD_GPIO_OUT_HIGH_STR) : F (CMD_GPIO_OUT_LOW_STR))).c_str ());
-    #    ifdef OldWay
+                         ((pin) ? F (CMD_GPIO_OUT_HIGH_STR) : F (CMD_GPIO_OUT_LOW_STR))).c_str ());
+ # ifdef OldWay
                 updateUiGpioMsg (pin, ControllerName, NewPinState);
-    #    endif // def OldWay
+ # endif // def OldWay
         } while (false);
 
         DEBUG_END;
@@ -296,7 +296,7 @@ bool cCommandProcessor::gpio (String &payloadStr, String &ControllerName, gpio_n
 
 // ================================================================================================
 // CommandError(): Create an error response.
-bool cCommandProcessor::HelpCommand (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::HelpCommand (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -307,14 +307,14 @@ bool cCommandProcessor::HelpCommand (String &payloadStr, String &ControllerName,
         Response        += ("=========================================\n");
         Response        += (" AUDIO MODE      : aud=mono : stereo\n");
         Response        += String (F (" FREQUENCY X10   : freq=")) + String (FM_FREQ_MIN_X10) + F ("<->") + String (FM_FREQ_MAX_X10) +
-            F ("\n");
+                           F ("\n");
         Response        += (" GPIO-19 CONTROL : gpio19=read : outhigh : outlow\n");
         Response        += (" GPIO-23 CONTROL : gpio23=read : outhigh : outlow\n");
         Response        += (" GPIO-33 CONTROL : gpio33=read : outhigh : outlow\n");
         Response        += (" INFORMATION     : info=system\n");
         Response        += (" MUTE AUDIO      : mute=on : off\n");
         Response        += String (" PROG ID CODE    : pic=0x") +
-            String (RDS_PI_CODE_MIN, HEX) + " <-> 0x" + String (RDS_PI_CODE_MAX, HEX) + F ("\n");
+                           String (RDS_PI_CODE_MIN, HEX) + " <-> 0x" + String (RDS_PI_CODE_MAX, HEX) + F ("\n");
         Response        += String (" PROG SERV NAME  : psn=[") + String (CMD_PSN_MAX_SZ) + F (" char name]\n");
         Response        += String (" RADIOTXT MSG    : rtm=[") + String (CMD_RT_MAX_SZ) + F (" char message]\n");
         Response        += String (" RADIOTXT PERIOD : rtper=5 <-> ") + String (RDS_DSP_TM_MAX) + F (" secs\n");
@@ -336,7 +336,7 @@ bool cCommandProcessor::HelpCommand (String &payloadStr, String &ControllerName,
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::info (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::info (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -354,7 +354,7 @@ bool cCommandProcessor::info (String &payloadStr, String &ControllerName, String
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid INFO Payload (") + payloadStr + F (
-                "), Ignored.")).c_str ());
+                              "), Ignored.")).c_str ());
             response = false;
         }
         DEBUG_END;
@@ -369,7 +369,7 @@ bool cCommandProcessor::info (String &payloadStr, String &ControllerName, String
 // *************************************************************************************************************************
 // logCmd(): Set the Serial Log Level to Silent or reset back to system (Web UI) setting.
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
-bool cCommandProcessor::log (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::log (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -400,7 +400,7 @@ bool cCommandProcessor::log (String &payloadStr, String &ControllerName, String 
                 break;
             }
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid LOG Payload (") + payloadStr + F (
-                "), Ignored.")).c_str ());
+                              "), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -417,7 +417,7 @@ bool cCommandProcessor::log (String &payloadStr, String &ControllerName, String 
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::mute (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::mute (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -447,7 +447,7 @@ bool cCommandProcessor::mute (String &payloadStr, String &ControllerName, String
                 break;
             }
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid MUTE Payload (") + payloadStr + F (
-                "), Ignored.")).c_str ());
+                              "), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -461,7 +461,7 @@ bool cCommandProcessor::mute (String &payloadStr, String &ControllerName, String
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::piCode (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::piCode (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -480,19 +480,19 @@ bool cCommandProcessor::piCode (String &payloadStr, String &ControllerName, Stri
             if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX))
             {
                 Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid RDS PI Code Value (") + payloadStr +
-                    F ("), Ignored.")).c_str ());
+                              F ("), Ignored.")).c_str ());
                 response = false;
                 break;
             }
-    #    ifdef OldWay
+ # ifdef OldWay
 
                 if (radio.getPiCode () == (uint16_t)(tempPiCode))
                 {
                     Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PI Code Unchanged (0x") +
-                        String (tempPiCode, HEX) + F (").")).c_str ());
+                                    String (tempPiCode, HEX) + F (").")).c_str ());
                     break;
                 }
-    #    endif // def OldWay
+ # endif // def OldWay
 
             // New PI Code.
             // Radio.SetPiCode(controller, tempPiCode);
@@ -500,7 +500,7 @@ bool cCommandProcessor::piCode (String &payloadStr, String &ControllerName, Stri
 
             // displaySaveWarning();
             Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PI Code Set to (0x") + String (tempPiCode, HEX) + F (
-                ").")).c_str ());
+                                ").")).c_str ());
         } while (false);
 
         DEBUG_END;
@@ -513,7 +513,7 @@ bool cCommandProcessor::piCode (String &payloadStr, String &ControllerName, Stri
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::ptyCode (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::ptyCode (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -532,19 +532,19 @@ bool cCommandProcessor::ptyCode (String &payloadStr, String &ControllerName, Str
             if ((tempPtyCode < RDS_PTY_CODE_MIN) || (tempPtyCode > RDS_PTY_CODE_MAX))
             {
                 Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid RDS PTY Code Value (") + payloadStr +
-                    F ("), Ignored.")).c_str ());
+                              F ("), Ignored.")).c_str ());
                 response = false;
                 break;
             }
-    #    ifdef OldWay
+ # ifdef OldWay
 
                 if (radio.getPTYCode () == (uint8_t)(tempPtyCode))
                 {
                     Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PTY Code Unchanged (0x") +
-                        String (tempPtyCode, HEX) + F (").")).c_str ());
+                                    String (tempPtyCode, HEX) + F (").")).c_str ());
                     break;
                 }
-    #    endif // def OldWay
+ # endif // def OldWay
 
             // New PTY Code.
             // ControllerMgr.SetPtyCode(controller, tempPtyCode);
@@ -552,7 +552,7 @@ bool cCommandProcessor::ptyCode (String &payloadStr, String &ControllerName, Str
 
             // displaySaveWarning();
             Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PTY Code Set to (0x") +
-                String (tempPtyCode, HEX) + F (").")).c_str ());
+                            String (tempPtyCode, HEX) + F (").")).c_str ());
         } while (false);
 
         DEBUG_END;
@@ -565,7 +565,7 @@ bool cCommandProcessor::ptyCode (String &payloadStr, String &ControllerName, Str
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::programServiceName (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::programServiceName (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -594,7 +594,7 @@ bool cCommandProcessor::programServiceName (String &payloadStr, String &Controll
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::radioText (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::radioText (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -625,7 +625,7 @@ bool cCommandProcessor::radioText (String &payloadStr, String &ControllerName, S
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
-bool cCommandProcessor::rdsTimePeriod (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -666,12 +666,12 @@ bool cCommandProcessor::rdsTimePeriod (String &payloadStr, String &ControllerNam
             if (capFlg)
             {
                 Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RDS Time Period Value out-of-range, set to ") +
-                    String (rtTime) + " secs.").c_str ());
+                                String (rtTime) + " secs.").c_str ());
             }
             else
             {
                 Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RDS Time Period Value set to ") + String (rtTime) +
-                    " secs.").c_str ());
+                                " secs.").c_str ());
             }
         } while (false);
 
@@ -685,7 +685,7 @@ bool cCommandProcessor::rdsTimePeriod (String &payloadStr, String &ControllerNam
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::reboot (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::reboot (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START
@@ -704,7 +704,7 @@ bool cCommandProcessor::reboot (String &payloadStr, String &ControllerName, Stri
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid REBOOT Payload (") + payloadStr + F (
-                "), Ignored.")).c_str ());
+                              "), Ignored.")).c_str ());
             response = false;
         }
         DEBUG_END;
@@ -717,7 +717,7 @@ bool cCommandProcessor::reboot (String &payloadStr, String &ControllerName, Stri
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::rfCarrier (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::rfCarrier (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -748,7 +748,7 @@ bool cCommandProcessor::rfCarrier (String &payloadStr, String &ControllerName, S
                 break;
             }
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid RF Carrier Payload (") + payloadStr +
-                F ("), Ignored.")).c_str ());
+                          F ("), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -762,7 +762,7 @@ bool cCommandProcessor::rfCarrier (String &payloadStr, String &ControllerName, S
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::start (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::start (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -781,7 +781,7 @@ bool cCommandProcessor::start (String &payloadStr, String &ControllerName, Strin
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid START Payload (") + payloadStr + F (
-                "), Ignored.")).c_str ());
+                              "), Ignored.")).c_str ());
             response = false;
         }
         DEBUG_END;
@@ -794,7 +794,7 @@ bool cCommandProcessor::start (String &payloadStr, String &ControllerName, Strin
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::stop (String &payloadStr, String &ControllerName, String &Response)
+bool cCommandProcessor::stop (String & payloadStr, String & ControllerName, String & Response)
 {
 #ifdef OldWay
         DEBUG_START;
@@ -813,7 +813,7 @@ bool cCommandProcessor::stop (String &payloadStr, String &ControllerName, String
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid STOP Payload (") + payloadStr + F (
-                "), Ignored.")).c_str ());
+                              "), Ignored.")).c_str ());
         }
         DEBUG_END;
 

@@ -22,11 +22,11 @@ class cAudioMute : public cOldControlCommon
 {
 public:
 
-    cAudioMute ();
-    virtual ~cAudioMute ()    {}
+cAudioMute ();
+virtual ~cAudioMute ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String &value, String &ResponseMessage);
+void    AddControls (uint16_t TabId, ControlColor color);
+bool    set (String & value, String & ResponseMessage);
 };      // class cAudioMute
 
 extern cAudioMute AudioMute;

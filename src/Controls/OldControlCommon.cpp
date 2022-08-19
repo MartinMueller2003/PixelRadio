@@ -46,27 +46,27 @@ void cOldControlCommon::AddControls (
     // DEBUG_START;
 
     ControlId = ESPUI.addControl (uiControltype,
-            emptyString.c_str (),
-            emptyString,
-            color,
-            value,
-            [] (Control * sender, int type, void * UserInfo)
-            {
-                if (UserInfo)
-                {
-                    static_cast <cOldControlCommon *> (UserInfo)->Callback (sender, type);
-                }
-            },
-            this);
+                                  emptyString.c_str (),
+                                  emptyString,
+                                  color,
+                                  value,
+                                  [] (Control * sender, int type, void * UserInfo)
+                                  {
+                                      if (UserInfo)
+                                      {
+                                          static_cast <cOldControlCommon *> (UserInfo)->Callback (sender, type);
+                                      }
+                                  },
+                                  this);
 
     ESPUI.setPanelStyle (ControlId, "font-size: 1.25em;");
     ESPUI.setElementStyle (ControlId, "color: black;");
 
     StatusMessageId = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            emptyString,
-            ControlColor::None,
-            ControlId);
+                                        emptyString.c_str (),
+                                        emptyString,
+                                        ControlColor::None,
+                                        ControlId);
     ESPUI.setPanelStyle (StatusMessageId, "font-size: 1.25em;");
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_TRANSPARENT);
 
@@ -107,10 +107,10 @@ void cOldControlCommon::Callback (Control * sender, int type)
 uint32_t        cOldControlCommon::get ()       {return DataValue;}
 
 // *********************************************************************************************
-String&         cOldControlCommon::getStr ()    {return DataValueStr;}
+String          &cOldControlCommon::getStr ()   {return DataValueStr;}
 
 // *********************************************************************************************
-void            cOldControlCommon::restoreConfiguration (JsonObject &config)
+void            cOldControlCommon::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
@@ -125,7 +125,7 @@ void            cOldControlCommon::restoreConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-void cOldControlCommon::saveConfiguration (JsonObject &config)
+void cOldControlCommon::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 

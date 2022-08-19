@@ -11,6 +11,10 @@
     (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
  */
 
+#include <ArduinoLog.h>
+#include <esp_wifi.h>
+#include <Int64String.h>
+
 #include "HotspotName.hpp"
 #include "memdebug.h"
 #include "HostnameCtrl.hpp"
@@ -21,10 +25,11 @@
 #include "ApFallback.hpp"
 #include "ApReboot.hpp"
 #include "PixelRadio.h"
+#include "StaticIpAddress.hpp"
+#include "StaticGatewayAddress.hpp"
+#include "StaticNetmask.hpp"
+#include "StaticDnsAddress.hpp"
 #include "WiFiDriver.hpp"
-#include <ArduinoLog.h>
-#include <esp_wifi.h>
-#include <Int64String.h>
 
 // -----------------------------------------------------------------------------
 /*
@@ -49,19 +54,19 @@
  */
 
 #if __has_include ("credentials.h")
-    #    include "credentials.h"
+ # include "credentials.h"
 #endif //  __has_include("credentials.h")
 
 #if !defined (SSID_NM_STR)
-    #    define SSID_NM_STR "DEFAULT_SSID_NOT_SET"
+ # define SSID_NM_STR "DEFAULT_SSID_NOT_SET"
 #endif // SSID_NM_STR
 
 #if !defined (WPA_KEY_STR)
-    #    define WPA_KEY_STR "DEFAULT_PASSPHRASE_NOT_SET"
+ # define WPA_KEY_STR "DEFAULT_PASSPHRASE_NOT_SET"
 #endif // WPA_KEY_STR
 
 #if !defined (AP_PSK_STR)
-    #    define AP_PSK_STR "DEFAULT_AP_PASSPHRASE_NOT_SET"
+ # define AP_PSK_STR "DEFAULT_AP_PASSPHRASE_NOT_SET"
 #endif // AP_PSK_STR
 
 /* Fallback configuration if config is empty or fails */
@@ -168,24 +173,24 @@ void c_WiFiDriver::Begin ()
 
     // Setup WiFi Handlers
     WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-    {
-        this->onWiFiStaConn (event, info);
-    }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+                         {
+                             this->onWiFiStaConn (event, info);
+                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
     WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-    {
-        this->onWiFiStaDisc (event, info);
-    }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+                         {
+                             this->onWiFiStaDisc (event, info);
+                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-    {
-        this->onWiFiConnect    (event, info);
-    }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+                         {
+                             this->onWiFiConnect    (event, info);
+                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
     WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-    {
-        this->onWiFiDisconnect (event, info);
-    }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+                         {
+                             this->onWiFiDisconnect (event, info);
+                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     // set up the poll interval
     NextPollTime = millis () + PollInterval;
@@ -196,7 +201,7 @@ void c_WiFiDriver::Begin ()
 }       // begin
 
 // -----------------------------------------------------------------------------
-void c_WiFiDriver::connectWifi (const String &current_ssid, const String &current_passphrase)
+void c_WiFiDriver::connectWifi (const String & current_ssid, const String & current_passphrase)
 {
     // DEBUG_START;
 
@@ -234,9 +239,9 @@ void c_WiFiDriver::connectWifi (const String &current_ssid, const String &curren
         // DEBUG_V (String ("  hostname: ") + Hostname);
 
         Log.infoln ((String (F ("Connecting to '")) +
-            current_ssid +
-            String (F ("' as ")) +
-            HostnameCtrl.getStr ()).c_str ());
+                     current_ssid +
+                     String (F ("' as ")) +
+                     HostnameCtrl.getStr ()).c_str ());
 
         WiFi.setSleep (false);
         // DEBUG_V("");
@@ -287,10 +292,10 @@ String  c_WiFiDriver::GetDefaultWpaKey ()               {return default_passphra
 String  c_WiFiDriver::GetDefaultSsid ()                 {return default_ssid;}
 
 // -----------------------------------------------------------------------------
-void    c_WiFiDriver::GetHostname (String &name)        {name = WiFi.getHostname ();}   // GetWiFiHostName
+void    c_WiFiDriver::GetHostname (String & name)       {name = WiFi.getHostname ();}   // GetWiFiHostName
 
 // -----------------------------------------------------------------------------
-void    c_WiFiDriver::GetStatus (JsonObject &jsonStatus)
+void    c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
 {
 #ifdef OldWay
         // DEBUG_START;
@@ -371,7 +376,7 @@ void c_WiFiDriver::reset ()
 }
 
 // -----------------------------------------------------------------------------
-bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
+bool c_WiFiDriver::restoreConfiguration (JsonObject & json)
 {
     // DEBUG_START;
 
@@ -400,7 +405,7 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject &json)
 }
 
 // -----------------------------------------------------------------------------
-void c_WiFiDriver::saveConfiguration (JsonObject &json)
+void c_WiFiDriver::saveConfiguration (JsonObject & json)
 {
     // DEBUG_START;
 
@@ -453,7 +458,10 @@ void c_WiFiDriver::SetUpIp ()
             break;
         }
         Log.infoln (String (F ("Using Static IP")).c_str ());
-        WiFi.config (DHCP.GetStaticIP (), DHCP.GetStaticGateway (), DHCP.GetStaticNetmask (), DHCP.GetStaticDNS ());
+        WiFi.config (StaticIpAddress.GetIpAddress (),
+                     StaticGatewayAddress.GetIpAddress (),
+                     StaticNetmask.GetIpAddress (),
+                     StaticDnsAddress.GetIpAddress ());
     } while (false);
 
     // DEBUG_END;

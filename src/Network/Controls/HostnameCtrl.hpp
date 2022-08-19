@@ -22,12 +22,12 @@ class cHostnameCtrl : public cOldControlCommon
 {
 public:
 
-    cHostnameCtrl ();
-    virtual ~cHostnameCtrl ();
+cHostnameCtrl ();
+virtual ~cHostnameCtrl ();
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String &value, String &Response);
+void    AddControls (uint16_t TabId, ControlColor color);
+void    ResetToDefaults ();
+bool    set (String & value, String & Response);
 };      // class cHostnameCtrl
 
 extern cHostnameCtrl HostnameCtrl;

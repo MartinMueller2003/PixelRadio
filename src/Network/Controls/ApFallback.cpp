@@ -51,7 +51,7 @@ void cApFallback::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cApFallback::set (String &value, String &ResponseMessage)
+bool cApFallback::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

@@ -22,11 +22,11 @@ class cDigitalAudioGain : public cOldControlCommon
 {
 public:
 
-    cDigitalAudioGain ();
-    virtual ~cDigitalAudioGain ()    {}
+cDigitalAudioGain ();
+virtual ~cDigitalAudioGain ()    {}
 
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &value, String &ResponseMessage);
+void    AddControls (uint16_t Tab, ControlColor color);
+bool    set (String & value, String & ResponseMessage);
 };      // class cDigitalAudioGain
 
 extern cDigitalAudioGain DigitalAudioGain;

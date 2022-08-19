@@ -26,33 +26,33 @@ class c_ControllerFPPD : public c_ControllerCommon
 {
 public:
 
-    c_ControllerFPPD ();
-    virtual ~c_ControllerFPPD ();
+c_ControllerFPPD ();
+virtual ~c_ControllerFPPD ();
 
-    void        begin ();
-    void        ProcessFppdFile (String &FppdFileName);
+void    begin ();
+void    ProcessFppdFile (String & FppdFileName);
 
-    void        AddControls (uint16_t ctrlTab);
-    void        restoreConfiguration (ArduinoJson::JsonObject &config);
-    void        saveConfiguration (ArduinoJson::JsonObject &config);
-    void        CbSequenceLearningEnabled (Control * sender, int type);
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response);
+void    AddControls (uint16_t ctrlTab);
+void    restoreConfiguration (ArduinoJson::JsonObject & config);
+void    saveConfiguration (ArduinoJson::JsonObject & config);
+void    CbSequenceLearningEnabled (Control * sender, int type);
+void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
 
-    void        updateVisibility ();
+void    updateVisibility ();
 
-    uint16_t SequenceLearningEnabledElementId           = Control::noParent;
-    uint16_t SequenceLearningLabelEnabledElementId      = Control::noParent;
-    uint16_t SequencesElementId                         = Control::noParent;
-    uint16_t CurrentSequenceElementId                   = Control::noParent;
+uint16_t SequenceLearningEnabledElementId       = Control::noParent;
+uint16_t SequenceLearningLabelEnabledElementId  = Control::noParent;
+uint16_t SequencesElementId                     = Control::noParent;
+uint16_t CurrentSequenceElementId               = Control::noParent;
 
-    bool ControlsHaveBeenAdded          = false;
-    bool SequenceLearningEnabled        = true;
-    uint16_t MaxIdleTimeSec             = 10;
-    String CurrentPlayingSequence;
+bool ControlsHaveBeenAdded      = false;
+bool SequenceLearningEnabled    = true;
+uint16_t MaxIdleTimeSec         = 10;
+String CurrentPlayingSequence;
 
-    c_ControllerFPPDSequences Sequences;
+c_ControllerFPPDSequences Sequences;
 };      // c_ControllerFPPD
 
 // *********************************************************************************************

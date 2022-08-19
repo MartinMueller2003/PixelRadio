@@ -32,40 +32,40 @@ class c_ControllerCommon
 {
 private:
 
-    String ControlName;
-    String SeperatorName;
+String ControlName;
+String SeperatorName;
 
 protected:
 
-    // values stored in configuration file
-    bool ControllerEnabled = false;
+// values stored in configuration file
+bool ControllerEnabled = false;
 
-    // operational data
-    String Name;        // Name of this controller
-    CtypeId TypeId = NullControllerId;
+// operational data
+String Name;    // Name of this controller
+CtypeId TypeId = NullControllerId;
 
-    // ESPUI control IDs
-    uint16_t homeTab                    = Control::noParent;
-    uint16_t EspuiParentElementId       = Control::noParent;
-    uint16_t ControlLabelElementId      = Control::noParent;
-    uint16_t ControlerEnabledElementId  = Control::noParent;
-    uint16_t EspuiMsgId                 = Control::noParent;
+// ESPUI control IDs
+uint16_t homeTab                        = Control::noParent;
+uint16_t EspuiParentElementId           = Control::noParent;
+uint16_t ControlLabelElementId          = Control::noParent;
+uint16_t ControlerEnabledElementId      = Control::noParent;
+uint16_t EspuiMsgId                     = Control::noParent;
 
 public:
 
-    c_ControllerCommon (String MyName, c_ControllerMgr::ControllerTypeId_t MyId);
-    virtual ~c_ControllerCommon ();
+c_ControllerCommon (String MyName, c_ControllerMgr::ControllerTypeId_t MyId);
+virtual ~c_ControllerCommon ();
 
-    virtual void        begin ()        {}
-    virtual void        poll ()         {}
-    virtual void        AddControls (uint16_t tabId);
-    void                CbControllerEnabled (Control * sender, int type);
-    virtual void        restoreConfiguration (ArduinoJson::JsonObject &config);
-    virtual void        saveConfiguration (ArduinoJson::JsonObject &config);
-    String&             GetName ()              {return Name;}
+virtual void    begin ()        {}
+virtual void    poll ()         {}
+virtual void    AddControls (uint16_t tabId);
+void            CbControllerEnabled (Control * sender, int type);
+virtual void    restoreConfiguration (ArduinoJson::JsonObject & config);
+virtual void    saveConfiguration (ArduinoJson::JsonObject & config);
+String          &GetName ()             {return Name;}
 
-    virtual void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response) = 0;
-    bool                ControllerIsEnabled ()  {return ControllerEnabled;}
+virtual void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
+bool            ControllerIsEnabled ()  {return ControllerEnabled;}
 };      // c_ControllerCommon
 
 // *********************************************************************************************

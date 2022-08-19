@@ -60,9 +60,9 @@ const PROGMEM String PanelStyles [] =
 };
 
 // *********************************************************************************************
-cControlCommon::cControlCommon (const String    &_ConfigName,
-    ControlType                                 _uiControltype,
-    const String                                &_Title) :
+cControlCommon::cControlCommon (const String    & _ConfigName,
+                                ControlType     _uiControltype,
+                                const String    & _Title) :
     ConfigName (_ConfigName),
     uiControltype (_uiControltype),
     Title (_Title)
@@ -80,33 +80,34 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_START;
 
     ControlId = ESPUI.addControl (uiControltype,
-            Title.c_str (),
-            Title,
-            color,
-            TabId,
-            [] (Control * sender, int type, void * UserInfo)
-            {
-                if (UserInfo)
-                {
-                    static_cast <cControlCommon *> (UserInfo)->Callback (sender, type);
-                }
-            },
-            this);
+                                  Title.c_str (),
+                                  Title,
+                                  color,
+                                  TabId,
+                                  [] (Control * sender, int type, void * UserInfo)
+                                  {
+                                      if (UserInfo)
+                                      {
+                                          static_cast <cControlCommon *> (UserInfo)->Callback (sender, type);
+                                      }
+                                  },
+                                  this);
 
     setControlPanelStyle (ControlPanelStyle);
     setControlStyle (ControlStyle);
 
     MessageId = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            emptyString,
-            ControlColor::None,
-            ControlId);
+                                  emptyString.c_str (),
+                                  emptyString,
+                                  ControlColor::None,
+                                  ControlId);
     setMessagePanelStyle (MessagePanelStyle);
     setMessageStyle (MessageStyle);
 
     // force a UI Update
     String Response;
     set (DataValueStr, Response, true);
+    Booting = false;
 
     // DEBUG_END;
 }
@@ -134,10 +135,10 @@ void cControlCommon::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-String& cControlCommon::get () {return DataValueStr;}
+String  &cControlCommon::get () {return DataValueStr;}
 
 // *********************************************************************************************
-void    cControlCommon::restoreConfiguration (JsonObject &config)
+void    cControlCommon::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
@@ -152,7 +153,7 @@ void    cControlCommon::restoreConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-void cControlCommon::saveConfiguration (JsonObject &config)
+void cControlCommon::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
@@ -164,7 +165,7 @@ void cControlCommon::saveConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-bool cControlCommon::set (const String &value, String &ResponseMessage, bool ForceUpdate)
+bool cControlCommon::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V ( String ("      value: ") + value);
@@ -175,7 +176,7 @@ bool cControlCommon::set (const String &value, String &ResponseMessage, bool For
 
     do  // once
     {
-        if (!validate (value, ResponseMessage))
+        if (!validate (value, ResponseMessage, ForceUpdate))
         {
             if (ResponseMessage.isEmpty ())
             {
@@ -204,7 +205,10 @@ bool cControlCommon::set (const String &value, String &ResponseMessage, bool For
         DataValueStr = value;
         ESPUI.print (ControlId, DataValueStr);
 
-        displaySaveWarning ();
+        if (!Booting)
+        {
+            displaySaveWarning ();
+        }
     } while (false);
 
     // DEBUG_V ( String ("ResponseMsg: '") + ResponseMessage + "'");
@@ -213,6 +217,14 @@ bool cControlCommon::set (const String &value, String &ResponseMessage, bool For
     // DEBUG_END;
 
     return Response;
+}
+
+// *********************************************************************************************
+void cControlCommon::setControlLabel (const String & value)
+{
+    // DEBUG_START;
+    ESPUI.updateControlLabel (ControlId, value.c_str ());
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -240,7 +252,7 @@ void cControlCommon::setControlPanelStyle (ePanelStyle style)
 }
 
 // *********************************************************************************************
-void cControlCommon::setMessage (const String &value, eCssStyle style)
+void cControlCommon::setMessage (const String & value, eCssStyle style)
 {
     // DEBUG_START;
 
@@ -271,13 +283,13 @@ void cControlCommon::setMessagePanelStyle (ePanelStyle style)
     // DEBUG_V (String ("style: ") + String (style));
 
     MessagePanelStyle = style;
-    ESPUI.setPanelStyle (MessagePanelStyle, PanelStyles[int(style)]);
+    ESPUI.setPanelStyle (MessageId, PanelStyles[int(style)]);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cControlCommon::validate (const String &, String &)
+bool cControlCommon::validate (const String &, String &, bool)
 {
     // DEBUG_START;
 

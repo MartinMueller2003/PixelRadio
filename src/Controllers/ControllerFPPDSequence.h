@@ -26,25 +26,25 @@ class c_ControllerFPPDSequence
 {
 public:
 
-    c_ControllerFPPDSequence ();
-    virtual ~c_ControllerFPPDSequence ();
+c_ControllerFPPDSequence ();
+virtual ~c_ControllerFPPDSequence ();
 
-    void        RestoreConfig (ArduinoJson::JsonObject &config);
-    void        SaveConfig (ArduinoJson::JsonObject &config);
-    void        AddControls (uint16_t ctrlTab, uint16_t EspuiSequencesElementId);
-    void        SetName (String &value);
-    void        Activate (bool value);
-    void        SetMessages (c_ControllerMessages * value)                      {Messages = value;}
+void    RestoreConfig (ArduinoJson::JsonObject & config);
+void    SaveConfig (ArduinoJson::JsonObject & config);
+void    AddControls (uint16_t ctrlTab, uint16_t EspuiSequencesElementId);
+void    SetName (String & value);
+void    Activate (bool value);
+void    SetMessages (c_ControllerMessages * value)                      {Messages = value;}
 
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)     {Messages->GetNextRdsMessage (Response);}
+void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)    {Messages->GetNextRdsMessage (Response);}
 
 private:
 
-    String Name;
-    uint16_t EspuiParentElementId       = Control::noParent;
-    uint16_t EspuiRootElementId         = Control::noParent;
-    uint16_t EspuiElementId             = Control::noParent;
-    c_ControllerMessages * Messages     = nullptr;
+String Name;
+uint16_t EspuiParentElementId   = Control::noParent;
+uint16_t EspuiRootElementId     = Control::noParent;
+uint16_t EspuiElementId         = Control::noParent;
+c_ControllerMessages * Messages = nullptr;
 };      // c_ControllerFPPDSequence
 
 // *********************************************************************************************

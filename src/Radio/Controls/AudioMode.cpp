@@ -54,7 +54,7 @@ void cAudioMode::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cAudioMode::set (String &value, String &ResponseMessage)
+bool cAudioMode::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

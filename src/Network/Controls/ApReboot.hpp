@@ -22,11 +22,11 @@ class cApReboot : public cOldControlCommon
 {
 public:
 
-    cApReboot ();
-    virtual ~cApReboot ()    {}
+cApReboot ();
+virtual ~cApReboot ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String &value, String &ResponseMessage);
+void    AddControls (uint16_t TabId, ControlColor color);
+bool    set (String & value, String & ResponseMessage);
 };      // class cApReboot
 
 extern cApReboot ApReboot;

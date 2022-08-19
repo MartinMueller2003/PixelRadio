@@ -51,10 +51,10 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
     ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
 
     homeRdsTmrID = ESPUI.addControl (ControlType::Label,
-            HOME_RDS_TIMER_STR.c_str (),
-            emptyString,
-            color,
-            value);
+                                     HOME_RDS_TIMER_STR.c_str (),
+                                     emptyString,
+                                     color,
+                                     value);
     ESPUI.setPanelStyle (homeRdsTmrID, String (F ("font-size: 1.25em;")));
 
     UpdateStatus ();
@@ -114,7 +114,7 @@ void cRdsText::poll ()
 }
 
 // *********************************************************************************************
-bool cRdsText::set (String &value, String &)
+bool cRdsText::set (String & value, String &)
 {
     // DEBUG_START;
     // DEBUG_V(String("value: ") + value);
@@ -142,7 +142,8 @@ void cRdsText::UpdateStatus ()
     {
         ESPUI.  print ( ControlId, String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR));
         ESPUI.  print ( StatusMessageId,
-            String (String (RdsMsgInfo.DurationMilliSec ? String (F ("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
+                        String (String (RdsMsgInfo.DurationMilliSec ? String (F ("Controller: ")) +
+                                        RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
     }
     // DEBUG_END;
 }

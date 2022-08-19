@@ -289,7 +289,7 @@ void StartESPUI ()
 
 // ************************************************************************************************
 // updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
-bool updateUiGpioMsg (uint8_t pin, String &ControllerName, bool PinState)
+bool updateUiGpioMsg (uint8_t pin, String & ControllerName, bool PinState)
 {
     // DEBUG_START;
     uint16_t msgID;
@@ -521,20 +521,20 @@ void buildGUI (void)
     ESPUI.      addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     backupSaveID =
         ESPUI.addControl (ControlType::Button,
-            BACKUP_SAV_CFG_STR,
-            BACKUP_SAVE_STR,
-            ControlColor::Wetasphalt,
-            backupTab,
-            &backupCallback);
+                          BACKUP_SAV_CFG_STR,
+                          BACKUP_SAVE_STR,
+                          ControlColor::Wetasphalt,
+                          backupTab,
+                          &backupCallback);
     backupSaveMsgID = ESPUI.addControl (ControlType::Label, "SAVE_MSG", emptyString, ControlColor::Wetasphalt, backupSaveID);
 
     backupRestoreID =
         ESPUI.addControl (ControlType::Button,
-            BACKUP_RES_CFG_STR,
-            BACKUP_RESTORE_STR,
-            ControlColor::Wetasphalt,
-            backupTab,
-            &backupCallback);
+                          BACKUP_RES_CFG_STR,
+                          BACKUP_RESTORE_STR,
+                          ControlColor::Wetasphalt,
+                          backupTab,
+                          &backupCallback);
     backupRestoreMsgID = ESPUI.addControl (ControlType::Label, "RESTORE_MSG", emptyString, ControlColor::Wetasphalt, backupRestoreID);
     // DEBUG_V();
 
@@ -555,40 +555,40 @@ void buildGUI (void)
     diagLogID =
         ESPUI.addControl (ControlType::Select, DIAG_LOG_LVL_STR, logLevelStr, ControlColor::Sunflower, diagTab, &diagLogCallback);
     ESPUI.      addControl (    ControlType::Option,
-        DIAG_LOG_SILENT_STR,
-        DIAG_LOG_SILENT_STR,
-        ControlColor::None,
-        diagLogID);
+                                DIAG_LOG_SILENT_STR,
+                                DIAG_LOG_SILENT_STR,
+                                ControlColor::None,
+                                diagLogID);
     ESPUI.      addControl (ControlType::Option,
-        DIAG_LOG_FATAL_STR,
-        DIAG_LOG_FATAL_STR,
-        ControlColor::None,
-        diagLogID);
+                            DIAG_LOG_FATAL_STR,
+                            DIAG_LOG_FATAL_STR,
+                            ControlColor::None,
+                            diagLogID);
     ESPUI.      addControl (ControlType::Option,
-        DIAG_LOG_ERROR_STR,
-        DIAG_LOG_ERROR_STR,
-        ControlColor::None,
-        diagLogID);
+                            DIAG_LOG_ERROR_STR,
+                            DIAG_LOG_ERROR_STR,
+                            ControlColor::None,
+                            diagLogID);
     ESPUI.      addControl (ControlType::Option,
-        DIAG_LOG_WARN_STR,
-        DIAG_LOG_WARN_STR,
-        ControlColor::None,
-        diagLogID);
+                            DIAG_LOG_WARN_STR,
+                            DIAG_LOG_WARN_STR,
+                            ControlColor::None,
+                            diagLogID);
     ESPUI.      addControl (ControlType::Option,
-        DIAG_LOG_INFO_STR,
-        DIAG_LOG_INFO_STR,
-        ControlColor::None,
-        diagLogID);
+                            DIAG_LOG_INFO_STR,
+                            DIAG_LOG_INFO_STR,
+                            ControlColor::None,
+                            diagLogID);
     ESPUI.      addControl (ControlType::Option,
-        DIAG_LOG_TRACE_STR,
-        DIAG_LOG_TRACE_STR,
-        ControlColor::None,
-        diagLogID);
+                            DIAG_LOG_TRACE_STR,
+                            DIAG_LOG_TRACE_STR,
+                            ControlColor::None,
+                            diagLogID);
     ESPUI.      addControl (ControlType::Option,
-        DIAG_LOG_VERB_STR,
-        DIAG_LOG_VERB_STR,
-        ControlColor::None,
-        diagLogID);
+                            DIAG_LOG_VERB_STR,
+                            DIAG_LOG_VERB_STR,
+                            ControlColor::None,
+                            diagLogID);
 #ifdef OldWay
         tempStr         = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
         diagLogMsgID    = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
@@ -605,11 +605,11 @@ void buildGUI (void)
 
     diagBootID =
         ESPUI.addControl (ControlType::Button,
-            DIAG_REBOOT_STR,
-            DIAG_LONG_PRESS_STR,
-            ControlColor::Sunflower,
-            diagTab,
-            &diagBootCallback);
+                          DIAG_REBOOT_STR,
+                          DIAG_LONG_PRESS_STR,
+                          ControlColor::Sunflower,
+                          diagTab,
+                          &diagBootCallback);
     diagBootMsgID = ESPUI.addControl (ControlType::Label, "REBOOT_MSG", emptyString, ControlColor::Sunflower, diagBootID);
 
     //
@@ -630,16 +630,16 @@ void buildGUI (void)
     static String WebGif = (makeWebGif ("/RadioLogo225x75_base64.gif", 200, 66, "white"));
     // DEBUG_V(String("WebGif.Length: ") + String(WebGif.length()));
     aboutLogoID = ESPUI.addControl (ControlType::Label,
-            N_About,
-            WebGif,
-            ControlColor::None,
-            aboutTab);
+                                    N_About,
+                                    WebGif,
+                                    ControlColor::None,
+                                    aboutTab);
 
     aboutVersionID = ESPUI.addControl (ControlType::Label,
-            N_About_PixelRadio,
-            tempStr,
-            ControlColor::None,
-            aboutLogoID);
+                                       N_About_PixelRadio,
+                                       tempStr,
+                                       ControlColor::None,
+                                       aboutLogoID);
 
     // this gets set as a side effect of the control setup.
     ConfigSave.ClearSaveNeeded ();

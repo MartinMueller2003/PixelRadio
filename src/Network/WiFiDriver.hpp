@@ -26,69 +26,69 @@ class c_WiFiDriver : public c_WiFiDriverUi
 {
 public:
 
-    c_WiFiDriver ();
-    virtual ~c_WiFiDriver ();
+c_WiFiDriver ();
+virtual ~c_WiFiDriver ();
 
-    void        Begin ();
-    void        GetStatus (JsonObject &json);
-    String      GetDefaultWpaKey ();
-    String      GetDefaultSsid ();
-    bool        restoreConfiguration (JsonObject &json);
-    void        saveConfiguration (JsonObject &json);
-    void        WiFiReset ();
-    IPAddress   getIpAddress ()                         {return CurrentIpAddress;}
-    void        setIpAddress (IPAddress NewAddress)     {CurrentIpAddress = NewAddress;}
-    IPAddress   getIpSubNetMask ()                      {return CurrentNetmask;}
-    void        setIpSubNetMask (IPAddress NewAddress)  {CurrentNetmask = NewAddress;}
-    void        connectWifi (const String &ssid, const String &passphrase);
-    void        reset ();
-    void        Poll ();
-    void        SetFsmState (fsm_WiFi_state * NewState);
-    void        AnnounceState ();
-    void        SetFsmStartTime (uint32_t NewStartTime) {FsmTimerWiFiStartTime = NewStartTime;}
-    uint32_t    GetFsmStartTime (void)                  {return FsmTimerWiFiStartTime;}
-    bool        IsWiFiConnected ()                      {return ReportedIsWiFiConnected;}
-    void        SetIsWiFiConnected (bool value)         {ReportedIsWiFiConnected = value;}
-    void        GetDriverName (String &Name)            {Name = F ("WiFiDrv");}
-    uint32_t    Get_sta_timeout ()                      {return sta_timeout;}
-    uint32_t    Get_ap_timeout ()                       {return ap_timeout;}
-    String      GetConfig_passphrase ()                 {return WpaKey.getStr ();}
-    void        GetHostname (String &name);
-    void        SetHostname (String &name);
-    void        Disable ();
-    void        Enable ();
-    bool        xUsingDhcp () {return DHCP.get ();}
+void            Begin ();
+void            GetStatus (JsonObject & json);
+String          GetDefaultWpaKey ();
+String          GetDefaultSsid ();
+bool            restoreConfiguration (JsonObject & json);
+void            saveConfiguration (JsonObject & json);
+void            WiFiReset ();
+IPAddress       getIpAddress ()                         {return CurrentIpAddress;}
+void            setIpAddress (IPAddress NewAddress)     {CurrentIpAddress = NewAddress;}
+IPAddress       getIpSubNetMask ()                      {return CurrentNetmask;}
+void            setIpSubNetMask (IPAddress NewAddress)  {CurrentNetmask = NewAddress;}
+void            connectWifi (const String & ssid, const String & passphrase);
+void            reset ();
+void            Poll ();
+void            SetFsmState (fsm_WiFi_state * NewState);
+void            AnnounceState ();
+void            SetFsmStartTime (uint32_t NewStartTime) {FsmTimerWiFiStartTime = NewStartTime;}
+uint32_t        GetFsmStartTime (void)                  {return FsmTimerWiFiStartTime;}
+bool            IsWiFiConnected ()                      {return ReportedIsWiFiConnected;}
+void            SetIsWiFiConnected (bool value)         {ReportedIsWiFiConnected = value;}
+void            GetDriverName (String & Name)           {Name = F ("WiFiDrv");}
+uint32_t        Get_sta_timeout ()                      {return sta_timeout;}
+uint32_t        Get_ap_timeout ()                       {return ap_timeout;}
+String          GetConfig_passphrase ()                 {return WpaKey.getStr ();}
+void            GetHostname (String & name);
+void            SetHostname (String & name);
+void            Disable ();
+void            Enable ();
+bool            xUsingDhcp () {return DHCP.get ();}
 
 private:
 
-    uint32_t NextPollTime       = 0;
-    uint32_t PollInterval       = 1000;
+uint32_t NextPollTime   = 0;
+uint32_t PollInterval   = 1000;
 
-    bool ReportedIsWiFiConnected = false;
+bool ReportedIsWiFiConnected = false;
 
-    int         ValidateConfig ();
-    void        SetUpIp ();
+int     ValidateConfig ();
+void    SetUpIp ();
 
-    void        onWiFiConnect (const WiFiEvent_t event, const WiFiEventInfo_t info);
-    void        onWiFiDisconnect (const WiFiEvent_t event, const WiFiEventInfo_t info);
+void    onWiFiConnect (const WiFiEvent_t event, const WiFiEventInfo_t info);
+void    onWiFiDisconnect (const WiFiEvent_t event, const WiFiEventInfo_t info);
 
-    void        onWiFiStaConn (const WiFiEvent_t event, const WiFiEventInfo_t info);
-    void        onWiFiStaDisc (const WiFiEvent_t event, const WiFiEventInfo_t info);
+void    onWiFiStaConn (const WiFiEvent_t event, const WiFiEventInfo_t info);
+void    onWiFiStaDisc (const WiFiEvent_t event, const WiFiEventInfo_t info);
 
 protected:
 
-    friend class fsm_WiFi_state_Boot;
-    friend class fsm_WiFi_state_ConnectingUsingConfig;
-    friend class fsm_WiFi_state_ConnectingUsingDefaults;
-    friend class fsm_WiFi_state_ConnectedToAP;
-    friend class fsm_WiFi_state_ConnectingAsAP;
-    friend class fsm_WiFi_state_ConnectedToSta;
-    friend class fsm_WiFi_state_ConnectionFailed;
-    friend class fsm_WiFi_state_Disabled;
-    friend class fsm_WiFi_state;
-    fsm_WiFi_state * pCurrentFsmState   = nullptr;
-    uint32_t FsmTimerWiFiStartTime      = 0;
-    DNSServer dnsServer;
+friend class fsm_WiFi_state_Boot;
+friend class fsm_WiFi_state_ConnectingUsingConfig;
+friend class fsm_WiFi_state_ConnectingUsingDefaults;
+friend class fsm_WiFi_state_ConnectedToAP;
+friend class fsm_WiFi_state_ConnectingAsAP;
+friend class fsm_WiFi_state_ConnectedToSta;
+friend class fsm_WiFi_state_ConnectionFailed;
+friend class fsm_WiFi_state_Disabled;
+friend class fsm_WiFi_state;
+fsm_WiFi_state * pCurrentFsmState       = nullptr;
+uint32_t FsmTimerWiFiStartTime          = 0;
+DNSServer dnsServer;
 };      // c_WiFiDriver
 
 /*****************************************************************************/
@@ -102,20 +102,20 @@ class fsm_WiFi_state
 {
 protected:
 
-    c_WiFiDriver * pWiFiDriver = nullptr;
+c_WiFiDriver * pWiFiDriver = nullptr;
 
 public:
 
-    fsm_WiFi_state () {}
-    virtual ~fsm_WiFi_state () {}
+fsm_WiFi_state () {}
+virtual ~fsm_WiFi_state () {}
 
-    virtual void        Poll (void)                     = 0;
-    virtual void        Init (void)                     = 0;
-    virtual void        GetStateName (String &sName)    = 0;
-    virtual void        OnConnect (void)                = 0;
-    virtual void        OnDisconnect (void)             = 0;
-    void                GetDriverName (String &Name)            {Name = F ("WiFiDrv");}
-    void                SetParent (c_WiFiDriver * parent)       {pWiFiDriver = parent;}
+virtual void    Poll (void)                     = 0;
+virtual void    Init (void)                     = 0;
+virtual void    GetStateName (String & sName)   = 0;
+virtual void    OnConnect (void)                = 0;
+virtual void    OnDisconnect (void)             = 0;
+void            GetDriverName (String & Name)           {Name = F ("WiFiDrv");}
+void            SetParent (c_WiFiDriver * parent)       {pWiFiDriver = parent;}
 };      // fsm_WiFi_state
 
 /*****************************************************************************/
@@ -124,13 +124,13 @@ class fsm_WiFi_state_Boot : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_Boot () {}
-    virtual ~fsm_WiFi_state_Boot () {}
-    virtual void        Poll (void);
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Boot");}
-    virtual void        OnConnect (void)                {}
-    virtual void        OnDisconnect (void)             {}
+fsm_WiFi_state_Boot () {}
+virtual ~fsm_WiFi_state_Boot () {}
+virtual void    Poll (void);
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Boot");}
+virtual void    OnConnect (void)                {}
+virtual void    OnDisconnect (void)             {}
 };      // class fsm_WiFi_state_Boot
 
 /*****************************************************************************/
@@ -138,14 +138,14 @@ class fsm_WiFi_state_ConnectingUsingConfig : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_ConnectingUsingConfig () {}
-    virtual ~fsm_WiFi_state_ConnectingUsingConfig () {}
+fsm_WiFi_state_ConnectingUsingConfig () {}
+virtual ~fsm_WiFi_state_ConnectingUsingConfig () {}
 
-    virtual void        Poll (void);
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Connecting Using Config Credentials");}
-    virtual void        OnConnect (void);
-    virtual void        OnDisconnect (void)             {}
+virtual void    Poll (void);
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Connecting Using Config Credentials");}
+virtual void    OnConnect (void);
+virtual void    OnDisconnect (void)             {}
 };      // class fsm_WiFi_state_ConnectingUsingConfig
 
 /*****************************************************************************/
@@ -153,14 +153,14 @@ class fsm_WiFi_state_ConnectingUsingDefaults : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_ConnectingUsingDefaults () {}
-    virtual ~fsm_WiFi_state_ConnectingUsingDefaults () {}
+fsm_WiFi_state_ConnectingUsingDefaults () {}
+virtual ~fsm_WiFi_state_ConnectingUsingDefaults () {}
 
-    virtual void        Poll (void);
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Connecting Using Default Credentials");}
-    virtual void        OnConnect (void);
-    virtual void        OnDisconnect (void)             {}
+virtual void    Poll (void);
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Connecting Using Default Credentials");}
+virtual void    OnConnect (void);
+virtual void    OnDisconnect (void)             {}
 };      // class fsm_WiFi_state_ConnectingUsingDefaults
 
 /*****************************************************************************/
@@ -168,14 +168,14 @@ class fsm_WiFi_state_ConnectedToAP : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_ConnectedToAP () {}
-    virtual ~fsm_WiFi_state_ConnectedToAP () {}
+fsm_WiFi_state_ConnectedToAP () {}
+virtual ~fsm_WiFi_state_ConnectedToAP () {}
 
-    virtual void        Poll (void);
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Connected To AP");}
-    virtual void        OnConnect (void)                {}
-    virtual void        OnDisconnect (void);
+virtual void    Poll (void);
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Connected To AP");}
+virtual void    OnConnect (void)                {}
+virtual void    OnDisconnect (void);
 };      // fsm_WiFi_state_ConnectedToAP
 
 /*****************************************************************************/
@@ -183,14 +183,14 @@ class fsm_WiFi_state_ConnectingAsAP : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_ConnectingAsAP () {}
-    virtual ~fsm_WiFi_state_ConnectingAsAP () {}
+fsm_WiFi_state_ConnectingAsAP () {}
+virtual ~fsm_WiFi_state_ConnectingAsAP () {}
 
-    virtual void        Poll (void);
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Connecting As AP");}
-    virtual void        OnConnect (void);
-    virtual void        OnDisconnect (void)             {}
+virtual void    Poll (void);
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Connecting As AP");}
+virtual void    OnConnect (void);
+virtual void    OnDisconnect (void)             {}
 };      // fsm_WiFi_state_ConnectingAsAP
 
 /*****************************************************************************/
@@ -198,14 +198,14 @@ class fsm_WiFi_state_ConnectedToSta : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_ConnectedToSta () {}
-    virtual ~fsm_WiFi_state_ConnectedToSta () {}
+fsm_WiFi_state_ConnectedToSta () {}
+virtual ~fsm_WiFi_state_ConnectedToSta () {}
 
-    virtual void        Poll (void);
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Connected To STA");}
-    virtual void        OnConnect (void)                {}
-    virtual void        OnDisconnect (void);
+virtual void    Poll (void);
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Connected To STA");}
+virtual void    OnConnect (void)                {}
+virtual void    OnDisconnect (void);
 };      // fsm_WiFi_state_ConnectedToSta
 
 /*****************************************************************************/
@@ -213,14 +213,14 @@ class fsm_WiFi_state_ConnectionFailed : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_ConnectionFailed () {}
-    virtual ~fsm_WiFi_state_ConnectionFailed () {}
+fsm_WiFi_state_ConnectionFailed () {}
+virtual ~fsm_WiFi_state_ConnectionFailed () {}
 
-    virtual void        Poll (void)                     {}
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Connection Failed");}
-    virtual void        OnConnect (void)                {}
-    virtual void        OnDisconnect (void)             {}
+virtual void    Poll (void)                     {}
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Connection Failed");}
+virtual void    OnConnect (void)                {}
+virtual void    OnDisconnect (void)             {}
 };      // class fsm_WiFi_state_ConnectionFailed
 
 /*****************************************************************************/
@@ -228,14 +228,14 @@ class fsm_WiFi_state_Disabled : public fsm_WiFi_state
 {
 public:
 
-    fsm_WiFi_state_Disabled () {}
-    virtual ~fsm_WiFi_state_Disabled () {}
+fsm_WiFi_state_Disabled () {}
+virtual ~fsm_WiFi_state_Disabled () {}
 
-    virtual void        Poll (void)                     {}
-    virtual void        Init (void);
-    virtual void        GetStateName (String &sName)    {sName = F ("Disabled");}
-    virtual void        OnConnect (void)                {}
-    virtual void        OnDisconnect (void)             {}
+virtual void    Poll (void)                     {}
+virtual void    Init (void);
+virtual void    GetStateName (String & sName)   {sName = F ("Disabled");}
+virtual void    OnConnect (void)                {}
+virtual void    OnDisconnect (void)             {}
 };      // class fsm_WiFi_state_Disabled
 
 extern c_WiFiDriver WiFiDriver;

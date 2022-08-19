@@ -22,14 +22,14 @@ class cStatusControl : public cControlCommon
 {
 public:
 
-    cStatusControl (const String &Title);
-    virtual ~cStatusControl ()    {}
+cStatusControl (const String & Title);
+virtual ~cStatusControl ()    {}
 
-    void                restoreConfiguration (JsonObject &)     {}
-    void                saveConfiguration (JsonObject &)        {}
+void            restoreConfiguration (JsonObject &)     {}
+void            saveConfiguration (JsonObject &)        {}
 
-    virtual bool        set (const String &value);
-    virtual void        set (const String &value, eCssStyle style);
+virtual bool    set (const String & value);
+virtual void    set (const String & value, eCssStyle style);
 };      // class cStatusControl
 
 // *********************************************************************************************

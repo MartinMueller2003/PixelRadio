@@ -85,7 +85,7 @@ void cTestTone::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cTestTone::set (String &value, String &ResponseMessage)
+bool cTestTone::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
@@ -107,7 +107,7 @@ bool cTestTone::set (String &value, String &ResponseMessage)
             NewDataValue = false;
         }
         else if (value.equals (F ("1")) ||
-            value.equals (F ("on")))
+                 value.equals (F ("on")))
         {
             NewDataValue = true;
         }

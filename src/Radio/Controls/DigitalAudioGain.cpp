@@ -57,13 +57,13 @@ void cDigitalAudioGain::AddControls (uint16_t value, ControlColor color)
     cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, RADIO_DIG_AUDIO_STR.c_str ());
 
-    for (auto &CurrentOption : MapOfGainValues)
+    for (auto & CurrentOption : MapOfGainValues)
     {
         ESPUI.addControl (ControlType::Option,
-            CurrentOption.first.c_str (),
-            CurrentOption.first,
-            ControlColor::None,
-            ControlId);
+                          CurrentOption.first.c_str (),
+                          CurrentOption.first,
+                          ControlColor::None,
+                          ControlId);
     }
     ESPUI.updateControlValue (ControlId, DataValueStr);
 
@@ -71,7 +71,7 @@ void cDigitalAudioGain::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cDigitalAudioGain::set (String &value, String &ResponseMessage)
+bool cDigitalAudioGain::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

@@ -42,8 +42,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
     // ************************************************************************************************
     // getCommandArg(): Get the Webserver's Command Argument. Result is returned as String passed by reference.
     // Also returns String Length. If argument missing then returns -1;
-    #    ifdef HTTP_ENB
-        int16_t getCommandArg (String &requestStr, uint8_t maxSize)
+ # ifdef HTTP_ENB
+        int16_t getCommandArg (String & requestStr, uint8_t maxSize)
         {
             int16_t     argStart        = 0;
             int16_t     argStop         = 0;
@@ -87,7 +87,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
             return requestStr.length ();
         }
 
-    #    endif // ifdef HTTP_ENB
+ # endif // ifdef HTTP_ENB
 
 #endif // def OldWay
 
@@ -96,7 +96,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 #ifdef HTTP_ENB
     void gpioHttpControl (WiFiClient client, String requestStr, uint8_t pin)
     {
-    #    ifdef OldWay
+ # ifdef OldWay
             bool        successFlg = true;
             char        charBuff[60];
 
@@ -122,7 +122,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
             }
             client.print (charBuff);
             client.println (HTML_CLOSE_STR);
-    #    endif // def OldWay
+ # endif // def OldWay
     }
 
 #endif // ifdef HTTP_ENB
@@ -146,7 +146,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 #ifdef HTTP_ENB
     void processWebClient (void)
     {
-    #    ifdef OldWay
+ # ifdef OldWay
             static bool connectFlg      = false;
             bool successFlg             = true;
             uint16_t    charCnt         = 0;
@@ -456,7 +456,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                     }
                                     client.println (HTML_CLOSE_STR);
                                 }
-        #        ifdef OldWay
+  #  ifdef OldWay
                                     // ************* PTY CODE COMMAND ****************
                                     else if (requestLcStr.indexOf (makeHttpCmdStr (CMD_PTYCODE_STR)) >= 0)
                                     {
@@ -518,7 +518,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                         }
                                         client.println (HTML_CLOSE_STR);
                                     }
-        #        endif // def OldWay
+  #  endif // def OldWay
 
                                 // ************ RT COMMAND ***************
                                 // To clear RadioText display send %20 as payload.
@@ -744,7 +744,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                 client.stop ();         // Close the GET HTTP connection.
                 Log.infoln ("-> HTTP Controller: Connected Client Now Idle, Disconnected).");
             }
-    #    endif // def OldWay
+ # endif // def OldWay
     }
 
 #endif // ifdef HTTP_ENB

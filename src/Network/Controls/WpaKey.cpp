@@ -61,7 +61,7 @@ void cWpaKey::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cWpaKey::set (String &value, String &ResponseMessage)
+bool cWpaKey::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
     // DEBUG_V(String("       value: ") + value);

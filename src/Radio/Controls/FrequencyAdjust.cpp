@@ -45,10 +45,10 @@ void cFrequencyAdjust::AddRadioControls (uint16_t value, ControlColor color)
     RadioId = value;
 
     RadioStatusID = ESPUI.addControl (ControlType::Label,
-            RADIO_FM_FRQ_STR.c_str (),
-            emptyString,
-            color,
-            RadioId);
+                                      RADIO_FM_FRQ_STR.c_str (),
+                                      emptyString,
+                                      color,
+                                      RadioId);
     ESPUI.setPanelStyle (RadioStatusID, F ("font-size: 3.0em;"));
     ESPUI.setElementStyle (RadioStatusID, F ("width: 75%;"));
 
@@ -65,10 +65,10 @@ void cFrequencyAdjust::AddHomeControls (uint16_t value, ControlColor color)
     HomeId = value;
 
     HomeStatusID = ESPUI.addControl (ControlType::Label,
-            HOME_RAD_STAT_STR.c_str (),
-            emptyString,
-            color,
-            HomeId);
+                                     HOME_RAD_STAT_STR.c_str (),
+                                     emptyString,
+                                     color,
+                                     HomeId);
     ESPUI.setPanelStyle (HomeStatusID, F ("font-size: 3.0em;"));
 
     UpdateStatus ();
@@ -82,16 +82,16 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     AdjustStatusID = ESPUI.addControl (ControlType::Label,
-            RADIO_FM_FRQ_STR.c_str (),
-            emptyString,
-            color,
-            value);
+                                       RADIO_FM_FRQ_STR.c_str (),
+                                       emptyString,
+                                       color,
+                                       value);
     ESPUI.setPanelStyle (AdjustStatusID, F ("font-size: 3.0em;"));
     ESPUI.setElementStyle (AdjustStatusID, F ("max-width: 75%;"));
 
     cOldControlCommon::AddControls (value,
-        ControlType::Pad,
-        color);
+                                    ControlType::Pad,
+                                    color);
     ESPUI.updateControlLabel (ControlId, ADJUST_FRQ_ADJ_STR.c_str ());
 
     UpdateStatus ();
@@ -163,7 +163,7 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-bool cFrequencyAdjust::set (String &value, String &ResponseMessage)
+bool cFrequencyAdjust::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

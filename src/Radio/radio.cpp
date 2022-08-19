@@ -60,7 +60,7 @@ void cRadio::Poll ()
 }
 
 // *********************************************************************************************
-void cRadio::restoreConfiguration (JsonObject &config)
+void cRadio::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
@@ -79,7 +79,7 @@ void cRadio::restoreConfiguration (JsonObject &config)
 }
 
 // *********************************************************************************************
-void cRadio::saveConfiguration (JsonObject &config)
+void cRadio::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 

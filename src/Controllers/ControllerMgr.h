@@ -38,56 +38,56 @@ class c_ControllerMgr
 {
 public:
 
-    enum ControllerTypeId_t
-    {
-        USB_SERIAL_CNTRL = 0,
-        MQTT_CNTRL,
-        FPPD_CNTRL,
-        HTTP_CNTRL,
-        LOCAL_CNTRL,
-        NO_CNTRL,
-        NumControllerTypes,
-        ControllerIdStart = 0,
-    };
+enum ControllerTypeId_t
+{
+    USB_SERIAL_CNTRL = 0,
+    MQTT_CNTRL,
+    FPPD_CNTRL,
+    HTTP_CNTRL,
+    LOCAL_CNTRL,
+    NO_CNTRL,
+    NumControllerTypes,
+    ControllerIdStart = 0,
+};
 
-    struct RdsMsgInfo_t
-    {
-        String          ControllerName;
-        String          Text;
-        uint32_t        DurationMilliSec = 0;
-    };
+struct RdsMsgInfo_t
+{
+    String      ControllerName;
+    String      Text;
+    uint32_t    DurationMilliSec = 0;
+};
 
 protected:
 
-    struct ControllerInfo_t
-    {
-        ControllerTypeId_t      ControllerId    = ControllerIdStart;
-        uint16_t                ActiveBit       = 0;
-        uint16_t                SendingBit      = 0;
-        c_ControllerCommon      * pController   = nullptr;
-    };
+struct ControllerInfo_t
+{
+    ControllerTypeId_t  ControllerId    = ControllerIdStart;
+    uint16_t            ActiveBit       = 0;
+    uint16_t            SendingBit      = 0;
+    c_ControllerCommon  * pController   = nullptr;
+};
 
-    ControllerInfo_t ListOfControllers[ControllerTypeId_t::NumControllerTypes];
+ControllerInfo_t ListOfControllers[ControllerTypeId_t::NumControllerTypes];
 
 private:
 
-    ControllerTypeId_t CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
+ControllerTypeId_t CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
 
 public:
 
-    c_ControllerMgr ();
-    virtual ~c_ControllerMgr ();
-    void                poll ();
-    void                begin ();
-    void                AddControls (uint16_t ctrlTab);
-    void                Display (ControllerTypeId_t Id);
-    c_ControllerCommon* GetControllerById (ControllerTypeId_t Id);
-    bool                GetControllerEnabledFlag (ControllerTypeId_t Id);
-    uint16_t            getControllerStatusSummary ();
-    String              GetName (ControllerTypeId_t Id);
-    void                GetNextRdsMessage (RdsMsgInfo_t &Response);
-    void                restoreConfiguration (ArduinoJson::JsonObject &config);
-    void                saveConfiguration (ArduinoJson::JsonObject &config);
+c_ControllerMgr ();
+virtual ~c_ControllerMgr ();
+void                    poll ();
+void                    begin ();
+void                    AddControls (uint16_t ctrlTab);
+void                    Display (ControllerTypeId_t Id);
+c_ControllerCommon      * GetControllerById (ControllerTypeId_t Id);
+bool                    GetControllerEnabledFlag (ControllerTypeId_t Id);
+uint16_t                getControllerStatusSummary ();
+String                  GetName (ControllerTypeId_t Id);
+void                    GetNextRdsMessage (RdsMsgInfo_t & Response);
+void                    restoreConfiguration (ArduinoJson::JsonObject & config);
+void                    saveConfiguration (ArduinoJson::JsonObject & config);
 };      // c_ControllerMgr
 
 #define CtypeId c_ControllerMgr::ControllerTypeId_t

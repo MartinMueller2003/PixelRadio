@@ -22,12 +22,12 @@ class cSSID : public cOldControlCommon
 {
 public:
 
-    cSSID ();
-    virtual ~cSSID ()    {}
+cSSID ();
+virtual ~cSSID ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String &value, String &Response);
+void    AddControls (uint16_t TabId, ControlColor color);
+void    ResetToDefaults ();
+bool    set (String & value, String & Response);
 };      // class cSSID
 
 extern cSSID SSID;

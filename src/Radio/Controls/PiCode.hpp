@@ -22,12 +22,12 @@ class cPiCode : public cOldControlCommon
 {
 public:
 
-    cPiCode ();
-    virtual ~cPiCode ()    {}
+cPiCode ();
+virtual ~cPiCode ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String &value, String &Response);
+void    AddControls (uint16_t TabId, ControlColor color);
+void    ResetToDefaults ();
+bool    set (String & value, String & Response);
 };      // class cPiCode
 
 extern cPiCode PiCode;

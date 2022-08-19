@@ -21,7 +21,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 #define FPP_TYPE_ID         0xC3
@@ -52,28 +52,28 @@ void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
 
     // register for changes in the WiFi State
     WiFi.onEvent ([] (WiFiEvent_t)
-        {
-            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-        },
-        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+                  {
+                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+                  },
+                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
     WiFi.onEvent ([] (WiFiEvent_t)
-        {
-            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-        },
-        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+                  {
+                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+                  },
+                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     WiFi.onEvent ([] (WiFiEvent_t)
-        {
-            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-        },
-        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+                  {
+                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+                  },
+                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
     WiFi.onEvent ([] (WiFiEvent_t)
-        {
-            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-        },
-        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+                  {
+                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+                  },
+                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     // DEBUG_END;
 }       // begin
@@ -411,11 +411,11 @@ void c_FPPDiscovery::sendPingPacket (IPAddress destination)
     }   // printReq
 
 #else // ifdef PRINT_DEBUG
-    #    define printReq(a, b)
+ # define printReq(a, b)
 #endif // !def PRINT_DEBUG
 
 // -----------------------------------------------------------------------------
-void c_FPPDiscovery::BuildFseqResponse (String fname, String &resp)
+void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
 {
     // DEBUG_START;
 
@@ -434,9 +434,9 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String &resp)
     struct tm tm = *gmtime(&MultiSyncStats.lastReceiveTime);
     // BUGBUG -- trusting the provided `tm` structure values contain valid data ... use `snprintf` to mitigate.
     int actuallyWritten = snprintf (timeStr, TIME_STR_CHAR_COUNT,
-            "%4d-%.2d-%.2d %.2d:%.2d:%.2d",
-            1900 + tm.tm_year, tm.tm_mon + 1, tm.tm_mday,
-            tm.tm_hour, tm.tm_min, tm.tm_sec);
+                                    "%4d-%.2d-%.2d %.2d:%.2d:%.2d",
+                                    1900 + tm.tm_year, tm.tm_mon + 1, tm.tm_mday,
+                                    tm.tm_hour, tm.tm_min, tm.tm_sec);
 
     // TODO: assert ((actuallyWritten > 0) && (actuallyWritten < TIME_STR_CHAR_COUNT))
     if ((actuallyWritten > 0) && (actuallyWritten < TIME_STR_CHAR_COUNT))
@@ -477,9 +477,9 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String &resp)
             while (FileOffsetToCurrentHeaderRecord < FileOffsetToStartOfSequenceData)
             {
                 FileMgr.ReadSdFile (fseq,
-                    (byte *)FSEQVariableDataHeaderBuffer,
-                    sizeof (FSEQRawVariableDataHeader),
-                    FileOffsetToCurrentHeaderRecord);
+                                    (byte *)FSEQVariableDataHeaderBuffer,
+                                    sizeof (FSEQRawVariableDataHeader),
+                                    FileOffsetToCurrentHeaderRecord);
 
                 int     VariableDataHeaderTotalLength   = read16 ((uint8_t *)&(pCurrentVariableHeader->length));
                 int     VariableDataHeaderDataLength    = VariableDataHeaderTotalLength - sizeof (FSEQRawVariableDataHeader);
@@ -492,7 +492,7 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String &resp)
                     memset (VariableDataHeaderDataBuffer, 0x00, VariableDataHeaderDataLength + 1);
 
                     FileMgr.ReadSdFile (fseq, (byte *)VariableDataHeaderDataBuffer, VariableDataHeaderDataLength,
-                        FileOffsetToCurrentHeaderRecord);
+                                        FileOffsetToCurrentHeaderRecord);
 
                     JsonObject JsonDataHeader = JsonDataHeaders.createNestedObject ();
                     JsonDataHeader[HeaderTypeCode] = String (VariableDataHeaderDataBuffer);
@@ -555,7 +555,7 @@ void c_FPPDiscovery::ProcessGET (AsyncWebServerRequest * request)
 } // ProcessGET
 
 // -----------------------------------------------------------------------------
-void c_FPPDiscovery::GetSysInfoJSON (JsonObject &jsonResponse)
+void c_FPPDiscovery::GetSysInfoJSON (JsonObject & jsonResponse)
 {
     // DEBUG_START;
 

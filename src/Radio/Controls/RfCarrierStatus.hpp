@@ -22,8 +22,8 @@ class cRfCarrierStatus : public cStatusControl
 {
 public:
 
-    cRfCarrierStatus ();
-    virtual ~cRfCarrierStatus ()    {}
+cRfCarrierStatus ();
+virtual ~cRfCarrierStatus ()    {}
 };      // class cRfCarrierStatus
 
 extern cRfCarrierStatus RfCarrierStatus;

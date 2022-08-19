@@ -398,7 +398,7 @@ void cQN8027RadioApi::setPreEmphasis (uint8_t value, bool Carrier)
 }
 
 // *********************************************************************************************
-void cQN8027RadioApi::setProgramServiceName (String &value, bool Carrier)
+void cQN8027RadioApi::setProgramServiceName (String & value, bool Carrier)
 {
     // DEBUG_START;
 
@@ -430,7 +430,7 @@ void cQN8027RadioApi::setPtyCode (uint8_t value, bool Carrier)
 }
 
 // *********************************************************************************************
-void cQN8027RadioApi::setRdsMessage (String &value)
+void cQN8027RadioApi::setRdsMessage (String & value)
 {
     // DEBUG_START;
 

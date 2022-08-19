@@ -72,13 +72,13 @@ void cRfPower::AddControls (uint16_t value, ControlColor color)
     cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, RADIO_RF_POWER_STR.c_str ());
 
-    for (auto &CurrentOption : MapOfPowerLevels)
+    for (auto & CurrentOption : MapOfPowerLevels)
     {
         ESPUI.addControl (ControlType::Option,
-            CurrentOption.first.c_str (),
-            CurrentOption.first,
-            ControlColor::None,
-            ControlId);
+                          CurrentOption.first.c_str (),
+                          CurrentOption.first,
+                          ControlColor::None,
+                          ControlId);
     }
 
     ESPUI.updateControlValue (ControlId, DataValueStr);
@@ -87,7 +87,7 @@ void cRfPower::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cRfPower::set (String &value, String &ResponseMessage)
+bool cRfPower::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

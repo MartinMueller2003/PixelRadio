@@ -73,7 +73,7 @@ void cApIpAddress::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cApIpAddress::set (String &value, String &ResponseMessage)
+bool cApIpAddress::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

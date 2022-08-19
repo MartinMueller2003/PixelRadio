@@ -29,7 +29,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 struct ControllerDefinition_t
@@ -66,7 +66,7 @@ c_ControllerMgr::c_ControllerMgr ()
 {
     // DEBUG_START;
 
-    for (auto &CurrentDefinition : ControllerDefinitions)
+    for (auto & CurrentDefinition : ControllerDefinitions)
     {
         uint32_t index = int(CurrentDefinition.Type);
         ListOfControllers[index].ControllerId   = CurrentDefinition.Type;
@@ -133,7 +133,7 @@ c_ControllerMgr::c_ControllerMgr ()
 // *********************************************************************************************
 c_ControllerMgr::~c_ControllerMgr ()
 {
-    for (auto &CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         if (nullptr != CurrentController.pController)
         {
@@ -148,7 +148,7 @@ void c_ControllerMgr::AddControls (uint16_t ctrlTab)
 {
     // DEBUG_START;
 
-    for (auto &CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
         CurrentController.pController->AddControls (ctrlTab);
@@ -160,7 +160,7 @@ void c_ControllerMgr::AddControls (uint16_t ctrlTab)
 void c_ControllerMgr::begin ()
 {
     // DEBUG_START;
-    for (auto &CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         // DEBUG_V(String("Begin: ") + CurrentController.pController->GetName());
         // DEBUG_V(String("pController: 0x") + String(uint32_t(CurrentController.pController), HEX));
@@ -170,10 +170,10 @@ void c_ControllerMgr::begin ()
 }       // begin
 
 // *********************************************************************************************
-c_ControllerCommon *    c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
+c_ControllerCommon      * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
 
 // *********************************************************************************************
-void                    c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t &Response)
+void                    c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -181,7 +181,7 @@ void                    c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t &Respon
     Response.Text               = F ("No Controllers Available");
     CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
 
-    for (auto &CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         if (!CurrentController.pController->ControllerIsEnabled ())
         {
@@ -214,7 +214,7 @@ uint16_t c_ControllerMgr::getControllerStatusSummary ()
 
     uint16_t Response = 0;
 
-    for (auto &CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         if (CurrentController.pController->ControllerIsEnabled ())
         {
@@ -238,7 +238,7 @@ String  c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControlle
 void    c_ControllerMgr::poll ()
 {
     // _ DEBUG_START;
-    for (auto &CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         CurrentController.pController->poll ();
     }
@@ -246,7 +246,7 @@ void    c_ControllerMgr::poll ()
 }       // poll
 
 // *********************************************************************************************
-void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -284,7 +284,7 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -299,7 +299,7 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject &config)
 
         JsonArray ControllerConfigs = config[N_controllers];
 
-        for (auto &CurrentController : ListOfControllers)
+        for (auto & CurrentController : ListOfControllers)
         {
             JsonObject ControllerConfig = ControllerConfigs.createNestedObject ();
             CurrentController.pController->saveConfiguration (ControllerConfig);

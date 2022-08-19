@@ -22,10 +22,10 @@ class cAnalogAudioGain : public cChoiceListControl
 {
 public:
 
-    cAnalogAudioGain ();
-    virtual ~cAnalogAudioGain ()    {}
+cAnalogAudioGain ();
+virtual ~cAnalogAudioGain ()    {}
 
-    bool set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
+bool set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
 };      // class cAnalogAudioGain
 
 extern cAnalogAudioGain AnalogAudioGain;

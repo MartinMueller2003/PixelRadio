@@ -64,7 +64,7 @@ void cPiCode::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cPiCode::set (String &value, String &ResponseMessage)
+bool cPiCode::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

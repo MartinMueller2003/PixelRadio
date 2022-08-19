@@ -21,7 +21,7 @@
 #include "Language.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -47,7 +47,7 @@ void c_ControllerMessageSet::Activate (bool Activating)
 {
     // DEBUG_START;
 
-    for (auto &CurrentMessage : Messages)
+    for (auto & CurrentMessage : Messages)
     {
         CurrentMessage.second.Activate (Activating);
     }
@@ -112,7 +112,7 @@ void c_ControllerMessageSet::AddControls (c_ControllerMessage::MessageElementIds
         }
 
         // DEBUG_V();
-        for (auto &CurrentMessage : Messages)
+        for (auto & CurrentMessage : Messages)
         {
             CurrentMessage.second.AddControls (MessageElementIds);
         }
@@ -217,7 +217,7 @@ void c_ControllerMessageSet::EraseMsg (String MsgTxt)
 }
 
 // ************************************************************************************************
-void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -264,7 +264,7 @@ void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &R
 }
 
 // *********************************************************************************************
-void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject &config)
+void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -310,7 +310,7 @@ void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject &config)
 }       // RestoreConfig
 
 // *********************************************************************************************
-void c_ControllerMessageSet::SaveConfig (ArduinoJson::JsonObject &MsgSetConfig)
+void c_ControllerMessageSet::SaveConfig (ArduinoJson::JsonObject & MsgSetConfig)
 {
     // DEBUG_START;
 
@@ -320,7 +320,7 @@ void c_ControllerMessageSet::SaveConfig (ArduinoJson::JsonObject &MsgSetConfig)
     JsonArray MessageArray = MsgSetConfig.createNestedArray (N_list);
 
     // DEBUG_V();
-    for (auto &currentMessage : Messages)
+    for (auto & currentMessage : Messages)
     {
         JsonObject MessageConfig = MessageArray.createNestedObject ();
         currentMessage.second.SaveConfig (MessageConfig);
@@ -367,7 +367,7 @@ void c_ControllerMessageSet::ShowMsgDetailsPane (bool value)
 }
 
 // *********************************************************************************************
-void c_ControllerMessageSet::UpdateMsgText (String &OriginalMessageText, String &NewMessageText)
+void c_ControllerMessageSet::UpdateMsgText (String & OriginalMessageText, String & NewMessageText)
 {
     // DEBUG_START;
 

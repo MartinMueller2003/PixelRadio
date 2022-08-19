@@ -44,7 +44,7 @@ void cConfigSave::SetSaveNeeded ()
 {
     // DEBUG_START;
 
-    for (auto &CurrentControl : ListOfSaveControls)
+    for (auto & CurrentControl : ListOfSaveControls)
     {
         CurrentControl->SetSaveNeeded ();
     }
@@ -57,7 +57,7 @@ void cConfigSave::ClearSaveNeeded ()
 {
     // DEBUG_START;
 
-    for (auto &CurrentControl : ListOfSaveControls)
+    for (auto & CurrentControl : ListOfSaveControls)
     {
         CurrentControl->ClearSaveNeeded ();
     }

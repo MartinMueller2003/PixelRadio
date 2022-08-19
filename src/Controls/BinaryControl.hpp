@@ -22,14 +22,14 @@ class cBinaryControl : public cControlCommon
 {
 public:
 
-    cBinaryControl (const String &ConfigName, const String &Title);
-    virtual ~cBinaryControl ()    {}
+cBinaryControl (const String & ConfigName, const String & Title);
+virtual ~cBinaryControl ()    {}
 
-    virtual bool        set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
-    virtual bool        validate (const String &value, String &ResponseMessage);
+virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
+virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 protected:
-    bool DataValue = false;
+bool DataValue = false;
 };      // class cBinaryControl
 
 // *********************************************************************************************

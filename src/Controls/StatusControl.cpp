@@ -19,7 +19,7 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cStatusControl::cStatusControl (const String &_Title) :
+cStatusControl::cStatusControl (const String & _Title) :
     cControlCommon (emptyString, ControlType::Label, _Title)
 {
     // _ DEBUG_START;
@@ -30,7 +30,7 @@ cStatusControl::cStatusControl (const String &_Title) :
 }
 
 // *********************************************************************************************
-void cStatusControl::set (const String &value, eCssStyle style)
+void cStatusControl::set (const String & value, eCssStyle style)
 {
     // DEBUG_START;
 
@@ -41,7 +41,7 @@ void cStatusControl::set (const String &value, eCssStyle style)
 }
 
 // *********************************************************************************************
-bool cStatusControl::set (const String &value)
+bool cStatusControl::set (const String & value)
 {
     // DEBUG_START;
 

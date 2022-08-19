@@ -61,7 +61,7 @@ void cSSID::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cSSID::set (String &value, String &ResponseMessage)
+bool cSSID::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

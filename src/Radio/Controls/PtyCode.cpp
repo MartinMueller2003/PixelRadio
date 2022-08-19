@@ -364,7 +364,7 @@ void cPtyCode::ResetToDefaults ()
 }
 
 // ************************************************************************************************
-bool cPtyCode::set (String &value, String &ResponseMessage)
+bool cPtyCode::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
@@ -398,7 +398,7 @@ bool cPtyCode::set (String &value, String &ResponseMessage)
             }
         }
 
-        for (auto &CurrentEntry : ListOfPtyCodes)
+        for (auto & CurrentEntry : ListOfPtyCodes)
         {
             if (value.equalsIgnoreCase (CurrentEntry.name[CurrentRegion]))
             {
@@ -445,7 +445,7 @@ void cPtyCode::setPtyCodeOptionValues ()
 
     if (Control::noParent != ControlId)
     {
-        for (auto &CurrentEntry : ListOfPtyCodes)
+        for (auto & CurrentEntry : ListOfPtyCodes)
         {
             // DEBUG_V(String("code: ") + String(CurrentEntry.code));
 
@@ -453,10 +453,10 @@ void cPtyCode::setPtyCodeOptionValues ()
             {
                 // DEBUG_V("Create Option");
                 CurrentEntry.UiId = ESPUI.addControl (ControlType::Option,
-                        emptyString.c_str (),
-                        emptyString,
-                        ControlColor::None,
-                        ControlId);
+                                                      emptyString.c_str (),
+                                                      emptyString,
+                                                      ControlColor::None,
+                                                      ControlId);
             }
             Control * control = ESPUI.getControl (CurrentEntry.UiId);
 

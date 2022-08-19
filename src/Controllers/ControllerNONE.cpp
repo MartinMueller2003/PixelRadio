@@ -20,7 +20,7 @@
 #include "ControllerNONE.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -35,7 +35,7 @@ c_ControllerNONE::~c_ControllerNONE ()
 {}
 
 // *********************************************************************************************
-void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -45,7 +45,7 @@ void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

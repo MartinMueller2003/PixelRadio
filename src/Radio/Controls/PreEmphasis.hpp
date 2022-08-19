@@ -22,11 +22,11 @@ class cPreEmphasis : public cOldControlCommon
 {
 public:
 
-    cPreEmphasis ();
-    virtual ~cPreEmphasis ()    {}
+cPreEmphasis ();
+virtual ~cPreEmphasis ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String &value, String &Response);
+void    AddControls (uint16_t TabId, ControlColor color);
+bool    set (String & value, String & Response);
 };      // class cPreEmphasis
 
 extern cPreEmphasis PreEmphasis;

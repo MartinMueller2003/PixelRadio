@@ -215,9 +215,9 @@ void loop ()
 
         rebootSystem ();                // Check to see if Reboot has been requested.
 
-    #    ifdef HTTP_ENB
+ # ifdef HTTP_ENB
             processWebClient ();        // Process Any Available HTTP RDS commands.
-    #    endif // ifdef HTTP_ENB
+ # endif // ifdef HTTP_ENB
 
 #endif // def OldWay
     // _ DEBUG_END;

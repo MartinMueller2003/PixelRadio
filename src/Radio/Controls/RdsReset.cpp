@@ -57,7 +57,7 @@ void cRdsReset::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cRdsReset::set (String &value, String &ResponseMessage)
+bool cRdsReset::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

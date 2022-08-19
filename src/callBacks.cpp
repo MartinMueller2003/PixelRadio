@@ -22,7 +22,7 @@
 #include <ArduinoLog.h>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // ************************************************************************************************

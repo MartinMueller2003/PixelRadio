@@ -726,13 +726,13 @@ void QN8027Radio::sendRadioText (String RT)
         uint8_t ptyLo = (ptyCode << 5) & 0xE0;  // bottom 3 bits of PTY are in top 3 bits of byte 4, Mod By dkulp,
                                                 // Jun-13-2022
         sendRDS (highByte (piCode),
-            lowByte (piCode),
-            0x20 | ptyHi,
-            ptyLo | (i / 4),
-            char_array[i],
-            char_array[i + 1],
-            char_array[i + 2],
-            char_array[i + 3]);
+                 lowByte (piCode),
+                 0x20 | ptyHi,
+                 ptyLo | (i / 4),
+                 char_array[i],
+                 char_array[i + 1],
+                 char_array[i + 2],
+                 char_array[i + 3]);
         waitForRDSSend ();
     }
 }

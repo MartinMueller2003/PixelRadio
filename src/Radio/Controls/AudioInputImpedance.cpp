@@ -65,13 +65,13 @@ void cAudioInputImpedance::AddControls (uint16_t value, ControlColor color)
     cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, RADIO_INP_IMP_STR.c_str ());
 
-    for (auto &CurrentOption : MapOfImpedances)
+    for (auto & CurrentOption : MapOfImpedances)
     {
         ESPUI.addControl (ControlType::Option,
-            CurrentOption.first.c_str (),
-            CurrentOption.first,
-            ControlColor::None,
-            ControlId);
+                          CurrentOption.first.c_str (),
+                          CurrentOption.first,
+                          ControlColor::None,
+                          ControlId);
     }
 
     ESPUI.updateControlValue (ControlId, DataValueStr);
@@ -80,7 +80,7 @@ void cAudioInputImpedance::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cAudioInputImpedance::set (String &value, String &ResponseMessage)
+bool cAudioInputImpedance::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

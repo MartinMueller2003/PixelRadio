@@ -24,7 +24,7 @@
 #include <ArduinoLog.h>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -56,7 +56,7 @@ void c_ControllerMQTT::Begin ()
 }       // Begin
 
 // *********************************************************************************************
-void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     if (ControllerEnabled)
     {
@@ -90,10 +90,11 @@ void c_ControllerMQTT::Init (void)
         Log.traceln (F ("Initializing MQTT"));
         mqttClient.setServer (RemoteIp, mqttPort);
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
-        {
-            c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
-            pMe->mqttClientCallback (topic, payload, length);
-        });     // Topic Subscription callback handler.
+                                {
+                                    c_ControllerMQTT * pMe =
+                                        static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
+                                    pMe->mqttClientCallback (topic, payload, length);
+                                });     // Topic Subscription callback handler.
 
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
         // DEBUG_V();
@@ -152,7 +153,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
 
     if ((ControllerEnabled == true) &&
         ((INADDR_NONE != RemoteIp) || (!mqttNameStr.length ()) ||
-        (!mqttUserStr.length ()) || (!mqttPwStr.length ())))
+         (!mqttUserStr.length ()) || (!mqttPwStr.length ())))
     {
         // DEBUG_V();
         MessageStr              = MQTT_MISSING_STR;
@@ -172,80 +173,80 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
     }
 
     EspuiMessageAreaId = ESPUI.addControl (ControlType::Label,
-            "MSG_AREA",
-            MessageStr,
-            ControlColor::Turquoise,
-            ControlerEnabledElementId);
+                                           "MSG_AREA",
+                                           MessageStr,
+                                           ControlColor::Turquoise,
+                                           ControlerEnabledElementId);
     ESPUI.setElementStyle (EspuiMessageAreaId, CSS_LABEL_STYLE_BLACK);
     // DEBUG_V();
 
     EspuiNameID = ESPUI.addControl (ControlType::Text,
-            MQTT_SUBSCR_NM_STR,
-            mqttNameStr,
-            ControlColor::Turquoise,
-            ctrlTab,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerMQTT *> (param)->setMqttNameCallback (sender, type);
-                }
-            },
-            this);
+                                    MQTT_SUBSCR_NM_STR,
+                                    mqttNameStr,
+                                    ControlColor::Turquoise,
+                                    ctrlTab,
+                                    [] (Control * sender, int type, void * param)
+                                    {
+                                        if (param)
+                                        {
+                                            reinterpret_cast <c_ControllerMQTT *> (param)->setMqttNameCallback (sender, type);
+                                        }
+                                    },
+                                    this);
 
     EspuiIpID = ESPUI.addControl (ControlType::Text,
-            CTRL_MQTT_IP_STR,
-            RemoteIp.toString (),
-            ControlColor::Turquoise,
-            ctrlTab,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerMQTT *> (param)->setRemoteIpAddrCallback (sender, type);
-                }
-            },
-            this);
+                                  CTRL_MQTT_IP_STR,
+                                  RemoteIp.toString (),
+                                  ControlColor::Turquoise,
+                                  ctrlTab,
+                                  [] (Control * sender, int type, void * param)
+                                  {
+                                      if (param)
+                                      {
+                                          reinterpret_cast <c_ControllerMQTT *> (param)->setRemoteIpAddrCallback (sender, type);
+                                      }
+                                  },
+                                  this);
     // DEBUG_V();
 
     EspuiPortID = ESPUI.addControl (ControlType::Label,
-            CTRL_MQTT_PORT_STR,
-            String (mqttPort),
-            ControlColor::Turquoise,
-            ctrlTab);
+                                    CTRL_MQTT_PORT_STR,
+                                    String (mqttPort),
+                                    ControlColor::Turquoise,
+                                    ctrlTab);
     ESPUI.setPanelStyle (EspuiPortID, String (F ("font-size: 1.25em;")));
     ESPUI.setElementStyle (EspuiPortID, "max-width: 40%;");
 
     // DEBUG_V();
 
     EspuiUserID = ESPUI.addControl (ControlType::Text,
-            CTRL_MQTT_USER_STR,
-            mqttUserStr,
-            ControlColor::Turquoise,
-            ctrlTab,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerMQTT *> (param)->setMqttAuthenticationCallback (sender, type);
-                }
-            },
-            this);
+                                    CTRL_MQTT_USER_STR,
+                                    mqttUserStr,
+                                    ControlColor::Turquoise,
+                                    ctrlTab,
+                                    [] (Control * sender, int type, void * param)
+                                    {
+                                        if (param)
+                                        {
+                                            reinterpret_cast <c_ControllerMQTT *> (param)->setMqttAuthenticationCallback (sender, type);
+                                        }
+                                    },
+                                    this);
     // DEBUG_V();
 
     EspuiPwID = ESPUI.addControl (ControlType::Text,
-            CTRL_MQTT_PW_STR,
-            MQTT_PASS_HIDE_STR,
-            ControlColor::Turquoise,
-            ctrlTab,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerMQTT *> (param)->setMqttAuthenticationCallback (sender, type);
-                }
-            },
-            this);
+                                  CTRL_MQTT_PW_STR,
+                                  MQTT_PASS_HIDE_STR,
+                                  ControlColor::Turquoise,
+                                  ctrlTab,
+                                  [] (Control * sender, int type, void * param)
+                                  {
+                                      if (param)
+                                      {
+                                          reinterpret_cast <c_ControllerMQTT *> (param)->setMqttAuthenticationCallback (sender, type);
+                                      }
+                                  },
+                                  this);
     // DEBUG_END;
 }       // AddControls
 
@@ -346,11 +347,11 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
                 String HostName;
                 WiFiDriver.GetHostname (HostName);
                 Message = String (F ("{\"")) + CMD_INFO_STR +
-                        F (     "\": \"ok\", \"version\": \"") + VERSION_STR +
-                        F (     "\", \"hostName\": \"") + HostName +
-                        F (     "\", \"ip\": \"") + WiFi.localIP ().toString () +
-                        F (     "\", \"rssi\": ") + WiFi.RSSI () +
-                        F (     ", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
+                                F (     "\": \"ok\", \"version\": \"") + VERSION_STR +
+                                F (     "\", \"hostName\": \"") + HostName +
+                                F (     "\", \"ip\": \"") + WiFi.localIP ().toString () +
+                                F (     "\", \"rssi\": ") + WiFi.RSSI () +
+                                F (     ", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
             }
             else
             {
@@ -490,10 +491,11 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         Log.infoln ((String (F ("Attempting MQTT Reconnection #")) + String (ClientConnectionRetryCount)).c_str ());
         mqttClient.setServer (RemoteIp, mqttPort);
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
-        {
-            c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
-            pMe->mqttClientCallback (topic, payload, length);
-        });     // Topic Subscription callback handler.
+                                {
+                                    c_ControllerMQTT * pMe =
+                                        static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
+                                    pMe->mqttClientCallback (topic, payload, length);
+                                });     // Topic Subscription callback handler.
 
         // DEBUG_V();
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
@@ -543,7 +545,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         {
             // DEBUG_V();
             Log.warningln ((String (F ("-> MQTT Connection Failure #")) + String (ClientConnectionRetryCount) + F (", Code= ") +
-                returnClientCode (mqttClient.state ())).c_str ());
+                            returnClientCode (mqttClient.state ())).c_str ());
             updateUiMqttMsg (MQTT_RETRY_FAIL_STR + String (ClientConnectionRetryCount));
             break;
         }
@@ -726,7 +728,7 @@ void c_ControllerMQTT::setMqttNameCallback (Control * sender, int type)
 }       // setMqttNameCallback
 
 // *********************************************************************************************
-void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -760,7 +762,7 @@ void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

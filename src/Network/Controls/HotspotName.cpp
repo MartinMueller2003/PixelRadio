@@ -67,7 +67,7 @@ void cHotspotName::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cHotspotName::set (String &value, String &ResponseMessage)
+bool cHotspotName::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

@@ -67,7 +67,7 @@ void cLoginUser::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cLoginUser::set (String &value, String &ResponseMessage)
+bool cLoginUser::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

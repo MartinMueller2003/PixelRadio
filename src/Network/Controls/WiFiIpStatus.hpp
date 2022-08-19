@@ -22,14 +22,14 @@ class cWiFiIpStatus : public cOldControlCommon
 {
 public:
 
-    cWiFiIpStatus ();
-    virtual ~cWiFiIpStatus ()    {}
+cWiFiIpStatus ();
+virtual ~cWiFiIpStatus ()    {}
 
-    void        restoreConfiguration (JsonObject &)     {}
-    void        saveConfiguration (JsonObject &)        {}
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &)                {return true;}
-    void        set ();
+void    restoreConfiguration (JsonObject &)     {}
+void    saveConfiguration (JsonObject &)        {}
+void    AddControls (uint16_t Tab, ControlColor color);
+bool    set (String &, String &)                {return true;}
+void    set ();
 };      // class cWiFiIpStatus
 
 // *********************************************************************************************

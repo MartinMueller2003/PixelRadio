@@ -19,7 +19,7 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cChoiceListControl::cChoiceListControl (const String &ConfigName, const String &Title, ChoiceList_t &_ChoiceList) :
+cChoiceListControl::cChoiceListControl (const String & ConfigName, const String & Title, ChoiceList_t & _ChoiceList) :
     ChoiceList (_ChoiceList),
     cControlCommon (ConfigName, ControlType::Select, Title)
 {
@@ -36,13 +36,13 @@ void cChoiceListControl::AddControls (uint16_t value, ControlColor color)
     cControlCommon::AddControls (value, color);
     setControlStyle (CssStyleBlack_bw);
 
-    for (auto &CurrentOption : ChoiceList)
+    for (auto & CurrentOption : ChoiceList)
     {
         ESPUI.addControl (ControlType::Option,
-            CurrentOption.first.c_str (),
-            CurrentOption.first,
-            ControlColor::None,
-            ControlId);
+                          CurrentOption.first.c_str (),
+                          CurrentOption.first,
+                          ControlColor::None,
+                          ControlId);
     }
     ESPUI.updateControlValue (ControlId, DataValueStr);
 
@@ -65,7 +65,7 @@ uint32_t cChoiceListControl::get32 ()
 }
 
 // *********************************************************************************************
-bool cChoiceListControl::validate (const String &value, String &ResponseMessage)
+bool cChoiceListControl::validate (const String & value, String & ResponseMessage, bool)
 {
     // DEBUG_START;
     // DEBUG_V (String ("value: ") + value);

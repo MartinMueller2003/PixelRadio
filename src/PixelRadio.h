@@ -194,7 +194,7 @@ bool    infoCmd (
     String              payloadStr,
     ControllerTypeId    controller);
 int16_t getCommandArg (
-    String      &requestStr,
+    String      & requestStr,
     uint8_t     maxSize);
 // uint8_t getControllerStatus(void);
 #ifdef OldWay
@@ -222,7 +222,7 @@ void    displaySaveWarning (void);
 void    initCustomCss (void);
 void    startGUI (void);
 void    updateUiFreeMemory (void);
-bool    updateUiGpioMsg (gpio_num_t pin, String &ControllerName, bool PinState);
+bool    updateUiGpioMsg (gpio_num_t pin, String & ControllerName, bool PinState);
 void    updateUiDiagTimer (void);
 void    updateUiVolts (void);
 
@@ -281,7 +281,7 @@ void            updateGpioBootPins (void);
 const String    returnClientCode (int code);
 
 // OTA Prototypes
-void            otaInit (String &mdnsname);
+void            otaInit (String & mdnsname);
 
 // Serial Log
 uint8_t         getLogLevel (void);
@@ -296,7 +296,7 @@ void            processWebClient (void);
 #endif // def OldWay
 
 template <typename J, typename N>
-bool            ReadFromJSON (float &OutValue, J &Json, N Name)
+bool            ReadFromJSON (float & OutValue, J & Json, N Name)
 {
     bool HasBeenModified = false;
 
@@ -314,7 +314,7 @@ bool            ReadFromJSON (float &OutValue, J &Json, N Name)
 }
 
 template <typename T, typename J, typename N>
-bool ReadFromJSON (T &OutValue, J &Json, N Name)
+bool ReadFromJSON (T & OutValue, J & Json, N Name)
 {
     bool HasBeenModified = false;
 

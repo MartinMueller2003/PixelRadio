@@ -21,7 +21,7 @@
 #include <map>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 static const String     Name                    = F ("FPPD Sequences");
@@ -45,7 +45,7 @@ void c_ControllerFPPDSequences::Activate ()
 
     // DEBUG_V(String("Activate SelectedSequenceName ") + SelectedSequenceName);
 
-    for (auto &CurrentSequence : Sequences)
+    for (auto & CurrentSequence : Sequences)
     {
         // DEBUG_V(String("Activate Sequence: ") + CurrentSequence.first);
         CurrentSequence.second.Activate (CurrentSequence.first.equals (SelectedSequenceName));
@@ -65,96 +65,101 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
     {
         // DEBUG_V("Adding Select");
         EspuiChoiceListElementId = ESPUI.addControl (ControlType::Select,
-                "FPPD Sequences",
-                emptyString,
-                ControlColor::Turquoise,
-                EspuiParentElementId,
-                [] (Control * sender, int type, void * param)
-                {
-                    if (param)
-                    {
-                        reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbChoiceList (sender, type);
-                    }
-                },
-                this);
+                                                     "FPPD Sequences",
+                                                     emptyString,
+                                                     ControlColor::Turquoise,
+                                                     EspuiParentElementId,
+                                                     [] (Control * sender, int type, void * param)
+                                                     {
+                                                         if (param)
+                                                         {
+                                                             reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbChoiceList (sender,
+                                                                                                                                   type);
+                                                         }
+                                                     },
+                                                     this);
 
         // DEBUG_V("Adding Delete button");
         EspuiButtonDeleteElementId = ESPUI.addControl (ControlType::Button,
-                emptyString.c_str (),
-                " Delete ",
-                ControlColor::None,
-                EspuiChoiceListElementId,
-                [] (Control * sender, int type, void * param)
-                {
-                    if (param)
-                    {
-                        reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonDelete (sender, type);
-                    }
-                },
-                this);
+                                                       emptyString.c_str (),
+                                                       " Delete ",
+                                                       ControlColor::None,
+                                                       EspuiChoiceListElementId,
+                                                       [] (Control * sender, int type, void * param)
+                                                       {
+                                                           if (param)
+                                                           {
+                                                               reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonDelete (sender,
+                                                                                                                                       type);
+                                                           }
+                                                       },
+                                                       this);
 
         // DEBUG_V("Adding Update button");
         EspuiButtonUpdateElementId = ESPUI.addControl (ControlType::Button,
-                emptyString.c_str (),
-                " Update ",
-                ControlColor::None,
-                EspuiChoiceListElementId,
-                [] (Control * sender, int type, void * param)
-                {
-                    if (param)
-                    {
-                        reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonUpdate (sender, type);
-                    }
-                },
-                this);
+                                                       emptyString.c_str (),
+                                                       " Update ",
+                                                       ControlColor::None,
+                                                       EspuiChoiceListElementId,
+                                                       [] (Control * sender, int type, void * param)
+                                                       {
+                                                           if (param)
+                                                           {
+                                                               reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonUpdate (sender,
+                                                                                                                                       type);
+                                                           }
+                                                       },
+                                                       this);
 
         // DEBUG_V("Adding Instruction Msg");
         EspuiInstructionMsgElementId = ESPUI.addControl (ControlType::Label,
-                DefaultTextFieldValue.c_str (),
-                DefaultTextFieldValue,
-                ControlColor::Turquoise,
-                EspuiChoiceListElementId);
+                                                         DefaultTextFieldValue.c_str (),
+                                                         DefaultTextFieldValue,
+                                                         ControlColor::Turquoise,
+                                                         EspuiChoiceListElementId);
         ESPUI.setElementStyle (EspuiInstructionMsgElementId, CSS_LABEL_STYLE_BLACK);
 
         // DEBUG_V("Adding Text Entry");
         EspuiTextEntryElementId = ESPUI.addControl (ControlType::Text,
-                emptyString.c_str (),
-                DefaultTextFieldValue,
-                ControlColor::None,
-                EspuiChoiceListElementId,
-                [] (Control * sender, int type, void * param)
-                {
-                    if (param)
-                    {
-                        reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbTextChange (sender, type);
-                    }
-                },
-                this);
+                                                    emptyString.c_str (),
+                                                    DefaultTextFieldValue,
+                                                    ControlColor::None,
+                                                    EspuiChoiceListElementId,
+                                                    [] (Control * sender, int type, void * param)
+                                                    {
+                                                        if (param)
+                                                        {
+                                                            reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbTextChange (sender,
+                                                                                                                                  type);
+                                                        }
+                                                    },
+                                                    this);
 
         // DEBUG_V("Adding Max");
         ESPUI.addControl (ControlType::Max, emptyString.c_str (), "64", ControlColor::None, EspuiTextEntryElementId);
 
         // DEBUG_V("Adding Create");
         EspuiButtonCreateElementId = ESPUI.addControl (ControlType::Button,
-                emptyString.c_str (),
-                " Create ",
-                ControlColor::None,
-                EspuiChoiceListElementId,
-                [] (Control * sender, int type, void * param)
-                {
-                    if (param)
-                    {
-                        reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonCreate (sender, type);
-                    }
-                },
-                this);
+                                                       emptyString.c_str (),
+                                                       " Create ",
+                                                       ControlColor::None,
+                                                       EspuiChoiceListElementId,
+                                                       [] (Control * sender, int type, void * param)
+                                                       {
+                                                           if (param)
+                                                           {
+                                                               reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonCreate (sender,
+                                                                                                                                       type);
+                                                           }
+                                                       },
+                                                       this);
 
         // DEBUG_V("Adding Status Msg");
         EspuiStatusMsgElementId = ESPUI.addControl (ControlType::Label,
-                emptyString.c_str (),
-                emptyString,
-                ControlColor::Turquoise,
-                EspuiChoiceListElementId);
+                                                    emptyString.c_str (),
+                                                    emptyString,
+                                                    ControlColor::Turquoise,
+                                                    EspuiChoiceListElementId);
         ESPUI.setElementStyle (EspuiStatusMsgElementId, CSS_LABEL_STYLE_BLACK);
     }
     else
@@ -165,7 +170,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
 
     ControllerMessages.AddControls (EspuiParentElementId);
 
-    for (auto &CurrentSequence : Sequences)
+    for (auto & CurrentSequence : Sequences)
     {
         // DEBUG_V(String("Adding Controls for ") + CurrentSequence.first);
         CurrentSequence.second.AddControls (EspuiParentElementId, EspuiChoiceListElementId);
@@ -181,7 +186,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
 }       // AddControls
 
 // ************************************************************************************************
-void c_ControllerFPPDSequences::AddSequence (String &SequenceName)
+void c_ControllerFPPDSequences::AddSequence (String & SequenceName)
 {
     // DEBUG_START;
 
@@ -446,7 +451,7 @@ void c_ControllerFPPDSequences::CbTextChange (Control *, int)
 }       // TextChangeCb
 
 // *********************************************************************************************
-void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject &config)
+void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -488,7 +493,7 @@ void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject &config)
 }       // RestoreControllerConfiguration
 
 // *********************************************************************************************
-void c_ControllerFPPDSequences::SaveConfig (ArduinoJson::JsonObject &config)
+void c_ControllerFPPDSequences::SaveConfig (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -501,7 +506,7 @@ void c_ControllerFPPDSequences::SaveConfig (ArduinoJson::JsonObject &config)
 
     // DEBUG_V();
 
-    for (auto &CurrentSequence : Sequences)
+    for (auto & CurrentSequence : Sequences)
     {
         // DEBUG_V(String("Create Sequence entry") + CurrentSequence.first);
         JsonObject SequenceConfig = SequenceConfigs.createNestedObject ();

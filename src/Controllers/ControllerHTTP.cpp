@@ -22,7 +22,7 @@
 #include <ArduinoLog.h>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -37,7 +37,7 @@ c_ControllerHTTP::~c_ControllerHTTP ()
 {}
 
 // *********************************************************************************************
-void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     if (ControllerEnabled)
     {
@@ -46,7 +46,7 @@ void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Respons
 }
 
 // *********************************************************************************************
-void c_ControllerHTTP::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerHTTP::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -56,7 +56,7 @@ void c_ControllerHTTP::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerHTTP::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerHTTP::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

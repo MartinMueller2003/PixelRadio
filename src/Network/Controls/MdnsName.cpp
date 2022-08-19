@@ -71,7 +71,7 @@ void cMdnsName::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cMdnsName::set (String &value, String &ResponseMessage)
+bool cMdnsName::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

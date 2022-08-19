@@ -61,7 +61,7 @@ void cProgramServiceName::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cProgramServiceName::set (String &value, String &ResponseMessage)
+bool cProgramServiceName::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

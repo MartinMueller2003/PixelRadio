@@ -23,7 +23,7 @@
 #include <map>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -123,10 +123,10 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         {
             // DEBUG_V(String("Create Choice List Entry on Active Choice list"));
             MessageElementId = ESPUI.addControl (ControlType::Option,
-                    MessageText.c_str (),
-                    MessageText,
-                    ControlColor::Turquoise,
-                    MessageElementIds->ActiveChoiceListElementId);
+                                                 MessageText.c_str (),
+                                                 MessageText,
+                                                 ControlColor::Turquoise,
+                                                 MessageElementIds->ActiveChoiceListElementId);
         }
         // DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
 
@@ -195,7 +195,7 @@ void c_ControllerMessage::CbEnabled (Control * sender, int type)
 }       // EnabledCb
 
 // *********************************************************************************************
-void c_ControllerMessage::GetMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerMessage::GetMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -293,7 +293,7 @@ void c_ControllerMessage::SelectMessage ()
 }       // SelectMessage
 
 // *********************************************************************************************
-void c_ControllerMessage::SetMessage (String &value)
+void c_ControllerMessage::SetMessage (String & value)
 {
     // DEBUG_START;
 

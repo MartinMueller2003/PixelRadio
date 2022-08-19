@@ -61,13 +61,13 @@ void cPreEmphasis::AddControls (uint16_t value, ControlColor color)
     cOldControlCommon::AddControls (value, ControlType::Select, color);
     ESPUI.updateControlLabel (ControlId, PRE_EMPH_STR.c_str ());
 
-    for (auto &CurrentOption : MapOfRegions)
+    for (auto & CurrentOption : MapOfRegions)
     {
         ESPUI.addControl (ControlType::Option,
-            CurrentOption.first.c_str (),
-            CurrentOption.first,
-            ControlColor::None,
-            ControlId);
+                          CurrentOption.first.c_str (),
+                          CurrentOption.first,
+                          ControlColor::None,
+                          ControlId);
     }
 
     ESPUI.updateControlValue (ControlId, DataValueStr);
@@ -76,7 +76,7 @@ void cPreEmphasis::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cPreEmphasis::set (String &value, String &ResponseMessage)
+bool cPreEmphasis::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

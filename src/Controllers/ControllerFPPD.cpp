@@ -22,7 +22,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 static const String DefaultSequenceMsg = "No Sequence";
@@ -45,38 +45,39 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
     uint16_t LabelId;
 
     LabelId = ESPUI.addControl (ControlType::Label,
-            "Sequence Learning",
-            "Sequence Learning",
-            ControlColor::Turquoise,
-            ControlLabelElementId);
+                                "Sequence Learning",
+                                "Sequence Learning",
+                                ControlColor::Turquoise,
+                                ControlLabelElementId);
     ESPUI.setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
 
     SequenceLearningEnabledElementId = ESPUI.addControl (ControlType::Switcher,
-            "Sequence Learning",
-            String (SequenceLearningEnabled ? F ("1") : F ("0")),
-            ControlColor::Turquoise,
-            ControlLabelElementId,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerFPPD *> (param)->CbSequenceLearningEnabled (sender, type);
-                }
-            },
-            this);
+                                                         "Sequence Learning",
+                                                         String (SequenceLearningEnabled ? F ("1") : F ("0")),
+                                                         ControlColor::Turquoise,
+                                                         ControlLabelElementId,
+                                                         [] (Control * sender, int type, void * param)
+                                                         {
+                                                             if (param)
+                                                             {
+                                                                 reinterpret_cast <c_ControllerFPPD *> (param)->CbSequenceLearningEnabled (
+                                                                     sender, type);
+                                                             }
+                                                         },
+                                                         this);
 
     LabelId = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            "Cuurent Sequence", // String("Current Sequence"),
-            ControlColor::Turquoise,
-            ControlLabelElementId);
+                                emptyString.c_str (),
+                                "Cuurent Sequence",     // String("Current Sequence"),
+                                ControlColor::Turquoise,
+                                ControlLabelElementId);
     ESPUI.      setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
 
     CurrentSequenceElementId = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            DefaultSequenceMsg,
-            ControlColor::Turquoise,
-            ControlLabelElementId);
+                                                 emptyString.c_str (),
+                                                 DefaultSequenceMsg,
+                                                 ControlColor::Turquoise,
+                                                 ControlLabelElementId);
     ESPUI.      setElementStyle (CurrentSequenceElementId, CSS_LABEL_STYLE_WHITE);
 
     Sequences.AddControls (EspuiParentElementId);
@@ -93,14 +94,14 @@ void c_ControllerFPPD::begin ()
 
     Sequences.begin ();
 
-    FPPDiscovery.begin ([] (String &FppdFileName, void * param)
-        {
-            if (param)
-            {
-                reinterpret_cast <c_ControllerFPPD *> (param)->ProcessFppdFile (FppdFileName);
-            }
-        },
-        this);
+    FPPDiscovery.begin ([] (String & FppdFileName, void * param)
+                        {
+                            if (param)
+                            {
+                                reinterpret_cast <c_ControllerFPPD *> (param)->ProcessFppdFile (FppdFileName);
+                            }
+                        },
+                        this);
 
     // DEBUG_END;
 }       // begin
@@ -119,7 +120,7 @@ void c_ControllerFPPD::CbSequenceLearningEnabled (Control * sender, int type)
 }       // SequenceLearningEnabledCb
 
 // *********************************************************************************************
-void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -131,7 +132,7 @@ void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Respons
 }
 
 // *********************************************************************************************
-void c_ControllerFPPD::ProcessFppdFile (String &FppdFileName)
+void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
 {
     // DEBUG_START;
 
@@ -164,7 +165,7 @@ void c_ControllerFPPD::ProcessFppdFile (String &FppdFileName)
 }       // ProcessFppdFile
 
 // *********************************************************************************************
-void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -190,7 +191,7 @@ void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerFPPD::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerFPPD::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

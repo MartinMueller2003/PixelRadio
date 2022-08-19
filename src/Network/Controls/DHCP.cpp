@@ -13,20 +13,20 @@
  */
 
 // *********************************************************************************************
-#include "DHCP.hpp"
-#include "memdebug.h"
-#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "DHCP.hpp"
+#include "WiFiDriver.hpp"
+#include "StaticIpAddress.hpp"
+#include "StaticGatewayAddress.hpp"
+#include "StaticNetmask.hpp"
+#include "StaticDnsAddress.hpp"
+#include "memdebug.h"
 
 static const PROGMEM String     STATIC_NETWORK_SETTINGS = "STATIC NETWORK SETTINGS";
 static const PROGMEM String     WIFI_DHCP_FLAG          = "WIFI_DHCP_FLAG";
 static const PROGMEM String     WIFI_WEB_DHCP_STR       = "WEBSERVER DHCP";
 static const PROGMEM String     DHCP_LOCKED_STR         = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
-static const PROGMEM String     WIFI_IP_ADDR_STR        = "WIFI_IP_ADDR_STR";
-static const PROGMEM String     WIFI_SUBNET_STR         = "WIFI_SUBNET_STR";
-static const PROGMEM String     WIFI_GATEWAY_STR        = "WIFI_GATEWAY_STR";
-static const PROGMEM String     WIFI_DNS_STR            = "WIFI_DNS_STR";
 
 // *********************************************************************************************
 cDHCP::cDHCP () : cOldControlCommon (WIFI_DHCP_FLAG)
@@ -39,11 +39,6 @@ cDHCP::cDHCP () : cOldControlCommon (WIFI_DHCP_FLAG)
 
     ActiveLabelStyle    = CSS_LABEL_STYLE_BLACK;
     InactiveLabelStyle  = CSS_LABEL_STYLE_BLACK;
-
-    StaticIp.SetConfigName (WIFI_IP_ADDR_STR);
-    StaticNetMask.SetConfigName (WIFI_SUBNET_STR);
-    StaticGateWay.SetConfigName (WIFI_GATEWAY_STR);
-    StaticDns.SetConfigName (WIFI_DNS_STR);
 
     // _ DEBUG_END;
 }
@@ -69,14 +64,10 @@ void cDHCP::AddControls (uint16_t value, ControlColor color)
 
     wifiStaticSettingsID = ESPUI.addControl (ControlType::Label, STATIC_NETWORK_SETTINGS.c_str (), emptyString, color, value);
 
-    IpAddressTitle = F ("IP Address");
-    StaticIp.AddControls (wifiStaticSettingsID, color, IpAddressTitle);
-    IpAddressTitle = F ("Subnet Mask");
-    StaticNetMask.AddControls (wifiStaticSettingsID, color, IpAddressTitle);
-    IpAddressTitle = F ("Gateway IP Address");
-    StaticGateWay.AddControls (wifiStaticSettingsID, color, IpAddressTitle);
-    IpAddressTitle = F ("DNS IP Address");
-    StaticDns.AddControls (wifiStaticSettingsID, color, IpAddressTitle);
+    StaticIpAddress.AddControls (wifiStaticSettingsID, color);
+    StaticNetmask.AddControls (wifiStaticSettingsID, color);
+    StaticGatewayAddress.AddControls (wifiStaticSettingsID, color);
+    StaticDnsAddress.AddControls (wifiStaticSettingsID, color);
 
     String      Dummy;
     String      NewVal;
@@ -114,19 +105,7 @@ uint32_t cDHCP::get ()
 }
 
 // *********************************************************************************************
-IPAddress       cDHCP::GetStaticIP ()           {return StaticIp.GetIpAddress ();}
-
-// *********************************************************************************************
-IPAddress       cDHCP::GetStaticNetmask ()      {return StaticNetMask.GetIpAddress ();}
-
-// *********************************************************************************************
-IPAddress       cDHCP::GetStaticGateway ()      {return StaticGateWay.GetIpAddress ();}
-
-// *********************************************************************************************
-IPAddress       cDHCP::GetStaticDNS ()          {return StaticDns.GetIpAddress ();}
-
-// *********************************************************************************************
-bool            cDHCP::set (String &value, String &ResponseMessage)
+bool cDHCP::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 
@@ -184,29 +163,29 @@ bool            cDHCP::set (String &value, String &ResponseMessage)
 }
 
 // *********************************************************************************************
-void cDHCP::restoreConfiguration (JsonObject &json)
+void cDHCP::restoreConfiguration (JsonObject & json)
 {
     // DEBUG_START;
 
     cOldControlCommon::restoreConfiguration (json);
-    StaticIp.restoreConfiguration (json);
-    StaticNetMask.restoreConfiguration (json);
-    StaticGateWay.restoreConfiguration (json);
-    StaticDns.restoreConfiguration (json);
+    StaticIpAddress.restoreConfiguration (json);
+    StaticNetmask.restoreConfiguration (json);
+    StaticGatewayAddress.restoreConfiguration (json);
+    StaticDnsAddress.restoreConfiguration (json);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cDHCP::saveConfiguration (JsonObject &json)
+void cDHCP::saveConfiguration (JsonObject & json)
 {
     // DEBUG_START;
 
     cOldControlCommon::saveConfiguration (json);
-    StaticIp.saveConfiguration (json);
-    StaticNetMask.saveConfiguration (json);
-    StaticGateWay.saveConfiguration (json);
-    StaticDns.saveConfiguration (json);
+    StaticIpAddress.saveConfiguration (json);
+    StaticNetmask.saveConfiguration (json);
+    StaticGatewayAddress.saveConfiguration (json);
+    StaticDnsAddress.saveConfiguration (json);
 
     // DEBUG_END;
 }
@@ -256,7 +235,7 @@ void cDHCP::TestIpSettings ()
 }
 
 // *********************************************************************************************
-bool cDHCP::ValidateStaticSettings (String &ResponseMessage)
+bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
 {
     // DEBUG_START;
 
@@ -271,27 +250,27 @@ bool cDHCP::ValidateStaticSettings (String &ResponseMessage)
             break;
         }
 
-        if (StaticIp.GetIpAddress () == IPAddress ((uint32_t)0))
+        if (StaticIpAddress.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln ("WiFi: Static IP Address is empty. Using DHCP.");
+            Log.warningln (String (F ("WiFi: Static IP Address is empty. Using DHCP.")).c_str ());
             break;
         }
 
-        if (StaticNetMask.GetIpAddress () == IPAddress ((uint32_t)0))
+        if (StaticNetmask.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln ("WiFi: Static Netmask is empty. Using DHCP.");
+            Log.warningln (String (F ("WiFi: Static Netmask is empty. Using DHCP.")).c_str ());
             break;
         }
 
-        if (StaticGateWay.GetIpAddress () == IPAddress ((uint32_t)0))
+        if (StaticGatewayAddress.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln ("WiFi: Static Gateway Address is empty. Using DHCP.");
+            Log.warningln (String (F ("WiFi: Static Gateway Address is empty. Using DHCP.")).c_str ());
             break;
         }
 
-        if (StaticDns.GetIpAddress () == IPAddress ((uint32_t)0))
+        if (StaticDnsAddress.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln ("WiFi: Static DNS IP Address is empty. Using DHCP.");
+            Log.warningln (String (F ("WiFi: Static DNS IP Address is empty. Using DHCP.")).c_str ());
             break;
         }
         // DEBUG_V("All settings are valid. We can use Static settings");

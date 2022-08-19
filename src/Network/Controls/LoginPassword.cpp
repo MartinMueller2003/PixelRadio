@@ -72,7 +72,7 @@ void cLoginPassword::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cLoginPassword::set (String &value, String &ResponseMessage)
+bool cLoginPassword::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

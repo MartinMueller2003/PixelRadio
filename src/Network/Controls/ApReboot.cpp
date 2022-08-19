@@ -51,7 +51,7 @@ void cApReboot::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cApReboot::set (String &value, String &ResponseMessage)
+bool cApReboot::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

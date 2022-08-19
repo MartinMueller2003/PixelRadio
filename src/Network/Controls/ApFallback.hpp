@@ -22,11 +22,11 @@ class cApFallback : public cOldControlCommon
 {
 public:
 
-    cApFallback ();
-    virtual ~cApFallback ()    {}
+cApFallback ();
+virtual ~cApFallback ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String &value, String &ResponseMessage);
+void    AddControls (uint16_t TabId, ControlColor color);
+bool    set (String & value, String & ResponseMessage);
 };      // class cApFallback
 
 extern cApFallback ApFallback;

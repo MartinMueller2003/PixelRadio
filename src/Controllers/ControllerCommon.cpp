@@ -21,7 +21,7 @@
 #include "Language.h"
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -49,31 +49,31 @@ void c_ControllerCommon::AddControls (uint16_t tabId)
     SeperatorName       = ControlName + F (" SETTINGS");
 
     ESPUI.addControl (ControlType::Separator,
-        SeperatorName.c_str (),
-        emptyString,
-        ControlColor::None,
-        tabId);
+                      SeperatorName.c_str (),
+                      emptyString,
+                      ControlColor::None,
+                      tabId);
 
     ControlLabelElementId = ESPUI.addControl (ControlType::Label,
-            ControlName.c_str (),
-            "ENABLE",
-            ControlColor::Turquoise,
-            EspuiParentElementId);
+                                              ControlName.c_str (),
+                                              "ENABLE",
+                                              ControlColor::Turquoise,
+                                              EspuiParentElementId);
     ESPUI.setElementStyle (ControlLabelElementId, CSS_LABEL_STYLE_WHITE);
 
     ControlerEnabledElementId = ESPUI.addControl (ControlType::Switcher,
-            "Enable",
-            String (ControllerEnabled ? F ("1") : F ("0")),
-            ControlColor::Turquoise,
-            ControlLabelElementId,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerCommon *> (param)->CbControllerEnabled (sender, type);
-                }
-            },
-            this);
+                                                  "Enable",
+                                                  String (ControllerEnabled ? F ("1") : F ("0")),
+                                                  ControlColor::Turquoise,
+                                                  ControlLabelElementId,
+                                                  [] (Control * sender, int type, void * param)
+                                                  {
+                                                      if (param)
+                                                      {
+                                                          reinterpret_cast <c_ControllerCommon *> (param)->CbControllerEnabled (sender, type);
+                                                      }
+                                                  },
+                                                  this);
     // DEBUG_END;
 }
 
@@ -95,7 +95,7 @@ void c_ControllerCommon::CbControllerEnabled (Control * sender, int type)
 }
 
 // *********************************************************************************************
-void c_ControllerCommon::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerCommon::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -105,7 +105,7 @@ void c_ControllerCommon::restoreConfiguration (ArduinoJson::JsonObject &config)
 }       // RestoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerCommon::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerCommon::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

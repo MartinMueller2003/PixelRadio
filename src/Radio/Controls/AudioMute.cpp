@@ -50,7 +50,7 @@ void cAudioMute::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cAudioMute::set (String &value, String &ResponseMessage)
+bool cAudioMute::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
 

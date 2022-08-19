@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: IpAddressUi.cpp
+   File: StaticGatewayAddress.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -14,29 +14,21 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "IpAddressControl.hpp"
 
 // *********************************************************************************************
-class cIpAddressUi : public cOldControlCommon
+class cStaticGatewayAddress : public cIpAddressControl
 {
 public:
 
-    cIpAddressUi ();
-    virtual ~cIpAddressUi ();
+cStaticGatewayAddress ();
+virtual ~cStaticGatewayAddress ();
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        AddControls (uint16_t TabId, ControlColor color, String &Title);
-    void        ResetToDefaults ();
-    bool        set (String &value, String &Response);
-    IPAddress   GetIpAddress ();
+bool set (const String & value, String & Response, bool ForceUpdate = false);
+};      // class cStaticGatewayAddress
 
-private:
-
-    String Title;
-    IPAddress IpAddress = IPAddress (uint32_t (0));
-    bool Booting        = true;
-};      // class cIpAddressUi
+extern cStaticGatewayAddress StaticGatewayAddress;
 
 // *********************************************************************************************
 // OEF

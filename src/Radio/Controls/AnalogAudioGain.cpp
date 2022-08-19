@@ -54,7 +54,7 @@ cAnalogAudioGain::cAnalogAudioGain () : cChoiceListControl (ANALOG_GAIN_STR, RAD
 }
 
 // *********************************************************************************************
-bool cAnalogAudioGain::set (const String &value, String &ResponseMessage, bool ForceUpdate)
+bool cAnalogAudioGain::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (String ("value: ") + value);

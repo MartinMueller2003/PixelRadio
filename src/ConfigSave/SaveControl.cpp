@@ -54,7 +54,7 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor _color)
     ESPUI.updateControlValue (ControlId, SAVE_SETTINGS_STR);
     ESPUI.      setElementStyle (       StatusMessageId, CSS_LABEL_STYLE_WHITE);
     ESPUI.      setElementStyle (       ControlId,
-        String (F ("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
+                                        String (F ("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
 
     // DEBUG_END;
 }
@@ -72,7 +72,7 @@ void cSaveControl::ClearSaveNeeded ()
 }
 
 // *********************************************************************************************
-bool cSaveControl::set (String &value, String &ResponseMessage)
+bool cSaveControl::set (String & value, String & ResponseMessage)
 {
     // DEBUG_START;
     // DEBUG_V(String("       value: ") + value);

@@ -22,7 +22,7 @@
 #include <ArduinoLog.h>
 
 #if __has_include ("memdebug.h")
-    #    include "memdebug.h"
+ # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // ================================================================================================
@@ -42,25 +42,26 @@ void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
 
     uint16_t LabelId;
     LabelId = ESPUI.addControl (ControlType::Label,
-            emptyString.c_str (),
-            String (N_BAUDRATE),
-            ControlColor::Turquoise,
-            ControlLabelElementId);
+                                emptyString.c_str (),
+                                String (N_BAUDRATE),
+                                ControlColor::Turquoise,
+                                ControlLabelElementId);
     ESPUI.setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
 
     ControlerEnabledElementId = ESPUI.addControl (ControlType::Select,
-            emptyString.c_str (),
-            BaudRateStr,
-            ControlColor::Turquoise,
-            ControlLabelElementId,
-            [] (Control * sender, int type, void * param)
-            {
-                if (param)
-                {
-                    reinterpret_cast <c_ControllerUsbSERIAL *> (param)->CbBaudrateControl (sender, type);
-                }
-            },
-            this);
+                                                  emptyString.c_str (),
+                                                  BaudRateStr,
+                                                  ControlColor::Turquoise,
+                                                  ControlLabelElementId,
+                                                  [] (Control * sender, int type, void * param)
+                                                  {
+                                                      if (param)
+                                                      {
+                                                          reinterpret_cast <c_ControllerUsbSERIAL *> (param)->CbBaudrateControl (sender,
+                                                                                                                                 type);
+                                                      }
+                                                  },
+                                                  this);
 
     // DEBUG_V(String("ControlerEnabledElementId: ") + String(ControlerEnabledElementId));
     // ESPUI.addControl(ControlType::Option, SERIAL_OFF_STR, SERIAL_OFF_STR, ControlColor::None, ControlerEnabledElementId);
@@ -72,10 +73,10 @@ void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
 #ifdef OldWay
         extern String logLevelStr;
         EspuiMsgId = ESPUI.addControl (ControlType::Label,
-                "SERIAL_MSG",
-                (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
-                ControlColor::Turquoise,
-                ControlLabelElementId);
+                                       "SERIAL_MSG",
+                                       (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
+                                       ControlColor::Turquoise,
+                                       ControlLabelElementId);
         ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
 #endif // def OldWay
 
@@ -83,7 +84,7 @@ void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
 }       // AddControls
 
 // ************************************************************************************************
-void c_ControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t &Response)
+void c_ControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     if (ControllerEnabled)
     {
@@ -266,7 +267,7 @@ bool c_ControllerUsbSERIAL::SetBaudrate (String NewRate)
 }       // SetBaudrate
 
 // *********************************************************************************************
-void c_ControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
@@ -281,7 +282,7 @@ void c_ControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject &confi
 }       // restoreConfiguration
 
 // *********************************************************************************************
-void c_ControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject &config)
+void c_ControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 

@@ -23,64 +23,66 @@ class cControlCommon
 {
 public:
 
-    cControlCommon (const String &ConfigName, ControlType uiControltype, const String &Title);
-    virtual ~cControlCommon ();
+cControlCommon (const String & ConfigName, ControlType uiControltype, const String & Title);
+virtual ~cControlCommon ();
 
-    virtual void        AddControls (uint16_t TabId, ControlColor color);
-    virtual void        Callback (Control * sender, int type);
-    virtual String&     get ();
-    virtual void        restoreConfiguration (JsonObject &json);
-    virtual void        saveConfiguration (JsonObject &json);
-    virtual bool        set (const String &value, String &ResponseMessage, bool ForceUpdate = true);
-    virtual bool        validate (const String &value, String &ResponseMessage);
+virtual void    AddControls (uint16_t TabId, ControlColor color);
+virtual void    Callback (Control * sender, int type);
+virtual String  &get ();
+virtual void    restoreConfiguration (JsonObject & json);
+virtual void    saveConfiguration (JsonObject & json);
+virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
+virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 protected:
-    enum eCssStyle
-    {
-        CssStyleBlack = 0,
-        CssStyleGreen,
-        CssStyleMaroon,
-        CssStyleRed,
-        CssStyleTransparent,
-        CssStyleWhite,
-        CssStyleBlack_bw,
-        CssStyleGreen_bw,
-        CssStyleMaroon_bw,
-        CssStyleRed_bw,
-        CssStyleTransparent_bw,
-        CssStyleWhite_bw,
-    };
+enum eCssStyle
+{
+    CssStyleBlack = 0,
+    CssStyleGreen,
+    CssStyleMaroon,
+    CssStyleRed,
+    CssStyleTransparent,
+    CssStyleWhite,
+    CssStyleBlack_bw,
+    CssStyleGreen_bw,
+    CssStyleMaroon_bw,
+    CssStyleRed_bw,
+    CssStyleTransparent_bw,
+    CssStyleWhite_bw,
+};
 
-    virtual void        setMessage (const String &value, eCssStyle style);
-    virtual void        setControlStyle (eCssStyle style);
-    virtual void        setMessageStyle (eCssStyle style);
+virtual void    setMessage (const String & value, eCssStyle style);
+virtual void    setControlStyle (eCssStyle style);
+virtual void    setMessageStyle (eCssStyle style);
+virtual void    setControlLabel (const String & value);
 
-    uint16_t ControlId          = Control::noParent;
-    uint16_t MessageId          = Control::noParent;
-    eCssStyle ControlStyle      = eCssStyle::CssStyleBlack;
-    eCssStyle MessageStyle      = eCssStyle::CssStyleBlack;
+uint16_t ControlId      = Control::noParent;
+uint16_t MessageId      = Control::noParent;
+eCssStyle ControlStyle  = eCssStyle::CssStyleBlack;
+eCssStyle MessageStyle  = eCssStyle::CssStyleBlack;
 
-    enum ePanelStyle
-    {
-        PanelStyle115 = 0,
-        PanelStyle125,
-        PanelStyle135,
-        PanelStyle300,
-    };
-    virtual void        setControlPanelStyle (ePanelStyle style);
-    virtual void        setMessagePanelStyle (ePanelStyle style);
+enum ePanelStyle
+{
+    PanelStyle115 = 0,
+    PanelStyle125,
+    PanelStyle135,
+    PanelStyle300,
+};
+virtual void    setControlPanelStyle (ePanelStyle style);
+virtual void    setMessagePanelStyle (ePanelStyle style);
 
-    ePanelStyle ControlPanelStyle       = PanelStyle125;
-    ePanelStyle MessagePanelStyle       = PanelStyle125;
+ePanelStyle ControlPanelStyle   = PanelStyle125;
+ePanelStyle MessagePanelStyle   = PanelStyle125;
 
-    String DataValueStr;
+String DataValueStr;
 
-    bool SkipSetLog = false;
-    const String &Title;
+bool SkipSetLog = false;
+const String & Title;
+bool Booting = true;
 
 private:
-    ControlType uiControltype;
-    const String &ConfigName;
+ControlType uiControltype;
+const String & ConfigName;
 };      // class cControlCommon
 
 // *********************************************************************************************

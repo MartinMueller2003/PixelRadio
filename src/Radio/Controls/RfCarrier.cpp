@@ -63,7 +63,7 @@ void cRfCarrier::AddHomeControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cRfCarrier::set (const String &value, String &ResponseMessage, bool ForceUpdate)
+bool cRfCarrier::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 

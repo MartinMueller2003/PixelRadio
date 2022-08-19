@@ -22,11 +22,11 @@ class cAudioInputImpedance : public cOldControlCommon
 {
 public:
 
-    cAudioInputImpedance ();
-    virtual ~cAudioInputImpedance ()    {}
+cAudioInputImpedance ();
+virtual ~cAudioInputImpedance ()    {}
 
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &);
+void    AddControls (uint16_t Tab, ControlColor color);
+bool    set (String &, String &);
 };      // class cAudioInputImpedance
 
 extern cAudioInputImpedance AudioInputImpedance;
