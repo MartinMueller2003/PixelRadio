@@ -76,13 +76,13 @@ protected:
 
     String DataValueStr;
 
-    bool SkipSetLog = false;
+    bool SkipSetLog     = false;
+    bool Booting        = true;
+    const String & ConfigName;
     const String & Title;
-    bool Booting = true;
 
 private:
     ControlType uiControltype;
-    const String & ConfigName;
 };      // class cControlCommon
 
 // *********************************************************************************************

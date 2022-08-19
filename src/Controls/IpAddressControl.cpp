@@ -40,22 +40,6 @@ cIpAddressControl::~cIpAddressControl ()
 }
 
 // *********************************************************************************************
-void cIpAddressControl::AddControls (uint16_t TabId, ControlColor color)
-{
-    // DEBUG_START;
-
-    uint16_t TempId = ESPUI.addControl (ControlType::Label,
-                                        emptyString.c_str (),
-                                        Title, color,
-                                        TabId);
-    ESPUI.setElementStyle (TempId, CSS_LABEL_STYLE_BLACK);
-
-    cControlCommon::AddControls (TabId, color);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
 IPAddress cIpAddressControl::GetIpAddress ()
 {
     // DEBUG_V (String (": ") + IpAddress.toString ());

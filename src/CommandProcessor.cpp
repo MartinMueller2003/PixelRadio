@@ -272,7 +272,7 @@ bool cCommandProcessor::gpio (String & payloadStr, String & ControllerName, gpio
                 !payloadStr.equals (CMD_GPIO_OUT_LOW_STR))
             {
                 Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid GPIO Payload (") + payloadStr + F (
-                                                                  "), Ignored.")).c_str ());
+                                                                                                                                                                                                  "), Ignored.")).c_str ());
                 response = false;
                 break;
             }
@@ -354,7 +354,7 @@ bool cCommandProcessor::info (String & payloadStr, String & ControllerName, Stri
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid INFO Payload (") + payloadStr + F (
-                                                              "), Ignored.")).c_str ());
+                                                                                                                                                                                              "), Ignored.")).c_str ());
             response = false;
         }
         DEBUG_END;
@@ -400,7 +400,7 @@ bool cCommandProcessor::log (String & payloadStr, String & ControllerName, Strin
                 break;
             }
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid LOG Payload (") + payloadStr + F (
-                                                              "), Ignored.")).c_str ());
+                                                                                                                                                                                              "), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -447,7 +447,7 @@ bool cCommandProcessor::mute (String & payloadStr, String & ControllerName, Stri
                 break;
             }
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid MUTE Payload (") + payloadStr + F (
-                                                              "), Ignored.")).c_str ());
+                                                                                                                                                                                              "), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -500,7 +500,7 @@ bool cCommandProcessor::piCode (String & payloadStr, String & ControllerName, St
 
             // displaySaveWarning();
             Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PI Code Set to (0x") + String (tempPiCode, HEX) + F (
-                                                                ").")).c_str ());
+                                                                                                                                                                                                ").")).c_str ());
         } while (false);
 
         DEBUG_END;
@@ -704,7 +704,7 @@ bool cCommandProcessor::reboot (String & payloadStr, String & ControllerName, St
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid REBOOT Payload (") + payloadStr + F (
-                                                              "), Ignored.")).c_str ());
+                                                                                                                                                                                              "), Ignored.")).c_str ());
             response = false;
         }
         DEBUG_END;
@@ -781,7 +781,7 @@ bool cCommandProcessor::start (String & payloadStr, String & ControllerName, Str
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid START Payload (") + payloadStr + F (
-                                                              "), Ignored.")).c_str ());
+                                                                                                                                                                                              "), Ignored.")).c_str ());
             response = false;
         }
         DEBUG_END;
@@ -813,7 +813,7 @@ bool cCommandProcessor::stop (String & payloadStr, String & ControllerName, Stri
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid STOP Payload (") + payloadStr + F (
-                                                              "), Ignored.")).c_str ());
+                                                                                                                                                                                              "), Ignored.")).c_str ());
         }
         DEBUG_END;
 

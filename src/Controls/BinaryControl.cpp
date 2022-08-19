@@ -15,6 +15,7 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "PixelRadio.h"
 #include "BinaryControl.hpp"
 #include "memdebug.h"
 
@@ -31,6 +32,34 @@ cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title
 }
 
 // *********************************************************************************************
+void cBinaryControl::restoreConfiguration (JsonObject & config)
+{
+    // DEBUG_START;
+
+    if (!ConfigName.isEmpty ())
+    {
+        bool NewValue = DataValue;
+        ReadFromJSON (NewValue, config, ConfigName);
+        String  NewValueStr = String (DataValue);
+        String  Response;
+        cControlCommon::set (NewValueStr, Response, false);
+    }
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cBinaryControl::saveConfiguration (JsonObject & config)
+{
+    // DEBUG_START;
+
+    if (!ConfigName.isEmpty ())
+    {
+        config[ConfigName] = DataValue;
+    }
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 bool cBinaryControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
@@ -38,6 +67,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
     // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
 
+    SkipSetLog = true;
     bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
 
     if (Response)
@@ -45,6 +75,10 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         DataValue       = value.equals (F ("1"));
         ResponseMessage = DataValue ? ENABLED_STR : DISABLED_STR;
         ESPUI.print (MessageId, ResponseMessage);
+        String LogMsg;
+        LogMsg.reserve (128);
+        LogMsg = Title + F (": Set To '") + ResponseMessage + F ("'");
+        Log.infoln (LogMsg.c_str ());
     }
     // DEBUG_V (       String ("       value: ") + value);
     // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);

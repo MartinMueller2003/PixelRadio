@@ -14,24 +14,19 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "IpAddressControl.hpp"
 
 // *********************************************************************************************
-class cApIpAddress : public cOldControlCommon
+class cApIpAddress : public cIpAddressControl
 {
 public:
 
     cApIpAddress ();
     virtual ~cApIpAddress ();
-
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
-    IPAddress   GetIpAddress () {return IpAddress;}
+    void ResetToDefaults ();
 
 private:
-    IPAddress IpAddress = IPAddress (uint32_t (0));
 };      // class cApIpAddress
 
 extern cApIpAddress ApIpAddress;

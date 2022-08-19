@@ -1,5 +1,5 @@
 /*
-   File: StaticNetmask.cpp
+   File: IpAddressControlStacked.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,54 +15,42 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "StaticNetmask.hpp"
-#include "DHCP.hpp"
+#include "IpAddressControlStacked.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     WIFI_SUBNET_STR = "WIFI_SUBNET_STR";
-static const PROGMEM String     WIFI_IP_ADDR    = "Subnet Mask";
+static const PROGMEM uint32_t IpAddress_MAX_SZ = 16;
 
 // *********************************************************************************************
-cStaticNetmask::cStaticNetmask () :   cIpAddressControlStacked (WIFI_SUBNET_STR, WIFI_IP_ADDR)
+cIpAddressControlStacked::cIpAddressControlStacked (const String & ConfigName, const String & Title) :
+    cIpAddressControl (ConfigName, Title)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-cStaticNetmask::~cStaticNetmask ()
+cIpAddressControlStacked::~cIpAddressControlStacked ()
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cStaticNetmask::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+void cIpAddressControlStacked::AddControls (uint16_t TabId, ControlColor color)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    DEBUG_V (String ("       value: ") + value);
+    uint16_t TempId = ESPUI.addControl (ControlType::Label,
+                                        emptyString.c_str (),
+                                        Title, color,
+                                        TabId);
+    ESPUI.setElementStyle (TempId, CSS_LABEL_STYLE_BLACK);
+    ESPUI.setPanelStyle (TempId, F ("font-size: 1.35em;"));
 
-    bool Response = true;
+    cIpAddressControl::AddControls (TabId, color);
 
-    do  // once
-    {
-        Response = cIpAddressControlStacked::set (value, ResponseMessage, ForceUpdate);
-
-        if (!Booting)
-        {
-            DHCP.TestIpSettings ();
-        }
-    } while (false);
-
-    DEBUG_V (String ("IpAddress: ") + GetIpAddress ());
-
-    DEBUG_END;
-
-    return Response;
+    // DEBUG_END;
 }
-
-cStaticNetmask StaticNetmask;
 
 // *********************************************************************************************
 // OEF

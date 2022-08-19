@@ -14,19 +14,16 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
+#include "BinaryControl.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cApReboot : public cOldControlCommon
+class cApReboot : public cBinaryControl
 {
 public:
 
     cApReboot ();
     virtual ~cApReboot ()    {}
-
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String & value, String & ResponseMessage);
 };      // class cApReboot
 
 extern cApReboot ApReboot;

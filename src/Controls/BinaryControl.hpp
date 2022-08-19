@@ -25,6 +25,8 @@ public:
     cBinaryControl (const String & ConfigName, const String & Title);
     virtual ~cBinaryControl ()    {}
 
+    virtual void        restoreConfiguration (JsonObject & json);
+    virtual void        saveConfiguration (JsonObject & json);
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
     virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 

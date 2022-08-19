@@ -15,10 +15,10 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "IpAddressControl.hpp"
+#include "IpAddressControlStacked.hpp"
 
 // *********************************************************************************************
-class cStaticNetmask : public cIpAddressControl
+class cStaticNetmask : public cIpAddressControlStacked
 {
 public:
 

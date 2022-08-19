@@ -1,5 +1,6 @@
+#pragma once
 /*
-   File: ApReboot.cpp
+   File: IpAddressControlStacked.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -14,25 +15,19 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ApReboot.hpp"
-#include "memdebug.h"
-
-static const PROGMEM String     WIFI_AP_REBOOT_STR      = "AP REBOOT";
-static const PROGMEM String     WIFI_REBOOT_FLAG        = "WIFI_REBOOT_FLAG";
+#include <ESPUI.h>
+#include "IpAddressControl.hpp"
 
 // *********************************************************************************************
-cApReboot::cApReboot () :   cBinaryControl (WIFI_REBOOT_FLAG, WIFI_AP_REBOOT_STR)
+class cIpAddressControlStacked : public cIpAddressControl
 {
-    // _ DEBUG_START;
+public:
 
-    DataValueStr        = "1";
-    DataValue           = true;
+    cIpAddressControlStacked (const String & ConfigName, const String & Title);
+    virtual ~cIpAddressControlStacked ();
 
-    // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-cApReboot ApReboot;
+    virtual void AddControls (uint16_t TabId, ControlColor color);
+};      // class cIpAddressControlStacked
 
 // *********************************************************************************************
 // OEF

@@ -25,7 +25,6 @@ public:
     cIpAddressControl (const String & ConfigName, const String & Title);
     virtual ~cIpAddressControl ();
 
-    virtual void        AddControls (uint16_t TabId, ControlColor color);
     void                ResetToDefaults ();
     IPAddress           GetIpAddress ();
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
