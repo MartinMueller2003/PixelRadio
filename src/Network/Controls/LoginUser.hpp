@@ -1,3 +1,4 @@
+#pragma once
 /*
    File: LoginUser.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
@@ -11,23 +12,18 @@
    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
    This Code was formatted with the uncrustify extension.
  */
-
-#pragma once
-
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cLoginUser : public cOldControlCommon
+class cLoginUser : public cControlCommon
 {
 public:
 
     cLoginUser ();
     virtual ~cLoginUser ();
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
+    void AddControls (uint16_t TabId, ControlColor color);
 };      // class cLoginUser
 
 extern cLoginUser LoginUser;

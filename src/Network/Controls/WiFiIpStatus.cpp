@@ -22,26 +22,11 @@
 static const PROGMEM String IP_ADDR_STATUS_STR = "IP ADDRESS";
 
 // *********************************************************************************************
-cWiFiIpStatus::cWiFiIpStatus () :   cOldControlCommon (emptyString)
+cWiFiIpStatus::cWiFiIpStatus () :   cStatusControl (IP_ADDR_STATUS_STR)
 {
     // _ DEBUG_START;
 
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cWiFiIpStatus::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Label, color);
-    ESPUI.updateControlLabel (ControlId, IP_ADDR_STATUS_STR.c_str ());
-    ESPUI.updateControlValue (ControlId, F ("0"));
-    ESPUI.setElementStyle (ControlId, F ("max-width: 45%;"));
-    ESPUI.setPanelStyle (ControlId, F ("font-size: 1.25em;"));
-    set ();
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************

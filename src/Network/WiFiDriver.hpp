@@ -52,7 +52,7 @@ public:
     void        GetDriverName (String & Name)           {Name = F ("WiFiDrv");}
     uint32_t    Get_sta_timeout ()                      {return sta_timeout;}
     uint32_t    Get_ap_timeout ()                       {return ap_timeout;}
-    String      GetConfig_passphrase ()                 {return WpaKey.getStr ();}
+    String      GetConfig_passphrase ()                 {return WpaKey.get ();}
     void        GetHostname (String & name);
     void        SetHostname (String & name);
     void        Disable ();

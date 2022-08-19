@@ -559,8 +559,8 @@ void fsm_WiFi_state_ConnectingUsingConfig::Init ()
     // DEBUG_V (String ("       this: ") + String (uint32_t (this), HEX));
     // DEBUG_V (String ("pWiFiDriver: ") + String (uint32_t (pWiFiDriver), HEX));
     // DEBUG_V();
-    String      CurrentSsid             = SSID.getStr ();
-    String      CurrentPassphrase       = WpaKey.getStr ();
+    String      CurrentSsid             = SSID.get ();
+    String      CurrentPassphrase       = WpaKey.get ();
 
     if (CurrentSsid.isEmpty ())
     {
@@ -758,7 +758,7 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
 #ifdef MDNS_ENB
 
         // The mDNS initialization is also handled by the ArduinoOTA.begin() function. This code block is a duplicate for MDNS only.
-        if (!MDNS.begin (MdnsName.getStr ().c_str ()))
+        if (!MDNS.begin (MdnsName.get ().c_str ()))
         {
             // ArduinoOTA.setHostname() MUST use the same name!
             Log.errorln (String (F ("-> Error starting mDNS; Service is disabled.")).c_str ());
@@ -766,10 +766,10 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
         else
         {
             Log.infoln (String (F ("-> Server mDNS has started")).c_str ());
-            Log.infoln (String (F ("-> Open http://%s.local in your browser")).c_str (), MdnsName.getStr ().c_str ());
+            Log.infoln (String (F ("-> Open http://%s.local in your browser")).c_str (), MdnsName.get ().c_str ());
 
             MDNS.addService ("http", "tcp", WEBSERVER_PORT);
-            MDNS.addServiceTxt ("http", "tcp", "arduino", MdnsName.getStr ().c_str ());
+            MDNS.addServiceTxt ("http", "tcp", "arduino", MdnsName.get ().c_str ());
         }
 #endif // ifdef MDNS_ENB
 

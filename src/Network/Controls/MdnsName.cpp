@@ -19,8 +19,9 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-static const PROGMEM String MDNS_NAME_DEF_STR   = "PixelRadio";
-static const PROGMEM uint32_t MDNS_NAME_MAX_SZ  = 18;
+static const PROGMEM String     MDNS_NAME_DEF_STR       = "PixelRadio";
+static const PROGMEM String     MDNS_NAME_STR           = "MDNS_NAME_STR";
+static const PROGMEM uint32_t MDNS_NAME_MAX_SZ          = 18;
 #ifdef OTA_ENB
     static const PROGMEM String WIFI_MDNS_NAME_STR = "MDNS / OTA NAME";
 #else // ifdef OTA_ENB
@@ -28,13 +29,13 @@ static const PROGMEM uint32_t MDNS_NAME_MAX_SZ  = 18;
 #endif // ifdef OTA_ENB
 
 // *********************************************************************************************
-cMdnsName::cMdnsName () :   cOldControlCommon ("MDNS_NAME_STR")
+cMdnsName::cMdnsName () :   cControlCommon (MDNS_NAME_STR,
+                                            ControlType::Text,
+                                            WIFI_MDNS_NAME_STR,
+                                            MDNS_NAME_DEF_STR,
+                                            MDNS_NAME_MAX_SZ)
 {
     // _ DEBUG_START;
-
-    DataValueStr.reserve (MDNS_NAME_MAX_SZ + 2);
-    DataValueStr = MDNS_NAME_DEF_STR;
-
     // _ DEBUG_END;
 }
 
@@ -46,67 +47,19 @@ cMdnsName::~cMdnsName ()
 }
 
 // *********************************************************************************************
-void cMdnsName::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Text, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_MDNS_NAME_STR.c_str ());
-    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (MDNS_NAME_MAX_SZ), ControlColor::None, ControlId);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cMdnsName::ResetToDefaults ()
-{
-    // DEBUG_START;
-
-    String      value = MDNS_NAME_DEF_STR;
-    String      dummy;
-
-    set (value, dummy);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-bool cMdnsName::set (String & value, String & ResponseMessage)
+bool cMdnsName::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
     // DEBUG_V(String("       value: ") + value);
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
 
-    bool Response = true;
+    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
 
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
-
-    do  // once
+    if (Response)
     {
-        if (value.length () > MDNS_NAME_MAX_SZ)
-        {
-            ResponseMessage     = String (F ("MDNS ? OTA New Value is too long: \""))  + value + String (F ("\""));
-            Response            = false;
-            break;
-        }
-
-        if (value.equals (DataValueStr))
-        {
-            // DEBUG_V("Name did not change");
-            Log.infoln (String (F ("MDNS / OTA Name Unchanged")).c_str ());
-            break;
-        }
-        DataValueStr = value;
-
-        ESPUI.updateControlValue (ControlId, DataValueStr);
         WiFiDriver.WiFiReset ();
-        Log.infoln ((String (F ("MDNS / OTA Name Set to: ")) + DataValueStr).c_str ());
-
-        displaySaveWarning ();
-    } while (false);
-
+    }
     // DEBUG_END;
     return Response;
 }

@@ -21,82 +21,35 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-static const PROGMEM String WIFI_SSID_STR       = "WIFI SSID";
+static const PROGMEM String     WIFI_SSID       = "WIFI SSID";
+static const PROGMEM String     WIFI_SSID_STR   = "WIFI_SSID_STR";
 static const PROGMEM uint32_t SSID_MAX_SZ       = 32;
 
 // *********************************************************************************************
-cSSID::cSSID () :   cOldControlCommon ("WIFI_SSID_STR")
+cSSID::cSSID () :   cControlCommon (WIFI_SSID_STR,
+                                    ControlType::Text,
+                                    WIFI_SSID,
+                                    WiFiDriver.GetDefaultSsid (),
+                                    SSID_MAX_SZ)
 {
     // _ DEBUG_START;
-
-    DataValueStr.reserve (SSID_MAX_SZ + 2);
-    DataValueStr = WiFiDriver.GetDefaultSsid ();
-
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cSSID::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Text, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_SSID_STR.c_str ());
-    ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (SSID_MAX_SZ), ControlColor::None, ControlId);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cSSID::ResetToDefaults ()
-{
-    // DEBUG_START;
-
-    String      value = WiFiDriver.GetDefaultSsid ();
-    String      dummy;
-
-    set (value, dummy);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-bool cSSID::set (String & value, String & ResponseMessage)
+bool cSSID::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
     // DEBUG_V(String("       value: ") + value);
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
 
-    bool Response = true;
+    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
 
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
-
-    do  // once
+    if (Response)
     {
-        if (value.length () > SSID_MAX_SZ)
-        {
-            ResponseMessage     = String (F ("New Value is too long: \""))  + value + String (F ("\""));
-            Response            = false;
-            break;
-        }
-
-        if (value.equals (DataValueStr))
-        {
-            // DEBUG_V("Name did not change");
-            Log.infoln (String (F ("WiFi SSID Unchanged")).c_str ());
-            break;
-        }
-        DataValueStr = value;
-
-        ESPUI.updateControlValue (ControlId, DataValueStr);
         WiFiDriver.WiFiReset ();
-        Log.infoln ((String (F ("WiFi SSID Set to: ")) + DataValueStr).c_str ());
-
-        displaySaveWarning ();
-    } while (false);
-
+    }
     // DEBUG_END;
     return Response;
 }

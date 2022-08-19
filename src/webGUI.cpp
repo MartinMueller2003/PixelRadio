@@ -266,7 +266,7 @@ void startGUI (void)
 void StartESPUI ()
 {
     // DEBUG_START;
-    if ((LoginUser.getStr ().isEmpty ()) || (LoginPassword.getStr ().isEmpty ()))
+    if ((LoginUser.get ().isEmpty ()) || (LoginPassword.get ().isEmpty ()))
     {   // Missing credentials, use automatic login.
         // DEBUG_V();
         ESPUI.begin ("PixelRadio");
@@ -278,7 +278,7 @@ void StartESPUI ()
     else
     {
         // DEBUG_V();
-        ESPUI.begin ("PixelRadio", LoginUser.getStr ().c_str (), LoginPassword.getStr ().c_str ());
+        ESPUI.begin ("PixelRadio", LoginUser.get ().c_str (), LoginPassword.get ().c_str ());
         // DEBUG_V();
 
         // Don't use LITLEFS, browser refreshes will crash.

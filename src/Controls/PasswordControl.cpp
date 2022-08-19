@@ -1,5 +1,5 @@
 /*
-   File: LoginUser.cpp
+   File: PasswordControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,46 +15,46 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "LoginUser.hpp"
+#include "PasswordControl.hpp"
 #include "memdebug.h"
-#include "credentials_user.h"
 
-static const PROGMEM String     WIFI_DEV_USER_NM_STR    = "LOGIN USER NAME";
-static const PROGMEM String     USER_NAME_STR           = "USER_NAME_STR";
-static const PROGMEM uint32_t   USER_NM_MAX_SZ          = 10;
-static const PROGMEM String     WIFI_BLANK_MSG_STR      = "LEAVE BLANK FOR AUTO LOGIN";
+const PROGMEM String PasswordString = "{PASSWORD HIDDEN}";
 
 // *********************************************************************************************
-cLoginUser::cLoginUser () :   cControlCommon (USER_NAME_STR,
-                                              ControlType::Text,
-                                              WIFI_DEV_USER_NM_STR,
-                                              LOGIN_USER_NAME_STR,
-                                              USER_NM_MAX_SZ)
+cPasswordControl::cPasswordControl (const String & ConfigName, const String & Title, const String & DefaultValue, uint32_t MaxDataLength) :
+    cControlCommon (ConfigName, ControlType::Text, Title, DefaultValue, MaxDataLength)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-cLoginUser::~cLoginUser ()
+cPasswordControl::~cPasswordControl ()
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cLoginUser::AddControls (uint16_t value, ControlColor color)
+bool cPasswordControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    // DEBUG_START;
+    DEBUG_START;
 
-    cControlCommon::AddControls (value, color);
-    setMessage (WIFI_BLANK_MSG_STR, eCssStyle::CssStyleBlack);
+        DEBUG_V (       String ("         value: ") + value);
+        DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
+        DEBUG_V (       String ("PasswordString: ") + PasswordString);
 
-    // DEBUG_END;
+    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    setControl (PasswordString, eCssStyle::CssStyleBlack_bw);
+
+        DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
+        DEBUG_V (       String ("   ResponseMsg: ") + ResponseMessage);
+        DEBUG_V (       String ("      Response: ") + Response);
+
+    DEBUG_END;
+
+    return Response;
 }
-
-// *********************************************************************************************
-cLoginUser LoginUser;
 
 // *********************************************************************************************
 // OEF

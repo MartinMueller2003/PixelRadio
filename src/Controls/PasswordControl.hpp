@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: WpaKey.cpp
+   File: PasswordControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,19 +15,18 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "PasswordControl.hpp"
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cWpaKey : public cPasswordControl
+class cPasswordControl : public cControlCommon
 {
 public:
 
-    cWpaKey ();
-    virtual ~cWpaKey ()    {}
-    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cWpaKey
+    cPasswordControl (const String & ConfigName, const String & Title, const String & DefaultValue, uint32_t MaxDataLength);
+    virtual ~cPasswordControl ();
 
-extern cWpaKey WpaKey;
+    virtual bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+};      // class cPasswordControl
 
 // *********************************************************************************************
 // OEF

@@ -13,35 +13,21 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
-#include "WiFiDriver.hpp"
-#include "WiFiStatus.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+
+#include "WiFiStatus.hpp"
+#include "WiFiDriver.hpp"
+#include "memdebug.h"
 
 static const PROGMEM String WIFI_STA_STATUS_STR = "WiFi STA/AP STATUS";
 
 // *********************************************************************************************
-cWiFiStatus::cWiFiStatus () :   cOldControlCommon (emptyString)
+cWiFiStatus::cWiFiStatus () :   cStatusControl (WIFI_STA_STATUS_STR)
 {
     // _ DEBUG_START;
 
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cWiFiStatus::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Label, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_STA_STATUS_STR.c_str ());
-    ESPUI.updateControlValue (ControlId, F ("0"));
-    ESPUI.setElementStyle (ControlId, F ("max-width: 80%;"));
-    ESPUI.setPanelStyle (ControlId, F ("font-size: 1.25em;"));
-    set ();
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************

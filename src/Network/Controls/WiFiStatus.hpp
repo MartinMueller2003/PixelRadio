@@ -14,22 +14,18 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cWiFiStatus : public cOldControlCommon
+class cWiFiStatus : public cStatusControl
 {
 public:
 
     cWiFiStatus ();
     virtual ~cWiFiStatus ()    {}
 
-    void        restoreConfiguration (JsonObject &)     {}
-    void        saveConfiguration (JsonObject &)        {}
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &)                {return true;}
-    void        set ();
+    void set ();
 };      // class cWiFiStatus
 
 // *********************************************************************************************

@@ -14,20 +14,17 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cMdnsName : public cOldControlCommon
+class cMdnsName : public cControlCommon
 {
 public:
 
     cMdnsName ();
     virtual ~cMdnsName ();
-
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
+    bool set (const String & value, String & Response, bool ForceUpdate = false);
 };      // class cMdnsName
 
 extern cMdnsName MdnsName;
