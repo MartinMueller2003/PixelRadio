@@ -24,7 +24,7 @@ static const PROGMEM String     STA_NAME_DEF_STR        = "PixelRadio";
 static const PROGMEM uint32_t STA_NAME_MAX_SZ           = 18;
 
 // *********************************************************************************************
-cHostnameCtrl::cHostnameCtrl () : cOldControlCommon ("STA_NAME_STR")
+cHostnameCtrl::cHostnameCtrl () :   cOldControlCommon ("STA_NAME_STR")
 {
     // _ DEBUG_START;
 

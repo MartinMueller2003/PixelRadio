@@ -22,17 +22,17 @@ class cPtyCode : public cOldControlCommon
 {
 public:
 
-cPtyCode ();
-virtual ~cPtyCode ()    {}
+    cPtyCode ();
+    virtual ~cPtyCode ()    {}
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    ResetToDefaults ();
-bool    set (String & value, String & Response);
-void    setPtyCodeOptionValues ();
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & Response);
+    void        setPtyCodeOptionValues ();
 
 private:
 
-void    updateUiPtyCode ();
+    void        updateUiPtyCode ();
 };      // class cPtyCode
 
 extern cPtyCode PtyCode;

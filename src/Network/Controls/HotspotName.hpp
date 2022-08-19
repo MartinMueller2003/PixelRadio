@@ -22,12 +22,12 @@ class cHotspotName : public cOldControlCommon
 {
 public:
 
-cHotspotName ();
-virtual ~cHotspotName ();
+    cHotspotName ();
+    virtual ~cHotspotName ();
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    ResetToDefaults ();
-bool    set (String & value, String & Response);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & Response);
 };      // class cHotspotName
 
 extern cHotspotName HotspotName;

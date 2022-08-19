@@ -25,7 +25,7 @@ static const PROGMEM uint32_t USER_PW_MAX_SZ            = 10;
 const PROGMEM String WIFI_BLANK_MSG_STR                 = "LEAVE BLANK FOR AUTO LOGIN";
 
 // *********************************************************************************************
-cLoginPassword::cLoginPassword () : cOldControlCommon ("USER_PW_STR")
+cLoginPassword::cLoginPassword () :   cOldControlCommon ("USER_PW_STR")
 {
     // _ DEBUG_START;
 

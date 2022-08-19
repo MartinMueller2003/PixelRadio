@@ -22,9 +22,9 @@ class cAudioGain : public cStatusControl
 {
 public:
 
-cAudioGain ();
-virtual ~cAudioGain ()    {}
-void set ();
+    cAudioGain ();
+    virtual ~cAudioGain ()    {}
+    void set ();
 };      // class cAudioGain
 
 extern cAudioGain AudioGain;

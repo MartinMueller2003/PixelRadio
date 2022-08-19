@@ -43,7 +43,7 @@ static const PROGMEM String     RADIO_PRE_EMPH_STR      = "RADIO_PRE_EMPH_STR";
 static const PROGMEM String     PRE_EMPH_STR            = "FM PRE-EMPHASIS";
 
 // *********************************************************************************************
-cPreEmphasis::cPreEmphasis () : cOldControlCommon (RADIO_PRE_EMPH_STR)
+cPreEmphasis::cPreEmphasis () :   cOldControlCommon (RADIO_PRE_EMPH_STR)
 {
     // DEBUG_START;
 

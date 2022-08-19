@@ -24,7 +24,7 @@ static const PROGMEM String RADIO_AUDIO_GAIN_STR        = "AUDIO GAIN";
 static const PROGMEM int32_t AUDIO_LEVEL_MAX            = uint32_t (675);
 
 // *********************************************************************************************
-cAudioGain::cAudioGain () : cStatusControl (RADIO_AUDIO_GAIN_STR)
+cAudioGain::cAudioGain () :   cStatusControl (RADIO_AUDIO_GAIN_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

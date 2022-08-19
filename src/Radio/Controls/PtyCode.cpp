@@ -326,7 +326,7 @@ static const PROGMEM String     RDS_PTY_CODE_STR        = "PTY CODE<br>Station G
 static const PROGMEM String     RDS_PTY_CODE            = "RDS_PTY_CODE";
 
 // *********************************************************************************************
-cPtyCode::cPtyCode () : cOldControlCommon (RDS_PTY_CODE)
+cPtyCode::cPtyCode () :   cOldControlCommon (RDS_PTY_CODE)
 {
     // _ DEBUG_START;
 

@@ -21,38 +21,38 @@ class c_WiFiDriverUi
 {
 public:
 
-c_WiFiDriverUi ();
-virtual ~c_WiFiDriverUi ();
+    c_WiFiDriverUi ();
+    virtual ~c_WiFiDriverUi ();
 
-void            addControls (uint16_t _WiFiTabId, ControlColor Color);
-void            addHomeControls (uint16_t _WiFiTabId, ControlColor Color);
+    void        addControls (uint16_t _WiFiTabId, ControlColor Color);
+    void        addHomeControls (uint16_t _WiFiTabId, ControlColor Color);
 
-String          &getConnectionStatus () {return ConnectionStatusMessage;}
-IPAddress       getIpAddress ()         {return CurrentIpAddress;}
+    String      &getConnectionStatus () {return ConnectionStatusMessage;}
+    IPAddress   getIpAddress ()         {return CurrentIpAddress;}
 
 protected:
 
-void            UpdateStatusFields ();
+    void        UpdateStatusFields ();
 
 #define CLIENT_TIMEOUT      500 // Webserver Client Timeout, in mS.
 #define AP_TIMEOUT          60
 
-IPAddress CurrentIpAddress      = IPAddress (0, 0, 0, 0);
-IPAddress CurrentNetmask        = IPAddress (0, 0, 0, 0);
-IPAddress CurrentGateway        = IPAddress (0, 0, 0, 0);
-IPAddress CurrentDns            = IPAddress (0, 0, 0, 0);
-bool ResetWiFi                  = false;
-uint32_t ap_timeout             = AP_TIMEOUT;           ///< How long to wait in AP mode with no connection before rebooting
-uint32_t sta_timeout            = CLIENT_TIMEOUT;       ///< Timeout when connected as client (station)
-String ConnectionStatusMessage;
+    IPAddress CurrentIpAddress  = IPAddress (0, 0, 0, 0);
+    IPAddress CurrentNetmask    = IPAddress (0, 0, 0, 0);
+    IPAddress CurrentGateway    = IPAddress (0, 0, 0, 0);
+    IPAddress CurrentDns        = IPAddress (0, 0, 0, 0);
+    bool ResetWiFi              = false;
+    uint32_t ap_timeout         = AP_TIMEOUT;           ///< How long to wait in AP mode with no connection before rebooting
+    uint32_t sta_timeout        = CLIENT_TIMEOUT;       ///< Timeout when connected as client (station)
+    String ConnectionStatusMessage;
 
 private:
-uint16_t wifiNetID = Control::noParent;
+    uint16_t wifiNetID = Control::noParent;
 
-cRssiStatus WiFiRssi;
-cRssiStatus HomeRssi;
-cWiFiStatus WiFiStatus;
-cWiFiStatus HomeStatus;
-cWiFiIpStatus WiFiIpStatus;
-cWiFiIpStatus HomeIpStatus;
+    cRssiStatus WiFiRssi;
+    cRssiStatus HomeRssi;
+    cWiFiStatus WiFiStatus;
+    cWiFiStatus HomeStatus;
+    cWiFiIpStatus WiFiIpStatus;
+    cWiFiIpStatus HomeIpStatus;
 };      // class c_WiFiDriverUi

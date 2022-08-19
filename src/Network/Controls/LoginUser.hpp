@@ -22,12 +22,12 @@ class cLoginUser : public cOldControlCommon
 {
 public:
 
-cLoginUser ();
-virtual ~cLoginUser ();
+    cLoginUser ();
+    virtual ~cLoginUser ();
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    ResetToDefaults ();
-bool    set (String & value, String & Response);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & Response);
 };      // class cLoginUser
 
 extern cLoginUser LoginUser;

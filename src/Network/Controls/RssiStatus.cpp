@@ -21,7 +21,7 @@
 static const PROGMEM String HOME_WIFI_STR = "WIFI RSSI";
 
 // *********************************************************************************************
-cRssiStatus::cRssiStatus () : cStatusControl (HOME_WIFI_STR)
+cRssiStatus::cRssiStatus () :   cStatusControl (HOME_WIFI_STR)
 {
     // _ DEBUG_START;
 

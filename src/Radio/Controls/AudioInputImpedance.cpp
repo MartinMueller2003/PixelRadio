@@ -47,7 +47,7 @@ static const PROGMEM char       INP_IMP_DEF_STR   []    = INP_IMP20K_STR;
 static const PROGMEM String     RADIO_INP_IMP_STR       = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
-cAudioInputImpedance::cAudioInputImpedance () : cOldControlCommon (INPUT_IMPED_STR)
+cAudioInputImpedance::cAudioInputImpedance () :   cOldControlCommon (INPUT_IMPED_STR)
 {
     // _ DEBUG_START;
 

@@ -23,25 +23,25 @@ class cRdsText : public cOldControlCommon
 {
 public:
 
-cRdsText ();
-virtual ~cRdsText ()    {}
+    cRdsText ();
+    virtual ~cRdsText ()    {}
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    poll ();
-bool    set (String & value, String & Response);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        poll ();
+    bool        set (String & value, String & Response);
 
 private:
 
-void    UpdateStatus ();
-void    updateRdsMsgRemainingTime (uint32_t now);
+    void        UpdateStatus ();
+    void        updateRdsMsgRemainingTime (uint32_t now);
 
-uint16_t homeTextMsgID  = Control::noParent;
-uint16_t homeRdsTmrID   = Control::noParent;
+    uint16_t homeTextMsgID      = Control::noParent;
+    uint16_t homeRdsTmrID       = Control::noParent;
 
-c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
-uint32_t CurrentMsgEndTime              = 0;
-uint32_t CurrentMsgLastUpdateTime       = 0;
-String LastMessageSent;
+    c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
+    uint32_t CurrentMsgEndTime          = 0;
+    uint32_t CurrentMsgLastUpdateTime   = 0;
+    String LastMessageSent;
 };      // class cRdsText
 
 extern cRdsText RdsText;

@@ -24,13 +24,13 @@ class c_ControllerNONE : public c_ControllerCommon
 {
 public:
 
-c_ControllerNONE ();
-virtual ~c_ControllerNONE ();
-void    AddControls (uint16_t ctrlTab)                                  {}
+    c_ControllerNONE ();
+    virtual ~c_ControllerNONE ();
+    void        AddControls (uint16_t ctrlTab)                                  {}
 
-void    saveConfiguration (ArduinoJson::JsonObject & config);
-void    restoreConfiguration (ArduinoJson::JsonObject & config);
-void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)    {}
+    void        saveConfiguration (ArduinoJson::JsonObject & config);
+    void        restoreConfiguration (ArduinoJson::JsonObject & config);
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)    {}
 };      // c_ControllerNONE
 
 // *********************************************************************************************

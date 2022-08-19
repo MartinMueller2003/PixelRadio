@@ -25,7 +25,7 @@ static const PROGMEM String WIFI_SSID_STR       = "WIFI SSID";
 static const PROGMEM uint32_t SSID_MAX_SZ       = 32;
 
 // *********************************************************************************************
-cSSID::cSSID () : cOldControlCommon ("WIFI_SSID_STR")
+cSSID::cSSID () :   cOldControlCommon ("WIFI_SSID_STR")
 {
     // _ DEBUG_START;
 

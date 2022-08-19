@@ -22,11 +22,11 @@ class cRfPower : public cOldControlCommon
 {
 public:
 
-cRfPower ();
-virtual ~cRfPower ()    {}
+    cRfPower ();
+    virtual ~cRfPower ()    {}
 
-void    AddControls (uint16_t Tab, ControlColor color);
-bool    set (String &, String &);
+    void        AddControls (uint16_t Tab, ControlColor color);
+    bool        set (String &, String &);
 };      // class cRfPower
 
 extern cRfPower RfPower;

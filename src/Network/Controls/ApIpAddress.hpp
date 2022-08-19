@@ -22,16 +22,16 @@ class cApIpAddress : public cOldControlCommon
 {
 public:
 
-cApIpAddress ();
-virtual ~cApIpAddress ();
+    cApIpAddress ();
+    virtual ~cApIpAddress ();
 
-void            AddControls (uint16_t TabId, ControlColor color);
-void            ResetToDefaults ();
-bool            set (String & value, String & Response);
-IPAddress       GetIpAddress () {return IpAddress;}
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & Response);
+    IPAddress   GetIpAddress () {return IpAddress;}
 
 private:
-IPAddress IpAddress = IPAddress (uint32_t (0));
+    IPAddress IpAddress = IPAddress (uint32_t (0));
 };      // class cApIpAddress
 
 extern cApIpAddress ApIpAddress;

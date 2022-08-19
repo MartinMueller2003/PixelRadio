@@ -24,7 +24,7 @@ static const PROGMEM String WIFI_DEV_USER_NM_STR        = "LOGIN USER NAME";
 static const PROGMEM uint32_t USER_NM_MAX_SZ            = 10;
 
 // *********************************************************************************************
-cLoginUser::cLoginUser () : cOldControlCommon ("USER_NAME_STR")
+cLoginUser::cLoginUser () :   cOldControlCommon ("USER_NAME_STR")
 {
     // _ DEBUG_START;
 

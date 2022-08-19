@@ -22,10 +22,10 @@ class cStaticIpAddress : public cIpAddressControl
 {
 public:
 
-cStaticIpAddress ();
-virtual ~cStaticIpAddress ();
+    cStaticIpAddress ();
+    virtual ~cStaticIpAddress ();
 
-bool set (const String & value, String & Response, bool ForceUpdate = false);
+    bool set (const String & value, String & Response, bool ForceUpdate = false);
 };      // class cStaticIpAddress
 
 extern cStaticIpAddress StaticIpAddress;

@@ -39,7 +39,7 @@ static const PROGMEM String     DIG_GAIN_DEF_STR        = "0 dB (default)";
 static const PROGMEM String     DIGITAL_GAIN_STR        = "DIGITAL_GAIN_STR";
 
 // *********************************************************************************************
-cDigitalAudioGain::cDigitalAudioGain () : cOldControlCommon (String (DIGITAL_GAIN_STR))
+cDigitalAudioGain::cDigitalAudioGain () :   cOldControlCommon (String (DIGITAL_GAIN_STR))
 {
     // _ DEBUG_START;
 

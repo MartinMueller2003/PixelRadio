@@ -22,12 +22,12 @@ class cRdsReset : public cOldControlCommon
 {
 public:
 
-cRdsReset ();
-virtual ~cRdsReset ()    {}
+    cRdsReset ();
+    virtual ~cRdsReset ()    {}
 
-void    AddControls (uint16_t adjTab, ControlColor color);
-void    ResetToDefaults ();
-bool    set (String & value, String & ResponseMessage);
+    void        AddControls (uint16_t adjTab, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & ResponseMessage);
 };      // class cRdsReset
 
 extern cRdsReset RdsReset;

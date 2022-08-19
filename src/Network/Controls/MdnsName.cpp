@@ -28,7 +28,7 @@ static const PROGMEM uint32_t MDNS_NAME_MAX_SZ  = 18;
 #endif // ifdef OTA_ENB
 
 // *********************************************************************************************
-cMdnsName::cMdnsName () : cOldControlCommon ("MDNS_NAME_STR")
+cMdnsName::cMdnsName () :   cOldControlCommon ("MDNS_NAME_STR")
 {
     // _ DEBUG_START;
 

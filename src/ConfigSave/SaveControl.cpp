@@ -25,7 +25,7 @@ static const PROGMEM String     SAVE_SETTINGS_STR       = "SAVE SETTINGS";
 static const PROGMEM String     SAVE_SETTINGS_MSG_STR   = "[ Settings Changed, Save Required ]";
 
 // *********************************************************************************************
-cSaveControl::cSaveControl () : cOldControlCommon (emptyString)
+cSaveControl::cSaveControl () :   cOldControlCommon (emptyString)
 {
     // DEBUG_START;
 

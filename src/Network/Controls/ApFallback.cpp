@@ -18,95 +18,18 @@
 #include "ApFallback.hpp"
 #include "memdebug.h"
 
-extern void displaySaveWarning ();
-
-static const PROGMEM String     ENABLED_STR             = "Enabled";
-static const PROGMEM String     DISABLED_STR            = "Disabled";
 static const PROGMEM String     WIFI_AP_FALLBK_STR      = "AP FALLBACK";
+static const PROGMEM String     WIFI_AP_FALLBACK        = "WIFI_AP_FALLBACK";
 
 // *********************************************************************************************
-cApFallback::cApFallback () : cOldControlCommon ("WIFI_AP_FALLBACK")
+cApFallback::cApFallback () :   cBinaryControl (WIFI_AP_FALLBACK, WIFI_AP_FALLBK_STR)
 {
     // _ DEBUG_START;
 
     DataValueStr        = "1";
     DataValue           = true;
 
-    ActiveLabelStyle    = CSS_LABEL_STYLE_BLACK;
-    InactiveLabelStyle  = CSS_LABEL_STYLE_BLACK;
-
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cApFallback::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Switcher, color);
-    ESPUI.updateControlLabel (ControlId, WIFI_AP_FALLBK_STR.c_str ());
-    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_BLACK);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-bool cApFallback::set (String & value, String & ResponseMessage)
-{
-    // DEBUG_START;
-
-    // DEBUG_V (       String ("       value: ") + value);
-    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
-
-    bool Response = true;
-
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
-
-    do  // once
-    {
-        if (DataValueStr.equals (value))
-        {
-            // DEBUG_V ("Ignore duplicate setting");
-            ResponseMessage = DataValue ? ENABLED_STR : DISABLED_STR;
-            break;
-        }
-
-        if (value.equals (F ("0")))
-        {
-            DataValue = 0;
-        }
-        else if (value.equals (F ("1")))
-        {
-            DataValue = 1;
-        }
-        else
-        {
-            ResponseMessage = String (F ("AP Fallback Invalid Value: ")) + value;
-            Log.infoln (ResponseMessage.c_str ());
-            Response = false;
-            break;
-        }
-        DataValueStr    = value;
-        ResponseMessage = DataValue ? ENABLED_STR : DISABLED_STR;
-        Response        = true;
-
-        ESPUI.updateControlValue (ControlId, DataValueStr);
-        ESPUI.print (StatusMessageId, ResponseMessage);
-
-        Log.infoln (String (F ("AP Fallback Set to: %s.")).c_str (), ResponseMessage.c_str ());
-        displaySaveWarning ();
-    } while (false);
-
-    // DEBUG_V (       String ("       value: ") + value);
-    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
-    // DEBUG_V (       String ("    Response: ") + ResponseMessage);
-
-    // DEBUG_END;
-
-    return Response;
 }
 
 // *********************************************************************************************

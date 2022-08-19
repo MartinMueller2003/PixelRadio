@@ -22,7 +22,7 @@
 static const PROGMEM String IP_ADDR_STATUS_STR = "IP ADDRESS";
 
 // *********************************************************************************************
-cWiFiIpStatus::cWiFiIpStatus () : cOldControlCommon (emptyString)
+cWiFiIpStatus::cWiFiIpStatus () :   cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 

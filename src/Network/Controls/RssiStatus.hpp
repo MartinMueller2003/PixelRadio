@@ -22,11 +22,11 @@ class cRssiStatus : public cStatusControl
 {
 public:
 
-cRssiStatus ();
-virtual ~cRssiStatus ();
+    cRssiStatus ();
+    virtual ~cRssiStatus ();
 
-int32_t getRssi ();
-void    set ();
+    int32_t     getRssi ();
+    void        set ();
 };      // class cRssiStatus
 
 // *********************************************************************************************

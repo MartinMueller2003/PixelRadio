@@ -24,7 +24,7 @@ static const PROGMEM uint32_t   AUDIO_MEAS_TIME = uint32_t (2000);
 static const PROGMEM uint32_t   AUDIO_LEVEL_MAX = uint32_t (675);
 
 // *********************************************************************************************
-cPeakAudio::cPeakAudio () : cStatusControl (RADIO_AUDLVL_STR)
+cPeakAudio::cPeakAudio () :   cStatusControl (RADIO_AUDLVL_STR)
 {
     // _ DEBUG_START;
 

@@ -27,7 +27,7 @@
 #define RDS_RESET_STR         "RESET RDS SETTINGS"
 
 // *********************************************************************************************
-cRdsReset::cRdsReset () : cOldControlCommon (emptyString)
+cRdsReset::cRdsReset () :   cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 

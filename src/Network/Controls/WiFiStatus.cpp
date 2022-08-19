@@ -22,7 +22,7 @@
 static const PROGMEM String WIFI_STA_STATUS_STR = "WiFi STA/AP STATUS";
 
 // *********************************************************************************************
-cWiFiStatus::cWiFiStatus () : cOldControlCommon (emptyString)
+cWiFiStatus::cWiFiStatus () :   cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 

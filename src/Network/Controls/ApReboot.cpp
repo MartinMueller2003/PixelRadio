@@ -25,7 +25,7 @@ static const PROGMEM String     DISABLED_STR            = "Disabled";
 static const PROGMEM String     WIFI_AP_REBOOT_STR      = "AP REBOOT";
 
 // *********************************************************************************************
-cApReboot::cApReboot () : cOldControlCommon ("WIFI_REBOOT_FLAG")
+cApReboot::cApReboot () :   cOldControlCommon ("WIFI_REBOOT_FLAG")
 {
     // _ DEBUG_START;
 

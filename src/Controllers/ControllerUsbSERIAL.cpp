@@ -26,7 +26,7 @@
 #endif //  __has_include("memdebug.h")
 
 // ================================================================================================
-c_ControllerUsbSERIAL::c_ControllerUsbSERIAL () : c_ControllerCommon ("USB SERIAL", c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
+c_ControllerUsbSERIAL::c_ControllerUsbSERIAL () :   c_ControllerCommon ("USB SERIAL", c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {}      // c_ControllerUsbSERIAL
 
 // ================================================================================================

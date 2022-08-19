@@ -23,7 +23,7 @@
 static const PROGMEM String HOME_RAD_STAT_STR = "RADIO STATUS";
 
 // *********************************************************************************************
-cRfCarrierStatus::cRfCarrierStatus () : cStatusControl (HOME_RAD_STAT_STR)
+cRfCarrierStatus::cRfCarrierStatus () :   cStatusControl (HOME_RAD_STAT_STR)
 {
     // _ DEBUG_START;
 

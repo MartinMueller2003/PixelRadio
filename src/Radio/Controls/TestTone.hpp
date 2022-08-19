@@ -24,51 +24,51 @@ class cTestTone : public cOldControlCommon
 {
 public:
 
-cTestTone ();
-virtual ~cTestTone ()    {}
+    cTestTone ();
+    virtual ~cTestTone ()    {}
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    Init ();
-void    poll ();
-bool    set (String & value, String & ResponseMessage);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        Init ();
+    void        poll ();
+    bool        set (String & value, String & ResponseMessage);
 
 protected:
 
-void    UpdateRdsTimeMsg ();
-void    toneOn (uint16_t freq);
-void    toneOff ();
+    void        UpdateRdsTimeMsg ();
+    void        toneOn (uint16_t freq);
+    void        toneOff ();
 
-uint8_t hours   = 0;
-uint8_t minutes = 0;
-uint8_t seconds = 0;
+    uint8_t hours       = 0;
+    uint8_t minutes     = 0;
+    uint8_t seconds     = 0;
 
-friend class fsm_Tone_state_Idle;
-friend class fsm_Tone_state_SendingTone;
-fsm_Tone_state * pCurrentFsmState       = nullptr;
-uint32_t FsmTimerExpirationTime         = 0;
+    friend class fsm_Tone_state_Idle;
+    friend class fsm_Tone_state_SendingTone;
+    fsm_Tone_state * pCurrentFsmState   = nullptr;
+    uint32_t FsmTimerExpirationTime     = 0;
 };      // class cTestTone
 
 class fsm_Tone_state
 {
 protected:
 
-cTestTone * pTestTone = nullptr;
-uint32_t ToneExpirationTime;
-std::vector <uint16_t>::iterator CurrentTone;
+    cTestTone * pTestTone = nullptr;
+    uint32_t ToneExpirationTime;
+    std::vector <uint16_t>::iterator CurrentTone;
 
 public:
 
-fsm_Tone_state ()
-{}
+    fsm_Tone_state ()
+    {}
 
-virtual ~fsm_Tone_state ()
-{}
+    virtual ~fsm_Tone_state ()
+    {}
 
-virtual void    Poll (uint32_t) = 0;
-virtual void    Init (void)     = 0;
-uint16_t        getCurrentToneFrequency ()      {return *CurrentTone;}
+    virtual void        Poll (uint32_t) = 0;
+    virtual void        Init (void)     = 0;
+    uint16_t            getCurrentToneFrequency ()      {return *CurrentTone;}
 
-void            SetParent (cTestTone * parent)  {pTestTone = parent;}
+    void                SetParent (cTestTone * parent)  {pTestTone = parent;}
 };      // fsm_Tone_state
 
 /*****************************************************************************/
@@ -77,14 +77,14 @@ class fsm_Tone_state_Idle : public fsm_Tone_state
 {
 public:
 
-fsm_Tone_state_Idle ()
-{}
+    fsm_Tone_state_Idle ()
+    {}
 
-virtual ~fsm_Tone_state_Idle ()
-{}
+    virtual ~fsm_Tone_state_Idle ()
+    {}
 
-virtual void    Poll (uint32_t now);
-virtual void    Init (void);
+    virtual void        Poll (uint32_t now);
+    virtual void        Init (void);
 };      // class fsm_Tone_state_Idle
 
 /*****************************************************************************/
@@ -92,14 +92,14 @@ class fsm_Tone_state_SendingTone : public fsm_Tone_state
 {
 public:
 
-fsm_Tone_state_SendingTone ()
-{}
+    fsm_Tone_state_SendingTone ()
+    {}
 
-virtual ~fsm_Tone_state_SendingTone ()
-{}
+    virtual ~fsm_Tone_state_SendingTone ()
+    {}
 
-virtual void    Poll (uint32_t now);
-virtual void    Init (void);
+    virtual void        Poll (uint32_t now);
+    virtual void        Init (void);
 };      // class fsm_Tone_state_SendingTone
 
 

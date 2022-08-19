@@ -22,14 +22,14 @@ class cPeakAudio : public cStatusControl
 {
 public:
 
-cPeakAudio ();
-virtual ~cPeakAudio ()    {}
+    cPeakAudio ();
+    virtual ~cPeakAudio ()    {}
 
-void poll ();
+    void poll ();
 
 private:
 
-uint32_t NextReadingTime = 0;
+    uint32_t NextReadingTime = 0;
 };      // class cPeakAudio
 
 extern cPeakAudio PeakAudio;

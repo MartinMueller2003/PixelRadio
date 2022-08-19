@@ -38,7 +38,7 @@ static const PROGMEM String     RADIO_VSWR_STR          = "HI-VSWR";
 static const PROGMEM String     RADIO_FAIL_STR          = "-FAIL-";
 
 // *********************************************************************************************
-cRfCarrier::cRfCarrier () : cBinaryControl (RADIO_RF_CARR_FLAG, RADIO_RF_CARRIER_STR)
+cRfCarrier::cRfCarrier () :   cBinaryControl (RADIO_RF_CARR_FLAG, RADIO_RF_CARRIER_STR)
 {
     // _ DEBUG_START;
 

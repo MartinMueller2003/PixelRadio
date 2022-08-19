@@ -24,7 +24,7 @@ static const PROGMEM String     RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
 static const PROGMEM String     ADJUST_MUTE_STR = "AUDIO MUTE";
 
 // *********************************************************************************************
-cAudioMute::cAudioMute () : cOldControlCommon (ADJUST_MUTE_STR)
+cAudioMute::cAudioMute () :   cOldControlCommon (ADJUST_MUTE_STR)
 {
     // _ DEBUG_START;
 

@@ -23,7 +23,7 @@ static const PROGMEM String     WIFI_IP_ADDR_STR        = "WIFI_IP_ADDR_STR";
 static const PROGMEM String     WIFI_IP_ADDR            = "IP Address";
 
 // *********************************************************************************************
-cStaticIpAddress::cStaticIpAddress () : cIpAddressControl (WIFI_IP_ADDR_STR, WIFI_IP_ADDR)
+cStaticIpAddress::cStaticIpAddress () :   cIpAddressControl (WIFI_IP_ADDR_STR, WIFI_IP_ADDR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

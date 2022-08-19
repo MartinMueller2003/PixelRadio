@@ -29,7 +29,7 @@
 // class c_ControllerHTTP : public c_ControllerCommon
 
 // *********************************************************************************************
-c_ControllerHTTP::c_ControllerHTTP () : c_ControllerCommon ("HTTP", c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)
+c_ControllerHTTP::c_ControllerHTTP () :   c_ControllerCommon ("HTTP", c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)
 {}      // c_ControllerHTTP
 
 // *********************************************************************************************

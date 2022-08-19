@@ -29,7 +29,7 @@ static const PROGMEM uint32_t   RDS_PI_CODE_MAX = uint32_t (0xffff);    // Maxim
 static const PROGMEM uint32_t   RDS_PI_CODE_MIN = uint32_t (0x00ff);    // Minumum PI Code Value (hex).
 
 // *********************************************************************************************
-cPiCode::cPiCode () : cOldControlCommon (String (RDS_PI_CODE))
+cPiCode::cPiCode () :   cOldControlCommon (String (RDS_PI_CODE))
 {
     // _ DEBUG_START;
 

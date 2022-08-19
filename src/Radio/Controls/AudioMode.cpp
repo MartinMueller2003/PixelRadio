@@ -25,7 +25,7 @@ static const PROGMEM char       RADIO_STEREO_STR      []        = "STEREO AUDIO"
 static const PROGMEM String     RADIO_AUDIO_MODE_STR            = "AUDIO MODE";
 
 // *********************************************************************************************
-cAudioMode::cAudioMode () : cOldControlCommon (RADIO_STEREO_FLAG)
+cAudioMode::cAudioMode () :   cOldControlCommon (RADIO_STEREO_FLAG)
 {
     // _ DEBUG_START;
 

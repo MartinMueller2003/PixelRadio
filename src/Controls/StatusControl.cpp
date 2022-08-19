@@ -35,6 +35,7 @@ void cStatusControl::set (const String & value, eCssStyle style)
     // DEBUG_START;
 
     cControlCommon::setControlStyle (style);
+
     set (value);
 
     // DEBUG_END;

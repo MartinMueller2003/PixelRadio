@@ -26,7 +26,7 @@ static const PROGMEM uint32_t IpAddress_MAX_SZ  = 16;
 static const PROGMEM IPAddress DefaultIpAddress = IPAddress (192, 168, 4, 1);
 
 // *********************************************************************************************
-cApIpAddress::cApIpAddress () : cOldControlCommon ("AP_IP_ADDR_STR")
+cApIpAddress::cApIpAddress () :   cOldControlCommon ("AP_IP_ADDR_STR")
 {
     // _ DEBUG_START;
 

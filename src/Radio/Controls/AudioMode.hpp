@@ -22,11 +22,11 @@ class cAudioMode : public cOldControlCommon
 {
 public:
 
-cAudioMode ();
-virtual ~cAudioMode ()    {}
+    cAudioMode ();
+    virtual ~cAudioMode ()    {}
 
-void    AddControls (uint16_t TabId, ControlColor color);
-bool    set (String & value, String & ResponseMessage);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    bool        set (String & value, String & ResponseMessage);
 };      // class cAudioMode
 
 extern cAudioMode AudioMode;

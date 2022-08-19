@@ -22,12 +22,12 @@ class cProgramServiceName : public cOldControlCommon
 {
 public:
 
-cProgramServiceName ();
-virtual ~cProgramServiceName ()    {}
+    cProgramServiceName ();
+    virtual ~cProgramServiceName ()    {}
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    ResetToDefaults ();
-bool    set (String & value, String & Response);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & Response);
 };      // class cProgramServiceName
 
 extern cProgramServiceName ProgramServiceName;

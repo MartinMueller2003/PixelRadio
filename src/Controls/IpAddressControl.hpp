@@ -22,17 +22,17 @@ class cIpAddressControl : public cControlCommon
 {
 public:
 
-cIpAddressControl (const String & ConfigName, const String & Title);
-virtual ~cIpAddressControl ();
+    cIpAddressControl (const String & ConfigName, const String & Title);
+    virtual ~cIpAddressControl ();
 
-virtual void    AddControls (uint16_t TabId, ControlColor color);
-void            ResetToDefaults ();
-IPAddress       GetIpAddress ();
-virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
-virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    virtual void        AddControls (uint16_t TabId, ControlColor color);
+    void                ResetToDefaults ();
+    IPAddress           GetIpAddress ();
+    virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
+    virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
-IPAddress IpAddress = IPAddress (uint32_t (0));
+    IPAddress IpAddress = IPAddress (uint32_t (0));
 };      // class cIpAddressControl
 
 // *********************************************************************************************

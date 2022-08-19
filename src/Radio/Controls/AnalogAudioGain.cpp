@@ -44,7 +44,7 @@ static const PROGMEM String     RADIO_VGA_AUDIO_STR     = "ANALOG (VGA) AUDIO GA
 static const PROGMEM String     ANALOG_GAIN_STR         = "ANALOG_GAIN_STR";
 
 // *********************************************************************************************
-cAnalogAudioGain::cAnalogAudioGain () : cChoiceListControl (ANALOG_GAIN_STR, RADIO_VGA_AUDIO_STR, MapOfGainValues)
+cAnalogAudioGain::cAnalogAudioGain () :   cChoiceListControl (ANALOG_GAIN_STR, RADIO_VGA_AUDIO_STR, MapOfGainValues)
 {
     // _ DEBUG_START;
 
@@ -70,7 +70,6 @@ bool cAnalogAudioGain::set (const String & value, String & ResponseMessage, bool
         }
         // DEBUG_V ("Update the radio")
         QN8027RadioApi.setVgaGain (get32 ());
-
         AudioGain.set ();
     } while (false);
 

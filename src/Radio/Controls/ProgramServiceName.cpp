@@ -26,7 +26,7 @@ static const PROGMEM String     RDS_PROG_SERV_STR       = "RDS_PROG_SERV_STR";
 static const PROGMEM String     RDS_PROG_SERV_NM_STR    = "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)";
 
 // *********************************************************************************************
-cProgramServiceName::cProgramServiceName () : cOldControlCommon (RDS_PROG_SERV_STR)
+cProgramServiceName::cProgramServiceName () :   cOldControlCommon (RDS_PROG_SERV_STR)
 {
     // _ DEBUG_START;
     DataValueStr.reserve (10);

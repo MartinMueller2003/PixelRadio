@@ -28,7 +28,7 @@
 static const String DefaultSequenceMsg = "No Sequence";
 
 // *********************************************************************************************
-c_ControllerFPPD::c_ControllerFPPD () : c_ControllerCommon ("FPPD", c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
+c_ControllerFPPD::c_ControllerFPPD () :   c_ControllerCommon ("FPPD", c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
 {}      // c_ControllerFPPD
 
 // *********************************************************************************************

@@ -30,7 +30,7 @@ static const PROGMEM String     RDS_DISABLED_STR        = "{ DISABLED }";
 static const PROGMEM String     RDS_EXPIRED_STR         = "{ EXPIRED }";
 
 // *********************************************************************************************
-cRdsText::cRdsText () : cOldControlCommon (emptyString)
+cRdsText::cRdsText () :   cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 

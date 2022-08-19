@@ -22,15 +22,15 @@ class cRfCarrier : public cBinaryControl
 {
 public:
 
-cRfCarrier ();
-virtual ~cRfCarrier ()    {}
+    cRfCarrier ();
+    virtual ~cRfCarrier ()    {}
 
-void            AddHomeControls (uint16_t TabId, ControlColor color);
-virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
+    void                AddHomeControls (uint16_t TabId, ControlColor color);
+    virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 
 private:
 
-uint16_t HomeStatusMessageId;
+    uint16_t HomeStatusMessageId;
 };      // class cRfCarrier
 
 extern cRfCarrier RfCarrier;

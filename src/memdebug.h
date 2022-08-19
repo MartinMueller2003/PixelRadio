@@ -24,6 +24,6 @@
 
 #define DEBUG_V(v)                                                                       \
     {LOG_PORT.println (String ("------ ") + String (FPSTR (__func__)) + ":" + MYFILE + ":" + String (__LINE__) + ": " + String (v) + \
-                       String (" ------"));LOG_PORT.flush ();}
+    String (" ------"));LOG_PORT.flush ();}
 #define DEBUG_START     DEBUG_V (F ("Start"))
 #define DEBUG_END       DEBUG_V (F ("End"))

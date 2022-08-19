@@ -23,7 +23,7 @@ static const PROGMEM String     WIFI_SUBNET_STR = "WIFI_SUBNET_STR";
 static const PROGMEM String     WIFI_IP_ADDR    = "Subnet Mask";
 
 // *********************************************************************************************
-cStaticNetmask::cStaticNetmask () : cIpAddressControl (WIFI_SUBNET_STR, WIFI_IP_ADDR)
+cStaticNetmask::cStaticNetmask () :   cIpAddressControl (WIFI_SUBNET_STR, WIFI_IP_ADDR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

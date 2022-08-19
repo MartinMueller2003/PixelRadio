@@ -94,7 +94,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
                                   this);
 
     setControlPanelStyle (ControlPanelStyle);
-    setControlStyle (ControlStyle);
+    // setControlStyle (ControlStyle);
 
     MessageId = ESPUI.addControl (ControlType::Label,
                                   emptyString.c_str (),

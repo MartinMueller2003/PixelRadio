@@ -52,7 +52,7 @@ static const PROGMEM String     RADIO_RF_POWER_STR      = "RF POWER";
 static const PROGMEM String     RADIO_POWER_STR         = "RADIO_POWER_STR";
 
 // *********************************************************************************************
-cRfPower::cRfPower () : cOldControlCommon (RADIO_POWER_STR)
+cRfPower::cRfPower () :   cOldControlCommon (RADIO_POWER_STR)
 {
     // _ DEBUG_START;
 

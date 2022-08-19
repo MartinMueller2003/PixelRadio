@@ -22,10 +22,10 @@ class cStaticNetmask : public cIpAddressControl
 {
 public:
 
-cStaticNetmask ();
-virtual ~cStaticNetmask ();
+    cStaticNetmask ();
+    virtual ~cStaticNetmask ();
 
-bool set (const String & value, String & Response, bool ForceUpdate = false);
+    bool set (const String & value, String & Response, bool ForceUpdate = false);
 };      // class cStaticNetmask
 
 extern cStaticNetmask StaticNetmask;

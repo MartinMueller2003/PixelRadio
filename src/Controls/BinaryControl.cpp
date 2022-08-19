@@ -18,6 +18,9 @@
 #include "BinaryControl.hpp"
 #include "memdebug.h"
 
+static const PROGMEM String     ENABLED_STR     = "Enabled";
+static const PROGMEM String     DISABLED_STR    = "Disabled";
+
 // *********************************************************************************************
 cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title) :
     cControlCommon (ConfigName, ControlType::Switcher, _Title)
@@ -31,14 +34,22 @@ cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title
 bool cBinaryControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
+    // DEBUG_V (       String ("       value: ") + value);
+    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
+    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
 
     bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
 
     if (Response)
     {
-        DataValue = value.equals (F ("1"));
+        DataValue       = value.equals (F ("1"));
+        ResponseMessage = DataValue ? ENABLED_STR : DISABLED_STR;
+        ESPUI.print (MessageId, ResponseMessage);
     }
-    // DEBUG_V (String ("DataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("       value: ") + value);
+    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
+    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("    Response: ") + ResponseMessage);
 
     // DEBUG_END;
 

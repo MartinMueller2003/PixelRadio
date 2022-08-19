@@ -14,19 +14,15 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "BinaryControl.hpp"
 
 // *********************************************************************************************
-class cApFallback : public cOldControlCommon
+class cApFallback : public cBinaryControl
 {
 public:
-
-cApFallback ();
-virtual ~cApFallback ()    {}
-
-void    AddControls (uint16_t TabId, ControlColor color);
-bool    set (String & value, String & ResponseMessage);
+    cApFallback ();
+    virtual ~cApFallback ()    {}
 };      // class cApFallback
 
 extern cApFallback ApFallback;

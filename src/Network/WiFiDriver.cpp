@@ -90,7 +90,7 @@ fsm_WiFi_state_Disabled fsm_WiFi_state_Disabled_imp;
 
 // -----------------------------------------------------------------------------
 ///< Start up the driver and put it into a safe mode
-c_WiFiDriver::c_WiFiDriver () : c_WiFiDriverUi ()
+c_WiFiDriver::c_WiFiDriver () :   c_WiFiDriverUi ()
 {}      // c_WiFiDriver
 
 // -----------------------------------------------------------------------------

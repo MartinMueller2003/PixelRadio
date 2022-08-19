@@ -27,7 +27,7 @@ static const PROGMEM String     UNITS_MHZ_STR           = " MHz";
 static const PROGMEM String     HOME_RAD_STAT_STR       = "RADIO STATUS";
 
 // *********************************************************************************************
-cFrequencyAdjust::cFrequencyAdjust ()  : cOldControlCommon (String (RADIO_FM_FREQ))
+cFrequencyAdjust::cFrequencyAdjust ()  :   cOldControlCommon (String (RADIO_FM_FREQ))
 {
     // _ DEBUG_START;
 

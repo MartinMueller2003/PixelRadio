@@ -24,15 +24,15 @@ class cChoiceListControl : public cControlCommon
 public:
 #define ChoiceList_t std::map <String, String>
 
-cChoiceListControl (const String & ConfigName, const String & Title, ChoiceList_t & ChoiceList);
-virtual ~cChoiceListControl ()    {}
+    cChoiceListControl (const String & ConfigName, const String & Title, ChoiceList_t & ChoiceList);
+    virtual ~cChoiceListControl ()    {}
 
-virtual void            AddControls (uint16_t value, ControlColor color);
-virtual bool            validate (const String & value, String & ResponseMessage, bool ForceUpdate);
-virtual uint32_t        get32 ();
+    virtual void        AddControls (uint16_t value, ControlColor color);
+    virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    virtual uint32_t    get32 ();
 
 private:
-ChoiceList_t & ChoiceList;
+    ChoiceList_t & ChoiceList;
 };      // class cChoiceListControl
 
 // *********************************************************************************************

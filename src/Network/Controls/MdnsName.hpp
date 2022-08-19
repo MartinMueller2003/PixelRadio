@@ -22,12 +22,12 @@ class cMdnsName : public cOldControlCommon
 {
 public:
 
-cMdnsName ();
-virtual ~cMdnsName ();
+    cMdnsName ();
+    virtual ~cMdnsName ();
 
-void    AddControls (uint16_t TabId, ControlColor color);
-void    ResetToDefaults ();
-bool    set (String & value, String & Response);
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        ResetToDefaults ();
+    bool        set (String & value, String & Response);
 };      // class cMdnsName
 
 extern cMdnsName MdnsName;

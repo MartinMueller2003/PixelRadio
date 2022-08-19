@@ -27,7 +27,7 @@
 // class c_ControllerNONE : public c_ControllerCommon
 
 // *********************************************************************************************
-c_ControllerNONE::c_ControllerNONE () : c_ControllerCommon ("NONE", c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
+c_ControllerNONE::c_ControllerNONE () :   c_ControllerCommon ("NONE", c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
 {}      // c_ControllerNONE
 
 // *********************************************************************************************

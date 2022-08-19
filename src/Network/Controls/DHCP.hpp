@@ -22,23 +22,23 @@ class cDHCP : public cOldControlCommon
 {
 public:
 
-cDHCP ();
-virtual ~cDHCP ();
+    cDHCP ();
+    virtual ~cDHCP ();
 
-void            AddControls (uint16_t TabId, ControlColor color);
-uint32_t        get ();
-bool            set (String & value, String & ResponseMessage);
-void            TestIpSettings ();
+    void        AddControls (uint16_t TabId, ControlColor color);
+    uint32_t    get ();
+    bool        set (String & value, String & ResponseMessage);
+    void        TestIpSettings ();
 
-void            restoreConfiguration (JsonObject & json);
-void            saveConfiguration (JsonObject & json);
+    void        restoreConfiguration (JsonObject & json);
+    void        saveConfiguration (JsonObject & json);
 
 private:
 
-void            SetStaticFieldsVisibility ();
-bool            ValidateStaticSettings (String & ResponseMessage);
+    void        SetStaticFieldsVisibility ();
+    bool        ValidateStaticSettings (String & ResponseMessage);
 
-uint16_t wifiStaticSettingsID = Control::noParent;
+    uint16_t wifiStaticSettingsID = Control::noParent;
 };      // class cDHCP
 
 extern cDHCP DHCP;

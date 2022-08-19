@@ -58,7 +58,7 @@ fsm_Tone_state_Idle fsm_Tone_state_Idle_imp;
 fsm_Tone_state_SendingTone fsm_Tone_state_SendingTone_imp;
 
 // *********************************************************************************************
-cTestTone::cTestTone () : cOldControlCommon (emptyString)
+cTestTone::cTestTone () :   cOldControlCommon (emptyString)
 {
     // _ DEBUG_START;
 

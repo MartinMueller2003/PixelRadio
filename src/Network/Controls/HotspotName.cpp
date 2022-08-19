@@ -24,7 +24,7 @@ static const PROGMEM String     AP_NAME_DEF_STR         = "PixelRadioAP";
 static const PROGMEM uint32_t AP_NAME_MAX_SZ            = 18;
 
 // *********************************************************************************************
-cHotspotName::cHotspotName () : cOldControlCommon ("AP_NAME_STR")
+cHotspotName::cHotspotName () :   cOldControlCommon ("AP_NAME_STR")
 {
     // _ DEBUG_START;
 

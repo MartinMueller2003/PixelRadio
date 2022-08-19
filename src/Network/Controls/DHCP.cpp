@@ -29,7 +29,7 @@ static const PROGMEM String     WIFI_WEB_DHCP_STR       = "WEBSERVER DHCP";
 static const PROGMEM String     DHCP_LOCKED_STR         = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
 
 // *********************************************************************************************
-cDHCP::cDHCP () : cOldControlCommon (WIFI_DHCP_FLAG)
+cDHCP::cDHCP () :   cOldControlCommon (WIFI_DHCP_FLAG)
 {
     // _ DEBUG_START;
 

@@ -28,7 +28,7 @@
 // class c_ControllerLOCAL : public c_ControllerCommon
 
 // *********************************************************************************************
-c_ControllerLOCAL::c_ControllerLOCAL () : c_ControllerCommon ("LOCAL", c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
+c_ControllerLOCAL::c_ControllerLOCAL () :   c_ControllerCommon ("LOCAL", c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
 {}      // c_ControllerLOCAL
 
 // *********************************************************************************************

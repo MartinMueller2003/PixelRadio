@@ -26,7 +26,7 @@ static const PROGMEM String WIFI_WPA_KEY_STR    = "WIFI WPA KEY";
 static const PROGMEM uint32_t PASSPHRASE_MAX_SZ = 48;
 
 // *********************************************************************************************
-cWpaKey::cWpaKey () : cOldControlCommon ("WIFI_WPA_KEY_STR")
+cWpaKey::cWpaKey () :   cOldControlCommon ("WIFI_WPA_KEY_STR")
 {
     // _ DEBUG_START;
     DataValueStr.reserve (PASSPHRASE_MAX_SZ + 2);

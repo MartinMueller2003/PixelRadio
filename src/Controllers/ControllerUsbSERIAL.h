@@ -28,38 +28,38 @@ class c_ControllerUsbSERIAL : public c_ControllerCommon
 {
 public:
 
-c_ControllerUsbSERIAL ();
-virtual ~c_ControllerUsbSERIAL ();
-void            begin ()        {initSerialControl ();}
+    c_ControllerUsbSERIAL ();
+    virtual ~c_ControllerUsbSERIAL ();
+    void        begin ()        {initSerialControl ();}
 
-void            poll ()         {serialCommands ();}
+    void        poll ()         {serialCommands ();}
 
-void            saveConfiguration (ArduinoJson::JsonObject & config);
-void            restoreConfiguration (ArduinoJson::JsonObject & config);
+    void        saveConfiguration (ArduinoJson::JsonObject & config);
+    void        restoreConfiguration (ArduinoJson::JsonObject & config);
 
-void            gpioSerialControl (String paramStr, uint8_t pin);       // Serial handler for GPIO Commands.
-void            AddControls (uint16_t ctrlTab);
-uint16_t        GetMsgId () {return EspuiMsgId;}
+    void        gpioSerialControl (String paramStr, uint8_t pin);       // Serial handler for GPIO Commands.
+    void        AddControls (uint16_t ctrlTab);
+    uint16_t    GetMsgId () {return EspuiMsgId;}
 
-void            GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
 
-void            initSerialControl (void);
-void            CbBaudrateControl (Control * sender, int type);
-void            serialCommands (void);
-bool            SetBaudrate (String NewRate);
+    void        initSerialControl (void);
+    void        CbBaudrateControl (Control * sender, int type);
+    void        serialCommands (void);
+    bool        SetBaudrate (String NewRate);
 
-RBD::SerialManager serial_manager;
-cCommandProcessor CommandProcessor;
+    RBD::SerialManager serial_manager;
+    cCommandProcessor CommandProcessor;
 
-String cmdStr;  // Serial Port Commands from user (CLI).
-String paramStr;
+    String cmdStr;      // Serial Port Commands from user (CLI).
+    String paramStr;
 
 #define  SERIAL_DEF_STR SERIAL_115_STR
-String BaudRateStr      = SERIAL_DEF_STR;       // Parameter string.
-uint32_t BaudRate       = 115200;
-c_ControllerMessages Messages;
+    String BaudRateStr  = SERIAL_DEF_STR;       // Parameter string.
+    uint32_t BaudRate   = 115200;
+    c_ControllerMessages Messages;
 };                                              // c_ControllerUsbSERIAL
 
 // *********************************************************************************************
