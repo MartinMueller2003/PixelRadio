@@ -33,6 +33,8 @@ public:
 
 protected:
     bool DataValue = false;
+    String OnString;
+    String OffString;
 };      // class cBinaryControl
 
 // *********************************************************************************************

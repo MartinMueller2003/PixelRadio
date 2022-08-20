@@ -14,19 +14,18 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
+#include "ChoiceListControl.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cAudioInputImpedance : public cOldControlCommon
+class cAudioInputImpedance : public cChoiceListControl
 {
 public:
 
     cAudioInputImpedance ();
     virtual ~cAudioInputImpedance ()    {}
 
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &);
+    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 };      // class cAudioInputImpedance
 
 extern cAudioInputImpedance AudioInputImpedance;

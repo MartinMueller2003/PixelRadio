@@ -14,19 +14,18 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "BinaryControl.hpp"
 
 // *********************************************************************************************
-class cAudioMode : public cOldControlCommon
+class cAudioMode : public cBinaryControl
 {
 public:
 
     cAudioMode ();
     virtual ~cAudioMode ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String & value, String & ResponseMessage);
+    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 };      // class cAudioMode
 
 extern cAudioMode AudioMode;

@@ -14,19 +14,17 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "BinaryControl.hpp"
 
 // *********************************************************************************************
-class cAudioMute : public cOldControlCommon
+class cAudioMute : public cBinaryControl
 {
 public:
 
     cAudioMute ();
     virtual ~cAudioMute ()    {}
-
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String & value, String & ResponseMessage);
+    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 };      // class cAudioMute
 
 extern cAudioMute AudioMute;

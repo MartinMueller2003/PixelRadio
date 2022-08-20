@@ -36,7 +36,7 @@ void cAudioGain::set ()
     // DEBUG_START;
 
     uint32_t    vgaGain         = AnalogAudioGain.get32 ();
-    uint32_t    impedance       = AudioInputImpedance.get ();
+    uint32_t    impedance       = AudioInputImpedance.get32 ();
     int32_t     FinalGain       = ((vgaGain + 1) * 3) - (impedance * 3);
 
     // DEBUG_V (       String ("  vgaGain: ") + String (vgaGain));

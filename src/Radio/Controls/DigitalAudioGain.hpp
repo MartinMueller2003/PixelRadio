@@ -14,19 +14,17 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ChoiceListControl.hpp"
 
 // *********************************************************************************************
-class cDigitalAudioGain : public cOldControlCommon
+class cDigitalAudioGain : public cChoiceListControl
 {
 public:
 
     cDigitalAudioGain ();
     virtual ~cDigitalAudioGain ()    {}
-
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String & value, String & ResponseMessage);
+    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 };      // class cDigitalAudioGain
 
 extern cDigitalAudioGain DigitalAudioGain;

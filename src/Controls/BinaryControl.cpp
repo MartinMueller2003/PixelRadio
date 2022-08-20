@@ -23,12 +23,17 @@ static const PROGMEM String     ENABLED_STR     = "Enabled";
 static const PROGMEM String     DISABLED_STR    = "Disabled";
 
 // *********************************************************************************************
-cBinaryControl::cBinaryControl (const String & ConfigName, const String & _Title, bool DefaultValue) :
+cBinaryControl::cBinaryControl (
+    const String        & ConfigName,
+    const String        & _Title,
+    bool                DefaultValue) :
     cControlCommon (ConfigName, ControlType::Switcher, _Title, String (DefaultValue), 10)
 {
     // _ DEBUG_START;
 
-    DataValue = DefaultValue;
+    DataValue   = DefaultValue;
+    OnString    = ENABLED_STR;
+    OffString   = DISABLED_STR;
 
     // _ DEBUG_END;
 }
@@ -75,7 +80,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
     if (Response)
     {
         DataValue       = value.equals (F ("1"));
-        ResponseMessage = DataValue ? ENABLED_STR : DISABLED_STR;
+        ResponseMessage = DataValue ? OnString : OffString;
         ESPUI.print (MessageId, ResponseMessage);
         String LogMsg;
         LogMsg.reserve (128);

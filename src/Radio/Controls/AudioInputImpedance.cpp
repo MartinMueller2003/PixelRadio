@@ -13,33 +13,26 @@
  */
 
 // *********************************************************************************************
-#include "AudioGain.hpp"
-#include "AudioInputImpedance.hpp"
-#include "memdebug.h"
-#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <map>
+
+#include "AudioInputImpedance.hpp"
+#include "AudioGain.hpp"
+#include "QN8027RadioApi.hpp"
+#include "memdebug.h"
 
 #define INP_IMP05K_STR   " 5K Ohms"
 #define INP_IMP10K_STR   "10K Ohms"
 #define INP_IMP20K_STR   "20K Ohms (default)"
 #define INP_IMP40K_STR   "40K Ohms"
 
-static std::map <String, uint8_t> MapOfImpedances
+static std::map <String, String> MapOfImpedances
 {
-    {
-        INP_IMP05K_STR,  5
-    },
-    {
-        INP_IMP10K_STR, 10
-    },
-    {
-        INP_IMP20K_STR, 20
-    },
-    {
-        INP_IMP40K_STR, 40
-    },
+    {INP_IMP05K_STR,  "5"},
+    {INP_IMP10K_STR, "10"},
+    {INP_IMP20K_STR, "20"},
+    {INP_IMP40K_STR, "40"},
 };
 
 static const PROGMEM String     INPUT_IMPED_STR         = "INPUT_IMPED_STR";
@@ -47,71 +40,28 @@ static const PROGMEM char       INP_IMP_DEF_STR   []    = INP_IMP20K_STR;
 static const PROGMEM String     RADIO_INP_IMP_STR       = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
-cAudioInputImpedance::cAudioInputImpedance () :   cOldControlCommon (INPUT_IMPED_STR)
+cAudioInputImpedance::cAudioInputImpedance () :   cChoiceListControl (
+        INPUT_IMPED_STR,
+        RADIO_INP_IMP_STR,
+        INP_IMP_DEF_STR,
+        MapOfImpedances)
 {
     // _ DEBUG_START;
-
-    DataValueStr        = INP_IMP_DEF_STR;
-    DataValue           = MapOfImpedances[DataValueStr];
-
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cAudioInputImpedance::AddControls (uint16_t value, ControlColor color)
+bool cAudioInputImpedance::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    cOldControlCommon::AddControls (value, ControlType::Select, color);
-    ESPUI.updateControlLabel (ControlId, RADIO_INP_IMP_STR.c_str ());
+    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
 
-    for (auto & CurrentOption : MapOfImpedances)
+    if (Response)
     {
-        ESPUI.addControl (ControlType::Option,
-                          CurrentOption.first.c_str (),
-                          CurrentOption.first,
-                          ControlColor::None,
-                          ControlId);
-    }
-
-    ESPUI.updateControlValue (ControlId, DataValueStr);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-bool cAudioInputImpedance::set (String & value, String & ResponseMessage)
-{
-    // DEBUG_START;
-
-    bool Response = true;
-
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
-
-    do  // once
-    {
-        if (MapOfImpedances.end () == MapOfImpedances.find (value))
-        {
-            ResponseMessage     = F ("AudioInputImpedance::Set: BAD_VALUE: ");
-            ResponseMessage     += DataValueStr;
-            Log.errorln (ResponseMessage.c_str ());
-            Response = false;
-            break;
-        }
-        DataValueStr    = value;
-        DataValue       = MapOfImpedances[DataValueStr];
-
-        QN8027RadioApi.setAudioImpedance (DataValue);
-
-        ESPUI.updateControlValue (ControlId, DataValueStr);
-
+        QN8027RadioApi.setAudioImpedance (get32 ());
         AudioGain.set ();
-
-        Log.infoln (String (F ("Input Impedance Set to: %s.")).c_str (), DataValueStr.c_str ());
-        displaySaveWarning ();
-    } while (false);
-
+    }
     // DEBUG_END;
     return Response;
 }
