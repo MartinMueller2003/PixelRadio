@@ -30,10 +30,25 @@ cAudioMode::cAudioMode () :   cBinaryControl (RADIO_STEREO_FLAG, RADIO_AUDIO_MOD
 {
     // _ DEBUG_START;
 
-    OnString    = RADIO_STEREO_STR;
-    OffString   = RADIO_MONO_STR;
+    setOnMessage (RADIO_STEREO_STR, eCssStyle::CssStyleBlack);
+    setOffMessage (RADIO_MONO_STR, eCssStyle::CssStyleBlack);
 
     // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+void cAudioMode::AddControls (uint16_t TabId, ControlColor color)
+{
+    // DEBUG_START;
+
+        addInputCondition (     RADIO_STEREO_STR,       true);
+        addInputCondition (     RADIO_MONO_STR,         false);
+        addInputCondition (     F ("stereo"),           true);
+        addInputCondition (     F ("mono"),             false);
+
+    cBinaryControl::AddControls (TabId, color);
+
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -42,14 +57,14 @@ bool cAudioMode::set (const String & value, String & ResponseMessage, bool Force
     // DEBUG_START;
 
     // DEBUG_V(String("       value: ") + value);
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+    // DEBUG_V(String("getBool()Str: ") + getBool()Str);
+    // DEBUG_V(String("   getBool(): ") + String(getBool()));
 
     bool Response = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
 
     if (Response)
     {
-        QN8027RadioApi.setMonoAudio (!DataValue);
+        QN8027RadioApi.setMonoAudio (!getBool ());
     }
     // DEBUG_END;
     return Response;

@@ -25,14 +25,28 @@ static const PROGMEM String     RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
 static const PROGMEM String     ADJUST_MUTE_STR = "AUDIO MUTE";
 
 // *********************************************************************************************
-cAudioMute::cAudioMute () :   cBinaryControl (RADIO_MUTE_FLAG, ADJUST_MUTE_STR, false)
+cAudioMute::cAudioMute () :   cBinaryControl (RADIO_MUTE_FLAG, ADJUST_MUTE_STR, true)
 {
     // _ DEBUG_START;
-
-    OffString   = F ("Muted");
-    OnString    = F ("Unmuted");
-
     // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+void cAudioMute::AddControls (uint16_t TabId, ControlColor color)
+{
+    // DEBUG_START;
+
+    setOffMessage (F ("Muted"), eCssStyle::CssStyleBlack);
+    setOnMessage (F ("Unmuted"), eCssStyle::CssStyleBlack);
+
+        addInputCondition (     F ("unmuted"),  true);
+        addInputCondition (     F ("muted"),    false);
+        addInputCondition (     F ("unmute"),   true);
+        addInputCondition (     F ("mute"),     false);
+
+    cBinaryControl::AddControls (TabId, color);
+
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
