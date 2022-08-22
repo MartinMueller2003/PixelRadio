@@ -61,7 +61,7 @@ void cDHCP::AddControls (uint16_t TabId, ControlColor color)
 
     String      Dummy;
     String      NewVal;
-    NewVal = String (DataValue);
+    NewVal = String (cBinaryControl::getBool ());
     set (NewVal, Dummy, true);
 
     // DEBUG_END;
@@ -81,13 +81,14 @@ bool cDHCP::getBool ()
     {
         if (!ValidateStaticSettings (Dummy))
         {
-            // DEBUG_V("IP Settings wont support static settings");
+            // DEBUG_V ("IP Settings wont support static settings");
             break;
         }
-        response = DataValue;
+        response = cBinaryControl::getBool ();
     } while (false);
 
     // DEBUG_END;
+
     return response;
 }
 
@@ -96,14 +97,14 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("       value: ") + value);
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (String ("OldDataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("       value: ") + value);
+    // DEBUG_V (       String ("cBinaryControl::getBool()Str: ") + cBinaryControl::getBool()Str);
+    // DEBUG_V (       String ("OldcBinaryControl::getBool(): ") + String (cBinaryControl::getBool()));
 
     bool        OldState        = getBool ();
-    bool        OldDataValue    = DataValue;
+    bool        OldBool         = cBinaryControl::getBool ();
     bool        Response        = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
-    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("   cBinaryControl::getBool(): ") + String (cBinaryControl::getBool()));
     // DEBUG_V (       String ("    OldState: ") + String (OldState));
     // DEBUG_V (       String ("    NewState: ") + String (getBool ()));
 
@@ -115,7 +116,7 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
             break;
         }
 
-        if (!ForceUpdate && (OldDataValue == DataValue))
+        if (!ForceUpdate && (OldBool == cBinaryControl::getBool ()))
         {
             // DEBUG_V ("No change in value");
             break;
@@ -132,6 +133,7 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
     } while (false);
 
     // DEBUG_END;
+
     return Response;
 }
 
@@ -168,7 +170,7 @@ void cDHCP::SetStaticFieldsVisibility ()
 {
     // DEBUG_START;
 
-    ESPUI.updateVisibility (wifiStaticSettingsID, DataValue == 0);
+    ESPUI.updateVisibility (wifiStaticSettingsID, cBinaryControl::getBool () == 0);
 
     // DEBUG_END;
 }
@@ -181,7 +183,7 @@ void cDHCP::SetControlMessage (String & ResponseMessage)
     do  // once
     {
         // are we in DHCP mode?
-        if (DataValue)
+        if (cBinaryControl::getBool ())
         {
             // DEBUG_V ("DHCP mode");
             // setMessage (emptyString, eCssStyle::CssStyleTransparent);
@@ -224,9 +226,9 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
 
     do  // once
     {
-        if (DataValue)
+        if (cBinaryControl::getBool ())
         {
-            // DEBUG_V("Dont check the rest of the settings if they dont matter");
+            // DEBUG_V ("Using DHCP: Dont check the rest of the settings if they dont matter");
             response = true;
             break;
         }
@@ -254,15 +256,16 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
             Log.warningln (String (F ("WiFi: Static DNS IP Address is empty. Using DHCP.")).c_str ());
             break;
         }
-        // DEBUG_V("All settings are valid. We can use Static settings");
+        // DEBUG_V ("All settings are valid. We can use Static settings");
         response = true;
     } while (false);
 
-    if (!response && (!DataValue))
+    if (!response && (!cBinaryControl::getBool ()))
     {
         ResponseMessage = DHCP_LOCKED_STR;
     }
     // DEBUG_END;
+
     return response;
 }
 
