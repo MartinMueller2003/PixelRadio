@@ -14,20 +14,22 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cPiCode : public cOldControlCommon
+class cPiCode : public cControlCommon
 {
 public:
 
     cPiCode ();
     virtual ~cPiCode ()    {}
-
-    void        AddControls (uint16_t TabId, ControlColor color);
+    uint32_t    get32 ();
     void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
+    bool        set (const String & value, String & Response, bool ForceUpdate          = false);
+    bool        validate (const String & value, String & Response, bool ForceUpdate     = false);
+private:
+    uint32_t    StringToNumber (const String & value);
 };      // class cPiCode
 
 extern cPiCode PiCode;

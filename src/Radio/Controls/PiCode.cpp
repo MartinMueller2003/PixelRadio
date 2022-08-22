@@ -13,41 +13,34 @@
  */
 
 // *********************************************************************************************
-#include "language.h"
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
+
+// #include "language.h"
 #include "PiCode.hpp"
 #include "QN8027RadioApi.hpp"
 #include "RfCarrier.hpp"
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 
 static const PROGMEM String     RDS_PI_CODE_STR = "PI CODE";
 static const PROGMEM String     RDS_PI_CODE     = "RDS_PI_CODE";
 
-static const PROGMEM uint16_t   RDS_PI_CODE_DEF = uint32_t (0x6400);    // Default RDS PI Code, 16-bit hex value, 0x00ff - 0xffff.
+static const PROGMEM uint32_t   RDS_PI_CODE_DEF = uint32_t (0x6400);    // Default RDS PI Code, 16-bit hex value, 0x00ff - 0xffff.
 static const PROGMEM uint32_t   RDS_PI_CODE_MAX = uint32_t (0xffff);    // Maximum PI Code Value (hex).
 static const PROGMEM uint32_t   RDS_PI_CODE_MIN = uint32_t (0x00ff);    // Minumum PI Code Value (hex).
 
 // *********************************************************************************************
-cPiCode::cPiCode () :   cOldControlCommon (String (RDS_PI_CODE))
+cPiCode::cPiCode () :   cControlCommon (
+        RDS_PI_CODE,
+        ControlType::Text,
+        RDS_PI_CODE_STR,
+        String (RDS_PI_CODE_DEF), 10)
 {
     // _ DEBUG_START;
 
-    DataValue           = RDS_PI_CODE_DEF;
-    DataValueStr        = String (F ("0x")) + String (DataValue, HEX);
+    DataValueStr = String (F ("0x")) + String (RDS_PI_CODE_DEF, HEX);
 
     // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-void cPiCode::AddControls (uint16_t value, ControlColor color)
-{
-    // DEBUG_START;
-
-    cOldControlCommon::AddControls (value, ControlType::Text, color);
-    ESPUI.updateControlLabel (ControlId, RDS_PI_CODE_STR.c_str ());
-
-    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -64,52 +57,88 @@ void cPiCode::ResetToDefaults ()
 }
 
 // *********************************************************************************************
-bool cPiCode::set (String & value, String & ResponseMessage)
+bool cPiCode::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+{
+    // DEBUG_START;
+
+    // DEBUG_V (String ("         value: ") + value);
+
+    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+
+    if (Response)
+    {
+        QN8027RadioApi.setPiCode (uint16_t (StringToNumber (get ())), RfCarrier.get ());
+    }
+        // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
+        // DEBUG_V (       String ("       Response: ") + String (Response));
+
+    // DEBUG_END;
+
+    return Response;
+}
+
+// *********************************************************************************************
+uint32_t cPiCode::StringToNumber (const String & value)
+{
+    // DEBUG_START;
+
+        // DEBUG_V (String ("value: ") + value);
+    uint32_t Response = value.toInt ();
+
+    if (0 == value.indexOf ("0x"))
+    {
+        char * p = nullptr;
+        Response = uint32_t (strtol (value.substring (2).c_str (), &p, 16));
+    }
+        // DEBUG_V (String ("Response: ") + String (Response, HEX));
+
+    // DEBUG_END;
+
+    return Response;
+}
+
+// *********************************************************************************************
+bool cPiCode::validate (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
     bool Response = true;
 
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
+        // DEBUG_V (       String ("         value: ") + value);
+        // DEBUG_V (       String ("           get: ") + get ());
 
-    uint32_t NewPiCodeValue = 0;
+    uint32_t OldPiCodeValue = StringToNumber (get ());
+        // DEBUG_V (       String ("OldPiCodeValue: ") + String (OldPiCodeValue));
 
     do  // once
     {
-        value.trim ();
-        NewPiCodeValue = strtol (value.c_str (), NULL, HEX);
+        uint32_t NewPiCodeValue = StringToNumber (value);
+        // DEBUG_V (String ("NewPiCodeValue: ") + String (NewPiCodeValue));
 
-        if (NewPiCodeValue == DataValue)
+        if (NewPiCodeValue == OldPiCodeValue)
         {
-            // DEBUG_V("No Change. Value is OK");
+            // DEBUG_V ("No Change. Value is OK");
             break;
         }
-        // DEBUG_V(String("NewPiCodeValue: ") + String(NewPiCodeValue, HEX));
 
         if ((NewPiCodeValue < RDS_PI_CODE_MIN) ||
             (NewPiCodeValue > RDS_PI_CODE_MAX))
         {
-            ResponseMessage     = String (F ("Value Out of Range: ")) + value;
+            // DEBUG_V ("Value is out of range");
+            ResponseMessage     = Title + (F (": BAD_VALUE: Value Out of Range: ")) + value;
             Response            = false;
             break;
         }
-        // DEBUG_V("Value has been accepted");
+        // DEBUG_V ("Value has been accepted");
 
-        DataValue       = NewPiCodeValue;
-        DataValueStr    = String (F ("0x")) + String (DataValue, HEX);
-        ESPUI.print (ControlId, DataValueStr);
-
-        QN8027RadioApi.setPiCode (DataValue, RfCarrier.get ());
-        Log.infoln (String (F ("RDS PI Code Set to: \"%s\"")).c_str (), DataValueStr);
-
-        displaySaveWarning ();
+        DataValueStr = String (F ("0x")) + String (NewPiCodeValue, HEX);
     } while (false);
 
-    // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
-    // DEBUG_V(String("       Response: ") + String(Response));
+        // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
+        // DEBUG_V (       String ("       Response: ") + String (Response));
 
     // DEBUG_END;
+
     return Response;
 }
 
