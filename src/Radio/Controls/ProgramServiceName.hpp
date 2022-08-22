@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
+#include "ControlCommon.hpp"
 #include <Arduino.h>
 
 // *********************************************************************************************
-class cProgramServiceName : public cOldControlCommon
+class cProgramServiceName : public cControlCommon
 {
 public:
 
@@ -26,8 +26,8 @@ public:
     virtual ~cProgramServiceName ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
+    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate           = false);
+    bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate      = false);
 };      // class cProgramServiceName
 
 extern cProgramServiceName ProgramServiceName;
