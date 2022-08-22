@@ -17,22 +17,41 @@
 #include <Arduino.h>
 #include "ControlCommon.hpp"
 #include <map>
+#include <vector>
+
+#define ChoiceListVector_t std::vector <std::pair <String, String>>
 
 // *********************************************************************************************
 class cChoiceListControl : public cControlCommon
 {
 public:
-#define ChoiceList_t std::map <String, String>
 
-    cChoiceListControl (const String & ConfigName, const String & Title, const String & DefaultValue, ChoiceList_t & ChoiceList);
+    cChoiceListControl (
+        const String                    & ConfigName,
+        const String                    & Title,
+        const String                    & DefaultValue,
+        const ChoiceListVector_t        * ChoiceList);
     virtual ~cChoiceListControl ()    {}
 
     virtual void        AddControls (uint16_t value, ControlColor color);
-    virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
     virtual uint32_t    get32 ();
+    uint32_t            getIndex ();
+    void                RefreshOptionList (const ChoiceListVector_t * OptionList);
+    // virtual bool        set32 ();
+    virtual bool        setIndex (const String & value, String & ResponseMessage, bool ForceUpdate      = false);
+    virtual bool        setIndex (uint32_t value, String & ResponseMessage, bool ForceUpdate            = false);
+    virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
-    ChoiceList_t & ChoiceList;
+
+    struct ChoiceListEntry
+    {
+        uint32_t        VectorIndex;
+        uint16_t        UiId;
+    };
+
+    std::map <String, ChoiceListEntry> KeyToChoiceVectorMap;
+    const ChoiceListVector_t * ChoiceVector;
 };      // class cChoiceListControl
 
 // *********************************************************************************************

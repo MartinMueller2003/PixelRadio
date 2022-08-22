@@ -118,6 +118,7 @@ bool cIpAddressControl::validate (const String & value, String & ResponseMessage
             Response = false;
             break;
         }
+        DataValueStr = TempIp.toString ();
     } while (false);
 
     // DEBUG_V (       String (" ResponseMsg: ") + ResponseMessage);

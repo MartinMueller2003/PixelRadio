@@ -79,7 +79,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
 
     if (Response)
     {
-        DataValue       = value.equals (F ("1"));
+        DataValue       = DataValueStr.equals (F ("1"));
         ResponseMessage = DataValue ? OnString : OffString;
         ESPUI.print (MessageId, ResponseMessage);
         String LogMsg;

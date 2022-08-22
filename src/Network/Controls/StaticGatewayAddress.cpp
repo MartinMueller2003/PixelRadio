@@ -39,9 +39,9 @@ cStaticGatewayAddress::~cStaticGatewayAddress ()
 // *********************************************************************************************
 bool cStaticGatewayAddress::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    DEBUG_V (String ("       value: ") + value);
+    // DEBUG_V (String ("       value: ") + value);
 
     bool Response = true;
 
@@ -55,9 +55,9 @@ bool cStaticGatewayAddress::set (const String & value, String & ResponseMessage,
         }
     } while (false);
 
-    DEBUG_V (String ("IpAddress: ") + GetIpAddress ());
+    // DEBUG_V (String ("IpAddress: ") + GetIpAddress ());
 
-    DEBUG_END;
+    // DEBUG_END;
 
     return Response;
 }

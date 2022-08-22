@@ -22,12 +22,12 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-#define INP_IMP05K_STR   " 5K Ohms"
+#define INP_IMP05K_STR   "5K Ohms"
 #define INP_IMP10K_STR   "10K Ohms"
-#define INP_IMP20K_STR   "20K Ohms (default)"
+#define INP_IMP20K_STR   "20K Ohms"
 #define INP_IMP40K_STR   "40K Ohms"
 
-static std::map <String, String> MapOfImpedances
+static ChoiceListVector_t MapOfImpedances
 {
     {INP_IMP05K_STR,  "5"},
     {INP_IMP10K_STR, "10"},
@@ -44,7 +44,7 @@ cAudioInputImpedance::cAudioInputImpedance () :   cChoiceListControl (
         INPUT_IMPED_STR,
         RADIO_INP_IMP_STR,
         INP_IMP_DEF_STR,
-        MapOfImpedances)
+        &MapOfImpedances)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

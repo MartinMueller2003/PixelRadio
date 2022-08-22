@@ -13,326 +13,94 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
-#include "PreEmphasis.hpp"
-#include "PtyCode.hpp"
-#include "QN8027RadioApi.hpp"
-#include "RfCarrier.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include <vector>
 
-typedef struct
-{
-    uint16_t    code;
-    uint16_t    UiId;
-    String      name[2];
-} PtyCodeEntry_t;
+#include "PtyCode.hpp"
+#include "PreEmphasis.hpp"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
+#include "memdebug.h"
 
-// 0 = US, 1 = EU
-static std::vector <PtyCodeEntry_t> ListOfPtyCodes =
+static std::vector <std::pair <String, String>> ListOfUsPtyCodes =
 {
-    {
-        0, Control::noParent,{
-            {
-                "No programme type defined"
-            },{
-                "No programme type defined"
-            }
-        }
-    },
-    {
-        1, Control::noParent,{
-            {
-                "News"
-            },{
-                "News"
-            }
-        }
-    },
-    {
-        2, Control::noParent,{
-            {
-                "Information"
-            },{
-                "Current affairs"
-            }
-        }
-    },
-    {
-        3, Control::noParent,{
-            {
-                "Sport"
-            },{
-                "Information"
-            }
-        }
-    },
-    {
-        4, Control::noParent,{
-            {
-                "Talk"
-            },{
-                "Sport"
-            }
-        }
-    },
-    {
-        5, Control::noParent,{
-            {
-                "Rock"
-            },{
-                "Education"
-            }
-        }
-    },
-    {
-        6, Control::noParent,{
-            {
-                "Classic Rock"
-            },{
-                "Drama"
-            }
-        }
-    },
-    {
-        7, Control::noParent,{
-            {
-                "Adult Hits"
-            },{
-                "Culture"
-            }
-        }
-    },
-    {
-        8, Control::noParent,{
-            {
-                "Soft Rock"
-            },{
-                "Soft Science"
-            }
-        }
-    },
-    {
-        9, Control::noParent,{
-            {
-                "Top 40"
-            },{
-                "Varied"
-            }
-        }
-    },
-    {
-        10, Control::noParent,{
-            {
-                "Country Music"
-            },{
-                "Popular Music (Pop)"
-            }
-        }
-    },
-    {
-        11, Control::noParent,{
-            {
-                "Oldies (Music)"
-            },{
-                "Rock Music"
-            }
-        }
-    },
-    {
-        12, Control::noParent,{
-            {
-                "Soft Music"
-            },{
-                "Easy Listening"
-            }
-        }
-    },
-    {
-        13, Control::noParent,{
-            {
-                "Nostalgia"
-            },{
-                "Light Classical"
-            }
-        }
-    },
-    {
-        14, Control::noParent,{
-            {
-                "Jazz"
-            },{
-                "Serious Classical"
-            }
-        }
-    },
-    {
-        15, Control::noParent,{
-            {
-                "Classical"
-            },{
-                "Other Music"
-            }
-        }
-    },
-    {
-        16, Control::noParent,{
-            {
-                "Rhythm & Blues"
-            },{
-                "Weather"
-            }
-        }
-    },
-    {
-        17, Control::noParent,{
-            {
-                "Soft Rhythm & Blues"
-            },{
-                "Finance"
-            }
-        }
-    },
-    {
-        18, Control::noParent,{
-            {
-                "Language"
-            },{
-                "Children's Programmes"
-            }
-        }
-    },
-    {
-        19, Control::noParent,{
-            {
-                "Religious Music"
-            },{
-                "Social Affairs"
-            }
-        }
-    },
-    {
-        20, Control::noParent,{
-            {
-                "Religious Talk"
-            },{
-                "Religion"
-            }
-        }
-    },
-    {
-        21, Control::noParent,{
-            {
-                "Personality"
-            },{
-                "Phone-in"
-            }
-        }
-    },
-    {
-        22, Control::noParent,{
-            {
-                "Public"
-            },{
-                "Travel"
-            }
-        }
-    },
-    {
-        23, Control::noParent,{
-            {
-                "College"
-            },{
-                "Leisure"
-            }
-        }
-    },
-    {
-        24, Control::noParent,{
-            {
-                "Not assigned 1"
-            },{
-                "Jazz Music"
-            }
-        }
-    },
-    {
-        25, Control::noParent,{
-            {
-                "Not assigned 2"
-            },{
-                "Country Music"
-            }
-        }
-    },
-    {
-        26, Control::noParent,{
-            {
-                "Not assigned 3"
-            },{
-                "National Music"
-            }
-        }
-    },
-    {
-        27, Control::noParent,{
-            {
-                "Not assigned 4"
-            },{
-                "Oldies Music"
-            }
-        }
-    },
-    {
-        28, Control::noParent,{
-            {
-                "Not assigned 5"
-            },{
-                "Folk Music"
-            }
-        }
-    },
-    {
-        29, Control::noParent,{
-            {
-                "Weather"
-            },{
-                "Documentary"
-            }
-        }
-    },
-    {
-        30, Control::noParent,{
-            {
-                "Emergency Test"
-            },{
-                "Alarm Test"
-            }
-        }
-    },
-    {
-        31, Control::noParent,{
-            {
-                "Emergency"
-            },{
-                "Alarm"
-            }
-        }
-    },
+    {"No programme type defined", "0"                      },
+    {"News",                      "1"                      },
+    {"Information",               "2"                      },
+    {"Sport",                     "3"                      },
+    {"Talk",                      "4"                      },
+    {"Rock",                      "5"                      },
+    {"Classic Rock",              "6"                      },
+    {"Adult Hits",                "7"                      },
+    {"Soft Rock",                 "8"                      },
+    {"Top 40",                    "9"                      },
+    {"Country Music",             "10"                     },
+    {"Oldies (Music)",            "11"                     },
+    {"Soft Music",                "12"                     },
+    {"Nostalgia",                 "13"                     },
+    {"Jazz",                      "14"                     },
+    {"Classical",                 "15"                     },
+    {"Rhythm & Blues",            "16"                     },
+    {"Soft Rhythm & Blues",       "17"                     },
+    {"Language",                  "18"                     },
+    {"Religious Music",           "19"                     },
+    {"Religious Talk",            "20"                     },
+    {"Personality",               "21"                     },
+    {"Public",                    "22"                     },
+    {"College",                   "23"                     },
+    {"Not assigned 1",            "24"                     },
+    {"Not assigned 2",            "25"                     },
+    {"Not assigned 3",            "26"                     },
+    {"Not assigned 4",            "27"                     },
+    {"Not assigned 5",            "28"                     },
+    {"Weather",                   "29"                     },
+    {"Emergency Test",            "30"                     },
+    {"Emergency",                 "31"                     },
+};
+
+static std::vector <std::pair <String, String>> ListOfEuPtyCodes =
+{
+    {"No programme type defined", "0"                     },
+    {"News",                      "1"                     },
+    {"Current affairs",           "2"                     },
+    {"Information",               "3"                     },
+    {"Sport",                     "4"                     },
+    {"Education",                 "5"                     },
+    {"Drama",                     "6"                     },
+    {"Culture",                   "7"                     },
+    {"Soft Science",              "8"                     },
+    {"Varied",                    "9"                     },
+    {"Popular Music (Pop)",       "10"                    },
+    {"Rock Music",                "11"                    },
+    {"Easy Listening",            "12"                    },
+    {"Light Classical",           "13"                    },
+    {"Serious Classical",         "14"                    },
+    {"Other Music",               "15"                    },
+    {"Weather",                   "16"                    },
+    {"Finance",                   "17"                    },
+    {"Children's Programmes",     "18"                    },
+    {"Social Affairs",            "19"                    },
+    {"Religion",                  "20"                    },
+    {"Phone-in",                  "21"                    },
+    {"Travel",                    "22"                    },
+    {"Leisure",                   "23"                    },
+    {"Jazz Music",                "24"                    },
+    {"Country Music",             "25"                    },
+    {"National Music",            "26"                    },
+    {"Oldies Music",              "27"                    },
+    {"Folk Music",                "28"                    },
+    {"Documentary",               "29"                    },
+    {"Alarm Test",                "30"                    },
+    {"Alarm",                     "31"                    },
 };
 
 static const PROGMEM String     RDS_PTY_CODE_STR        = "PTY CODE<br>Station Genre";
 static const PROGMEM String     RDS_PTY_CODE            = "RDS_PTY_CODE";
 
 // *********************************************************************************************
-cPtyCode::cPtyCode () :   cOldControlCommon (RDS_PTY_CODE)
+cPtyCode::cPtyCode () :   cChoiceListControl (RDS_PTY_CODE, RDS_PTY_CODE_STR, "Top 40", &ListOfUsPtyCodes)
 {
     // _ DEBUG_START;
-
-    DataValue           = 9;
-    DataValueStr        = "9";
-
     // _ DEBUG_END;
 }
 
@@ -341,92 +109,34 @@ void cPtyCode::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cOldControlCommon::AddControls (value, ControlType::Select, color);
-    ESPUI.updateControlLabel (ControlId, RDS_PTY_CODE_STR.c_str ());
-    ESPUI.setPanelStyle (ControlId, "font-size: 1.15em;");
-
+    cChoiceListControl::AddControls (value, color);
     setPtyCodeOptionValues ();
 
     // DEBUG_END;
 }
 
-// *********************************************************************************************
-void cPtyCode::ResetToDefaults ()
-{
-    // DEBUG_START;
-
-    String      value = "9";
-    String      dummy;
-
-    set (value, dummy);
-
-    // DEBUG_END;
-}
-
 // ************************************************************************************************
-bool cPtyCode::set (String & value, String & ResponseMessage)
+bool cPtyCode::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("       value: ") + value);
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+    // DEBUG_V (       String ("          value: '") + value + "'");
+    // DEBUG_V (       String ("   DataValueStr: '") + DataValueStr + "'");
+    // DEBUG_V (       String ("CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 
-    bool Response = false;
+    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+    // DEBUG_V (       String ("          get32: ") + String (get32 ()));
 
-    ResponseMessage.reserve (128);
-    ResponseMessage.clear ();
+    // DEBUG_V (       String ("CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 
-    uint32_t CurrentRegion = PreEmphasis.get ();
-
-    do  // once
+    if (Response || ForceUpdate)
     {
-        if (isdigit (value[0]))
-        {
-            // DEBUG_V("Value is a number");
-            uint32_t NewData = atoi (value.c_str ());
-
-            if (ListOfPtyCodes.size () >= NewData)
-            {
-                // DEBUG_V("Value is a number");
-                DataValue       = NewData;
-                DataValueStr    = String (DataValue);
-                // DEBUG_V(String("   DataValue: ") + String(DataValue));
-                // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-                Response = true;
-                break;
-            }
-        }
-
-        for (auto & CurrentEntry : ListOfPtyCodes)
-        {
-            if (value.equalsIgnoreCase (CurrentEntry.name[CurrentRegion]))
-            {
-                // DEBUG_V("Value is a string");
-                // DEBUG_V(String("   DataValue: ") + String(DataValue));
-                // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-
-                DataValue       = CurrentEntry.code;
-                DataValueStr    = String (DataValue);
-                Response        = true;
-                break;
-            }
-        }
-    } while (false);
-
-    if (Response)
-    {
-        QN8027RadioApi.setPtyCode (DataValue, RfCarrier.get ());
-        updateUiPtyCode ();
+        QN8027RadioApi.setPtyCode (get32 (), RfCarrier.get ());
     }
-    else
-    {
-        ResponseMessage = String (F ("Set PTY Code: BAD VALUE: '")) + value + F ("'");
-    }
-    // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
-    // DEBUG_V(String("      DataValue: ") + String(DataValue));
-    // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
-    // DEBUG_V(String("       Response: ") + String(Response));
+    // DEBUG_V (       String ("   DataValueStr: ") + DataValueStr);
+    // DEBUG_V (       String ("          get32: ") + String (get32 ()));
+    // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
+    // DEBUG_V (       String ("       Response: ") + String (Response));
 
     // DEBUG_END;
     return Response;
@@ -437,58 +147,24 @@ void cPtyCode::setPtyCodeOptionValues ()
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("DataValue: ") + String(DataValue));
-    // DEBUG_V(String("M0: ") + ListOfPtyCodes[2].name[0]);
-    // DEBUG_V(String("M1: ") + ListOfPtyCodes[2].name[1]);
+    // DEBUG_V (       String ("       DataValueStr: ") + String (DataValueStr));
+    // DEBUG_V (       String ("PreEmphasis.get32(): ") + String (PreEmphasis.get32 ()));
+    // DEBUG_V (       String ("    CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 
-    uint32_t CurrentRegion = PreEmphasis.get ();
+    // DEBUG_V (       String ("    US 9: '") + ListOfUsPtyCodes[9].first + "'");
+    // DEBUG_V (       String ("    EU 9: '") + ListOfEuPtyCodes[9].first + "'");
 
-    if (Control::noParent != ControlId)
+    if (0 == PreEmphasis.get32 ())
     {
-        for (auto & CurrentEntry : ListOfPtyCodes)
-        {
-            // DEBUG_V(String("code: ") + String(CurrentEntry.code));
-
-            if (Control::noParent == CurrentEntry.UiId)
-            {
-                // DEBUG_V("Create Option");
-                CurrentEntry.UiId = ESPUI.addControl (ControlType::Option,
-                                                      emptyString.c_str (),
-                                                      emptyString,
-                                                      ControlColor::None,
-                                                      ControlId);
-            }
-            Control * control = ESPUI.getControl (CurrentEntry.UiId);
-
-            if (control)
-            {
-                // DEBUG_V("Update control fields");
-                control->value  = CurrentEntry.name[CurrentRegion];
-                control->label  = CurrentEntry.name[CurrentRegion].c_str ();
-                ESPUI.updateControl (control);
-                // DEBUG_V(String("label: ") + String(control->label));
-            }
-            else
-            {
-                // DEBUG_V("Could not access control")
-            }
-        }
-        updateUiPtyCode ();
-        ESPUI.jsonDom (0);
+        // DEBUG_V ("US");
+        RefreshOptionList (&ListOfUsPtyCodes);
     }
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-void cPtyCode::updateUiPtyCode ()
-{
-    // DEBUG_START;
-
-    // DEBUG_V(String("  ControlId: ") + String(ControlId));
-    // DEBUG_V(String("  DataValue: ") + String(DataValue));
-    // DEBUG_V(String("PreEmphasis: ") + String(PreEmphasis.get()));
-
-    ESPUI.updateControlValue (ControlId, ListOfPtyCodes[DataValue].name[PreEmphasis.get ()]);
+    else
+    {
+        // DEBUG_V ("EU");
+        RefreshOptionList (&ListOfEuPtyCodes);
+    }
+    // DEBUG_V (String ("    CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 
     // DEBUG_END;
 }

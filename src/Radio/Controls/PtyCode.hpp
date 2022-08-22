@@ -14,11 +14,11 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ChoiceListControl.hpp"
 
 // *********************************************************************************************
-class cPtyCode : public cOldControlCommon
+class cPtyCode : public cChoiceListControl
 {
 public:
 
@@ -26,13 +26,8 @@ public:
     virtual ~cPtyCode ()    {}
 
     void        AddControls (uint16_t TabId, ControlColor color);
-    void        ResetToDefaults ();
-    bool        set (String & value, String & Response);
+    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
     void        setPtyCodeOptionValues ();
-
-private:
-
-    void        updateUiPtyCode ();
 };      // class cPtyCode
 
 extern cPtyCode PtyCode;

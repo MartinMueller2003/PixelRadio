@@ -38,20 +38,20 @@ cPasswordControl::~cPasswordControl ()
 // *********************************************************************************************
 bool cPasswordControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-        DEBUG_V (       String ("         value: ") + value);
-        DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
-        DEBUG_V (       String ("PasswordString: ") + PasswordString);
+    // DEBUG_V (       String ("         value: ") + value);
+    // DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
+    // DEBUG_V (       String ("PasswordString: ") + PasswordString);
 
     bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
     setControl (PasswordString, eCssStyle::CssStyleBlack_bw);
 
-        DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
-        DEBUG_V (       String ("   ResponseMsg: ") + ResponseMessage);
-        DEBUG_V (       String ("      Response: ") + Response);
+    // DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
+    // DEBUG_V (       String ("   ResponseMsg: ") + ResponseMessage);
+    // DEBUG_V (       String ("      Response: ") + Response);
 
-    DEBUG_END;
+    // DEBUG_END;
 
     return Response;
 }

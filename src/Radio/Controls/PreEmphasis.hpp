@@ -14,19 +14,18 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ChoiceListControl.hpp"
 
 // *********************************************************************************************
-class cPreEmphasis : public cOldControlCommon
+class cPreEmphasis : public cChoiceListControl
 {
 public:
 
     cPreEmphasis ();
     virtual ~cPreEmphasis ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (String & value, String & Response);
+    bool set (const String & value, String & Response, bool ForceUpdate = false);
 };      // class cPreEmphasis
 
 extern cPreEmphasis PreEmphasis;

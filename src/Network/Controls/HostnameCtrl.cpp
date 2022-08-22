@@ -55,9 +55,9 @@ void cHostnameCtrl::ResetToDefaults ()
 // *********************************************************************************************
 bool cHostnameCtrl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    DEBUG_START;
-        DEBUG_V (       String ("       value: ") + value);
-        DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
+    // DEBUG_START;
+    // DEBUG_V (       String ("       value: ") + value);
+    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
 
     bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
 
@@ -65,20 +65,20 @@ bool cHostnameCtrl::set (const String & value, String & ResponseMessage, bool Fo
     {
         if (!Response)
         {
-            DEBUG_V ("New data is not valid");
+            // DEBUG_V ("New data is not valid");
             break;
         }
 
         if (value.equals (DataValueStr))
         {
-            DEBUG_V ("Name did not change");
+            // DEBUG_V ("Name did not change");
             break;
         }
-        DEBUG_V ("New Name Accepted");
+        // DEBUG_V ("New Name Accepted");
         WiFiDriver.WiFiReset ();
     } while (false);
 
-    DEBUG_END;
+    // DEBUG_END;
 
     return Response;
 }

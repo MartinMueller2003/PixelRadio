@@ -22,19 +22,19 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static std::map <String, String> MapOfGainValues
+static ChoiceListVector_t MapOfGainValues
 {
-    {"0 dB (default)",  "0"},
+    {"0 dB",  "0"},
     {"1 dB",  "1"},
     {"2 dB",  "2"},
 };
 
 static const PROGMEM String     RADIO_DIG_AUDIO_STR     = "DIGITAL AUDIO GAIN";
-static const PROGMEM String     DIG_GAIN_DEF_STR        = "0 dB (default)";
+static const PROGMEM String     DIG_GAIN_DEF_STR        = "0 dB";
 static const PROGMEM String     DIGITAL_GAIN_STR        = "DIGITAL_GAIN_STR";
 
 // *********************************************************************************************
-cDigitalAudioGain::cDigitalAudioGain () :   cChoiceListControl (DIGITAL_GAIN_STR, RADIO_DIG_AUDIO_STR, DIG_GAIN_DEF_STR, MapOfGainValues)
+cDigitalAudioGain::cDigitalAudioGain () :   cChoiceListControl (DIGITAL_GAIN_STR, RADIO_DIG_AUDIO_STR, DIG_GAIN_DEF_STR, &MapOfGainValues)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

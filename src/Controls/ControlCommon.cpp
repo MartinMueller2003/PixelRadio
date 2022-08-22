@@ -130,7 +130,7 @@ void cControlCommon::Callback (Control * sender, int type)
     // DEBUG_START;
 
     // DEBUG_V (String ("value: ") + String (sender->value));
-    // DEBUG_V ( String (" type: ") + String (type));
+    // DEBUG_V (String (" type: ") + String (type));
 
     do  // once
     {
@@ -191,19 +191,21 @@ void cControlCommon::saveConfiguration (JsonObject & config)
 bool cControlCommon::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
-    // DEBUG_V ( String ("      value: ") + value);
-    // DEBUG_V ( String ("ForceUpdate: ") + String (ForceUpdate));
+    // DEBUG_V (String ("      value: ") + value);
+    // DEBUG_V (String ("ForceUpdate: ") + String (ForceUpdate));
 
     bool Response = true;
     ResponseMessage.reserve (128);
 
     do  // once
     {
+        String OriginaleDataValueStr = DataValueStr;
+
         if (!validate (value, ResponseMessage, ForceUpdate))
         {
             if (ResponseMessage.isEmpty ())
             {
-                ResponseMessage = Title + F (": New value '") + value + F ("' is not valid.");
+                ResponseMessage = String (Title + F (": Set: BAD VALUE: '")) + value + F ("'");
             }
             Log.errorln (ResponseMessage.c_str ());
             Response = false;
@@ -211,21 +213,20 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
         }
         // DEBUG_V ("value is valid");
 
-        ResponseMessage = Title + F (": Set To '") + value + F ("'");
+        ResponseMessage = Title + F (": Set To '") + DataValueStr + F ("'");
 
         if (!SkipSetLog)
         {
             Log.infoln (ResponseMessage.c_str ());
         }
 
-        if (value.equals (DataValueStr) && !ForceUpdate)
+        if (OriginaleDataValueStr.equals (DataValueStr) && !ForceUpdate)
         {
-            // DEBUG_V ("Dont not set duplicate value");
+            // DEBUG_V ("Dont set duplicate value");
             break;
         }
         // DEBUG_V ("Saving value");
 
-        DataValueStr = value;
         ESPUI.print (ControlId, DataValueStr);
 
         if (!Booting)
@@ -234,8 +235,8 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
         }
     } while (false);
 
-    // DEBUG_V ( String ("ResponseMsg: '") + ResponseMessage + "'");
-    // DEBUG_V ( String ("   Response: ")  + String (Response));
+    // DEBUG_V (String ("ResponseMsg: '") + ResponseMessage + "'");
+    // DEBUG_V (String ("   Response: ")  + String (Response));
 
     // DEBUG_END;
 
@@ -247,8 +248,8 @@ void cControlCommon::setControl (const String & value, eCssStyle style)
 {
     // DEBUG_START;
 
-    // DEBUG_V ( String ("value: ") + value);
-    // DEBUG_V ( String ("style: ") + String (style));
+    // DEBUG_V (String ("value: ") + value);
+    // DEBUG_V (String ("style: ") + String (style));
     ESPUI.print (ControlId, value);
     setControlStyle (style);
 
@@ -267,7 +268,7 @@ void cControlCommon::setControlLabel (const String & value)
 void cControlCommon::setControlStyle (eCssStyle style)
 {
     // DEBUG_START;
-    // DEBUG_V ( String ("style: ") + String (style));
+    // DEBUG_V (String ("style: ") + String (style));
 
     ControlStyle = style;
     ESPUI.setElementStyle (ControlId, CssStyles[int(style)]);
@@ -279,7 +280,7 @@ void cControlCommon::setControlStyle (eCssStyle style)
 void cControlCommon::setControlPanelStyle (ePanelStyle style)
 {
     // DEBUG_START;
-    // DEBUG_V ( String ("style: ") + String (style));
+    // DEBUG_V (String ("style: ") + String (style));
 
     ControlPanelStyle = style;
     ESPUI.setPanelStyle (ControlId, PanelStyles[int(style)]);
@@ -292,8 +293,8 @@ void cControlCommon::setMessage (const String & value, eCssStyle style)
 {
     // DEBUG_START;
 
-    // DEBUG_V ( String ("value: ") + value);
-    // DEBUG_V ( String ("style: ") + String (style));
+    // DEBUG_V (String ("value: ") + value);
+    // DEBUG_V (String ("style: ") + String (style));
     ESPUI.print (MessageId, value);
     setMessageStyle (style);
 
@@ -337,6 +338,14 @@ bool cControlCommon::validate (const String & value, String &, bool)
         {
             Response = false;
         }
+        else
+        {
+            DataValueStr = value;
+        }
+    }
+    else
+    {
+        DataValueStr = value;
     }
     return Response;
 
