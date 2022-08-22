@@ -53,8 +53,9 @@ void cRfCarrier::AddHomeControls (uint16_t TabId, ControlColor color)
     RfCarrierStatus.AddControls (TabId, color);
     ESPUI.setPanelStyle (HomeStatusMessageId, F ("font-size: 3.0em;"));
 
-    String Dummy;
-    set (DataValueStr, Dummy, true);
+    String      Dummy;
+    String      Temp = String (getBool ());
+    set (Temp, Dummy, true);
 
     // DEBUG_END;
 }
@@ -63,9 +64,13 @@ void cRfCarrier::AddHomeControls (uint16_t TabId, ControlColor color)
 bool cRfCarrier::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
+    // DEBUG_V (       String ("       value: ") + value);
+    // DEBUG_V (       String ("getBool()Str: ") + getBool()Str);
+    // DEBUG_V (       String ("   getBool(): ") + String (getBool()));
 
     bool Response = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
-    // DEBUG_V (String (" DataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("getBool()Str: ") + getBool()Str);
+    // DEBUG_V (       String ("   getBool(): ") + String (getBool()));
 
     extern uint32_t paVolts;
 
@@ -77,9 +82,9 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             break;
         }
         // DEBUG_V ("Set the carrier");
-        QN8027RadioApi.setRfCarrier (DataValue);
+        QN8027RadioApi.setRfCarrier (getBool ());
 
-        if (!DataValue)
+        if (!getBool ())
         {
             // DEBUG_V (RADIO_OFF_AIR_STR);
             ResponseMessage = RADIO_OFF_AIR_STR;
@@ -122,7 +127,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
         }
         // DEBUG_V (RADIO_ON_AIR_STR);
         ResponseMessage = RADIO_ON_AIR_STR;
-        setMessage (ResponseMessage, eCssStyle::CssStyleGreen);
+        setMessage (ResponseMessage, eCssStyle::CssStyleWhite);
         RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleGreen);
         Log.infoln ((Title + F (": ") + ResponseMessage).c_str ());
     } while (false);
