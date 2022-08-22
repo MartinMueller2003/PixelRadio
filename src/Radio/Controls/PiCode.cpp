@@ -69,8 +69,8 @@ bool cPiCode::set (const String & value, String & ResponseMessage, bool ForceUpd
     {
         QN8027RadioApi.setPiCode (uint16_t (StringToNumber (get ())), RfCarrier.get ());
     }
-        // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
-        // DEBUG_V (       String ("       Response: ") + String (Response));
+    // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
+    // DEBUG_V (       String ("       Response: ") + String (Response));
 
     // DEBUG_END;
 
@@ -82,7 +82,7 @@ uint32_t cPiCode::StringToNumber (const String & value)
 {
     // DEBUG_START;
 
-        // DEBUG_V (String ("value: ") + value);
+    // DEBUG_V (String ("value: ") + value);
     uint32_t Response = value.toInt ();
 
     if (0 == value.indexOf ("0x"))
@@ -90,7 +90,7 @@ uint32_t cPiCode::StringToNumber (const String & value)
         char * p = nullptr;
         Response = uint32_t (strtol (value.substring (2).c_str (), &p, 16));
     }
-        // DEBUG_V (String ("Response: ") + String (Response, HEX));
+    // DEBUG_V (String ("Response: ") + String (Response, HEX));
 
     // DEBUG_END;
 
@@ -104,11 +104,11 @@ bool cPiCode::validate (const String & value, String & ResponseMessage, bool For
 
     bool Response = true;
 
-        // DEBUG_V (       String ("         value: ") + value);
-        // DEBUG_V (       String ("           get: ") + get ());
+    // DEBUG_V (       String ("         value: ") + value);
+    // DEBUG_V (       String ("           get: ") + get ());
 
     uint32_t OldPiCodeValue = StringToNumber (get ());
-        // DEBUG_V (       String ("OldPiCodeValue: ") + String (OldPiCodeValue));
+    // DEBUG_V (       String ("OldPiCodeValue: ") + String (OldPiCodeValue));
 
     do  // once
     {
@@ -134,8 +134,8 @@ bool cPiCode::validate (const String & value, String & ResponseMessage, bool For
         DataValueStr = String (F ("0x")) + String (NewPiCodeValue, HEX);
     } while (false);
 
-        // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
-        // DEBUG_V (       String ("       Response: ") + String (Response));
+    // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
+    // DEBUG_V (       String ("       Response: ") + String (Response));
 
     // DEBUG_END;
 
