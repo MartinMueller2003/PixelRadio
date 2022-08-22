@@ -126,8 +126,8 @@ void setup ()
     // Serial1.println("\r\n\r\n");
     // Serial1.println("COM1 NOW ALIVE");
 
-    while (!Serial && !Serial.available ())
-    {}  // Wait for ESP32 Device Serial Port to be available.
+    // while (!Serial && !Serial.available ())
+    // {}  // Wait for ESP32 Device Serial Port to be available.
     Serial.println ("\r\n\r\n");
     Serial.flush ();
 
