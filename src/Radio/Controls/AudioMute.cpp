@@ -29,8 +29,8 @@ cAudioMute::cAudioMute () :   cBinaryControl (RADIO_MUTE_FLAG, ADJUST_MUTE_STR, 
 {
     // _ DEBUG_START;
 
-    OnString    = F ("Muted");
-    OffString   = F ("Unmuted");
+    OffString   = F ("Muted");
+    OnString    = F ("Unmuted");
 
     // _ DEBUG_END;
 }
@@ -48,7 +48,7 @@ bool cAudioMute::set (const String & value, String & ResponseMessage, bool Force
 
     if (Response)
     {
-        QN8027RadioApi.setAudioMute (value);
+        QN8027RadioApi.setAudioMute (!value);
     }
     // DEBUG_END;
     return Response;
