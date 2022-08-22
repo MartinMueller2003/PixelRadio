@@ -15,6 +15,7 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
+#include <map>
 #include "ControlCommon.hpp"
 
 // *********************************************************************************************
@@ -25,16 +26,22 @@ public:
     cBinaryControl (const String & ConfigName, const String & Title, bool DefaultValue);
     virtual ~cBinaryControl ()    {}
 
+    void                addInputCondition (const String & Name, bool value);
     virtual bool        getBool () {return DataValue;}
     virtual void        restoreConfiguration (JsonObject & json);
     virtual void        saveConfiguration (JsonObject & json);
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual void        setOffMessage (const String & value, eCssStyle style);
+    virtual void        setOnMessage (const String & value, eCssStyle style);
     virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
-protected:
+private:
     bool DataValue = false;
+
     String OnString;
     String OffString;
+    eCssStyle OnStyle   = eCssStyle::CssStyleBlack;
+    eCssStyle OffStyle  = eCssStyle::CssStyleBlack;
 };      // class cBinaryControl
 
 // *********************************************************************************************

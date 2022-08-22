@@ -22,6 +22,16 @@
 static const PROGMEM String     ENABLED_STR     = "Enabled";
 static const PROGMEM String     DISABLED_STR    = "Disabled";
 
+static std::map <String, bool> ValidInputValues =
+{
+    {"enabled",  true        },
+    {"disabled", false       },
+    {"1",        true        },
+    {"0",        false       },
+    {"on",       true        },
+    {"off",      false       },
+};
+
 // *********************************************************************************************
 cBinaryControl::cBinaryControl (
     const String        & ConfigName,
@@ -35,6 +45,19 @@ cBinaryControl::cBinaryControl (
     OnString    = ENABLED_STR;
     OffString   = DISABLED_STR;
 
+
+    // _ DEBUG_END;
+}
+
+// *********************************************************************************************
+void cBinaryControl::addInputCondition (const String & Name, bool value)
+{
+    // _ DEBUG_START;
+
+    String Temp = Name;
+    Temp.toLowerCase ();
+    ValidInputValues[Name] = value;
+
     // _ DEBUG_END;
 }
 
@@ -42,6 +65,10 @@ cBinaryControl::cBinaryControl (
 void cBinaryControl::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
+
+    // DEBUG_V (       String (" OnString: ") + OnString);
+    // DEBUG_V (       String ("OffString: ") + OffString);
+    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
 
     if (!ConfigName.isEmpty ())
     {
@@ -51,6 +78,10 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
         String  Response;
         cControlCommon::set (NewValueStr, Response, false);
     }
+    // DEBUG_V (       String (" OnString: ") + OnString);
+    // DEBUG_V (       String ("OffString: ") + OffString);
+    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
+
     // DEBUG_END;
 }
 
@@ -58,6 +89,9 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
 void cBinaryControl::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
+    // DEBUG_V (       String (" OnString: ") + OnString);
+    // DEBUG_V (       String ("OffString: ") + OffString);
+    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
 
     if (!ConfigName.isEmpty ())
     {
@@ -70,22 +104,46 @@ void cBinaryControl::saveConfiguration (JsonObject & config)
 bool cBinaryControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
+    // DEBUG_V (       String ("       Title: ") + Title);
     // DEBUG_V (       String ("       value: ") + value);
     // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
+    // DEBUG_V (       String ("    OnString: ") + OnString);
+    // DEBUG_V (       String ("   OffString: ") + OffString);
+    // DEBUG_V (       String ("       Guard: ") + String (Guard, HEX));
+    // DEBUG_V (       String ("  SkipSetLog: ") + String (SkipSetLog));
 
+    if (OnString.isEmpty ())
+    {
+        OnString = ENABLED_STR;
+    }
+
+    if (OffString.isEmpty ())
+    {
+        OffString = DISABLED_STR;
+    }
+    // DEBUG_V (       String ("    OnString: ") + OnString);
+    // DEBUG_V (       String ("   OffString: ") + OffString);
+
+    bool OldSkipSetLog = SkipSetLog;
     SkipSetLog = true;
     bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    SkipSetLog = OldSkipSetLog;
 
     if (Response)
     {
-        DataValue       = DataValueStr.equals (F ("1"));
+        // DEBUG_V ();
         ResponseMessage = DataValue ? OnString : OffString;
-        ESPUI.print (MessageId, ResponseMessage);
-        String LogMsg;
-        LogMsg.reserve (128);
-        LogMsg = Title + F (": Set To '") + ResponseMessage + F ("'");
-        Log.infoln (LogMsg.c_str ());
+        // DEBUG_V (String ("    Response: ") + ResponseMessage);
+        setMessage (ResponseMessage, eCssStyle::CssStyleBlack);
+
+        if (!SkipSetLog)
+        {
+            String LogMsg;
+            LogMsg.reserve (128);
+            LogMsg = Title + F (": Set To '") + ResponseMessage + F ("'");
+            Log.infoln (LogMsg.c_str ());
+        }
     }
     // DEBUG_V (       String ("       value: ") + value);
     // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
@@ -98,17 +156,52 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
 }
 
 // *********************************************************************************************
+void cBinaryControl::setOffMessage (const String & value, eCssStyle style)
+{
+    // DEBUG_START;
+
+    OffString   = value;
+    OffStyle    = style;
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cBinaryControl::setOnMessage (const String & value, eCssStyle style)
+{
+    // DEBUG_START;
+
+    OnString    = value;
+    OnStyle     = style;
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 bool cBinaryControl::validate (const String & value, String & ResponseMessage, bool)
 {
     // DEBUG_START;
-    // DEBUG_V (String ("value: ") + value);
+    // DEBUG_V (String ("    value: ") + value);
+    // DEBUG_V (       String (" OnString: ") + OnString);
+    // DEBUG_V (       String ("OffString: ") + OffString);
+    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
 
     bool Response = true;
 
-    if (!value.equals (F ("0")) && !value.equals (F ("1")))
+    String Temp = value;
+    Temp.toLowerCase ();
+
+    if (ValidInputValues.end () == ValidInputValues.find (Temp))
     {
-        ResponseMessage = Title + F (": Invalid Binary Value '") + value + F ("'");
+        ResponseMessage = Title + F (": BAD_VALUE: Invalid Binary Value '") + value + F ("'");
         Response        = false;
+        // DEBUG_V (String ("ResponseMessage: ") + ResponseMessage);
+    }
+    else
+    {
+        // DEBUG_V ("Accept the input value");
+        DataValue       = ValidInputValues[Temp];
+        DataValueStr    = String (DataValue);
     }
     // DEBUG_V (       String ("Response: ") + String (Response));
     // DEBUG_V (       String (" Message: ") + ResponseMessage);
