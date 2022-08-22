@@ -14,19 +14,17 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ChoiceListControl.hpp"
 
 // *********************************************************************************************
-class cRfPower : public cOldControlCommon
+class cRfPower : public cChoiceListControl
 {
 public:
 
     cRfPower ();
     virtual ~cRfPower ()    {}
-
-    void        AddControls (uint16_t Tab, ControlColor color);
-    bool        set (String &, String &);
+    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 };      // class cRfPower
 
 extern cRfPower RfPower;
