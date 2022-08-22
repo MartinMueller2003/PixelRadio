@@ -295,9 +295,16 @@ void cControlCommon::setMessage (const String & value, eCssStyle style)
 
     // DEBUG_V (String ("value: ") + value);
     // DEBUG_V (String ("style: ") + String (style));
-    ESPUI.print (MessageId, value);
-    setMessageStyle (style);
-
+    if (value.isEmpty ())
+    {
+        ESPUI.print (MessageId, emptyString);
+        setMessageStyle (eCssStyle::CssStyleTransparent);
+    }
+    else
+    {
+        ESPUI.print (MessageId, value);
+        setMessageStyle (style);
+    }
     // DEBUG_END;
 }
 
