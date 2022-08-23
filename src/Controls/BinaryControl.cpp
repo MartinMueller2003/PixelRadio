@@ -42,9 +42,15 @@ cBinaryControl::cBinaryControl (
     // _ DEBUG_START;
 
     DataValue   = DefaultValue;
-    OnString    = ENABLED_STR;
-    OffString   = DISABLED_STR;
-
+    if(OnString.isEmpty())
+    {
+        OnString    = ENABLED_STR;
+    }
+    
+    if(OffString.isEmpty())
+    {
+        OffString   = DISABLED_STR;
+    }
 
     // _ DEBUG_END;
 }
@@ -135,7 +141,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         // DEBUG_V ();
         ResponseMessage = DataValue ? OnString : OffString;
         // DEBUG_V (String ("    Response: ") + ResponseMessage);
-        setMessage (ResponseMessage, eCssStyle::CssStyleBlack);
+        setMessage (ResponseMessage, DataValue ? OnStyle : OffStyle);
 
         if (!SkipSetLog)
         {
