@@ -209,7 +209,7 @@ void loop ()
         updateUiDiagTimer ();           // Upddate the Elapsed Timer on UI diagTab.
         updateUiVolts ();               // Update the two system voltages on UI diagTab.
 
-        updateRadioSettings ();         // Update the QN8027 device registers.
+        // no longer needed updateRadioSettings ();         // Update the QN8027 device registers.
         updateGpioBootPins ();          // Update the User Programmable GPIO Pins.
         updateOnAirSign ();             // Update the Optional "On Air" 12V LED Sign.
 
