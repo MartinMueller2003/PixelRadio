@@ -13,14 +13,16 @@
  */
 
 // *********************************************************************************************
-#include "language.h"
-#include "memdebug.h"
-#include "QN8027RadioApi.hpp"
-#include "RdsText.hpp"
-#include "RfCarrier.hpp"
-#include "TestTone.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+
+#include "RdsText.hpp"
+#include "RdsTextStatus.hpp"
+#include "language.h"
+#include "QN8027RadioApi.hpp"
+#include "RfCarrier.hpp"
+#include "TestTone.hpp"
+#include "memdebug.h"
 
 static const PROGMEM String     HOME_RDS_WAIT_STR       = "Waiting for RDS RadioText ...";
 static const PROGMEM String     HOME_CUR_TEXT_STR       = "CURRENT RADIOTEXT";
@@ -30,10 +32,9 @@ static const PROGMEM String     RDS_DISABLED_STR        = "{ DISABLED }";
 static const PROGMEM String     RDS_EXPIRED_STR         = "{ EXPIRED }";
 
 // *********************************************************************************************
-cRdsText::cRdsText () :   cOldControlCommon (emptyString)
+cRdsText::cRdsText () : cStatusControl (HOME_CUR_TEXT_STR)
 {
     // _ DEBUG_START;
-
     // _ DEBUG_END;
 }
 
@@ -42,22 +43,13 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cOldControlCommon::AddControls (value, ControlType::Label, color);
-    ESPUI.updateControlLabel (ControlId, HOME_CUR_TEXT_STR.c_str ());
-    ESPUI.setPanelStyle (ControlId, String (F ("font-size: 1.25em;")));
-    ESPUI.setElementStyle (ControlId, CSS_LABEL_STYLE_WHITE);
+    cStatusControl::AddControls (value, color);
+    setControlStyle ( eCssStyle::CssStyleWhite );
+    setMessageStyle ( eCssStyle::CssStyleWhite );
 
-    ESPUI.setPanelStyle (StatusMessageId, String (F ("font-size: 1.15em;")));
-    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
-
-    homeRdsTmrID = ESPUI.addControl (ControlType::Label,
-                                     HOME_RDS_TIMER_STR.c_str (),
-                                     emptyString,
-                                     color,
-                                     value);
-    ESPUI.setPanelStyle (homeRdsTmrID, String (F ("font-size: 1.25em;")));
-
-    UpdateStatus ();
+    RdsTextStatus.AddControls(value, color);
+    
+    UpdateStatus();
 
     // DEBUG_END;
 }
@@ -71,18 +63,21 @@ void cRdsText::poll ()
 
     do  // once
     {
-        if (TestTone.get ())
-        {
-            // dont output anything when test mode is running
-            break;
-        }
-
         // has it been one second since the last update?
         if (1000 > (now - CurrentMsgLastUpdateTime))
         {
             // need to wait a bit longer
             break;
         }
+
+        if (TestTone.getBool ())
+        {
+            // DEBUG_V();
+            CurrentMsgLastUpdateTime += 1000;
+            updateRdsMsgRemainingTime(now);
+            break;
+        }
+
         CurrentMsgLastUpdateTime = now;
         // _ DEBUG_V("One second later");
 
@@ -91,7 +86,7 @@ void cRdsText::poll ()
         // has the current message output expired?
         if (now < CurrentMsgEndTime)
         {
-            // _ DEBUG_V("still waiting");
+            // DEBUG_V("still waiting");
             updateRdsMsgRemainingTime (now);
             break;
         }
@@ -107,7 +102,8 @@ void cRdsText::poll ()
             String dummy;
             set (RdsMsgInfo.Text, dummy);
         }
-        updateRdsMsgRemainingTime (now);
+        // DEBUG_V();
+        updateRdsMsgRemainingTime(now);
     } while (false);
 
     // _ DEBUG_END;
@@ -132,18 +128,20 @@ void cRdsText::UpdateStatus ()
 {
     // DEBUG_START;
 
-    if (TestTone.get ())
+    if (TestTone.getBool ())
     {
         // DEBUG_V("Test Mode");
-        ESPUI.  print ( ControlId,              LastMessageSent);
-        ESPUI.  print ( StatusMessageId,        emptyString);
+        setControl(LastMessageSent, eCssStyle::CssStyleMaroon );
+        setMessage(emptyString, eCssStyle::CssStyleTransparent);
     }
-    else
+    else // not in test mode
     {
-        ESPUI.  print ( ControlId, String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR));
-        ESPUI.  print ( StatusMessageId,
-                        String (String (RdsMsgInfo.DurationMilliSec ? String (F ("Controller: ")) +
-                                        RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR)));
+        setControl(String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR), eCssStyle::CssStyleWhite);
+        String TempMsg;
+        TempMsg.reserve(128);
+
+        TempMsg = RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR;
+        setMessage(TempMsg, eCssStyle::CssStyleWhite);
     }
     // DEBUG_END;
 }
@@ -157,36 +155,36 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
 
     do  // once
     {
-        if (TestTone.get ())
+        if (TestTone.getBool ())
         {
             // DEBUG_V("Test Mode");
-            ESPUI.print (homeRdsTmrID, String (F ("Test Mode")));
+            RdsTextStatus.set(String(F("Test Mode")));
             break;
         }
 
-        if (!RfCarrier.get ())
+        if (!RfCarrier.getBool ())
         {
             // DEBUG_V("No Carrier");
-            ESPUI.print (homeRdsTmrID, RDS_DISABLED_STR);
+            RdsTextStatus.set(RDS_DISABLED_STR);
             break;
         }
 
         if (0 == RdsMsgInfo.DurationMilliSec)
         {
             // DEBUG_V("No Message to send");
-            ESPUI.print (homeRdsTmrID, HOME_RDS_WAIT_STR);
+            RdsTextStatus.set(HOME_RDS_WAIT_STR);
             break;
         }
 
         if (now > CurrentMsgEndTime)
         {
             // DEBUG_V("Timed Out");
-            ESPUI.print (homeRdsTmrID, RDS_EXPIRED_STR);
+            RdsTextStatus.set(RDS_EXPIRED_STR);
             break;
         }
         unsigned long TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
         // DEBUG_V(String("Update Timer: ") + String(TimeRemaining));
-        ESPUI.print (homeRdsTmrID, String (TimeRemaining) + F (" Secs"));
+        RdsTextStatus.set(String (TimeRemaining) + F (" Secs"));
     } while (false);
 
     // DEBUG_END;

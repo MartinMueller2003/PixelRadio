@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: RdsText.cpp
+   File: RdsTextStatus.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -19,29 +19,17 @@
 #include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cRdsText : public cStatusControl
+class cRdsTextStatus : public cStatusControl
 {
 public:
 
-    cRdsText ();
-    virtual ~cRdsText ()    {}
+    cRdsTextStatus ();
+    virtual ~cRdsTextStatus ()    {}
+    void AddControls(uint16_t value, ControlColor color);
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        poll ();
-    bool        set (String & value, String & Response);
+};      // class cRdsTextStatus
 
-private:
-
-    void        UpdateStatus ();
-    void        updateRdsMsgRemainingTime (uint32_t now);
-
-    c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
-    uint32_t CurrentMsgEndTime          = 0;
-    uint32_t CurrentMsgLastUpdateTime   = 0;
-    String LastMessageSent;
-};      // class cRdsText
-
-extern cRdsText RdsText;
+extern cRdsTextStatus RdsTextStatus;
 
 // *********************************************************************************************
 // OEF
