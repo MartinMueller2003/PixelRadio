@@ -36,15 +36,15 @@ void cAudioMute::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    setOffMessage (F ("Muted"), eCssStyle::CssStyleBlack);
-    setOnMessage (F ("Unmuted"), eCssStyle::CssStyleBlack);
-
-        addInputCondition (     F ("unmuted"),  true);
-        addInputCondition (     F ("muted"),    false);
-        addInputCondition (     F ("unmute"),   true);
-        addInputCondition (     F ("mute"),     false);
+    setOffMessage (F ("Muted"), eCssStyle::CssStyleWhite);
+    setOnMessage (F ("Unmuted"), eCssStyle::CssStyleWhite);
 
     cBinaryControl::AddControls (TabId, color);
+
+    addInputCondition (F ("unmuted"),  true);
+    addInputCondition (F ("muted"),    false);
+    addInputCondition (F ("unmute"),   true);
+    addInputCondition (F ("mute"),     false);
 
     // DEBUG_END;
 }
