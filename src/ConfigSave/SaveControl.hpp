@@ -15,10 +15,10 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "OldControlCommon.hpp"
+#include "ButtonControl.hpp"
 
 // *********************************************************************************************
-class cSaveControl : public cOldControlCommon
+class cSaveControl : public cButtonControl
 {
 public:
 
@@ -27,13 +27,9 @@ public:
 
     void        AddControls (uint16_t TabId, ControlColor color);
     void        ClearSaveNeeded ();
-    bool        set (String & value, String & ResponseMessage);
+    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
     void        SetSaveNeeded ();
 
-private:
-
-    ControlColor color  = ControlColor::None;
-    bool IgnoreFirstSet = true;
 };      // class cSaveControl
 
 // *********************************************************************************************

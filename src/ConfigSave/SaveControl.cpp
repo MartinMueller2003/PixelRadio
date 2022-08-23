@@ -22,39 +22,24 @@
 // *********************************************************************************************
 
 static const PROGMEM String     SAVE_SETTINGS_STR       = "SAVE SETTINGS";
-static const PROGMEM String     SAVE_SETTINGS_MSG_STR   = "[ Settings Changed, Save Required ]";
+static const PROGMEM String     SAVE_SETTINGS_MSG_STR   = "Settings Changed, Save Required";
 
 // *********************************************************************************************
-cSaveControl::cSaveControl () :   cOldControlCommon (emptyString)
+cSaveControl::cSaveControl () :   cButtonControl (SAVE_SETTINGS_STR)
 {
     // DEBUG_START;
-
-    DataValueStr        = "0";
-    DataValue           = false;
-
-    ActiveLabelStyle    = CSS_LABEL_STYLE_RED;
-    InactiveLabelStyle  = CSS_LABEL_STYLE_BLACK;
-
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cSaveControl::AddControls (uint16_t TabId, ControlColor _color)
+void cSaveControl::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
     // DEBUG_V(String("TabId: ") + String(TabId));
     // DEBUG_V(String("color: ") + String(color));
 
-    color = _color;
-
     ESPUI.addControl (ControlType::Separator, SAVE_SETTINGS_STR.c_str (), emptyString, ControlColor::None, TabId);
-
-    cOldControlCommon::AddControls (TabId, ControlType::Button, color);
-    ESPUI.updateControlLabel (ControlId, SAVE_SETTINGS_STR.c_str ());
-    ESPUI.updateControlValue (ControlId, SAVE_SETTINGS_STR);
-    ESPUI.      setElementStyle (       StatusMessageId, CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (       ControlId,
-                                        String (F ("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
+    cButtonControl::AddControls (TabId, color);
 
     // DEBUG_END;
 }
@@ -64,15 +49,13 @@ void cSaveControl::ClearSaveNeeded ()
 {
     // DEBUG_START;
 
-    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_BLACK);
-    ESPUI.updateControlValue (StatusMessageId, emptyString);
-    ESPUI.updateControlLabel (StatusMessageId, emptyString.c_str ());
+    setMessage(emptyString, eCssStyle::CssStyleTransparent);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cSaveControl::set (String & value, String & ResponseMessage)
+bool cSaveControl::set (const String &, String & ResponseMessage, bool)
 {
     // DEBUG_START;
     // DEBUG_V(String("       value: ") + value);
@@ -83,15 +66,9 @@ bool cSaveControl::set (String & value, String & ResponseMessage)
 
     ResponseMessage.clear ();
 
-    if (!IgnoreFirstSet)
-    {
-        Response = true;
-        ConfigSave.InitiateSaveOperation ();
-    }
-    else
-    {
-        IgnoreFirstSet = false;
-    }
+    Response = true;
+    ConfigSave.InitiateSaveOperation ();
+
     // DEBUG_END;
     return Response;
 }
@@ -101,9 +78,7 @@ void cSaveControl::SetSaveNeeded ()
 {
     // DEBUG_START;
 
-    ESPUI.updateControlValue (StatusMessageId, SAVE_SETTINGS_MSG_STR);
-    ESPUI.updateControlLabel (StatusMessageId, SAVE_SETTINGS_MSG_STR.c_str ());
-    ESPUI.setElementStyle (StatusMessageId, CSS_LABEL_STYLE_WHITE);
+    setMessage(SAVE_SETTINGS_MSG_STR, eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }
