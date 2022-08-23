@@ -12,67 +12,52 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
-#include "PiCode.hpp"
-#include "ProgramServiceName.hpp"
-#include "PtyCode.hpp"
-#include "RdsReset.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <vector>
 
+#include "RdsReset.hpp"
+#include "PiCode.hpp"
+#include "ProgramServiceName.hpp"
+#include "PtyCode.hpp"
+#include "memdebug.h"
+
 // *********************************************************************************************
 
-#define RDS_RESET_SEP_STR     "LOCAL RDS RESET"
-#define RDS_RESET_STR         "RESET RDS SETTINGS"
+const String PROGMEM RDS_RESET_SEP_STR = "LOCAL RDS RESET";
+const String PROGMEM RDS_RESET_STR = "RESET RDS SETTINGS";
 
 // *********************************************************************************************
-cRdsReset::cRdsReset () :   cOldControlCommon (emptyString)
+cRdsReset::cRdsReset () :   cButtonControl (RDS_RESET_STR)
 {
     // _ DEBUG_START;
-
-    DataValue           = 0;
-    DataValueStr        = "0";
-
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cRdsReset::AddControls (uint16_t value, ControlColor color)
+void cRdsReset::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    // DEBUG_V (String ("value: ") + String (value))
+    // DEBUG_V (String ("TabId: ") + String (TabId))
     // DEBUG_V (String ("color: ") + String (color))
 
-    ESPUI.addControl (ControlType::Separator, RDS_RESET_SEP_STR, emptyString, ControlColor::None, value);
-
-    cOldControlCommon::AddControls (value, ControlType::Button, color);
-    ESPUI.updateControlValue (ControlId, RDS_RESET_STR);
-    ESPUI.updateControlLabel (ControlId, RDS_RESET_STR);
-    ESPUI.setPanelStyle (ControlId, String (F ("font-size: 1.35em;")));
-    ESPUI.setElementStyle (ControlId, String (F ("color: white;")));
+    ESPUI.addControl (ControlType::Separator, RDS_RESET_SEP_STR.c_str(), emptyString, ControlColor::None, TabId);
+    cButtonControl::AddControls (TabId, color);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cRdsReset::set (String & value, String & ResponseMessage)
+bool cRdsReset::set (const String &, String & ResponseMessage, bool)
 {
     // DEBUG_START;
 
-    // do something here
-    // DEBUG_V (String ("value: ") + String (value));
+    PiCode.ResetToDefaults ();
+    PtyCode.ResetToDefaults ();
+    ProgramServiceName.ResetToDefaults ();
 
-    if (DataValue)
-    {
-        PiCode.ResetToDefaults ();
-        PtyCode.ResetToDefaults ();
-        ProgramServiceName.ResetToDefaults ();
-
-        Log.infoln (String (F ("Reset RDS Settings to defaults.")).c_str ());
-    }
-    ++DataValue;
+    ResponseMessage = String (F ("Reset RDS Settings to defaults."));
 
     // DEBUG_END;
 

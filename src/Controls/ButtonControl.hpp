@@ -1,11 +1,11 @@
 #pragma once
 /*
-   File: RdsReset.cpp
-   Project: PixelRdsReset, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+   File: ButtonControl.hpp
+   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
    Revised:  Jun-13-2022
-   Revision History: See PixelRdsReset.cpp
+   Revision History: See PixelRadio.cpp
    Project Leader: T. Black (thomastech)
    Contributors: thomastech
 
@@ -15,21 +15,20 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ButtonControl.hpp"
+#include <ESPUI.h>
+#include "language.h"
+#include "ControlCommon.hpp"
 
 // *********************************************************************************************
-class cRdsReset : public cButtonControl
+class cButtonControl : public cControlCommon
 {
 public:
+    cButtonControl(const String &Title);
+    virtual ~cButtonControl();
 
-    cRdsReset ();
-    virtual ~cRdsReset ()    {}
+    virtual void AddControls (uint16_t TabId, ControlColor color);
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cRdsReset
-
-extern cRdsReset RdsReset;
+};      // class cButtonControl
 
 // *********************************************************************************************
 // OEF
