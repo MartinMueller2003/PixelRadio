@@ -12,7 +12,7 @@
    This Code was formatted with the uncrustify extension.
 
    Notes:
-   SPIFFS is depreciated and has been replaced by PixelRadio_LittleFS.
+   SPIFFS is depreciated and has been replaced by LittleFS.
 
    Data Files:
    All littleFS data files must be in the PixelRadio/data folder.
