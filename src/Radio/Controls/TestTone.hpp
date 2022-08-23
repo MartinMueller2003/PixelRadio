@@ -14,23 +14,21 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
+#include "BinaryControl.hpp"
 #include <Arduino.h>
 
 class fsm_Tone_state;
 
 // *********************************************************************************************
-class cTestTone : public cOldControlCommon
+class cTestTone : public cBinaryControl
 {
 public:
 
     cTestTone ();
     virtual ~cTestTone ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
     void        Init ();
     void        poll ();
-    bool        set (String & value, String & ResponseMessage);
 
 protected:
 
