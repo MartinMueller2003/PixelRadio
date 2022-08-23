@@ -25,17 +25,20 @@
  */
 
 // *************************************************************************************************************************
+#include <ArduinoJson.h>
+#include <ArduinoLog.h>
+#include <LittleFS.h>
+#include <SD.h>
+#include <SPI.h>
+
 #include "globals.h"
 #include "PixelRadio.h"
 #include "radio.hpp"
 #include "WiFiDriver.hpp"
 #include "LoginUser.hpp"
 #include "LoginPassword.hpp"
-#include <ArduinoJson.h>
-#include <ArduinoLog.h>
-#include <LittleFS.h>
-#include <SD.h>
-#include <SPI.h>
+
+#define PixelRadio_LittleFS LITTLEFS
 
 // *************************************************************************************************************************
 const uint16_t  JSON_CFG_SZ     = 10000;
@@ -125,7 +128,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
 // *************************************************************************************************************************
 // saveConfiguration(): Save the System Configuration to LittleFS or SD Card.
-// SD Card Date Stamp is Jan-01-1980. Wasn't able to write actual time stamp because SDFat library conflicts with LITTLEFS.h.
+// SD Card Date Stamp is Jan-01-1980. Wasn't able to write actual time stamp because SDFat library conflicts with PixelRadio_LittleFS.h.
 bool saveConfiguration (uint8_t saveMode, const char * fileName)
 {
     bool        successFlg = false;
@@ -135,8 +138,8 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     if (saveMode == LITTLEFS_MODE)
     {
         Log.infoln ("Backup Configuration to LittleFS ...");
-        LittleFS.remove (fileName);
-        file = LittleFS.open (fileName, FILE_WRITE);
+        PixelRadio_LittleFS.remove (fileName);
+        file = PixelRadio_LittleFS.open (fileName, FILE_WRITE);
     }
     else if (saveMode == SD_CARD_MODE)
     {
@@ -246,7 +249,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     if (restoreMode == LITTLEFS_MODE)
     {
         Log.infoln ("Restore Configuration From LittleFS ...");
-        file = LittleFS.open (fileName, FILE_READ);
+        file = PixelRadio_LittleFS.open (fileName, FILE_READ);
     }
     else if (restoreMode == SD_CARD_MODE)
     {

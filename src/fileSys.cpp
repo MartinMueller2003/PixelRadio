@@ -12,7 +12,7 @@
    This Code was formatted with the uncrustify extension.
 
    Notes:
-   SPIFFS is depreciated and has been replaced by LittleFS.
+   SPIFFS is depreciated and has been replaced by PixelRadio_LittleFS.
 
    Data Files:
    All littleFS data files must be in the PixelRadio/data folder.
@@ -42,13 +42,17 @@
 
 // *********************************************************************************************
 
-#include "config.h"
-#include "PixelRadio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <LittleFS.h>
 #include <SD.h>
 #include <SPI.h>
+
+#include "config.h"
+#include "PixelRadio.h"
+
+#define PixelRadio_LittleFS LITTLEFS
+
 
 // *********************************************************************************************
 // instalLogoImageFile(): Check to see if a logo image file needs to be copied to the ESP32
@@ -62,7 +66,7 @@ void instalLogoImageFile (void)
     int16_t     lfsFileSize;
     SPIClass SPI2 (HSPI);
 
-    if (LittleFS.exists (LOGO_GIF_NAME))
+    if (PixelRadio_LittleFS.exists (LOGO_GIF_NAME))
     {
         sprintf (logBuff, "Found \"%s\" Logo Image in File System.", LOGO_GIF_NAME);
         Log.verboseln (logBuff);
@@ -114,7 +118,7 @@ void instalLogoImageFile (void)
     // lfsImageFile.close();
     File lfsImageFile;  // LittleFS Image File.
 
-    lfsImageFile = LittleFS.open (LOGO_GIF_NAME, FILE_WRITE);
+    lfsImageFile = PixelRadio_LittleFS.open (LOGO_GIF_NAME, FILE_WRITE);
 
     while (sdcImageFile.available ())
     {
@@ -122,7 +126,7 @@ void instalLogoImageFile (void)
         lfsImageFile.print (data);
     }
     lfsImageFile.close ();
-    lfsImageFile        = LittleFS.open (LOGO_GIF_NAME, FILE_READ);
+    lfsImageFile        = PixelRadio_LittleFS.open (LOGO_GIF_NAME, FILE_READ);
     lfsFileSize         = lfsImageFile.size ();
 
     /*  // DEBUG ONLY
@@ -158,7 +162,7 @@ void littlefsInit (void)
     const char          * content1      = "  This text was written to LittleFS because the Filesystem is missing\r\n";
     const char          * content2      = "  >> If you see this message then please Upload the Filesystem Image <<";
 
-    if (!LittleFS.begin (true)) // true=Format on fail.
+    if (!PixelRadio_LittleFS.begin (true)) // true=Format on fail.
     {
         Log.errorln ("LittleFS: An Error has occurred while mounting File System");
     }
@@ -166,14 +170,14 @@ void littlefsInit (void)
     {
         Log.infoln ("LittleFS: Mounted File System, testing ...");
 
-        sprintf (logBuff, "-> Total Size: %u bytes", LittleFS.totalBytes ());
+        sprintf (logBuff, "-> Total Size: %u bytes", PixelRadio_LittleFS.totalBytes ());
         Log.verboseln (logBuff);
-        sprintf (logBuff, "-> Total Used: %u bytes", LittleFS.usedBytes ());
+        sprintf (logBuff, "-> Total Used: %u bytes", PixelRadio_LittleFS.usedBytes ());
         Log.verboseln (logBuff);
-        sprintf (logBuff, "-> Total Free: %u bytes", LittleFS.totalBytes () - LittleFS.usedBytes ());
+        sprintf (logBuff, "-> Total Free: %u bytes", PixelRadio_LittleFS.totalBytes () - PixelRadio_LittleFS.usedBytes ());
         Log.verboseln (logBuff);
 
-        File file1 = LittleFS.open ("/test.txt", FILE_READ);
+        File file1 = PixelRadio_LittleFS.open ("/test.txt", FILE_READ);
 
         if (!file1)
         {
@@ -189,7 +193,7 @@ void littlefsInit (void)
 
         if (filesz == 0)
         {
-            file1 = LittleFS.open ("/test.txt", FILE_WRITE);
+            file1 = PixelRadio_LittleFS.open ("/test.txt", FILE_WRITE);
 
             if (!file1)
             {
@@ -220,9 +224,9 @@ void littlefsInit (void)
             Log.verboseln ("-> test.txt file successfully opened, now closed");
             file1.close ();
         }
-        // Let's read the test.txt file from LittleFS.
+        // Let's read the test.txt file from PixelRadio_LittleFS.
         // Data files like this one should be uploaded to the Filesystem Image, see comment section at top of file.
-        File file2 = LittleFS.open ("/test.txt", FILE_READ);
+        File file2 = PixelRadio_LittleFS.open ("/test.txt", FILE_READ);
 
         if (!file2)
         {
@@ -256,7 +260,7 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
     String imageStr;
 
     imageStr.clear ();
-    File imageFile = LittleFS.open (fileName, FILE_READ);
+    File imageFile = PixelRadio_LittleFS.open (fileName, FILE_READ);
 
     if (!imageFile)
     {
