@@ -32,7 +32,9 @@ public:
     virtual void        saveConfiguration (JsonObject & json);
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
     virtual void        setOffMessage (const String & value, eCssStyle style);
+    virtual void        setOffMessageStyle (eCssStyle style);
     virtual void        setOnMessage (const String & value, eCssStyle style);
+    virtual void        setOnMessageStyle (eCssStyle style);
     virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:

@@ -46,7 +46,7 @@ cBinaryControl::cBinaryControl (
     {
         OnString    = ENABLED_STR;
     }
-    
+
     if(OffString.isEmpty())
     {
         OffString   = DISABLED_STR;
@@ -167,7 +167,28 @@ void cBinaryControl::setOffMessage (const String & value, eCssStyle style)
     // DEBUG_START;
 
     OffString   = value;
-    OffStyle    = style;
+    OffStyle = style;
+
+    if(!getBool())
+    {
+        setMessage(OffString, OffStyle);
+    }
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
+void cBinaryControl::setOffMessageStyle (eCssStyle style)
+{
+    // DEBUG_START;
+    // DEBUG_V (String ("style: ") + String (style));
+
+    OffStyle = style;
+    
+    if(!getBool())
+    {
+        setMessage(OffString, OffStyle);
+    }
 
     // DEBUG_END;
 }
@@ -178,10 +199,33 @@ void cBinaryControl::setOnMessage (const String & value, eCssStyle style)
     // DEBUG_START;
 
     OnString    = value;
-    OnStyle     = style;
+    OnStyle = style;
+
+    if(getBool())
+    {
+        setMessage(OnString, OnStyle);
+    }
 
     // DEBUG_END;
 }
+
+
+// *********************************************************************************************
+void cBinaryControl::setOnMessageStyle (eCssStyle style)
+{
+    // DEBUG_START;
+    // DEBUG_V (String ("style: ") + String (style));
+
+    OnStyle = style;
+    
+    if(getBool())
+    {
+        setMessage(OnString, OnStyle);
+    }
+
+    // DEBUG_END;
+}
+
 
 // *********************************************************************************************
 bool cBinaryControl::validate (const String & value, String & ResponseMessage, bool)
