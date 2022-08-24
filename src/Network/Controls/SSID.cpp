@@ -13,13 +13,14 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
+
 #include "PtyCode.hpp"
 #include "QN8027RadioApi.hpp"
 #include "RfCarrier.hpp"
 #include "SSID.hpp"
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 
 static const PROGMEM String     WIFI_SSID       = "WIFI SSID";
 static const PROGMEM String     WIFI_SSID_STR   = "WIFI_SSID_STR";

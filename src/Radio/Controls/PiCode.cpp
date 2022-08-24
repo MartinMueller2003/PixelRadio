@@ -16,7 +16,6 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-// #include "language.h"
 #include "PiCode.hpp"
 #include "QN8027RadioApi.hpp"
 #include "RfCarrier.hpp"

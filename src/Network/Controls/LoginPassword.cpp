@@ -13,12 +13,13 @@
  */
 
 // *********************************************************************************************
-#include "LoginPassword.hpp"
-#include "memdebug.h"
-#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+
+#include "LoginPassword.hpp"
+#include "WiFiDriver.hpp"
 #include "credentials_user.h"
+#include "memdebug.h"
 
 static const PROGMEM String     WIFI_DEV_USER_PW_STR    = "LOGIN USER PASSWORD";
 static const PROGMEM String     USER_PW_STR             = "USER_PW_STR";

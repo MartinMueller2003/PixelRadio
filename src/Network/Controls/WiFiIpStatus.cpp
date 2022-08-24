@@ -13,11 +13,12 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
-#include "WiFiDriver.hpp"
-#include "WiFiIpStatus.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+
+#include "WiFiDriver.hpp"
+#include "WiFiIpStatus.hpp"
+#include "memdebug.h"
 
 static const PROGMEM String IP_ADDR_STATUS_STR = "IP ADDRESS";
 

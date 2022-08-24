@@ -13,13 +13,14 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
+#include <Arduino.h>
+#include <ArduinoLog.h>
+
 #include "ProgramServiceName.hpp"
 #include "PtyCode.hpp"
 #include "QN8027RadioApi.hpp"
 #include "RfCarrier.hpp"
-#include <Arduino.h>
-#include <ArduinoLog.h>
+#include "memdebug.h"
 
 static const PROGMEM String     RDS_PSN_DEF_STR         = "PixeyFM";
 static const PROGMEM String     RDS_PROG_SERV_STR       = "RDS_PROG_SERV_STR";

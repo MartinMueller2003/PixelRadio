@@ -13,11 +13,12 @@
  */
 
 // *********************************************************************************************
-#include "memdebug.h"
-#include "MdnsName.hpp"
-#include "WiFiDriver.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+
+#include "MdnsName.hpp"
+#include "WiFiDriver.hpp"
+#include "memdebug.h"
 
 static const PROGMEM String     MDNS_NAME_DEF_STR       = "PixelRadio";
 static const PROGMEM String     MDNS_NAME_STR           = "MDNS_NAME_STR";
