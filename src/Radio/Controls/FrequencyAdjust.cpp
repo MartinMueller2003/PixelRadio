@@ -126,8 +126,15 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
 
         String  DataStr = String (float(NewData) / 10.0f, 1);
         // DEBUG_V(String("DataStr: ") + DataStr);
-        String  Response;
-        set (DataStr, Response, false);
+        String  ResponseMessage;
+        if( set (DataStr, ResponseMessage, false))
+        {
+            setMessage(emptyString, eCssStyle::CssStyleTransparent);
+        }
+        else
+        {
+            setMessage(ResponseMessage, eCssStyle::CssStyleRed);
+        }
 
     } while (false);
 
@@ -150,8 +157,7 @@ bool cFrequencyAdjust::set (const String & value, String & ResponseMessage, bool
         QN8027RadioApi.setFrequency (tempFloat, RfCarrier.get ());
 
         UpdateStatus ();
-
-    } while (false);
+    }
 
     // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("      DataValue: ") + String(DataValue));
