@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: ControllerUsbSERIAL.h
+   File: SerialControl.hpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.0
    Creation: Dec-16-2021
@@ -21,32 +21,30 @@
 #include <Arduino.h>
 
 #include "CommandProcessor.hpp"
-#include "SerialControl.hpp"
-#include "ControllerCommon.h"
-#include "ControllerMessages.h"
-#include "language.h"
+#include "BaudrateControl.hpp"
 #include "RBD_SerialManager.h"
 
-class cControllerUsbSERIAL : public cControllerCommon
+class cSerialControl : public cBaudrateControl
 {
 public:
 
-    cControllerUsbSERIAL ();
-    virtual ~cControllerUsbSERIAL ();
-    void        poll ()         {}
-
-    void        saveConfiguration (ArduinoJson::JsonObject & config);
-    void        restoreConfiguration (ArduinoJson::JsonObject & config);
-
-    void        gpioSerialControl (String paramStr, uint8_t pin);       // Serial handler for GPIO Commands.
-    void        AddControls (uint16_t TabId, ControlColor color);
-
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    cSerialControl ();
+    virtual ~cSerialControl ();
+    void SetSerialPort(HardwareSerial * port) { SerialPort = port; }
 
 private:
-    cSerialControl SerialControl;
-    c_ControllerMessages Messages;
-};                                              // cControllerUsbSERIAL
+    void    initSerialControl(void);
+    void    serialCommands (void);
+    bool    SetBaudrate (String NewRate);
+
+    HardwareSerial * SerialPort;
+
+    RBD::SerialManager serial_manager;
+    cCommandProcessor CommandProcessor;
+
+    String cmdStr;      // Serial Port Commands from user (CLI).
+    String paramStr;
+};
 
 // *********************************************************************************************
 // EOF

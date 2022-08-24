@@ -85,7 +85,7 @@ c_ControllerMgr::c_ControllerMgr ()
             case ControllerTypeId_t::USB_SERIAL_CNTRL:
             {
                 // DEBUG_V("SERIAL_CNTRL");
-                ListOfControllers[index].pController = new c_ControllerUsbSERIAL ();
+                ListOfControllers[index].pController = new cControllerUsbSERIAL ();
                 break;
             }
 

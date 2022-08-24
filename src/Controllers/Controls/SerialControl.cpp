@@ -1,5 +1,5 @@
 /*
-   File: ControllerUsbSERIAL.cpp
+   File: SerialControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.0
    Creation: Dec-16-2021
@@ -17,116 +17,52 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
 #include <ArduinoLog.h>
-#include "ControllerUsbSERIAL.h"
-#include "language.h"
+#include "SerialControl.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String Name = F("USB SERIAL");
 // ================================================================================================
-cControllerUsbSERIAL::cControllerUsbSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
+cSerialControl::cSerialControl () : cBaudrateControl ()
 {
-    SerialControl.SetSerialPort(&Serial);
+    cmdStr.reserve (40);    // Minimize memory re-allocations.
+    paramStr.reserve (80);  // Minimize memory re-allocations.
 }
 
 // ================================================================================================
-cControllerUsbSERIAL::~cControllerUsbSERIAL ()
+cSerialControl::~cSerialControl ()
 {}
 
-// ************************************************************************************************
-void cControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
-{
-    // DEBUG_START;
-
-    cControllerCommon::AddControls (TabId, color);
-    SerialControl.AddControls (ControlId, color);
-
-    /*
-    #ifdef OldWay
-            extern String logLevelStr;
-            EspuiMsgId = ESPUI.addControl (ControlType::Label,
-                                           "SERIAL_MSG",
-                                           (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
-                                           ControlColor::Turquoise,
-                                           ControlLabelElementId);
-            ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-    #endif // def OldWay
-    */
-    // DEBUG_END;
-}       // AddControls
-
-// ************************************************************************************************
-void cControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
-{
-    if (ControllerIsEnabled())
-    {
-        Messages.GetNextRdsMessage (Response);
-    }
-}
 #ifdef OldWay
 // ************************************************************************************************
-void cControllerUsbSERIAL::initSerialControl (void)
+void cSerialControl::SetSerialPort(HardwareSerial * port)
 {
     // DEBUG_START;
+    
+    SerialPort = port;
 
-    cmdStr.reserve (40);                        // Minimize memory re-allocations.
-    paramStr.reserve (80);                      // Minimize memory re-allocations.
-
-    Serial.flush ();                            // Purge pending serial chars.
-    Serial.end ();
-    serial_manager.start ();                    // Start Command Line Processor.
-    serial_manager.setFlag (CMD_EOL_TERM);      // EOL Termination character.
-    serial_manager.setDelimiter ('=');          // Parameter delimiter character.
-    Serial.flush ();                            // Repeat the flushing.
-    // Log.infoln(String(F("Serial Controller CLI is Enabled.")).c_str());
+    SerialPort->flush ();                   // Purge pending serial chars.
+    SerialPort->end ();
+#ifdef OldWay
+    serial_manager.start ();                // Start Command Line Processor.
+    serial_manager.setFlag (CMD_EOL_TERM);  // EOL Termination character.
+    serial_manager.setDelimiter ('=');      // Parameter delimiter character.
+#endif // def OldWay
+    SerialPort->flush ();                   // Repeat the flushing.
 
     // DEBUG_END;
 }
 #endif // def OldWay
 
-// ************************************************************************************************
-void cControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
-{
-    // DEBUG_START;
-
-    bool successFlg = false;
-    String Response;
-
-    // DEBUG_V(String("Serial Controller: Received GPIO Pin-") + String(pin) + " Command");
-    // Log.infoln(charBuff);
-
-#ifdef OldWay
-        successFlg = gpioCmd (paramStr, TypeId, pin);
-#endif // def OldWay
-
-    Response = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + F ("\": \"");
-
-    if (!successFlg)
-    {
-        Response += F ("fail\"}");
-    }
-    else if (paramStr == CMD_GPIO_READ_STR)
-    {
-        Response += String (digitalRead (pin)) + F ("\"}");
-    }
-    else
-    {
-        Response += F ("ok\"}");
-    }
-#ifdef OldWay
-    serial_manager.println (Response.c_str ());
-#endif // def OldWay
-    // DEBUG_END;
-}
 #ifdef OldWay
 
 // ************************************************************************************************
-void cControllerUsbSERIAL::CbSerialControl (Control * sender, int type)
+void cSerialControl::CbBaudrateControl (Control * sender, int type)
 {
     // DEBUG_START;
-    uint32_t OriginalBaudrate = SerialControl.get32();
+    uint32_t OriginalBaudrate = BaudrateControl.get32();
 
-    // DEBUG_V(String("CbSerialControl ID: ") + String(sender->id) + ", Value: " + sender->value);
+    // DEBUG_V(String("CbBaudrateControl ID: ") + String(sender->id) + ", Value: " + sender->value);
 
     do  // once
     {
@@ -141,16 +77,15 @@ void cControllerUsbSERIAL::CbSerialControl (Control * sender, int type)
     } while (false);
     // DEBUG_V();
 
-
     // DEBUG_END;
-}       // CbSerialControl
+}
 #endif // def OldWay
 
-#ifdef OldWay
 // ************************************************************************************************
-void cControllerUsbSERIAL::serialCommands (void)
+void cSerialControl::serialCommands (void)
 {
     // _ DEBUG_START;
+#ifdef OldWay
 
     do  // once
     {
@@ -175,18 +110,17 @@ void cControllerUsbSERIAL::serialCommands (void)
             // DEBUG_V(String("Response.length: ") + String(Response.length()));
         }
     } while (false);
+#endif // def OldWay
 
     // _ DEBUG_END;
 }
-#endif // def OldWay
 
-#ifdef OldWay
 // ************************************************************************************************
-bool cControllerUsbSERIAL::SetBaudrate (String NewRate)
+bool cSerialControl::SetBaudrate (String NewRate)
 {
     // DEBUG_START;
     bool Response               = true;
-    uint32_t OriginalBaudrate   = SerialControl.get32();
+    uint32_t OriginalBaudrate   = get32();
 #ifdef OldWay
     do  // once
     {
@@ -244,30 +178,7 @@ bool cControllerUsbSERIAL::SetBaudrate (String NewRate)
 
     // DEBUG_END;
     return Response;
-}       // SetBaudrate
-#endif // def OldWay
-
-// *********************************************************************************************
-void cControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    cControllerCommon::restoreConfiguration (config);
-    SerialControl.restoreConfiguration(config);
-
-    // DEBUG_END;
-}       // restoreConfiguration
-
-// *********************************************************************************************
-void cControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    cControllerCommon::saveConfiguration (config);
-    SerialControl.saveConfiguration(config);
-
-    // DEBUG_END;
-}       // saveConfiguration
+}
 
 // *********************************************************************************************
 // EOF
