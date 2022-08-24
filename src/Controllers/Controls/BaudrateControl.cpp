@@ -33,7 +33,7 @@ static ChoiceListVector_t MapOfBaudrates
 };
 
 // ================================================================================================
-cBaudrateControl::cBaudrateControl () : cChoiceListControl (Name, Name, "57.6K", &MapOfBaudrates)
+cBaudrateControl::cBaudrateControl () : cChoiceListControl (Name, Name, "115.2K", &MapOfBaudrates)
 {}      // cBaudrateControl
 
 // ================================================================================================
