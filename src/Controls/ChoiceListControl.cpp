@@ -212,7 +212,7 @@ bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, boo
         String  Dummy;
         String  NewValue = (*ChoiceVector)[value].first;
         // DEBUG_V (String ("       NewValue: ") + NewValue);
-        set (NewValue, Dummy, ForceUpdate);
+        Response = set (NewValue, Dummy, ForceUpdate);
 
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
     } while (false);

@@ -85,8 +85,8 @@ cCommandProcessor::cCommandProcessor ()
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
-    String      & RawCommand,
-    String      & ControllerName,
+    const String      & RawCommand,
+    const String      & ControllerName,
     String      & Response)
 {
     DEBUG_START;
@@ -103,13 +103,15 @@ bool cCommandProcessor::ProcessCommand (
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
-    String      & Command,
-    String      & Parameter,
-    String      & ControllerName,
-    String      & Response)
+    const String      & Command,
+    const String      & Parameter,
+    const String      & ControllerName,
+          String      & Response)
 {
     DEBUG_START;
+
     bool response = false;
+#ifdef OldWay
     Response.reserve (1000);
 
     Command.trim ();
@@ -130,6 +132,7 @@ bool cCommandProcessor::ProcessCommand (
         Response += String (F ("->")) + ControllerName;
         (this->*ListOfCommands[Command])(Parameter, ControllerName, Response);
     } while (false);
+#endif // def OldWay
 
     DEBUG_END;
 

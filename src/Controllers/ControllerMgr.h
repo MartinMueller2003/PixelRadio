@@ -20,10 +20,11 @@
 // *********************************************************************************************
 #pragma once
 
-#include "Arduino.h"
-#include "ArduinoJson.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <ESPUI.h>
 
-class c_ControllerCommon;       // forward declaration
+class cControllerCommon;       // forward declaration
 
 #define ControllerTypeId c_ControllerMgr::ControllerTypeId_t
 
@@ -64,7 +65,7 @@ protected:
         ControllerTypeId_t      ControllerId    = ControllerIdStart;
         uint16_t                ActiveBit       = 0;
         uint16_t                SendingBit      = 0;
-        c_ControllerCommon      * pController   = nullptr;
+        cControllerCommon      * pController   = nullptr;
     };
 
     ControllerInfo_t ListOfControllers[ControllerTypeId_t::NumControllerTypes];
@@ -79,9 +80,9 @@ public:
     virtual ~c_ControllerMgr ();
     void                poll ();
     void                begin ();
-    void                AddControls (uint16_t ctrlTab);
+    void                AddControls (uint16_t TabId, ControlColor color);
     void                Display (ControllerTypeId_t Id);
-    c_ControllerCommon  * GetControllerById (ControllerTypeId_t Id);
+    cControllerCommon  * GetControllerById (ControllerTypeId_t Id);
     bool                GetControllerEnabledFlag (ControllerTypeId_t Id);
     uint16_t            getControllerStatusSummary ();
     String              GetName (ControllerTypeId_t Id);

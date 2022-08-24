@@ -181,6 +181,7 @@ void diagBootCallback (Control * sender, int type)
 // diagLogCallback() Set the Serial Log Level. Used for system debugging.
 void diagLogCallback (Control * sender, int type)
 {
+#ifdef OldWay
     char logBuff[60];
     String serialMsg;
 
@@ -269,6 +270,7 @@ void diagLogCallback (Control * sender, int type)
         sprintf (logBuff, "diagLogCallback: %s.", BAD_SENDER_STR);
         Log.errorln (logBuff);
     }
+#endif // def OldWay
 }
 
 // ************************************************************************************************

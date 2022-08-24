@@ -18,13 +18,16 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
+
 #include "CommandProcessor.hpp"
+#include "BaudrateControl.hpp"
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
 #include "language.h"
 #include "RBD_SerialManager.h"
 
-class c_ControllerUsbSERIAL : public c_ControllerCommon
+class c_ControllerUsbSERIAL : public cControllerCommon
 {
 public:
 
@@ -38,14 +41,15 @@ public:
     void        restoreConfiguration (ArduinoJson::JsonObject & config);
 
     void        gpioSerialControl (String paramStr, uint8_t pin);       // Serial handler for GPIO Commands.
-    void        AddControls (uint16_t ctrlTab);
-    uint16_t    GetMsgId () {return EspuiMsgId;}
+    void        AddControls (uint16_t TabId, ControlColor color);
+    // uint16_t    GetMsgId () {return EspuiMsgId;}
 
     void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
+    cBaudrateControl BaudrateControl;
 
-    void        initSerialControl (void);
+    void initSerialControl(void);
     void        CbBaudrateControl (Control * sender, int type);
     void        serialCommands (void);
     bool        SetBaudrate (String NewRate);
@@ -56,9 +60,6 @@ private:
     String cmdStr;      // Serial Port Commands from user (CLI).
     String paramStr;
 
-#define  SERIAL_DEF_STR SERIAL_115_STR
-    String BaudRateStr  = SERIAL_DEF_STR;       // Parameter string.
-    uint32_t BaudRate   = 115200;
     c_ControllerMessages Messages;
 };                                              // c_ControllerUsbSERIAL
 

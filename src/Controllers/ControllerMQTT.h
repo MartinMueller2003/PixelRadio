@@ -25,7 +25,7 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 
-class c_ControllerMQTT : public c_ControllerCommon
+class c_ControllerMQTT : public cControllerCommon
 {
 public:
 
@@ -36,7 +36,7 @@ public:
     void        saveConfiguration (ArduinoJson::JsonObject & config);
     void        restoreConfiguration (ArduinoJson::JsonObject & config);
 
-    void        AddControls (uint16_t ctrlTab);
+    void        AddControls (uint16_t TabId, ControlColor color);
     void        setMqttAuthenticationCallback (Control * sender, int type);
     void        setMqttNameCallback (Control * sender, int type);
     void        setRemoteIpAddrCallback (Control * sender, int type);

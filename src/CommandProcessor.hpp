@@ -49,8 +49,8 @@ public:
     cCommandProcessor ();
     virtual ~cCommandProcessor ()    {}
 
-    bool        ProcessCommand (String & RawCommand, String & ControllerName, String & Response);
-    bool        ProcessCommand (String & Command, String & parameters, String & ControllerName, String & Response);
+    bool        ProcessCommand (const String & RawCommand, const String & ControllerName, String & Response);
+    bool        ProcessCommand (const String & Command, const String & parameters, const String & ControllerName, String & Response);
 };      // CommandProcessor
 
 // *************************************************************************************************************************

@@ -25,10 +25,10 @@
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
-// class c_ControllerLOCAL : public c_ControllerCommon
+static const PROGMEM String Name = F("LOCAL");
 
 // *********************************************************************************************
-c_ControllerLOCAL::c_ControllerLOCAL () :   c_ControllerCommon ("LOCAL", c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
+c_ControllerLOCAL::c_ControllerLOCAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
 {}      // c_ControllerLOCAL
 
 // *********************************************************************************************
@@ -36,15 +36,15 @@ c_ControllerLOCAL::~c_ControllerLOCAL ()
 {}
 
 // *********************************************************************************************
-void c_ControllerLOCAL::AddControls (uint16_t ctrlTab)
+void c_ControllerLOCAL::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::AddControls (ctrlTab);
+    cControllerCommon::AddControls (TabId, color);
 
     // Messages.SetTitle(Name + " " + N_Messages);
-    Messages.AddControls (EspuiParentElementId);
-    Messages.ActivateMessageSet (Name);
+    Messages.AddControls (TabId);
+    Messages.ActivateMessageSet (Title);
 
     // DEBUG_END;
 }
@@ -55,9 +55,9 @@ void c_ControllerLOCAL::CreateDefaultMsgSet ()
     // DEBUG_START;
 
     Messages.clear ();
-    Messages.   AddMessage (    F ("LOCAL"),    F ("Welcome to Our Drive-by Holiday Light Show"));
-    Messages.   AddMessage (    F ("LOCAL"),    F ("For Safety Keep Automobile Running Lights On"));
-    Messages.   AddMessage (    F ("LOCAL"),    F ("Please Drive Slowly and Watch Out for Children and Pets"));
+    Messages.AddMessage ( F ("LOCAL"), F ("Welcome to Our Drive-by Holiday Light Show"));
+    Messages.AddMessage ( F ("LOCAL"), F ("For Safety Keep Automobile Running Lights On"));
+    Messages.AddMessage ( F ("LOCAL"), F ("Please Drive Slowly and Watch Out for Children and Pets"));
 
     // DEBUG_END;
 }
@@ -67,7 +67,7 @@ void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Respo
 {
     // DEBUG_START;
 
-    if (ControllerEnabled)
+    if (ControllerIsEnabled())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -79,7 +79,7 @@ void c_ControllerLOCAL::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::restoreConfiguration (config);
+    cControllerCommon::restoreConfiguration (config);
     Messages.RestoreConfig (config);
 
     // do we need to create a set of default messages?
@@ -95,7 +95,7 @@ void c_ControllerLOCAL::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::saveConfiguration (config);
+    cControllerCommon::saveConfiguration (config);
     Messages.SaveConfig (config);
 
     // DEBUG_END;

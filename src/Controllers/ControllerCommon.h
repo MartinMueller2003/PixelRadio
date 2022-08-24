@@ -21,52 +21,35 @@
 // *********************************************************************************************
 #pragma once
 
-#include "Arduino.h"
-#include "ControllerMessages.h"
-#include "ControllerMgr.h"
-#include "PixelRadio.h"
+#include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESPUI.h>
 
-class c_ControllerCommon
+#include "BinaryControl.hpp"
+// #include "ControllerMessages.h"
+#include "ControllerMgr.h"
+// #include "PixelRadio.h"
+
+class cControllerCommon : public cBinaryControl
 {
 private:
 
-    String ControlName;
+    CtypeId TypeId = NullControllerId;
     String SeperatorName;
 
-protected:
-
-// values stored in configuration file
-    bool ControllerEnabled = false;
-
-// operational data
-    String Name;        // Name of this controller
-    CtypeId TypeId = NullControllerId;
-
-// ESPUI control IDs
-    uint16_t homeTab                    = Control::noParent;
-    uint16_t EspuiParentElementId       = Control::noParent;
-    uint16_t ControlLabelElementId      = Control::noParent;
-    uint16_t ControlerEnabledElementId  = Control::noParent;
-    uint16_t EspuiMsgId                 = Control::noParent;
-
 public:
-
-    c_ControllerCommon (String MyName, c_ControllerMgr::ControllerTypeId_t MyId);
-    virtual ~c_ControllerCommon ();
+    cControllerCommon (const String & MyName, CtypeId MyId);
+    virtual ~cControllerCommon ();
 
     virtual void        begin ()        {}
     virtual void        poll ()         {}
-    virtual void        AddControls (uint16_t tabId);
-    void                CbControllerEnabled (Control * sender, int type);
-    virtual void        restoreConfiguration (ArduinoJson::JsonObject & config);
+    virtual void        AddControls (uint16_t tabId, ControlColor color);
+    String              GetName ()     {return Title;}
     virtual void        saveConfiguration (ArduinoJson::JsonObject & config);
-    String              &GetName ()             {return Name;}
 
     virtual void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
-    bool                ControllerIsEnabled ()  {return ControllerEnabled;}
-};      // c_ControllerCommon
+    bool                ControllerIsEnabled ()  {return getBool();}
+};
 
 // *********************************************************************************************
 // EOF

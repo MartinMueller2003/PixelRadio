@@ -24,10 +24,10 @@
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
-// class c_ControllerNONE : public c_ControllerCommon
+static const PROGMEM String Name = F("NONE");
 
 // *********************************************************************************************
-c_ControllerNONE::c_ControllerNONE () :   c_ControllerCommon ("NONE", c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
+c_ControllerNONE::c_ControllerNONE () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
 {}      // c_ControllerNONE
 
 // *********************************************************************************************
@@ -39,7 +39,7 @@ void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::restoreConfiguration (config);
+    cControllerCommon::restoreConfiguration (config);
 
     // DEBUG_END;
 }       // restoreConfiguration
@@ -49,7 +49,7 @@ void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::saveConfiguration (config);
+    cControllerCommon::saveConfiguration (config);
 
     // DEBUG_END;
 }       // saveConfiguration

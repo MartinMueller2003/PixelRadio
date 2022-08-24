@@ -26,9 +26,10 @@
 #endif //  __has_include("memdebug.h")
 
 static const String DefaultSequenceMsg = "No Sequence";
+static const PROGMEM String Name = F("FPPD");
 
 // *********************************************************************************************
-c_ControllerFPPD::c_ControllerFPPD () :   c_ControllerCommon ("FPPD", c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
+c_ControllerFPPD::c_ControllerFPPD () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
 {}      // c_ControllerFPPD
 
 // *********************************************************************************************
@@ -36,12 +37,12 @@ c_ControllerFPPD::~c_ControllerFPPD ()
 {}
 
 // ************************************************************************************************
-void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
+void c_ControllerFPPD::AddControls (uint16_t ctrlTab, ControlColor color)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::AddControls (ctrlTab);
-
+    cControllerCommon::AddControls (ctrlTab, color);
+/*
     uint16_t LabelId;
 
     LabelId = ESPUI.addControl (ControlType::Label,
@@ -83,7 +84,7 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab)
     Sequences.AddControls (EspuiParentElementId);
 
     ControlsHaveBeenAdded = true;
-
+*/
     // DEBUG_END;
 }       // AddControls
 
@@ -169,7 +170,7 @@ void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::restoreConfiguration (config);
+    cControllerCommon::restoreConfiguration (config);
 
     if (config.containsKey (N_SequenceLearningEnabled))
     {
@@ -195,7 +196,7 @@ void c_ControllerFPPD::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::saveConfiguration (config);
+    cControllerCommon::saveConfiguration (config);
 
     config[N_MaxIdleSec]                = MaxIdleTimeSec;
     config[N_SequenceLearningEnabled]   = SequenceLearningEnabled;

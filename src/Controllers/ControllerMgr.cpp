@@ -144,14 +144,14 @@ c_ControllerMgr::~c_ControllerMgr ()
 }
 
 // *********************************************************************************************
-void c_ControllerMgr::AddControls (uint16_t ctrlTab)
+void c_ControllerMgr::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
     for (auto & CurrentController : ListOfControllers)
     {
         // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
-        CurrentController.pController->AddControls (ctrlTab);
+        CurrentController.pController->AddControls (TabId, color);
     }
     // DEBUG_END;
 }       // AddControls
@@ -170,7 +170,7 @@ void c_ControllerMgr::begin ()
 }       // begin
 
 // *********************************************************************************************
-c_ControllerCommon      * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
+cControllerCommon      * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
 
 // *********************************************************************************************
 void                    c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)

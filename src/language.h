@@ -171,11 +171,6 @@
 #define WIFI_TAB_STR           "WiFi"
 #define WIFI_UNKNOWN_STR       "(- ? -)"
 
-extern const PROGMEM char       SERIAL_096_STR[];
-extern const PROGMEM char       SERIAL_192_STR[];
-extern const PROGMEM char       SERIAL_576_STR[];
-extern const PROGMEM char       SERIAL_115_STR[];
-
 extern const PROGMEM char       CSS_LABEL_STYLE_BLACK[];
 extern const PROGMEM char       CSS_LABEL_STYLE_GREEN[];
 extern const PROGMEM char       CSS_LABEL_STYLE_RED[];

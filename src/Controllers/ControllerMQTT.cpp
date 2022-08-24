@@ -29,9 +29,10 @@
 
 // *********************************************************************************************
 static const PROGMEM String WIFI_PASS_HIDE_STR = "{PASSWORD HIDDEN}";
+static const PROGMEM String Name = F("MQTT");
 
 // *********************************************************************************************
-c_ControllerMQTT::c_ControllerMQTT () :   c_ControllerCommon ("MQTT", c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
+c_ControllerMQTT::c_ControllerMQTT () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
 {}      // c_ControllerMQTT
 
 // *********************************************************************************************
@@ -58,7 +59,7 @@ void c_ControllerMQTT::Begin ()
 // *********************************************************************************************
 void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerEnabled)
+    if (ControllerIsEnabled())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -75,7 +76,7 @@ void c_ControllerMQTT::Init (void)
     String      payloadStr;
     String      topicStr;
 
-    if (!ControllerEnabled)
+    if (!ControllerIsEnabled())
     {   // MQTT Controller Disabled.
         // DEBUG_V();
         OnlineFlag = false;
@@ -144,20 +145,19 @@ void c_ControllerMQTT::Init (void)
 }       // Init
 
 // ************************************************************************************************
-void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
+void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::AddControls (ctrlTab);
+    cControllerCommon::AddControls (TabId, color);
     String tempStr;
 
-    if ((ControllerEnabled == true) &&
+    if ((ControllerIsEnabled() == true) &&
         ((INADDR_NONE != RemoteIp) || (!mqttNameStr.length ()) ||
          (!mqttUserStr.length ()) || (!mqttPwStr.length ())))
     {
         // DEBUG_V();
         MessageStr              = MQTT_MISSING_STR;
-        ControllerEnabled       = false;        // Force DHCP mode.
     }
 #ifdef OldWay
         else if (getWifiMode () == WIFI_AP)
@@ -165,7 +165,6 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
             // DEBUG_V();
             MessageStr = MQTT_NOT_AVAIL_STR;
         }
-#endif // def OldWay
     else
     {
         // DEBUG_V();
@@ -247,6 +246,7 @@ void c_ControllerMQTT::AddControls (uint16_t ctrlTab)
                                       }
                                   },
                                   this);
+#endif // def OldWay
     // DEBUG_END;
 }       // AddControls
 
@@ -443,7 +443,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         }
         // DEBUG_V();
 
-        if (!ControllerEnabled)
+        if (!ControllerIsEnabled())
         {       // MQTT Controller Disabled.
             // DEBUG_V();
             OnlineFlag = false;
@@ -568,18 +568,17 @@ void c_ControllerMQTT::TestParameters ()
         (mqttPwStr.isEmpty ()))
     {   // Missing MQTT Entries
         // DEBUG_V();
-        ControllerEnabled = false;
         updateUiMqttMsg (MQTT_MISSING_STR);
-        ESPUI.print (ControlerEnabledElementId, "0");   // Turn off MQTT Controller Switcher.
+        // ESPUI.print (ControlerEnabledElementId, "0");   // Turn off MQTT Controller Switcher.
         Log.warningln (F ("Invalid MQTT Controller Settings, Disabled MQTT."));
     }
     else
     {
         // DEBUG_V();
-        ControllerEnabled = false;
+        // ControllerIsEnabled() = false;
         updateUiMqttMsg (emptyString);
-        mqttReconnect (true);           // Reset MQTT Reconnect values while ControllerEnabled is false.
-        ControllerEnabled = true;       // Must set flag AFTER mqqtReconnect!
+        mqttReconnect (true);           // Reset MQTT Reconnect values while ControllerIsEnabled() is false.
+        // ControllerIsEnabled() = true;       // Must set flag AFTER mqqtReconnect!
     }
     // DEBUG_END;
 } // TestParameters
@@ -654,9 +653,9 @@ void c_ControllerMQTT::setRemoteIpAddrCallback (Control * sender, int type)
         if ((tempStr.length () == 0))
         {
             // DEBUG_V();
-            ControllerEnabled = false;
+            // ControllerIsEnabled() = false;
             // RemoteIpStr = emptyString;
-            ESPUI.print (ControlerEnabledElementId, "0");       // Missing IP Addreess, Turn Off MQTT Controller.
+            // ESPUI.print (ControlerEnabledElementId, "0");       // Missing IP Addreess, Turn Off MQTT Controller.
             Log.errorln (F ("setRemoteIpAddrCallback: Broker IP Address Erased. Disabled MQTT Controller."));
         }
         else
@@ -732,7 +731,7 @@ void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::restoreConfiguration (config);
+    cControllerCommon::restoreConfiguration (config);
 
     if (true == config.containsKey (F (N_MQTT_NAME_STR)))
     {
@@ -766,7 +765,7 @@ void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::saveConfiguration (config);
+    cControllerCommon::saveConfiguration (config);
 
     config[N_MQTT_NAME_STR]     = mqttNameStr;
     config[N_MQTT_PW_STR]       = mqttPwStr;
@@ -785,7 +784,7 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
     String      topicStr;
     String      CmdString;
 
-    topicStr = Name + MQTT_GPIO_STR;
+    topicStr = Title + MQTT_GPIO_STR;
 
     Log.infoln ((String (F ("-> MQTT Controller: Received GPIO Pin-")) + String (pin) + " Command").c_str ());
 
@@ -829,7 +828,7 @@ void c_ControllerMQTT::mqttSendMessages (void)
         String  Payload;
         String  topicStr;
 
-        if (!ControllerEnabled)
+        if (!ControllerIsEnabled())
         {       // MQTT Controller Disabled.
             // DEBUG_V();
             break;

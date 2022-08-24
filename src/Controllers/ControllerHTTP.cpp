@@ -17,19 +17,18 @@
  */
 
 // *********************************************************************************************
+#include <ArduinoLog.h>
 #include "ControllerHTTP.h"
 #include "Language.h"
-#include <ArduinoLog.h>
 
-#if __has_include ("memdebug.h")
- # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
+#include "memdebug.h"
 
 // *********************************************************************************************
-// class c_ControllerHTTP : public c_ControllerCommon
+
+static const PROGMEM String Name = F("HTTP");
 
 // *********************************************************************************************
-c_ControllerHTTP::c_ControllerHTTP () :   c_ControllerCommon ("HTTP", c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)
+c_ControllerHTTP::c_ControllerHTTP () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)
 {}      // c_ControllerHTTP
 
 // *********************************************************************************************
@@ -39,31 +38,11 @@ c_ControllerHTTP::~c_ControllerHTTP ()
 // *********************************************************************************************
 void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerEnabled)
+    if (ControllerIsEnabled())
     {
         Messages.GetNextRdsMessage (Response);
     }
 }
-
-// *********************************************************************************************
-void c_ControllerHTTP::restoreConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    c_ControllerCommon::restoreConfiguration (config);
-
-    // DEBUG_END;
-}       // restoreConfiguration
-
-// *********************************************************************************************
-void c_ControllerHTTP::saveConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    c_ControllerCommon::saveConfiguration (config);
-
-    // DEBUG_END;
-}       // saveConfiguration
 
 // *********************************************************************************************
 // EOF

@@ -20,7 +20,7 @@
 #pragma once
 #include "ControllerCommon.h"
 
-class c_ControllerNONE : public c_ControllerCommon
+class c_ControllerNONE : public cControllerCommon
 {
 public:
 

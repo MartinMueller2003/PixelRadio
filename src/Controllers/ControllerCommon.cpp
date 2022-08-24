@@ -20,98 +20,50 @@
 #include "ControllerCommon.h"
 #include "Language.h"
 
-#if __has_include ("memdebug.h")
- # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
+ #include "memdebug.h"
 
 // *********************************************************************************************
 // class c_ControllerCommon
 
 // *********************************************************************************************
-c_ControllerCommon::c_ControllerCommon (String _Name, c_ControllerMgr::ControllerTypeId_t _Id)
-{
-    Name        = _Name;
-    TypeId      = _Id;
-}       // c_ControllerCommon
+cControllerCommon::cControllerCommon (const String & _Title, CtypeId _Id) :
+    TypeId(_Id),
+    cBinaryControl(N_ControllerEnabled, _Title, false)
+{}
 
 // *********************************************************************************************
-c_ControllerCommon::~c_ControllerCommon ()
+cControllerCommon::~cControllerCommon ()
 {}
 
 // ************************************************************************************************
-void c_ControllerCommon::AddControls (uint16_t tabId)
+void cControllerCommon::AddControls(uint16_t tabId, ControlColor color)
 {
     // DEBUG_START;
+    // DEBUG_V(String("Title: ") + Title);
 
-    EspuiParentElementId = tabId;
+    SeperatorName = Title + F(" SETTINGS");
+    ESPUI.addControl(ControlType::Separator,
+                     SeperatorName.c_str(),
+                     emptyString,
+                     ControlColor::None,
+                     tabId);
 
-    ControlName         = Name + F (" CONTROL");
-    SeperatorName       = ControlName + F (" SETTINGS");
+    setOffMessageStyle (eCssStyle::CssStyleWhite );
+    setOnMessageStyle (eCssStyle::CssStyleWhite);
 
-    ESPUI.addControl (ControlType::Separator,
-                      SeperatorName.c_str (),
-                      emptyString,
-                      ControlColor::None,
-                      tabId);
-
-    ControlLabelElementId = ESPUI.addControl (ControlType::Label,
-                                              ControlName.c_str (),
-                                              "ENABLE",
-                                              ControlColor::Turquoise,
-                                              EspuiParentElementId);
-    ESPUI.setElementStyle (ControlLabelElementId, CSS_LABEL_STYLE_WHITE);
-
-    ControlerEnabledElementId = ESPUI.addControl (ControlType::Switcher,
-                                                  "Enable",
-                                                  String (ControllerEnabled ? F ("1") : F ("0")),
-                                                  ControlColor::Turquoise,
-                                                  ControlLabelElementId,
-                                                  [] (Control * sender, int type, void * param)
-                                                  {
-                                                      if (param)
-                                                      {
-                                                          reinterpret_cast <c_ControllerCommon *> (param)->CbControllerEnabled (sender, type);
-                                                      }
-                                                  },
-                                                  this);
-    // DEBUG_END;
-}
-
-// ************************************************************************************************
-void c_ControllerCommon::CbControllerEnabled (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    ControllerEnabled = (type == S_ACTIVE);
-
-    // DEBUG_V();
-    displaySaveWarning ();
-    String Temp = Name;
-    Temp        += F (" Controller Set to: ");
-    Temp        += ControllerEnabled ? F ("On") : F ("Off");
-    Log.infoln (Temp.c_str ());
+    cBinaryControl::AddControls(tabId, color);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void c_ControllerCommon::restoreConfiguration (ArduinoJson::JsonObject & config)
+void cControllerCommon::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    ReadFromJSON (ControllerEnabled, config, N_ControllerEnabled);
-
-    // DEBUG_END;
-}       // RestoreConfiguration
-
-// *********************************************************************************************
-void c_ControllerCommon::saveConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    config[N_name]              = Name;
-    config[N_type]              = TypeId;
-    config[N_ControllerEnabled] = ControllerEnabled;
+    cBinaryControl::saveConfiguration(config);
+    config[N_name]  = Title;
+    config[N_type]  = TypeId;
 
     // DEBUG_END;
 }       // saveConfiguration

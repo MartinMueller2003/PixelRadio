@@ -22,7 +22,7 @@
 #include "ControllerCommon.h"
 #include "ControllerFPPDSequences.h"
 
-class c_ControllerFPPD : public c_ControllerCommon
+class c_ControllerFPPD : public cControllerCommon
 {
 public:
 
@@ -32,7 +32,7 @@ public:
     void        begin ();
     void        ProcessFppdFile (String & FppdFileName);
 
-    void        AddControls (uint16_t ctrlTab);
+    void        AddControls (uint16_t ctrlTab, ControlColor color);
     void        restoreConfiguration (ArduinoJson::JsonObject & config);
     void        saveConfiguration (ArduinoJson::JsonObject & config);
     void        CbSequenceLearningEnabled (Control * sender, int type);

@@ -1,5 +1,6 @@
+#pragma once
 /*
-   File: ControllerLOCAL.h
+   File: BaudrateControl.h
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.0
    Creation: Dec-16-2021
@@ -17,28 +18,19 @@
  */
 
 // *********************************************************************************************
-#pragma once
+#include <Arduino.h>
+#include "ChoiceListControl.hpp"
 
-#include "ControllerCommon.h"
-#include "ControllerMessages.h"
-
-class c_ControllerLOCAL : public cControllerCommon
+class cBaudrateControl : public cChoiceListControl
 {
 public:
 
-    c_ControllerLOCAL ();
-    virtual ~c_ControllerLOCAL ();
+    cBaudrateControl ();
+    virtual ~cBaudrateControl ();
+    virtual void    AddControls (uint16_t value, ControlColor color);
 
-    void        AddControls (uint16_t ctrlTab, ControlColor color);
-    void        restoreConfiguration (ArduinoJson::JsonObject & config);
-    void        saveConfiguration (ArduinoJson::JsonObject & config);
-    void        CreateDefaultMsgSet ();
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
-private:
-
-    c_ControllerMessages Messages;
-};      // c_ControllerLOCAL
+};
 
 // *********************************************************************************************
 // EOF

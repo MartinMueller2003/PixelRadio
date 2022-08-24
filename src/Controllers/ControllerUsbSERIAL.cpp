@@ -17,16 +17,14 @@
  */
 
 // *********************************************************************************************
+#include <ArduinoLog.h>
 #include "ControllerUsbSERIAL.h"
 #include "language.h"
-#include <ArduinoLog.h>
+# include "memdebug.h"
 
-#if __has_include ("memdebug.h")
- # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
-
+static const PROGMEM String Name = F("USB SERIAL");
 // ================================================================================================
-c_ControllerUsbSERIAL::c_ControllerUsbSERIAL () :   c_ControllerCommon ("USB SERIAL", c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
+c_ControllerUsbSERIAL::c_ControllerUsbSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {}      // c_ControllerUsbSERIAL
 
 // ================================================================================================
@@ -34,59 +32,30 @@ c_ControllerUsbSERIAL::~c_ControllerUsbSERIAL ()
 {}
 
 // ************************************************************************************************
-void c_ControllerUsbSERIAL::AddControls (uint16_t ctrlTab)
+void c_ControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::AddControls (ctrlTab);
-
-    uint16_t LabelId;
-    LabelId = ESPUI.addControl (ControlType::Label,
-                                emptyString.c_str (),
-                                String (N_BAUDRATE),
-                                ControlColor::Turquoise,
-                                ControlLabelElementId);
-    ESPUI.setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
-
-    ControlerEnabledElementId = ESPUI.addControl (ControlType::Select,
-                                                  emptyString.c_str (),
-                                                  BaudRateStr,
-                                                  ControlColor::Turquoise,
-                                                  ControlLabelElementId,
-                                                  [] (Control * sender, int type, void * param)
-                                                  {
-                                                      if (param)
-                                                      {
-                                                          reinterpret_cast <c_ControllerUsbSERIAL *> (param)->CbBaudrateControl (sender,
-                                                                                                                                 type);
-                                                      }
-                                                  },
-                                                  this);
-
-    // DEBUG_V(String("ControlerEnabledElementId: ") + String(ControlerEnabledElementId));
-    // ESPUI.addControl(ControlType::Option, SERIAL_OFF_STR, SERIAL_OFF_STR, ControlColor::None, ControlerEnabledElementId);
-    ESPUI.      addControl (    ControlType::Option,    SERIAL_096_STR, SERIAL_096_STR, ControlColor::None,     ControlerEnabledElementId);
-    ESPUI.      addControl (    ControlType::Option,    SERIAL_192_STR, SERIAL_192_STR, ControlColor::None,     ControlerEnabledElementId);
-    ESPUI.      addControl (    ControlType::Option,    SERIAL_576_STR, SERIAL_576_STR, ControlColor::None,     ControlerEnabledElementId);
-    ESPUI.      addControl (    ControlType::Option,    SERIAL_115_STR, SERIAL_115_STR, ControlColor::None,     ControlerEnabledElementId);
-    // DEBUG_V();
-#ifdef OldWay
-        extern String logLevelStr;
-        EspuiMsgId = ESPUI.addControl (ControlType::Label,
-                                       "SERIAL_MSG",
-                                       (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
-                                       ControlColor::Turquoise,
-                                       ControlLabelElementId);
-        ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-#endif // def OldWay
-
+    cControllerCommon::AddControls (TabId, color);
+    BaudrateControl.AddControls (ControlId, color);
+    /*
+    #ifdef OldWay
+            extern String logLevelStr;
+            EspuiMsgId = ESPUI.addControl (ControlType::Label,
+                                           "SERIAL_MSG",
+                                           (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
+                                           ControlColor::Turquoise,
+                                           ControlLabelElementId);
+            ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
+    #endif // def OldWay
+    */
     // DEBUG_END;
 }       // AddControls
 
 // ************************************************************************************************
 void c_ControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerEnabled)
+    if (ControllerIsEnabled())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -148,7 +117,7 @@ void c_ControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
 void c_ControllerUsbSERIAL::CbBaudrateControl (Control * sender, int type)
 {
     // DEBUG_START;
-    uint32_t OriginalBaudrate = BaudRate;
+    uint32_t OriginalBaudrate = BaudrateControl.get32();
 
     // DEBUG_V(String("CbBaudrateControl ID: ") + String(sender->id) + ", Value: " + sender->value);
 
@@ -165,8 +134,6 @@ void c_ControllerUsbSERIAL::CbBaudrateControl (Control * sender, int type)
     } while (false);
     // DEBUG_V();
 
-    displaySaveWarning ();
-    Log.infoln ((Name + F (": Baudrate Set to: ") + BaudRateStr).c_str ());
 
     // DEBUG_END;
 }       // CbBaudrateControl
@@ -178,7 +145,7 @@ void c_ControllerUsbSERIAL::serialCommands (void)
 
     do  // once
     {
-        if (!ControllerEnabled)
+        if (!ControllerIsEnabled())
         {
             // DEBUG_V("Serial Controller disabled, nothing to do. Exit.");
             break;
@@ -194,7 +161,7 @@ void c_ControllerUsbSERIAL::serialCommands (void)
             // serial_manager.println((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
 
             String Response;
-            CommandProcessor.ProcessCommand (cmdStr, paramStr, Name, Response);
+            CommandProcessor.ProcessCommand (cmdStr, paramStr, Title, Response);
             serial_manager.print (Response);
             // DEBUG_V(String("Response.length: ") + String(Response.length()));
         }
@@ -208,8 +175,8 @@ bool c_ControllerUsbSERIAL::SetBaudrate (String NewRate)
 {
     // DEBUG_START;
     bool Response               = true;
-    uint32_t OriginalBaudrate   = BaudRate;
-
+    uint32_t OriginalBaudrate   = BaudrateControl.get32();
+#ifdef OldWay
     do  // once
     {
         if (NewRate == SERIAL_096_STR)
@@ -245,13 +212,13 @@ bool c_ControllerUsbSERIAL::SetBaudrate (String NewRate)
         }
         // DEBUG_V("Not a valid string");
         Response                = false;
-        ControllerEnabled       = false;
+        // ControllerIsEnabled()       = false;
 
         // DEBUG_V();
     } while (false);
     // DEBUG_V();
 
-    if ((OriginalBaudrate != BaudRate) && (ControllerEnabled))
+    if ((OriginalBaudrate != BaudRate) && (ControllerIsEnabled()))
     {
         // DEBUG_V("Change Baudrate");
         Serial.end ();  // Flush all characters in queue.
@@ -262,6 +229,8 @@ bool c_ControllerUsbSERIAL::SetBaudrate (String NewRate)
         Serial.println ();      // Push out any corrupted data due to baud change.
         // DEBUG_V("Change Baudrate - Done");
     }
+#endif // def OldWay
+
     // DEBUG_END;
     return Response;
 }       // SetBaudrate
@@ -271,13 +240,9 @@ void c_ControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject & conf
 {
     // DEBUG_START;
 
-    c_ControllerCommon::restoreConfiguration (config);
+    cControllerCommon::restoreConfiguration (config);
+    BaudrateControl.restoreConfiguration(config);
 
-    if (config.containsKey (N_Baudrate))
-    {
-        BaudRateStr = (const char *)config[N_Baudrate];
-        SetBaudrate (BaudRateStr);
-    }
     // DEBUG_END;
 }       // restoreConfiguration
 
@@ -286,9 +251,8 @@ void c_ControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    c_ControllerCommon::saveConfiguration (config);
-
-    config[N_Baudrate] = BaudRateStr;
+    cControllerCommon::saveConfiguration (config);
+    BaudrateControl.saveConfiguration(config);
 
     // DEBUG_END;
 }       // saveConfiguration

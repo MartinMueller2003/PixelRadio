@@ -475,7 +475,7 @@ void buildGUI (void)
     //
     // *************
     //  Controller Tab
-    ControllerMgr.AddControls (ctrlTab);
+    ControllerMgr.AddControls (ctrlTab, ControlColor::Turquoise);
     // ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, emptyString, ControlColor::None, ctrlTab);
     ConfigSave.AddControls (ctrlTab, ControlColor::Turquoise);
 
