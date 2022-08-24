@@ -68,12 +68,12 @@ void cConfigSave::ClearSaveNeeded ()
 // *********************************************************************************************
 void cConfigSave::InitiateSaveOperation ()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     // saveSuccessFlg = saveConfiguration(LITTLEFS_MODE, fileName);
     ClearSaveNeeded ();
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

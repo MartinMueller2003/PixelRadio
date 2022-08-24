@@ -104,13 +104,6 @@ const uint32_t  ELAPSED_TMR_TIME        = 1000;         // RDS Elapsed Time Upda
 const uint8_t LITTLEFS_MODE = 1;
 const uint8_t SD_CARD_MODE = 2;
 
-// FM Radio: All FM Frequencies are X10.
-const uint16_t  FM_FREQ_DEF_X10 = 887;          // 88.7MHz FM.
-const uint16_t  FM_FREQ_MAX_X10 = 1079;         // 107.9MHz FM.
-const uint16_t  FM_FREQ_MIN_X10 = 881;          // 88.1MHz FM.
-const uint16_t  FM_FREQ_SKP_KHZ = 1;            // 100Khz.
-const uint16_t  FM_FREQ_SKP_MHZ = 10;           // 1MHz.
-
 // FM Radio RF
 const float     PA_VOLT_MIN     = 8.1f;         // Minimum allowed voltage for Power Amp, 9V -10%.
 const float     PA_VOLT_MAX     = 9.9f;         // Maximum allowed voltage for Power Amp, 9V + 10%.

@@ -14,34 +14,34 @@
  */
 
 // *********************************************************************************************
-#include "OldControlCommon.hpp"
 #include <Arduino.h>
+#include "ControlCommon.hpp"
+#include "FrequencyStatus.hpp"
 
 // *********************************************************************************************
-class cFrequencyAdjust : public cOldControlCommon
+class cFrequencyAdjust : public cControlCommon
 {
 public:
 
     cFrequencyAdjust ();
     virtual ~cFrequencyAdjust ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color) {AddAdjustControls (TabId, color);}
+    void        AddControls (uint16_t TabId, ControlColor color);
     void        AddAdjustControls (uint16_t TabId, ControlColor color);
     void        AddRadioControls (uint16_t TabId, ControlColor color);
     void        AddHomeControls (uint16_t TabId, ControlColor color);
-    bool        set (String & value, String & ResponseMessage);
     void        Callback (Control * sender, int type);
+    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
 
     void        UpdateStatus ();
 
-    uint16_t RadioId    = Control::noParent;
-    uint16_t HomeId     = Control::noParent;
+    cFrequencyStatus HomeFreqStatus;
+    cFrequencyStatus AdjustFreqStatus;
+    cFrequencyStatus RadioFreqStatus;
 
-    uint16_t HomeStatusID       = Control::noParent;
-    uint16_t AdjustStatusID     = Control::noParent;
-    uint16_t RadioStatusID      = Control::noParent;
 };      // class cFrequencyAdjust
 
 extern cFrequencyAdjust FrequencyAdjust;
