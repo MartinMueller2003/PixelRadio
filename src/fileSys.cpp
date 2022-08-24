@@ -51,7 +51,7 @@
 #include "config.h"
 #include "PixelRadio.h"
 
-#define PixelRadio_LittleFS LITTLEFS
+#define PixelRadio_LittleFS LittleFS
 
 
 // *********************************************************************************************

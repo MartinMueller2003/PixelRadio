@@ -38,7 +38,7 @@
 #include "LoginUser.hpp"
 #include "LoginPassword.hpp"
 
-#define PixelRadio_LittleFS LITTLEFS
+#define PixelRadio_LittleFS LittleFS
 
 // *************************************************************************************************************************
 const uint16_t  JSON_CFG_SZ     = 10000;
