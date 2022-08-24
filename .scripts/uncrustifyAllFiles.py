@@ -36,7 +36,7 @@ def ProcessDirectory(DirPath):
                 SRC_FILE_NAME = file.path
                 DST_FILE_NAME = SRC_FILE_NAME + ".txt"
                 CRT_FILE_NAME = SRC_FILE_NAME + ".uncrustify"
-                COMMAND = PROJECT_DIR + "/uncrustify.exe -c " + PROJECT_DIR + \
+                COMMAND = PROJECT_DIR + exeName + " -c " + PROJECT_DIR + \
                     "/uncrustify.cfg -f " + SRC_FILE_NAME + " > " + DST_FILE_NAME
                 # print("SRC_FILE_NAME : '" + SRC_FILE_NAME + "'")
                 # print("DST_FILE_NAME : '" + DST_FILE_NAME + "'")
@@ -52,4 +52,9 @@ def ProcessDirectory(DirPath):
                 if os.path.exists(CRT_FILE_NAME):
                     os.remove(CRT_FILE_NAME)
 
-ProcessDirectory(SRC_DIR)
+exeName = shutil.which('uncrustify')
+if(exeName == None):
+    print("uncrustify command not found")
+else:
+    print("exeName: '" + exeName + "'")
+    ProcessDirectory(SRC_DIR)
