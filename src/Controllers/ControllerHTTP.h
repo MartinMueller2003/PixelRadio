@@ -27,13 +27,13 @@ public:
 
     c_ControllerHTTP ();
     virtual ~c_ControllerHTTP ();
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
 
     uint16_t EspuiControlID = 0;
     c_ControllerMessages Messages;
-};      // c_ControllerHTTP
+};  // c_ControllerHTTP
 
 // *********************************************************************************************
 // EOF

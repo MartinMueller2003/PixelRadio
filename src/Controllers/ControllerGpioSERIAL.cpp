@@ -25,10 +25,10 @@
 static const PROGMEM char Name [] = "GPIO SERIAL";
 
 // *********************************************************************************************
-cControllerGpioSERIAL::cControllerGpioSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
+cControllerGpioSERIAL::cControllerGpioSERIAL () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {
-    SerialControl.initSerialControl(&Serial1);
-    SetTitle(Name);
+    SerialControl.initSerialControl (& Serial1);
+    SetTitle (Name);
 }
 
 // *********************************************************************************************
@@ -43,7 +43,7 @@ void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V(String("    Name: ") + Name);
     // DEBUG_V(String("GetTitle: ") + GetTitle());
 
-    SetTitle(Name);
+    SetTitle (Name);
 
     // DEBUG_V(String("    Name: ") + Name);
     // DEBUG_V(String("GetTitle: ") + GetTitle());
@@ -52,7 +52,7 @@ void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
     SerialControl.AddControls (ControlId, color);
 
     /*
-    #ifdef OldWay
+     #ifdef OldWay
             extern String logLevelStr;
             EspuiMsgId = ESPUI.addControl (ControlType::Label,
                                            "SERIAL_MSG",
@@ -60,15 +60,15 @@ void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
                                            ControlColor::Turquoise,
                                            ControlLabelElementId);
             ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-    #endif // def OldWay
-    */
+     #endif // def OldWay
+     */
     // DEBUG_END;
 }
 
 // ************************************************************************************************
 void cControllerGpioSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerIsEnabled())
+    if (ControllerIsEnabled ())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -104,7 +104,7 @@ void cControllerGpioSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
         Response += F ("ok\"}");
     }
 #ifdef OldWay
-    serial_manager.println (Response.c_str ());
+        serial_manager.println (Response.c_str ());
 #endif // def OldWay
     // DEBUG_END;
 }
@@ -115,10 +115,10 @@ void cControllerGpioSERIAL::restoreConfiguration (ArduinoJson::JsonObject & conf
     // DEBUG_START;
 
     cControllerCommon::restoreConfiguration (config);
-    SerialControl.restoreConfiguration(config);
+    SerialControl.restoreConfiguration (config);
 
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void cControllerGpioSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -126,21 +126,21 @@ void cControllerGpioSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cControllerCommon::saveConfiguration (config);
-    SerialControl.saveConfiguration(config);
+    SerialControl.saveConfiguration (config);
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *********************************************************************************************
 bool cControllerGpioSERIAL::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
-    bool Response = cControllerCommon::set(value, ResponseMessage, ForceUpdate);
+    bool Response = cControllerCommon::set (value, ResponseMessage, ForceUpdate);
 
-    SerialControl.SetControllerEnabled(getBool());
+    SerialControl.SetControllerEnabled (getBool ());
 
- // DEBUG_END;
+    // DEBUG_END;
     return Response;
 }
 

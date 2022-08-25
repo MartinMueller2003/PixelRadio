@@ -29,7 +29,7 @@ static const PROGMEM char Name [] = "HTTP";
 
 // *********************************************************************************************
 c_ControllerHTTP::c_ControllerHTTP () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)
-{}      // c_ControllerHTTP
+{}  // c_ControllerHTTP
 
 // *********************************************************************************************
 c_ControllerHTTP::~c_ControllerHTTP ()
@@ -38,7 +38,7 @@ c_ControllerHTTP::~c_ControllerHTTP ()
 // *********************************************************************************************
 void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerIsEnabled())
+    if (ControllerIsEnabled ())
     {
         Messages.GetNextRdsMessage (Response);
     }

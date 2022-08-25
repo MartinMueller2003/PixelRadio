@@ -28,8 +28,8 @@
 static const PROGMEM char Name [] = "LOCAL";
 
 // *********************************************************************************************
-c_ControllerLOCAL::c_ControllerLOCAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
-{}      // c_ControllerLOCAL
+c_ControllerLOCAL::c_ControllerLOCAL () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
+{}  // c_ControllerLOCAL
 
 // *********************************************************************************************
 c_ControllerLOCAL::~c_ControllerLOCAL ()
@@ -44,7 +44,7 @@ void c_ControllerLOCAL::AddControls (uint16_t TabId, ControlColor color)
 
     // Messages.SetTitle(Name + " " + N_Messages);
     Messages.AddControls (TabId);
-    Messages.ActivateMessageSet (GetTitle());
+    Messages.ActivateMessageSet (GetTitle ());
 
     // DEBUG_END;
 }
@@ -55,9 +55,9 @@ void c_ControllerLOCAL::CreateDefaultMsgSet ()
     // DEBUG_START;
 
     Messages.clear ();
-    Messages.AddMessage ( F ("LOCAL"), F ("Welcome to Our Drive-by Holiday Light Show"));
-    Messages.AddMessage ( F ("LOCAL"), F ("For Safety Keep Automobile Running Lights On"));
-    Messages.AddMessage ( F ("LOCAL"), F ("Please Drive Slowly and Watch Out for Children and Pets"));
+    Messages.AddMessage (F ("LOCAL"), F ("Welcome to Our Drive-by Holiday Light Show"));
+    Messages.AddMessage (F ("LOCAL"), F ("For Safety Keep Automobile Running Lights On"));
+    Messages.AddMessage (F ("LOCAL"), F ("Please Drive Slowly and Watch Out for Children and Pets"));
 
     // DEBUG_END;
 }
@@ -67,7 +67,7 @@ void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Respo
 {
     // DEBUG_START;
 
-    if (ControllerIsEnabled())
+    if (ControllerIsEnabled ())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -88,7 +88,7 @@ void c_ControllerLOCAL::restoreConfiguration (ArduinoJson::JsonObject & config)
         CreateDefaultMsgSet ();
     }
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void c_ControllerLOCAL::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -99,7 +99,7 @@ void c_ControllerLOCAL::saveConfiguration (ArduinoJson::JsonObject & config)
     Messages.SaveConfig (config);
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *********************************************************************************************
 // EOF

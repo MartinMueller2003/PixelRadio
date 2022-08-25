@@ -29,16 +29,16 @@ public:
     c_ControllerLOCAL ();
     virtual ~c_ControllerLOCAL ();
 
-    void        AddControls (uint16_t ctrlTab, ControlColor color);
-    void        restoreConfiguration (ArduinoJson::JsonObject & config);
-    void        saveConfiguration (ArduinoJson::JsonObject & config);
-    void        CreateDefaultMsgSet ();
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void    AddControls (uint16_t ctrlTab, ControlColor color);
+    void    restoreConfiguration (ArduinoJson::JsonObject & config);
+    void    saveConfiguration (ArduinoJson::JsonObject & config);
+    void    CreateDefaultMsgSet ();
+    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
 
     c_ControllerMessages Messages;
-};      // c_ControllerLOCAL
+};  // c_ControllerLOCAL
 
 // *********************************************************************************************
 // EOF

@@ -32,37 +32,37 @@ public:
 
     c_ControllerFPPDSequences ();
     virtual ~c_ControllerFPPDSequences ();
-    void        RestoreConfig (ArduinoJson::JsonObject & config);
-    void        SaveConfig (ArduinoJson::JsonObject & config);
+    void    RestoreConfig (ArduinoJson::JsonObject & config);
+    void    SaveConfig (ArduinoJson::JsonObject & config);
 
-    void        AddControls (uint16_t ctrlTab);
-    void        AddSequence (String & SequenceName);
-    void        begin ();
-    void        CbButtonCreate (Control * sender, int type);
-    void        CbButtonDelete (Control * sender, int type);
-    void        CbButtonUpdate (Control * sender, int type);
-    void        CbChoiceList (Control * sender, int type);
-    void        CbTextChange (Control * sender, int type);
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) {ControllerMessages.GetNextRdsMessage (Response);}
+    void    AddControls (uint16_t ctrlTab);
+    void    AddSequence (String & SequenceName);
+    void    begin ();
+    void    CbButtonCreate (Control * sender, int type);
+    void    CbButtonDelete (Control * sender, int type);
+    void    CbButtonUpdate (Control * sender, int type);
+    void    CbChoiceList (Control * sender, int type);
+    void    CbTextChange (Control * sender, int type);
+    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) {ControllerMessages.GetNextRdsMessage (Response);}
 
 private:
 
-    void        Activate ();
+    void    Activate ();
 
     String SelectedSequenceName = N_default;
 
-    uint16_t EspuiParentElementId               = Control::noParent;
-    uint16_t EspuiChoiceListElementId           = Control::noParent;
-    uint16_t EspuiStatusMsgElementId            = Control::noParent;
-    uint16_t EspuiInstructionMsgElementId       = Control::noParent;
-    uint16_t EspuiTextEntryElementId            = Control::noParent;
-    uint16_t EspuiButtonCreateElementId         = Control::noParent;
-    uint16_t EspuiButtonDeleteElementId         = Control::noParent;
-    uint16_t EspuiButtonUpdateElementId         = Control::noParent;
+    uint16_t EspuiParentElementId           = Control::noParent;
+    uint16_t EspuiChoiceListElementId       = Control::noParent;
+    uint16_t EspuiStatusMsgElementId        = Control::noParent;
+    uint16_t EspuiInstructionMsgElementId   = Control::noParent;
+    uint16_t EspuiTextEntryElementId        = Control::noParent;
+    uint16_t EspuiButtonCreateElementId     = Control::noParent;
+    uint16_t EspuiButtonDeleteElementId     = Control::noParent;
+    uint16_t EspuiButtonUpdateElementId     = Control::noParent;
 
     std::map <String, c_ControllerFPPDSequence> Sequences;
     c_ControllerMessages ControllerMessages;
-};      // c_ControllerFPPDSequences
+};  // c_ControllerFPPDSequences
 
 // *********************************************************************************************
 // EOF
