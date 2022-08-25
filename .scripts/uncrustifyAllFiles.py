@@ -36,7 +36,7 @@ def ProcessDirectory(DirPath):
                 SRC_FILE_NAME = file.path
                 DST_FILE_NAME = SRC_FILE_NAME + ".txt"
                 CRT_FILE_NAME = SRC_FILE_NAME + ".uncrustify"
-                COMMAND = PROJECT_DIR + exeName + " -c " + PROJECT_DIR + \
+                COMMAND = "uncrustify -q" + " -c " + PROJECT_DIR + \
                     "/uncrustify.cfg -f " + SRC_FILE_NAME + " > " + DST_FILE_NAME
                 # print("SRC_FILE_NAME : '" + SRC_FILE_NAME + "'")
                 # print("DST_FILE_NAME : '" + DST_FILE_NAME + "'")
@@ -45,8 +45,11 @@ def ProcessDirectory(DirPath):
                 result = filecmp.cmp(SRC_FILE_NAME, DST_FILE_NAME, shallow=False)
                 # print(result)
                 if(False == result):
-                    # print("Copy File: " + DST_FILE_NAME)
-                    shutil.copyfile(DST_FILE_NAME, SRC_FILE_NAME)
+                    originalFileSize = os.path.getsize(SRC_FILE_NAME)
+                    modifiedFileSize = os.path.getsize(DST_FILE_NAME)
+                    if((originalFileSize/2) < modifiedFileSize):
+                        print("Copy File: " + DST_FILE_NAME)
+                        shutil.copyfile(DST_FILE_NAME, SRC_FILE_NAME)
                 if os.path.exists(DST_FILE_NAME):
                     os.remove(DST_FILE_NAME)
                 if os.path.exists(CRT_FILE_NAME):
