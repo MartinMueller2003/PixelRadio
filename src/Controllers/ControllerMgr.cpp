@@ -31,7 +31,7 @@
 #include "ControllerGpioSERIAL.hpp"
 #include "language.h"
 
- # include "memdebug.h"
+#include "memdebug.h"
 
 struct ControllerDefinition_t
 {
@@ -42,13 +42,13 @@ struct ControllerDefinition_t
 
 static const ControllerDefinition_t ControllerDefinitions[] =
 {
-    {        c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL,  SERIAL_CONTROLLER_ACTIVE_FLAG,  0x0008    },
-    {        c_ControllerMgr::ControllerTypeId_t::GPIO_SERIAL_CNTRL, SERIAL1_CONTROLLER_ACTIVE_FLAG, 0x0200    },
-    {        c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,        MQTT_CONTROLLER_ACTIVE_FLAG,    0x0004    },
-    {        c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,        FPPD_CONTROLLER_ACTIVE_FLAG,    0x0100    },
-    {        c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,        HTTP_CONTROLLER_ACTIVE_FLAG,    0x0002    },
-    {        c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,       LOCAL_CONTROLLER_ACTIVE_FLAG,   0x0001    },
-    {        c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,          0,                              0x0000    },
+    {c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL,  SERIAL_CONTROLLER_ACTIVE_FLAG,  0x0008},
+    {c_ControllerMgr::ControllerTypeId_t::GPIO_SERIAL_CNTRL, SERIAL1_CONTROLLER_ACTIVE_FLAG, 0x0200},
+    {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,        MQTT_CONTROLLER_ACTIVE_FLAG,    0x0004},
+    {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,        FPPD_CONTROLLER_ACTIVE_FLAG,    0x0100},
+    {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,        HTTP_CONTROLLER_ACTIVE_FLAG,    0x0002},
+    {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,       LOCAL_CONTROLLER_ACTIVE_FLAG,   0x0001},
+    {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,          0,                              0x0000},
 };
 
 // *********************************************************************************************
@@ -121,11 +121,11 @@ c_ControllerMgr::c_ControllerMgr ()
                 // post an error
                 break;
             }
-        }       // end switch(index)
+        }   // end switch(index)
     }
 
     // DEBUG_END;
-}       // c_ControllerMgr
+}   // c_ControllerMgr
 
 // *********************************************************************************************
 c_ControllerMgr::~c_ControllerMgr ()
@@ -151,7 +151,7 @@ void c_ControllerMgr::AddControls (uint16_t TabId, ControlColor color)
         CurrentController.pController->AddControls (TabId, color);
     }
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // *********************************************************************************************
 void c_ControllerMgr::begin ()
@@ -164,13 +164,13 @@ void c_ControllerMgr::begin ()
         CurrentController.pController->begin ();
     }
     // DEBUG_END;
-}       // begin
+}   // begin
 
 // *********************************************************************************************
-cControllerCommon * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
+cControllerCommon   * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
 
 // *********************************************************************************************
-void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
+void                c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -229,15 +229,15 @@ uint16_t c_ControllerMgr::getControllerStatusSummary ()
 }
 
 // *********************************************************************************************
-String c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}        // GetName
+String  c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}    // GetName
 
 // *********************************************************************************************
-void c_ControllerMgr::poll ()
+void    c_ControllerMgr::poll ()
 {
     // _ DEBUG_START;
     for (auto & CurrentController : ListOfControllers)
     {
-        if(CurrentController.pController->ControllerIsEnabled())
+        if (CurrentController.pController->ControllerIsEnabled ())
         {
             CurrentController.pController->poll ();
         }
@@ -281,7 +281,7 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
     } while (false);
 
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -309,7 +309,7 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
     serializeJsonPretty (config, Serial);
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 c_ControllerMgr ControllerMgr;
 

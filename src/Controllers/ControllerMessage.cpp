@@ -31,7 +31,7 @@ c_ControllerMessage::c_ControllerMessage ()
 {
     // DEBUG_START;
     // DEBUG_END;
-}       // c_ControllerMessage
+}   // c_ControllerMessage
 
 // *********************************************************************************************
 c_ControllerMessage::~c_ControllerMessage ()
@@ -47,7 +47,7 @@ c_ControllerMessage::~c_ControllerMessage ()
         MessageElementId = Control::noParent;
     }
     // DEBUG_END;
-}       // c_ControllerMessage
+}   // c_ControllerMessage
 
 // ************************************************************************************************
 void c_ControllerMessage::Activate (bool value)
@@ -90,7 +90,7 @@ void c_ControllerMessage::Activate (bool value)
     } while (false);
 
     // DEBUG_END;
-}       // Activate
+}   // Activate
 
 // ************************************************************************************************
 void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
@@ -165,7 +165,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
     } while (false);
 
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // *********************************************************************************************
 void c_ControllerMessage::CbDuration (Control * sender, int type)
@@ -178,7 +178,7 @@ void c_ControllerMessage::CbDuration (Control * sender, int type)
     Log.infoln ((String (F ("FPPD Message Duration Set to: ")) + String (DurationSec)).c_str ());
 
     // DEBUG_END;
-}       // EnabledCb
+}   // EnabledCb
 
 // *********************************************************************************************
 void c_ControllerMessage::CbEnabled (Control * sender, int type)
@@ -192,7 +192,7 @@ void c_ControllerMessage::CbEnabled (Control * sender, int type)
     Log.infoln ((String (F ("FPPD Message Duration Set to: ")) + String (Enabled ? "On" : "Off")).c_str ());
 
     // DEBUG_END;
-}       // EnabledCb
+}   // EnabledCb
 
 // *********************************************************************************************
 void c_ControllerMessage::GetMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
@@ -228,7 +228,7 @@ void c_ControllerMessage::RestoreConfig (ArduinoJson::JsonObject config)
         // DEBUG_V(String("    Enabled: ") + String(Enabled));
     }
     // DEBUG_END;
-}       // RestoreConfig
+}   // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessage::SaveConfig (ArduinoJson::JsonObject config)
@@ -236,12 +236,12 @@ void c_ControllerMessage::SaveConfig (ArduinoJson::JsonObject config)
     // DEBUG_START;
     // DEBUG_V(String("Message: ") + MessageText);
 
-    config[N_message]           = MessageText;
-    config[N_durationSec]       = DurationSec;
-    config[N_enabled]           = Enabled;
+    config[N_message]       = MessageText;
+    config[N_durationSec]   = DurationSec;
+    config[N_enabled]       = Enabled;
 
     // DEBUG_END;
-}       // SaveConfig
+}   // SaveConfig
 
 // ************************************************************************************************
 void c_ControllerMessage::SelectMessage ()
@@ -274,8 +274,8 @@ void c_ControllerMessage::SelectMessage ()
         if (control)
         {
             // DEBUG_V("Set up Duration");
-            control->value      = String (DurationSec);
-            control->user       = this;
+            control->value  = String (DurationSec);
+            control->user   = this;
             ESPUI.updateControl (MessageElementIds->DisplayDurationElementId);
         }
         control = ESPUI.getControl (MessageElementIds->EnabledElementId);
@@ -283,14 +283,14 @@ void c_ControllerMessage::SelectMessage ()
         if (control)
         {
             // DEBUG_V("Set up enabled CB");
-            control->value      = String (Enabled ? "1" : "0");
-            control->user       = this;
+            control->value  = String (Enabled ? "1" : "0");
+            control->user   = this;
             ESPUI.updateControl (MessageElementIds->EnabledElementId);
         }
     } while (false);
 
     // DEBUG_END;
-}       // SelectMessage
+}   // SelectMessage
 
 // *********************************************************************************************
 void c_ControllerMessage::SetMessage (String & value)
@@ -303,7 +303,7 @@ void c_ControllerMessage::SetMessage (String & value)
     MessageText = value;
 
     // DEBUG_END;
-}       // SetMessage
+}   // SetMessage
 
 // *********************************************************************************************
 // EOF

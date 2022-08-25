@@ -31,11 +31,11 @@ public:
 
     struct MessageElementIds_t
     {
-        uint16_t        ActiveChoiceListElementId       = Control::noParent;
-        uint16_t        HiddenChoiceListElementId       = Control::noParent;
-        uint16_t        MessageDetailsElementId         = Control::noParent;
-        uint16_t        DisplayDurationElementId        = Control::noParent;
-        uint16_t        EnabledElementId                = Control::noParent;
+        uint16_t    ActiveChoiceListElementId   = Control::noParent;
+        uint16_t    HiddenChoiceListElementId   = Control::noParent;
+        uint16_t    MessageDetailsElementId     = Control::noParent;
+        uint16_t    DisplayDurationElementId    = Control::noParent;
+        uint16_t    EnabledElementId            = Control::noParent;
     };
 
     c_ControllerMessage ();
@@ -63,10 +63,10 @@ private:
 
     uint16_t MessageElementId = Control::noParent;
     String MessageText;
-    uint32_t DurationSec                        = 5;
-    bool Enabled                                = true;
-    MessageElementIds_t * MessageElementIds     = nullptr;
-};      // c_ControllerMessage
+    uint32_t DurationSec                    = 5;
+    bool Enabled                            = true;
+    MessageElementIds_t * MessageElementIds = nullptr;
+};  // c_ControllerMessage
 
 // *********************************************************************************************
 // EOF

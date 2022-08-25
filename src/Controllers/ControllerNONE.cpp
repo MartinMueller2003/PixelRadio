@@ -28,7 +28,7 @@ static const PROGMEM char Name [] = "NONE";
 
 // *********************************************************************************************
 c_ControllerNONE::c_ControllerNONE () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
-{}      // c_ControllerNONE
+{}  // c_ControllerNONE
 
 // *********************************************************************************************
 c_ControllerNONE::~c_ControllerNONE ()
@@ -42,7 +42,7 @@ void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject & config)
     cControllerCommon::restoreConfiguration (config);
 
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -52,7 +52,7 @@ void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject & config)
     cControllerCommon::saveConfiguration (config);
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *********************************************************************************************
 // EOF

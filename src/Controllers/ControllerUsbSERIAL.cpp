@@ -24,9 +24,9 @@
 
 static const PROGMEM char Name [] = "USB SERIAL";
 // ================================================================================================
-cControllerUsbSERIAL::cControllerUsbSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
+cControllerUsbSERIAL::cControllerUsbSERIAL () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {
-    SerialControl.initSerialControl(&Serial);
+    SerialControl.initSerialControl (& Serial);
 }
 
 // ================================================================================================
@@ -42,7 +42,7 @@ void cControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
     SerialControl.AddControls (ControlId, color);
 
     /*
-    #ifdef OldWay
+     #ifdef OldWay
             extern String logLevelStr;
             EspuiMsgId = ESPUI.addControl (ControlType::Label,
                                            "SERIAL_MSG",
@@ -50,15 +50,15 @@ void cControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
                                            ControlColor::Turquoise,
                                            ControlLabelElementId);
             ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-    #endif // def OldWay
-    */
+     #endif // def OldWay
+     */
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // ************************************************************************************************
 void cControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerIsEnabled())
+    if (ControllerIsEnabled ())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -94,7 +94,7 @@ void cControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
         Response += F ("ok\"}");
     }
 #ifdef OldWay
-    serial_manager.println (Response.c_str ());
+        serial_manager.println (Response.c_str ());
 #endif // def OldWay
     // DEBUG_END;
 }
@@ -105,10 +105,10 @@ void cControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject & confi
     // DEBUG_START;
 
     cControllerCommon::restoreConfiguration (config);
-    SerialControl.restoreConfiguration(config);
+    SerialControl.restoreConfiguration (config);
 
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void cControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -116,21 +116,21 @@ void cControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cControllerCommon::saveConfiguration (config);
-    SerialControl.saveConfiguration(config);
+    SerialControl.saveConfiguration (config);
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *********************************************************************************************
 bool cControllerUsbSERIAL::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
-    bool Response = cControllerCommon::set(value, ResponseMessage, ForceUpdate);
+    bool Response = cControllerCommon::set (value, ResponseMessage, ForceUpdate);
 
-    SerialControl.SetControllerEnabled(getBool());
+    SerialControl.SetControllerEnabled (getBool ());
 
- // DEBUG_END;
+    // DEBUG_END;
     return Response;
 }
 

@@ -24,7 +24,7 @@
 #include <ArduinoJson.h>
 #include <ESPUI.h>
 
-class cControllerCommon;       // forward declaration
+class cControllerCommon;    // forward declaration
 
 #define ControllerTypeId c_ControllerMgr::ControllerTypeId_t
 
@@ -55,19 +55,19 @@ public:
 
     struct RdsMsgInfo_t
     {
-        String          ControllerName;
-        String          Text;
-        uint32_t        DurationMilliSec = 0;
+        String      ControllerName;
+        String      Text;
+        uint32_t    DurationMilliSec = 0;
     };
 
 protected:
 
     struct ControllerInfo_t
     {
-        ControllerTypeId_t      ControllerId    = ControllerIdStart;
-        uint16_t                ActiveBit       = 0;
-        uint16_t                SendingBit      = 0;
-        cControllerCommon      * pController   = nullptr;
+        ControllerTypeId_t  ControllerId    = ControllerIdStart;
+        uint16_t            ActiveBit       = 0;
+        uint16_t            SendingBit      = 0;
+        cControllerCommon   * pController   = nullptr;
     };
 
     ControllerInfo_t ListOfControllers[ControllerTypeId_t::NumControllerTypes];
@@ -84,14 +84,14 @@ public:
     void                begin ();
     void                AddControls (uint16_t TabId, ControlColor color);
     void                Display (ControllerTypeId_t Id);
-    cControllerCommon  * GetControllerById (ControllerTypeId_t Id);
+    cControllerCommon   * GetControllerById (ControllerTypeId_t Id);
     bool                GetControllerEnabledFlag (ControllerTypeId_t Id);
     uint16_t            getControllerStatusSummary ();
     String              GetName (ControllerTypeId_t Id);
     void                GetNextRdsMessage (RdsMsgInfo_t & Response);
     void                restoreConfiguration (ArduinoJson::JsonObject & config);
     void                saveConfiguration (ArduinoJson::JsonObject & config);
-};      // c_ControllerMgr
+};  // c_ControllerMgr
 
 #define CtypeId c_ControllerMgr::ControllerTypeId_t
 #define LocalControllerId     CtypeId::LOCAL_CNTRL

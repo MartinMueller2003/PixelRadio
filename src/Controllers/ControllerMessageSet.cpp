@@ -32,7 +32,7 @@ c_ControllerMessageSet::c_ControllerMessageSet ()
     MessagesSemaphore = xSemaphoreCreateMutex ();
 
     // DEBUG_END;
-}       // c_ControllerMessageSet
+}   // c_ControllerMessageSet
 
 // *********************************************************************************************
 c_ControllerMessageSet::~c_ControllerMessageSet ()
@@ -40,7 +40,7 @@ c_ControllerMessageSet::~c_ControllerMessageSet ()
     // DEBUG_START;
 
     // DEBUG_END;
-}       // c_ControllerMessageSet
+}   // c_ControllerMessageSet
 
 // *********************************************************************************************
 void c_ControllerMessageSet::Activate (bool Activating)
@@ -94,7 +94,7 @@ void c_ControllerMessageSet::ActivateMessage (String MsgName)
     } while (false);
 
     // DEBUG_END;
-}       // ActivateMessage
+}   // ActivateMessage
 
 // ************************************************************************************************
 void c_ControllerMessageSet::AddControls (c_ControllerMessage::MessageElementIds_t * _MessageElementIds)
@@ -132,7 +132,7 @@ void c_ControllerMessageSet::AddControls (c_ControllerMessage::MessageElementIds
     } while (false);
 
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // ************************************************************************************************
 void c_ControllerMessageSet::AddMessage (String MsgText)
@@ -307,7 +307,7 @@ void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject & config)
     }
 
     // DEBUG_END;
-}       // RestoreConfig
+}   // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessageSet::SaveConfig (ArduinoJson::JsonObject & MsgSetConfig)
@@ -327,7 +327,7 @@ void c_ControllerMessageSet::SaveConfig (ArduinoJson::JsonObject & MsgSetConfig)
     }
 
     // DEBUG_END;
-}       // SaveConfig
+}   // SaveConfig
 
 // *********************************************************************************************
 void c_ControllerMessageSet::ShowMsgDetailsPane (bool value)

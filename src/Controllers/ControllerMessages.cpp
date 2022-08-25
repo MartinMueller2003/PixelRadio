@@ -25,9 +25,9 @@
  # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-static const String     DefaultTextFieldValue   = F ("Type New RDS Message Text Here. 64 Char Max");
-static const String     DefaultTextWarningMsg   = F ("WARN: Instruction text cannot be in the message");
-static const String     EmptyMsgWarning         = F ("WARN: Empty message is not allowed");
+static const String DefaultTextFieldValue   = F ("Type New RDS Message Text Here. 64 Char Max");
+static const String DefaultTextWarningMsg   = F ("WARN: Instruction text cannot be in the message");
+static const String EmptyMsgWarning         = F ("WARN: Empty message is not allowed");
 
 // *********************************************************************************************
 c_ControllerMessages::c_ControllerMessages ()
@@ -37,7 +37,7 @@ c_ControllerMessages::c_ControllerMessages ()
     MessageSetsSemaphore = xSemaphoreCreateMutex ();
 
     // DEBUG_END;
-}       // c_ControllerMessages
+}   // c_ControllerMessages
 
 // *********************************************************************************************
 c_ControllerMessages::~c_ControllerMessages ()
@@ -45,7 +45,7 @@ c_ControllerMessages::~c_ControllerMessages ()
     // DEBUG_START;
 
     // DEBUG_END;
-}       // c_ControllerMessages
+}   // c_ControllerMessages
 
 // ************************************************************************************************
 void c_ControllerMessages::ActivateMessageSet (String MsgSetName)
@@ -81,8 +81,8 @@ void c_ControllerMessages::ActivateMessageSet (String MsgSetName)
 
         if (control)
         {
-            Title               = MsgSetName + F (" ") + N_Messages;
-            control->label      = Title.c_str ();
+            Title           = MsgSetName + F (" ") + N_Messages;
+            control->label  = Title.c_str ();
             ESPUI.updateControl (control);
         }
         // DEBUG_V();
@@ -122,8 +122,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                                                                             if (parm)
                                                                             {
                                                                                 reinterpret_cast <c_ControllerMessages *> (parm)->CbChoiceList (
-                                                                                    sender,
-                                                                                    type);
+                                                                            sender,
+                                                                            type);
                                                                             }
                                                                         },
                                                                         this);
@@ -238,7 +238,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                                                              if (nullptr != parm)
                                                              {
                                                                  reinterpret_cast <c_ControllerMessages *> (parm)->CbSwitchDisplayFseqName (
-                                                                     sender, type);
+                                                             sender, type);
                                                              }
                                                          },
                                                          nullptr);
@@ -295,7 +295,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
     for (auto & CurrentMessageSet : MessageSets)
     {
         // DEBUG_V();
-        CurrentMessageSet.second.AddControls (&MessageElementIds);
+        CurrentMessageSet.second.AddControls (& MessageElementIds);
     }
 
     if (MessageSets.empty ())
@@ -312,7 +312,7 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
     CbTextChange (nullptr, 0);
 
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // ************************************************************************************************
 void c_ControllerMessages::AddMessage (String MsgSetName, String MsgText)
@@ -377,7 +377,7 @@ bool c_ControllerMessages::AddMessageSet (String MsgSetName)
         MessageSets[MsgSetName] = temp;
         xSemaphoreGive (MessageSetsSemaphore);
 
-        MessageSets[MsgSetName].AddControls (&MessageElementIds);
+        MessageSets[MsgSetName].AddControls (& MessageElementIds);
         MessageSets[MsgSetName].SetName (MsgSetName);
 
         if (CurrentMsgSetName.isEmpty ())
@@ -415,7 +415,7 @@ void c_ControllerMessages::CbButtonCreate (Control * sender, int type)
     } while (false);
 
     // DEBUG_END;
-}       // ButtonCreateCb
+}   // ButtonCreateCb
 
 // ************************************************************************************************
 void c_ControllerMessages::CbButtonDelete (Control * sender, int type)
@@ -423,8 +423,8 @@ void c_ControllerMessages::CbButtonDelete (Control * sender, int type)
     // DEBUG_START;
     // DEBUG_V(String("       Title: '") + Title + "'");
 
-    Control     * ChoiceControl = ESPUI.getControl (MessageElementIds.ActiveChoiceListElementId);
-    String      SelectedMsgName = ChoiceControl->value;
+    Control * ChoiceControl = ESPUI.getControl (MessageElementIds.ActiveChoiceListElementId);
+    String  SelectedMsgName = ChoiceControl->value;
 
     // DEBUG_V(String("Choice value: '") + SelectedMsgName + "'");
 
@@ -450,7 +450,7 @@ void c_ControllerMessages::CbButtonDelete (Control * sender, int type)
     } while (false);
 
     // DEBUG_END;
-}       // ButtonDeleteCb
+}   // ButtonDeleteCb
 
 // ************************************************************************************************
 void c_ControllerMessages::CbButtonUpdate (Control * sender, int type)
@@ -470,8 +470,8 @@ void c_ControllerMessages::CbButtonUpdate (Control * sender, int type)
         String  NewMessageText  = TextControl->value;
         // DEBUG_V(String("     NewMessageText: '") + NewMessageText + "'");
 
-        Control * ChoiceControl         = ESPUI.getControl (MessageElementIds.ActiveChoiceListElementId);
-        String  OriginalMessageText     = ChoiceControl->value;
+        Control * ChoiceControl     = ESPUI.getControl (MessageElementIds.ActiveChoiceListElementId);
+        String  OriginalMessageText = ChoiceControl->value;
         // DEBUG_V(String("OriginalMessageText: '") + OriginalMessageText + "'");
 
         MessageSets[CurrentMsgSetName].UpdateMsgText (OriginalMessageText, NewMessageText);
@@ -481,7 +481,7 @@ void c_ControllerMessages::CbButtonUpdate (Control * sender, int type)
     } while (false);
 
     // DEBUG_END;
-}       // CbButtonUpdate
+}   // CbButtonUpdate
 
 // ************************************************************************************************
 void c_ControllerMessages::CbChoiceList (Control * sender, int type)
@@ -512,7 +512,7 @@ void c_ControllerMessages::CbChoiceList (Control * sender, int type)
     } while (false);
 
     // DEBUG_END;
-}       // CbChoiceList
+}   // CbChoiceList
 
 // ************************************************************************************************
 void c_ControllerMessages::CbSwitchDisplayFseqName (Control * sender, int type)
@@ -526,7 +526,7 @@ void c_ControllerMessages::CbSwitchDisplayFseqName (Control * sender, int type)
     Log.infoln ((String (F ("FPPD Display fseq Name Set to: ")) + String (DisplayFseqName ? "On" : "Off")).c_str ());
 
     // DEBUG_END;
-}       // DisplayFseqNameCb
+}   // DisplayFseqNameCb
 
 // ************************************************************************************************
 void c_ControllerMessages::CbTextChange (Control *, int)
@@ -534,30 +534,30 @@ void c_ControllerMessages::CbTextChange (Control *, int)
     // DEBUG_START;
     // DEBUG_V(String(" CurrentMsgSetName: '") + CurrentMsgSetName + "'");
 
-    Control * ChoiceList        = ESPUI.getControl (MessageElementIds.ActiveChoiceListElementId);
-    Control * TextControl       = ESPUI.getControl (TextEntryElementId);
+    Control * ChoiceList    = ESPUI.getControl (MessageElementIds.ActiveChoiceListElementId);
+    Control * TextControl   = ESPUI.getControl (TextEntryElementId);
 
     // DEBUG_V(String("        Text value: '") + TextControl->value + "'");
     // DEBUG_V(String("      Choice value: '") + ChoiceList->value + "'");
 
-    bool        EnableCreate    = true;
-    bool        EnableDelete    = true;
-    bool        EnableUpdate    = true;
+    bool    EnableCreate    = true;
+    bool    EnableDelete    = true;
+    bool    EnableUpdate    = true;
 
     do  // once
     {
         if (ChoiceList->value.isEmpty () || MessageSets[CurrentMsgSetName].empty ())
         {
             // DEBUG_V("Disable delete/update buttons");
-            EnableDelete        = false;
-            EnableUpdate        = false;
+            EnableDelete    = false;
+            EnableUpdate    = false;
         }
 
         if (TextControl->value.equals (DefaultTextFieldValue))
         {
             // DEBUG_V("User did not remove the default text");
-            EnableCreate        = false;
-            EnableUpdate        = false;
+            EnableCreate    = false;
+            EnableUpdate    = false;
             ESPUI.print (StatusMsgElementId, emptyString);
             break;
         }
@@ -565,8 +565,8 @@ void c_ControllerMessages::CbTextChange (Control *, int)
         if (-1 != TextControl->value.indexOf (DefaultTextFieldValue))
         {
             // DEBUG_V("User did not remove the default text");
-            EnableCreate        = false;
-            EnableUpdate        = false;
+            EnableCreate    = false;
+            EnableUpdate    = false;
             ESPUI.print (StatusMsgElementId, DefaultTextWarningMsg);
             break;
         }
@@ -574,8 +574,8 @@ void c_ControllerMessages::CbTextChange (Control *, int)
         if (TextControl->value.isEmpty ())
         {
             // DEBUG_V("Cant update an entry without a message");
-            EnableCreate        = false;
-            EnableUpdate        = false;
+            EnableCreate    = false;
+            EnableUpdate    = false;
             ESPUI.updateText (TextEntryElementId, DefaultTextFieldValue);
             ESPUI.print (StatusMsgElementId, EmptyMsgWarning);
             break;
@@ -584,8 +584,8 @@ void c_ControllerMessages::CbTextChange (Control *, int)
         if (TextControl->value.equals (ChoiceList->value))
         {
             // DEBUG_V("No Change In Text");
-            EnableCreate        = false;
-            EnableUpdate        = false;
+            EnableCreate    = false;
+            EnableUpdate    = false;
             // ESPUI.updateControlValue(TextEntryElementId, DefaultTextFieldValue);
             break;
         }
@@ -593,8 +593,8 @@ void c_ControllerMessages::CbTextChange (Control *, int)
         if (MessageSets[CurrentMsgSetName].HasMsg (TextControl->value))
         {
             // DEBUG_V("Msg exists in active set. No Create or update allowed.");
-            EnableCreate        = false;
-            EnableUpdate        = false;
+            EnableCreate    = false;
+            EnableUpdate    = false;
             ESPUI.print (StatusMsgElementId, String (F ("This message already exists.")));
             break;
         }
@@ -603,12 +603,12 @@ void c_ControllerMessages::CbTextChange (Control *, int)
     } while (false);
 
     // DEBUG_V("Update Buttons");
-    ESPUI.      setEnabled (    ButtonCreateElementId,  EnableCreate);
-    ESPUI.      setEnabled (    ButtonDeleteElementId,  EnableDelete);
-    ESPUI.      setEnabled (    ButtonUpdateElementId,  EnableUpdate);
+    ESPUI.setEnabled (ButtonCreateElementId,  EnableCreate);
+    ESPUI.setEnabled (ButtonDeleteElementId,  EnableDelete);
+    ESPUI.setEnabled (ButtonUpdateElementId,  EnableUpdate);
 
     // DEBUG_END;
-}       // TextChangeCb
+}   // TextChangeCb
 
 // ************************************************************************************************
 void c_ControllerMessages::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
@@ -680,7 +680,7 @@ void c_ControllerMessages::RestoreConfig (ArduinoJson::JsonObject & config)
     }
 
     // DEBUG_END;
-}       // RestoreConfig
+}   // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerMessages::SaveConfig (ArduinoJson::JsonObject & config)
@@ -707,7 +707,7 @@ void c_ControllerMessages::SaveConfig (ArduinoJson::JsonObject & config)
     // serializeJsonPretty(config, Serial);
 
     // DEBUG_END;
-}       // SaveConfig
+}   // SaveConfig
 
 // *********************************************************************************************
 void c_ControllerMessages::SaveConfig (ArduinoJson::JsonObject & config, String & SetName)
@@ -717,7 +717,7 @@ void c_ControllerMessages::SaveConfig (ArduinoJson::JsonObject & config, String 
     MessageSets[SetName].SaveConfig (config);
 
     // DEBUG_END;
-}       // SaveConfig
+}   // SaveConfig
 
 // *********************************************************************************************
 void c_ControllerMessages::SetShowFseqNameSelection (bool value)

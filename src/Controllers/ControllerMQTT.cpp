@@ -31,7 +31,7 @@ static const PROGMEM char Name [] = "MQTT";
 
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
-{}      // c_ControllerMQTT
+{}  // c_ControllerMQTT
 
 // *********************************************************************************************
 c_ControllerMQTT::~c_ControllerMQTT ()
@@ -44,15 +44,15 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
 
     cControllerCommon::AddControls (TabId, color);
     setMessageStyle (eCssStyle::CssStyleWhite);
-    
-    MqttName.AddControls(TabId, color);
-    MqttBrokerIpAddress.AddControls(TabId, color);
+
+    MqttName.AddControls (TabId, color);
+    MqttBrokerIpAddress.AddControls (TabId, color);
 
 #ifdef OldWay
 
-    // DEBUG_V();
+        // DEBUG_V();
 
-    EspuiIpID = ESPUI.addControl (ControlType::Text,
+        EspuiIpID = ESPUI.addControl (ControlType::Text,
                                   CTRL_MQTT_IP_STR,
                                   MqttBrokerIpAddress.get (),
                                   ControlColor::Turquoise,
@@ -65,19 +65,19 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
                                       }
                                   },
                                   this);
-    // DEBUG_V();
+        // DEBUG_V();
 
-    EspuiPortID = ESPUI.addControl (ControlType::Label,
+        EspuiPortID = ESPUI.addControl (ControlType::Label,
                                     CTRL_MQTT_PORT_STR,
                                     String (mqttPort),
                                     ControlColor::Turquoise,
                                     ctrlTab);
-    ESPUI.setPanelStyle (EspuiPortID, String (F ("font-size: 1.25em;")));
-    ESPUI.setElementStyle (EspuiPortID, "max-width: 40%;");
+        ESPUI.setPanelStyle (EspuiPortID, String (F ("font-size: 1.25em;")));
+        ESPUI.setElementStyle (EspuiPortID, "max-width: 40%;");
 
-    // DEBUG_V();
+        // DEBUG_V();
 
-    EspuiUserID = ESPUI.addControl (ControlType::Text,
+        EspuiUserID = ESPUI.addControl (ControlType::Text,
                                     CTRL_MQTT_USER_STR,
                                     mqttUserStr,
                                     ControlColor::Turquoise,
@@ -90,9 +90,9 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
                                         }
                                     },
                                     this);
-    // DEBUG_V();
+        // DEBUG_V();
 
-    EspuiPwID = ESPUI.addControl (ControlType::Text,
+        EspuiPwID = ESPUI.addControl (ControlType::Text,
                                   CTRL_MQTT_PW_STR,
                                   MQTT_PASS_HIDE_STR,
                                   ControlColor::Turquoise,
@@ -108,28 +108,29 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
 
 
 
-    String tempStr;
-    if ((ControllerIsEnabled() == true) &&
-        ((INADDR_NONE != MqttBrokerIpAddress.getIpaddress ()) || (!MqttName.get().length ()) ||
+        String tempStr;
+
+        if ((ControllerIsEnabled () == true) &&
+        ((INADDR_NONE != MqttBrokerIpAddress.getIpaddress ()) || (!MqttName.get ().length ()) ||
          (!mqttUserStr.length ()) || (!mqttPwStr.length ())))
-    {
-        // DEBUG_V();
-        MessageStr              = MQTT_MISSING_STR;
-    }
+        {
+            // DEBUG_V();
+            MessageStr = MQTT_MISSING_STR;
+        }
 
         else if (getWifiMode () == WIFI_AP)
         {
             // DEBUG_V();
             MessageStr = MQTT_NOT_AVAIL_STR;
         }
-    else
-    {
-        // DEBUG_V();
-        MessageStr = emptyString;
-    }
+        else
+        {
+            // DEBUG_V();
+            MessageStr = emptyString;
+        }
 #endif // def OldWay
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // *********************************************************************************************
 void c_ControllerMQTT::Begin ()
@@ -146,12 +147,12 @@ void c_ControllerMQTT::Begin ()
         }
 #endif // def OldWay
     // DEBUG_END;
-}       // Begin
+}   // Begin
 
 // *********************************************************************************************
 void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerIsEnabled())
+    if (ControllerIsEnabled ())
     {
         Messages.GetNextRdsMessage (Response);
     }
@@ -162,10 +163,10 @@ void c_ControllerMQTT::Init (void)
 {
     // DEBUG_START;
 
-    String      payloadStr;
-    String      topicStr;
+    String  payloadStr;
+    String  topicStr;
 
-    if (!ControllerIsEnabled())
+    if (!ControllerIsEnabled ())
     {   // MQTT Controller Disabled.
         // DEBUG_V();
         OnlineFlag = false;
@@ -178,31 +179,31 @@ void c_ControllerMQTT::Init (void)
     {
         // DEBUG_V();
         Log.traceln (F ("Initializing MQTT"));
-        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress(), mqttPort);
+        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), mqttPort);
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
                                 {
                                     c_ControllerMQTT * pMe =
                                         static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
                                     pMe->mqttClientCallback (topic, payload, length);
-                                });     // Topic Subscription callback handler.
+                                }); // Topic Subscription callback handler.
 
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
         // DEBUG_V();
 
-        if (mqttClient.connect (MqttName.get().c_str (), mqttUserStr.c_str (), mqttPwStr.c_str ()))
+        if (mqttClient.connect (MqttName.get ().c_str (), mqttUserStr.c_str (), mqttPwStr.c_str ()))
         {
             // DEBUG_V();
             OnlineFlag  = true;
-            topicStr    = MqttName.get();
+            topicStr    = MqttName.get ();
             topicStr    += MQTT_CONNECT_STR;
-            payloadStr  = F ("{\"boot\": 0}");                                  // JSON Formatted payload.
-            mqttClient.publish (topicStr.c_str (), payloadStr.c_str ());        // Publish reconnect status.
+            payloadStr  = F ("{\"boot\": 0}");                              // JSON Formatted payload.
+            mqttClient.publish (topicStr.c_str (), payloadStr.c_str ());    // Publish reconnect status.
 
             Log.infoln ((String (F ("-> MQTT Started. Sent Topic: ")) + topicStr + F (", Payload: ") + payloadStr).c_str ());
 
             updateUiMqttMsg (MQTT_ONLINE_STR);
 
-            topicStr    = MqttName.get();
+            topicStr    = MqttName.get ();
             topicStr    += MQTT_CMD_SUB_STR;
 
             if (mqttClient.subscribe (topicStr.c_str ()))
@@ -231,7 +232,7 @@ void c_ControllerMQTT::Init (void)
         Log.errorln (F ("WiFi Router Not Connected; MQTT Disabled."));
     }
     // DEBUG_END;
-}       // Init
+}   // Init
 
 // *************************************************************************************************************************
 void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)
@@ -260,15 +261,15 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
         {
             char cBuff[length + 2];
             memcpy (cBuff, payload, length);
-            cBuff[length]       = 0;
-            payloadStr          = cBuff;
+            cBuff[length]   = 0;
+            payloadStr      = cBuff;
         }
-        payloadStr.trim ();     // Remove leading/trailing spaces. Do NOT change to lowercase!
+        payloadStr.trim (); // Remove leading/trailing spaces. Do NOT change to lowercase!
         // DEBUG_V();
 
         topicStr = topic;
-        topicStr.trim ();               // Remove leading/trailing spaces.
-        topicStr.toLowerCase ();        // Force lowercase, prevent case matching problems.
+        topicStr.trim ();           // Remove leading/trailing spaces.
+        topicStr.toLowerCase ();    // Force lowercase, prevent case matching problems.
 
         if (topicStr.length () > MQTT_TOPIC_MAX_SZ)
         {
@@ -285,37 +286,37 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
         // START OF MQTT COMMAND ACTIONS:
         // DEBUG_V();
 
-        if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_AUDMODE_STR))
+        if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_AUDMODE_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received Audio Mode Command"));
             audioModeCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_FREQ_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_FREQ_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received Radio Frequency Command"));
             frequencyCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_GPIO19_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_GPIO19_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received GPIO19 Command"));
             gpioMqttControl (payloadStr, GPIO19_PIN);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_GPIO23_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_GPIO23_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received GPIO23 Command"));
             gpioMqttControl (payloadStr, GPIO23_PIN);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_GPIO33_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_GPIO33_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received GPIO33 Command"));
             gpioMqttControl (payloadStr, GPIO33_PIN);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_INFO_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_INFO_STR))
         {
             // DEBUG_V();
             String Message;
@@ -327,11 +328,11 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
                 String HostName;
                 WiFiDriver.GetHostname (HostName);
                 Message = String (F ("{\"")) + CMD_INFO_STR +
-                                F (     "\": \"ok\", \"version\": \"") + VERSION_STR +
-                                F (     "\", \"hostName\": \"") + HostName +
-                                F (     "\", \"ip\": \"") + WiFi.localIP ().toString () +
-                                F (     "\", \"rssi\": ") + WiFi.RSSI () +
-                                F (     ", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
+                                F ( "\": \"ok\", \"version\": \"") + VERSION_STR +
+                                F ( "\", \"hostName\": \"") + HostName +
+                                F ( "\", \"ip\": \"") + WiFi.localIP ().toString () +
+                                F ( "\", \"rssi\": ") + WiFi.RSSI () +
+                                F ( ", \"status\": \"0x") + ControllerMgr.getControllerStatusSummary ();
             }
             else
             {
@@ -339,52 +340,52 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
                 Message = String (F ("{\"")) + CMD_INFO_STR + F ("\": \"fail\"}");
             }
             // DEBUG_V();
-            topicStr = MqttName.get() + MQTT_INFORM_STR;
+            topicStr = MqttName.get () + MQTT_INFORM_STR;
             mqttClient.publish (topicStr.c_str (), Message.c_str ());
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_MUTE_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_MUTE_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received Audio Mute Command"));
             muteCmd (payloadStr, Name);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_PICODE_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_PICODE_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT Received RDS PI Code Command"));
             piCodeCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_PSN_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_PSN_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received RDS Program Station Name Command"));
             programServiceNameCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_RADIOTEXT_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_RADIOTEXT_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received RadioText Command"));
             radioTextCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_REBOOT_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_REBOOT_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received System Reboot Command."));
             rebootCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_START_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_START_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received RDS Restart Command."));
             startCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_STOP_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_STOP_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received RDS Stop Command."));
             stopCmd (payloadStr, MqttControllerId);
         }
-        else if (topicStr == MqttName.get() + makeMqttCmdStr (CMD_PERIOD_STR))
+        else if (topicStr == MqttName.get () + makeMqttCmdStr (CMD_PERIOD_STR))
         {
             // DEBUG_V();
             Log.infoln (F ("MQTT: Received RDS Display Time Command"));
@@ -397,32 +398,32 @@ void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, u
         }
 #endif // def OldWay
     // DEBUG_END;
-}       // mqttClientCallback
+}   // mqttClientCallback
 
 // *************************************************************************************************************************
 void c_ControllerMQTT::mqttReconnect (bool resetFlg)
 {
     // DEBUG_START;
-    static uint8_t ClientConnectionRetryCount = 0;      // MQTT Connection Retry Counter. Each reconnect attempt is allowed
-                                                        // several tries.
-    static long previousWiFiMillis = millis ();         // Timer for WiFi services.
+    static uint8_t ClientConnectionRetryCount = 0;  // MQTT Connection Retry Counter. Each reconnect attempt is allowed
+                                                    // several tries.
+    static long previousWiFiMillis = millis ();     // Timer for WiFi services.
     String topicStr;
 
-    do                                                  // once
+    do                                              // once
     {
         // DEBUG_V();
         if (resetFlg == true)
         {
             // DEBUG_V();
             ClientConnectionRetryCount  = 0;
-            previousWiFiMillis          = millis () - MQTT_RECONNECT_TIME + 2000;       // Allow Reconnect in 2 secs.
+            previousWiFiMillis          = millis () - MQTT_RECONNECT_TIME + 2000;   // Allow Reconnect in 2 secs.
             Log.traceln (F ("MQTT Reconnect Fail Count has Been Reset."));
             break;
         }
         // DEBUG_V();
 
-        if (!ControllerIsEnabled())
-        {       // MQTT Controller Disabled.
+        if (!ControllerIsEnabled ())
+        {   // MQTT Controller Disabled.
             // DEBUG_V();
             OnlineFlag = false;
 
@@ -467,28 +468,28 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         // DEBUG_V();
         updateUiMqttMsg (MQTT_RETRY_STR);
         Log.infoln ((String (F ("Attempting MQTT Reconnection #")) + String (ClientConnectionRetryCount)).c_str ());
-        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress(), mqttPort);
+        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), mqttPort);
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
                                 {
                                     c_ControllerMQTT * pMe =
                                         static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
                                     pMe->mqttClientCallback (topic, payload, length);
-                                });     // Topic Subscription callback handler.
+                                }); // Topic Subscription callback handler.
 
         // DEBUG_V();
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
 
         // DEBUG_V();
-        Log.    verboseln (     (String (F ("-> Broker Name: \"")) + MqttName.get() + "\"").c_str ());
-        Log.    verboseln (     (String (F ("-> Broker User: \"")) + mqttUserStr + F ("\", Password: \"") + mqttPwStr + "\"").c_str ());
-        Log.    verboseln (     (String (F ("-> Broker IP: ")) + MqttBrokerIpAddress.get () + F (", PORT: ") + String (mqttPort)).c_str ());
+        Log.verboseln ( (String (F ("-> Broker Name: \"")) + MqttName.get () + "\"").c_str ());
+        Log.verboseln ( (String (F ("-> Broker User: \"")) + mqttUserStr + F ("\", Password: \"") + mqttPwStr + "\"").c_str ());
+        Log.verboseln ( (String (F ("-> Broker IP: ")) + MqttBrokerIpAddress.get () + F (", PORT: ") + String (mqttPort)).c_str ());
         // DEBUG_V();
 
-        if (mqttClient.connect (MqttName.get().c_str (), mqttUserStr.c_str (), mqttPwStr.c_str ()))
-        {       // Connect to MQTT Server
+        if (mqttClient.connect (MqttName.get ().c_str (), mqttUserStr.c_str (), mqttPwStr.c_str ()))
+        {   // Connect to MQTT Server
             // DEBUG_V();
             OnlineFlag  = true;
-            topicStr    = MqttName.get() + MQTT_CONNECT_STR;
+            topicStr    = MqttName.get () + MQTT_CONNECT_STR;
             String Payload;
             Payload = String (F ("{\"reconnect\": ")) + String (ClientConnectionRetryCount) + F ("}");  // JSON Formatted payload.
             // DEBUG_V();
@@ -500,7 +501,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
             updateUiMqttMsg (MQTT_ONLINE_STR);
             // DEBUG_V();
 
-            topicStr = MqttName.get() + MQTT_CMD_SUB_STR;
+            topicStr = MqttName.get () + MQTT_CMD_SUB_STR;
             // DEBUG_V();
 
             if (mqttClient.subscribe (topicStr.c_str ()))
@@ -514,7 +515,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
                 Log.errorln (F ("-> MQTT subscribe failed!"));
                 updateUiMqttMsg (MQTT_SUBCR_FAIL_STR);
             }
-            ClientConnectionRetryCount = 0;     // Successful reconnect, OK to reset counter.
+            ClientConnectionRetryCount = 0; // Successful reconnect, OK to reset counter.
             break;
         }
         // DEBUG_V();
@@ -533,15 +534,15 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         updateUiMqttMsg (MQTT_DISABLED_STR);
     } while (false);
     // DEBUG_END;
-}       // mqttReconnect
+}   // mqttReconnect
 
 // ************************************************************************************************
 void c_ControllerMQTT::TestParameters ()
 {
     // DEBUG_START;
 
-    if ((INADDR_NONE == MqttBrokerIpAddress.GetIpAddress()) ||
-        (MqttName.get().isEmpty ()) ||
+    if ((INADDR_NONE == MqttBrokerIpAddress.GetIpAddress ()) ||
+        (MqttName.get ().isEmpty ()) ||
         (mqttUserStr.isEmpty ()) ||
         (mqttPwStr.isEmpty ()))
     {   // Missing MQTT Entries
@@ -555,65 +556,66 @@ void c_ControllerMQTT::TestParameters ()
         // DEBUG_V();
         // ControllerIsEnabled() = false;
         updateUiMqttMsg (emptyString);
-        mqttReconnect (true);           // Reset MQTT Reconnect values while ControllerIsEnabled() is false.
+        mqttReconnect (true);   // Reset MQTT Reconnect values while ControllerIsEnabled() is false.
         // ControllerIsEnabled() = true;       // Must set flag AFTER mqqtReconnect!
     }
     // DEBUG_END;
-} // TestParameters
+}   // TestParameters
 
 // ************************************************************************************************
 void c_ControllerMQTT::setMqttAuthenticationCallback (Control * sender, int type)
 {
 #ifdef OldWay
-    // DEBUG_START;
-    // DEBUG_V(String("   ID: ") + String(sender->id));
-    // DEBUG_V(String("value: ") + sender->value);
+        // DEBUG_START;
+        // DEBUG_V(String("   ID: ") + String(sender->id));
+        // DEBUG_V(String("value: ") + sender->value);
 
-    // String shortHideStr = MQTT_PASS_HIDE_STR;
+        // String shortHideStr = MQTT_PASS_HIDE_STR;
 
-    // Log.verboseln ( (String (F ("setMqttAuthenticationCallback ID : " + String (sender->id) + " , Value  : " + sender->value + " s
-    // "))).c_str ());
+        // Log.verboseln ( (String (F ("setMqttAuthenticationCallback ID : " + String (sender->id) + " , Value  : " + sender->value + " s
+        // "))).c_str ());
 
-    if (sender->id == EspuiUserID)
-    {
-        // DEBUG_V();
-        mqttUserStr = sender->value.substring (0, MQTT_USER_MAX_SZ);
-        ESPUI.print (EspuiUserID, mqttUserStr);
-        displaySaveWarning ();
-        Log.infoln ((String (F ("MQTT Broker Username Set to: \"")) + mqttUserStr + "\"").c_str ());
-    }
-    else if (sender->id == EspuiPwID)
-    {
-        // DEBUG_V();
-        String tempStr = sender->value.substring (0, MQTT_PW_MAX_SZ);
-        // shortHideStr = shortHideStr.substring (0, 6);   // Get first 5 chars of the "PW Hidden" text.
-        if (tempStr.indexOf (shortHideStr) >= 0)
-        {                                               // User has accidentally deleted part of PW Hidden msg.
+        if (sender->id == EspuiUserID)
+        {
             // DEBUG_V();
-            // ESPUI.print (EspuiPwID, MQTT_PASS_HIDE_STR);
+            mqttUserStr = sender->value.substring (0, MQTT_USER_MAX_SZ);
+            ESPUI.print (EspuiUserID, mqttUserStr);
+            displaySaveWarning ();
+            Log.infoln ((String (F ("MQTT Broker Username Set to: \"")) + mqttUserStr + "\"").c_str ());
+        }
+        else if (sender->id == EspuiPwID)
+        {
+            // DEBUG_V();
+            String tempStr = sender->value.substring (0, MQTT_PW_MAX_SZ);
 
-            // Log.infoln ( (String (F ("MQTT Broker Password Unchanged: ")) + mqttPwStr).c_str ()); // Show Password in log.
-            // Log.infoln ((String (F ("MQTT Broker Password Unchanged: ")) + WIFI_PASS_HIDE_STR).c_str ());
+            // shortHideStr = shortHideStr.substring (0, 6);   // Get first 5 chars of the "PW Hidden" text.
+            if (tempStr.indexOf (shortHideStr) >= 0)
+            {   // User has accidentally deleted part of PW Hidden msg.
+                // DEBUG_V();
+                // ESPUI.print (EspuiPwID, MQTT_PASS_HIDE_STR);
+
+                // Log.infoln ( (String (F ("MQTT Broker Password Unchanged: ")) + mqttPwStr).c_str ()); // Show Password in log.
+                // Log.infoln ((String (F ("MQTT Broker Password Unchanged: ")) + WIFI_PASS_HIDE_STR).c_str ());
+            }
+            else
+            {
+                // DEBUG_V();
+                mqttPwStr = tempStr;
+                ESPUI.print (EspuiPwID, mqttPwStr);
+                displaySaveWarning ();
+                Log.infoln ((String (F ("MQTT Broker Password Set to: \"")) + mqttPwStr).c_str ());
+            }
         }
         else
         {
             // DEBUG_V();
-            mqttPwStr = tempStr;
-            ESPUI.print (EspuiPwID, mqttPwStr);
-            displaySaveWarning ();
-            Log.infoln ((String (F ("MQTT Broker Password Set to: \"")) + mqttPwStr).c_str ());
+            Log.errorln ((String (F ("setMqttAuthenticationCallback: ")) + BAD_SENDER_STR).c_str ());
         }
-    }
-    else
-    {
-        // DEBUG_V();
-        Log.errorln ((String (F ("setMqttAuthenticationCallback: ")) + BAD_SENDER_STR).c_str ());
-    }
-    TestParameters ();
+        TestParameters ();
 
-    // DEBUG_END;
+        // DEBUG_END;
 #endif // def OldWay
-}       // setMqttAuthenticationCallback
+}   // setMqttAuthenticationCallback
 
 // *********************************************************************************************
 void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject & config)
@@ -621,17 +623,16 @@ void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cControllerCommon::restoreConfiguration (config);
-    MqttName.restoreConfiguration(config);
-    MqttBrokerIpAddress.restoreConfiguration(config);
+    MqttName.restoreConfiguration (config);
+    MqttBrokerIpAddress.restoreConfiguration (config);
 
-    if (true == config.containsKey(F(N_MQTT_PW_STR)))
+    if (true == config.containsKey (F (N_MQTT_PW_STR)))
     {
         // DEBUG_V();
         mqttPwStr = (const char *)config[F (N_MQTT_PW_STR)];
     }
-
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -639,14 +640,14 @@ void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cControllerCommon::saveConfiguration (config);
-    MqttName.saveConfiguration(config);
-    MqttBrokerIpAddress.saveConfiguration(config);
+    MqttName.saveConfiguration (config);
+    MqttBrokerIpAddress.saveConfiguration (config);
 
-    config[N_MQTT_PW_STR]       = mqttPwStr;
-    config[N_MQTT_USER_STR]     = mqttUserStr;
+    config[N_MQTT_PW_STR]   = mqttPwStr;
+    config[N_MQTT_USER_STR] = mqttUserStr;
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *************************************************************************************************************************
 // gpioMqttControl (): MQTT handler for GPIO Commands. This is a companion to mqttCallback ().
@@ -654,10 +655,10 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 {
     // DEBUG_START;
     bool successFlg = true;
-    String      topicStr;
-    String      CmdString;
+    String  topicStr;
+    String  CmdString;
 
-    topicStr = GetTitle() + MQTT_GPIO_STR;
+    topicStr = GetTitle () + MQTT_GPIO_STR;
 
     Log.infoln ((String (F ("-> MQTT Controller: Received GPIO Pin-")) + String (pin) + " Command").c_str ());
 
@@ -688,7 +689,7 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 // ************************************************************************************************
 // makeMqttCmdStr (): Return the MQTT command string. On entry cmdStr has command keyword.
 //                   This is a companion to mqttCallback ().
-String c_ControllerMQTT::makeMqttCmdStr (String cmdStr) {return String (MQTT_CMD_STR) + cmdStr;}        // makeMqttCmdStr
+String c_ControllerMQTT::makeMqttCmdStr (String cmdStr) {return String (MQTT_CMD_STR) + cmdStr;}    // makeMqttCmdStr
 
 // *************************************************************************************************************************
 // mqttSendMessages(): Broadcast system messages to MQTT broker.
@@ -701,14 +702,14 @@ void c_ControllerMQTT::mqttSendMessages (void)
         String  Payload;
         String  topicStr;
 
-        if (!ControllerIsEnabled())
-        {       // MQTT Controller Disabled.
+        if (!ControllerIsEnabled ())
+        {   // MQTT Controller Disabled.
             // DEBUG_V();
             break;
         }
 
         if (!mqttClient.connected ())
-        {       // MQTT not connected, nothing to do. Exit.
+        {   // MQTT not connected, nothing to do. Exit.
             // DEBUG_V();
             break;
         }
@@ -729,9 +730,9 @@ void c_ControllerMQTT::mqttSendMessages (void)
             ((paVolts > oldPaVolts + VOLTS_HYSTERESIS) || (paVolts < oldPaVolts - VOLTS_HYSTERESIS)))
         {
             // DEBUG_V();
-            oldVbatVolts        = vbatVolts;
-            oldPaVolts          = paVolts;
-            topicStr            = MqttName.get() + MQTT_VOLTS_STR;
+            oldVbatVolts    = vbatVolts;
+            oldPaVolts      = paVolts;
+            topicStr        = MqttName.get () + MQTT_VOLTS_STR;
             // JSON Formatted Payload.
             Payload = String (F ("{\"vbat\": ")) + String (vbatVolts) + F (",\"pa\": ") + String (paVolts);
             mqttClient.publish (topicStr.c_str (), Payload.c_str ());   // Publish Power Supply Voltage.
@@ -745,21 +746,21 @@ void c_ControllerMQTT::mqttSendMessages (void)
     } while (false);
 
     // DEBUG_END;
-}       // mqttSendMessages
+}   // mqttSendMessages
 
 // *********************************************************************************************
 void c_ControllerMQTT::poll (void)
 {
     if (mqttClient.connected ())
     {
-        mqttClient.loop ();     // Service MQTT background tasks.
+        mqttClient.loop (); // Service MQTT background tasks.
         mqttSendMessages ();
     }
     else
     {
         mqttReconnect (false);
     }
-}       // poll
+}   // poll
 
 // *************************************************************************************************************************
 // returnClientCode(): Convert Client.state() code to String Message.

@@ -26,12 +26,12 @@ public:
 
     c_ControllerNONE ();
     virtual ~c_ControllerNONE ();
-    void        AddControls (uint16_t ctrlTab)                                  {}
+    void    AddControls (uint16_t ctrlTab)                                  {}
 
-    void        saveConfiguration (ArduinoJson::JsonObject & config);
-    void        restoreConfiguration (ArduinoJson::JsonObject & config);
-    void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)    {}
-};      // c_ControllerNONE
+    void    saveConfiguration (ArduinoJson::JsonObject & config);
+    void    restoreConfiguration (ArduinoJson::JsonObject & config);
+    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)    {}
+};  // c_ControllerNONE
 
 // *********************************************************************************************
 // EOF
