@@ -60,6 +60,7 @@ public:
 
     virtual void    setControl (const String & value, eCssStyle style);
     virtual void    setMessage (const String & value, eCssStyle style);
+    virtual void    setMessage (const String & value);
     virtual void    setControlStyle (eCssStyle style);
     virtual void    setMessageStyle (eCssStyle style);
     virtual void    setControlLabel (const String & value);

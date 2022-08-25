@@ -33,7 +33,20 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-static const PROGMEM char Name [] = "MQTT";
+static const PROGMEM char   Name []             = "MQTT";
+static const PROGMEM char   MQTT_ONLINE []      = "ONLINE";
+static const PROGMEM char   MQTT_SUBCR_FAIL []  = "MQTT SUBCRIBE FAILED";
+static const PROGMEM char   MQTT_NOT_AVAIL []   = "MQTT NOT AVAILABLE IN AP MODE";
+static const PROGMEM char   MQTT_RETRY []       = "RETRY CONNECTION";
+static const PROGMEM char   MQTT_DISABLED []    = "CONNECTION FAILED!<br>DISABLED MQTT CONTROLLER";
+static const PROGMEM char   MQTT_MISSING []     = "MISSING SETTINGS : MQTT DISABLED";
+
+static const String MQTT_ONLINE_STR     = MQTT_ONLINE;
+static const String MQTT_SUBCR_FAIL_STR = MQTT_SUBCR_FAIL;
+static const String MQTT_NOT_AVAIL_STR  = MQTT_NOT_AVAIL;
+static const String MQTT_RETRY_STR      = MQTT_RETRY;
+static const String MQTT_DISABLED_STR   = MQTT_DISABLED;
+static const String MQTT_MISSING_STR    = MQTT_MISSING;
 
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
@@ -58,24 +71,6 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
     MqttPassword.AddControls (TabId, color);
 
 #ifdef OldWay
-
-        // DEBUG_V();
-
-        EspuiPwID = ESPUI.addControl (ControlType::Text,
-                                  CTRL_MQTT_PW_STR,
-                                  MQTT_PASS_HIDE_STR,
-                                  ControlColor::Turquoise,
-                                  ctrlTab,
-                                  [] (Control * sender, int type, void * param)
-                                  {
-                                      if (param)
-                                      {
-                                          reinterpret_cast <c_ControllerMQTT *> (param)->setMqttAuthenticationCallback (sender, type);
-                                      }
-                                  },
-                                  this);
-
-
 
         String tempStr;
 
@@ -170,7 +165,7 @@ void c_ControllerMQTT::Init (void)
 
             Log.infoln ((String (F ("-> MQTT Started. Sent Topic: ")) + topicStr + F (", Payload: ") + payloadStr).c_str ());
 
-            updateUiMqttMsg (MQTT_ONLINE_STR);
+            setMessage (MQTT_ONLINE_STR);
 
             topicStr    = MqttName.get ();
             topicStr    += MQTT_CMD_SUB_STR;
@@ -184,7 +179,7 @@ void c_ControllerMQTT::Init (void)
             {
                 // DEBUG_V();
                 Log.errorln (F ("-> MQTT subscribe failed!"));
-                updateUiMqttMsg (MQTT_SUBCR_FAIL_STR);
+                setMessage (MQTT_SUBCR_FAIL_STR);
             }
         }
         else
@@ -197,7 +192,7 @@ void c_ControllerMQTT::Init (void)
     else
     {
         // DEBUG_V();
-        updateUiMqttMsg (MQTT_NOT_AVAIL_STR);
+        setMessage (MQTT_NOT_AVAIL_STR);
         Log.errorln (F ("WiFi Router Not Connected; MQTT Disabled."));
     }
     // DEBUG_END;
@@ -418,7 +413,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         if (WiFi.status () != WL_CONNECTED)
         {
             // DEBUG_V();
-            updateUiMqttMsg (MQTT_NOT_AVAIL_STR);
+            setMessage (MQTT_NOT_AVAIL_STR);
             Log.errorln (F ("-> WiFi Router Not Connected; MQTT Disabled."));
             break;
         }
@@ -435,7 +430,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
             break;
         }
         // DEBUG_V();
-        updateUiMqttMsg (MQTT_RETRY_STR);
+        setMessage (MQTT_RETRY_STR);
         Log.infoln ((String (F ("Attempting MQTT Reconnection #")) + String (ClientConnectionRetryCount)).c_str ());
         mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), MqttPort.get32 ());
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
@@ -467,7 +462,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
 
             Log.infoln ((String (F ("-> MQTT Reconnected. Sent Topic:")) + topicStr + F (", Payload:") + Payload).c_str ());
 
-            updateUiMqttMsg (MQTT_ONLINE_STR);
+            setMessage (MQTT_ONLINE_STR);
             // DEBUG_V();
 
             topicStr = MqttName.get () + MQTT_CMD_SUB_STR;
@@ -482,7 +477,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
             {
                 // DEBUG_V();
                 Log.errorln (F ("-> MQTT subscribe failed!"));
-                updateUiMqttMsg (MQTT_SUBCR_FAIL_STR);
+                setMessage (MQTT_SUBCR_FAIL_STR);
             }
             ClientConnectionRetryCount = 0; // Successful reconnect, OK to reset counter.
             break;
@@ -494,13 +489,13 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
             // DEBUG_V();
             Log.warningln ((String (F ("-> MQTT Connection Failure #")) + String (ClientConnectionRetryCount) + F (", Code= ") +
                             returnClientCode (mqttClient.state ())).c_str ());
-            updateUiMqttMsg (MQTT_RETRY_FAIL_STR + String (ClientConnectionRetryCount));
+            setMessage (MQTT_RETRY_FAIL_STR + String (ClientConnectionRetryCount));
             break;
         }
         // DEBUG_V();
 
         Log.errorln (F ("-> MQTT Controller Has Been Disabled, Too Many Reconnect Attempts."));
-        updateUiMqttMsg (MQTT_DISABLED_STR);
+        setMessage (MQTT_DISABLED_STR);
     } while (false);
     // DEBUG_END;
 }   // mqttReconnect
@@ -516,7 +511,7 @@ void c_ControllerMQTT::TestParameters ()
         (MqttPassword.get ().isEmpty ()))
     {   // Missing MQTT Entries
         // DEBUG_V();
-        updateUiMqttMsg (MQTT_MISSING_STR);
+        setMessage (MQTT_MISSING_STR);
         // ESPUI.print (ControlerEnabledElementId, "0");   // Turn off MQTT Controller Switcher.
         Log.warningln (F ("Invalid MQTT Controller Settings, Disabled MQTT."));
     }
@@ -524,67 +519,12 @@ void c_ControllerMQTT::TestParameters ()
     {
         // DEBUG_V();
         // ControllerIsEnabled() = false;
-        updateUiMqttMsg (emptyString);
+        setMessage (emptyString);
         mqttReconnect (true);   // Reset MQTT Reconnect values while ControllerIsEnabled() is false.
         // ControllerIsEnabled() = true;       // Must set flag AFTER mqqtReconnect!
     }
     // DEBUG_END;
 }   // TestParameters
-
-// ************************************************************************************************
-void c_ControllerMQTT::setMqttAuthenticationCallback (Control * sender, int type)
-{
-#ifdef OldWay
-        // DEBUG_START;
-        // DEBUG_V(String("   ID: ") + String(sender->id));
-        // DEBUG_V(String("value: ") + sender->value);
-
-        // String shortHideStr = MQTT_PASS_HIDE_STR;
-
-        // Log.verboseln ( (String (F ("setMqttAuthenticationCallback ID : " + String (sender->id) + " , Value  : " + sender->value + " s
-        // "))).c_str ());
-
-        if (sender->id == EspuiUserID)
-        {
-            // DEBUG_V();
-            // MqttUser.get() = sender->value.substring (0, MQTT_USER_MAX_SZ);
-            ESPUI.print (EspuiUserID, MqttUser.get ());
-            displaySaveWarning ();
-            Log.infoln ((String (F ("MQTT Broker Username Set to: \"")) + MqttUser.get () + "\"").c_str ());
-        }
-        else if (sender->id == EspuiPwID)
-        {
-            // DEBUG_V();
-            String tempStr = sender->value.substring (0, MQTT_PW_MAX_SZ);
-
-            // shortHideStr = shortHideStr.substring (0, 6);   // Get first 5 chars of the "PW Hidden" text.
-            if (tempStr.indexOf (shortHideStr) >= 0)
-            {   // User has accidentally deleted part of PW Hidden msg.
-                // DEBUG_V();
-                // ESPUI.print (EspuiPwID, MQTT_PASS_HIDE_STR);
-
-                // Log.infoln ( (String (F ("MQTT Broker Password Unchanged: ")) + MqttPassword.get()).c_str ()); // Show Password in log.
-                // Log.infoln ((String (F ("MQTT Broker Password Unchanged: ")) + WIFI_PASS_HIDE_STR).c_str ());
-            }
-            else
-            {
-                // DEBUG_V();
-                // MqttPassword.get() = tempStr;
-                ESPUI.print (EspuiPwID, MqttPassword.get ());
-                displaySaveWarning ();
-                Log.infoln ((String (F ("MQTT Broker Password Set to: \"")) + MqttPassword.get ()).c_str ());
-            }
-        }
-        else
-        {
-            // DEBUG_V();
-            Log.errorln ((String (F ("setMqttAuthenticationCallback: ")) + BAD_SENDER_STR).c_str ());
-        }
-        TestParameters ();
-
-        // DEBUG_END;
-#endif // def OldWay
-}   // setMqttAuthenticationCallback
 
 // *********************************************************************************************
 void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject & config)
@@ -817,10 +757,6 @@ String c_ControllerMQTT::returnClientCode (int code)
 
     return Response;
 }       //
-
-// ************************************************************************************************
-// updateUiMqttMsg(): Update the MQTT CONTROL panel's status message on the ctrlTab.
-void c_ControllerMQTT::updateUiMqttMsg (String msgStr) {ESPUI.print (EspuiMessageAreaId, msgStr);}
 
 // *********************************************************************************************
 // EOF

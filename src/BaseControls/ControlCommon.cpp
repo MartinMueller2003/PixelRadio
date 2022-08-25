@@ -290,6 +290,17 @@ void cControlCommon::setControlPanelStyle (ePanelStyle style)
 }
 
 // *********************************************************************************************
+void cControlCommon::setMessage (const String & value)
+{
+    // DEBUG_START;
+    // DEBUG_V (String ("value: ") + value);
+
+    setMessage (value, MessageStyle);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 void cControlCommon::setMessage (const String & value, eCssStyle style)
 {
     // DEBUG_START;

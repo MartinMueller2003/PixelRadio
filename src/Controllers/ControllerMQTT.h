@@ -39,7 +39,6 @@ public:
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
 
     void    AddControls (uint16_t TabId, ControlColor color);
-    void    setMqttAuthenticationCallback (Control * sender, int type);
     void    mqttClientCallback (const char * topic, byte * payload, unsigned int length);
     void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
@@ -48,7 +47,6 @@ private:
     void    Init (void);
     void    mqttReconnect (bool resetFlg);
     void    mqttSendMessages (void);
-    void    updateUiMqttMsg (String msgStr);
     String  makeMqttCmdStr (String cmdStr);
     void    gpioMqttControl (String payloadStr, gpio_num_t pin);
     String  returnClientCode (int code);

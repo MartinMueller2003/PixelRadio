@@ -20,10 +20,10 @@
 #include "credentials_user.h"
 #include "memdebug.h"
 
-static const PROGMEM char   CTRL_MQTT_PW_STR    [] = "BROKER PASSWORD";
-static const PROGMEM char   SAVE_MQTT_PW_STR    [] = "MQTT_PW_STR";
-static const PROGMEM char   WIFI_BLANK_MSG_STR  [] = "LEAVE BLANK FOR AUTO LOGIN";
-static const PROGMEM uint32_t MQTT_PW_MAX_SZ       = 48;
+static const PROGMEM char   CTRL_MQTT_PW_STR    []  = "BROKER PASSWORD";
+static const PROGMEM char   SAVE_MQTT_PW_STR    []  = "MQTT_PW_STR";
+static const PROGMEM char   WIFI_BLANK_MSG_STR  []  = "LEAVE BLANK FOR AUTO LOGIN";
+static const PROGMEM uint32_t MQTT_PW_MAX_SZ        = 48;
 
 // *********************************************************************************************
 cMqttPassword::cMqttPassword () :   cPasswordControl (SAVE_MQTT_PW_STR,
