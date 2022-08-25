@@ -20,15 +20,15 @@
 #include "ControllerCommon.h"
 #include "Language.h"
 
- #include "memdebug.h"
+#include "memdebug.h"
 
 // *********************************************************************************************
 // class c_ControllerCommon
 
 // *********************************************************************************************
 cControllerCommon::cControllerCommon (const String & _Title, CtypeId _Id) :
-    TypeId(_Id),
-    cBinaryControl(N_ControllerEnabled, _Title, false)
+    TypeId (_Id),
+    cBinaryControl (N_ControllerEnabled, _Title, false)
 {}
 
 // *********************************************************************************************
@@ -36,21 +36,21 @@ cControllerCommon::~cControllerCommon ()
 {}
 
 // ************************************************************************************************
-void cControllerCommon::AddControls(uint16_t tabId, ControlColor color)
+void cControllerCommon::AddControls (uint16_t tabId, ControlColor color)
 {
     // DEBUG_START;
 
-    SeperatorName = GetTitle() + F(" SETTINGS");
-    ESPUI.addControl(ControlType::Separator,
-                     SeperatorName.c_str(),
+    SeperatorName = GetTitle () + F (" SETTINGS");
+    ESPUI.addControl (ControlType::Separator,
+                     SeperatorName.c_str (),
                      emptyString,
                      ControlColor::None,
                      tabId);
 
-    setOffMessageStyle (eCssStyle::CssStyleWhite );
+    setOffMessageStyle (eCssStyle::CssStyleWhite);
     setOnMessageStyle (eCssStyle::CssStyleWhite);
 
-    cBinaryControl::AddControls(tabId, color);
+    cBinaryControl::AddControls (tabId, color);
 
     // DEBUG_END;
 }
@@ -60,12 +60,12 @@ void cControllerCommon::saveConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    cBinaryControl::saveConfiguration(config);
-    config[N_name]  = GetTitle();
+    cBinaryControl::saveConfiguration (config);
+    config[N_name]  = GetTitle ();
     config[N_type]  = TypeId;
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *********************************************************************************************
 // EOF
