@@ -14,9 +14,9 @@
  */
 
 // *********************************************************************************************
-#include "ESPUI.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include <ESPUI.h>
 
 // *********************************************************************************************
 class cConfigSave
@@ -26,11 +26,11 @@ public:
     cConfigSave ()    {}
     virtual ~cConfigSave ()    {}
 
-    void        AddControls (uint16_t adjTab, ControlColor color);
-    void        ClearSaveNeeded ();
-    void        InitiateSaveOperation ();
-    void        SetSaveNeeded ();
-};      // class cConfigSave
+    void    AddControls (uint16_t adjTab, ControlColor color);
+    void    ClearSaveNeeded ();
+    void    InitiateSaveOperation ();
+    void    SetSaveNeeded ();
+};  // class cConfigSave
 
 extern cConfigSave ConfigSave;
 
