@@ -48,7 +48,6 @@
 #define CTRL_HTTP_STR        "HTTP CONTROL"
 #define CTRL_HTPP_SET_STR    "HTTP CONTROL SETTINGS"
 // #define CTRL_LOCAL_SEP_STR   "LOCAL CONTROL SETTINGS"
-#define CTRL_MQTT_IP_STR     "BROKER IP ADDRESS"
 #define CTRL_MQTT_PW_STR     "BROKER PASSWORD"
 #define CTRL_MQTT_PORT_STR   "BROKER PORT NUMBER"
 #define CTRL_MQTT_STR        "MQTT CONTROL"
@@ -114,13 +113,11 @@
 #define HOME_STA_STR        "STA / AP STATUS"
 #define HOME_TAB_STR        "Home"
 
-#define MQTT_SUBSCR_NM_STR   "BROKER SUBSCRIBE NAME"
 #define MQTT_DISABLED_STR    "CONNECTION FAILED!<br>DISABLED MQTT CONTROLLER"
 #define MQTT_DISCONNECT_STR  "DISCONNECTED"
 #define MQTT_MISSING_STR     "MISSING SETTINGS : MQTT DISABLED"
 #define MQTT_NOT_AVAIL_STR   "MQTT NOT AVAILABLE IN AP MODE"
 #define MQTT_ONLINE_STR      "ONLINE"
-#define MQTT_PASS_HIDE_STR   "{PASSWORD HIDDEN}"
 #define MQTT_RETRY_STR       "RETRY CONNECTION"
 #define MQTT_RETRY_FAIL_STR  "RETRY FAIL #"
 #define MQTT_SUBCR_FAIL_STR  "MQTT SUBCRIBE FAILED"
@@ -199,7 +196,6 @@ extern const PROGMEM char       N_message[];
 extern const PROGMEM char       N_messages[];
 extern const PROGMEM char       N_Messages[];
 extern const PROGMEM char       N_MQTT_IP_STR[];
-extern const PROGMEM char       N_MQTT_NAME_STR[];
 extern const PROGMEM char       N_MQTT_PW_STR[];
 extern const PROGMEM char       N_MQTT_USER_STR[];
 extern const PROGMEM char       N_name[];
