@@ -1,5 +1,5 @@
 /*
-   File: MqttPassword.cpp
+   File: MqttPort.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -16,34 +16,34 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-#include "MqttPassword.hpp"
-#include "credentials_user.h"
+#include "MqttPort.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char   CTRL_MQTT_PW_STR    [] = "BROKER PASSWORD";
-static const PROGMEM char   SAVE_MQTT_PW_STR    [] = "MQTT_PW_STR";
-static const PROGMEM char   WIFI_BLANK_MSG_STR  [] = "LEAVE BLANK FOR AUTO LOGIN";
-static const PROGMEM uint32_t MQTT_PW_MAX_SZ       = 48;
+static const PROGMEM char   MQTT_NAME_STR         []    = "MQTT_NAME_STR";
+static const PROGMEM char   CTRL_MQTT_PORT_STR    []    = "BROKER PORT NUMBER";
+static const PROGMEM uint32_t   MQTT_NAME_MAX_SZ        = 18;
+static const PROGMEM uint32_t   MQTT_PORT_DEF           = 1883; // 1883 is Default MQTT Port. Change it here if differnt port is needed.
 
 // *********************************************************************************************
-cMqttPassword::cMqttPassword () :   cPasswordControl (SAVE_MQTT_PW_STR,
-                                                        CTRL_MQTT_PW_STR,
-                                                        MQTT_PW_STR,
-                                                        MQTT_PW_MAX_SZ)
+cMqttPort::cMqttPort () :   cNumberControl (MQTT_NAME_STR,
+                                            CTRL_MQTT_PORT_STR,
+                                            MQTT_PORT_DEF,
+                                            0,
+                                            65535)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-cMqttPassword::~cMqttPassword ()
+cMqttPort::~cMqttPort ()
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-cMqttPassword MqttPassword;
+cMqttPort MqttPort;
 
 // *********************************************************************************************
 // OEF

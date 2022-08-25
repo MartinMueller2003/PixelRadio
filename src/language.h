@@ -48,11 +48,8 @@
 #define CTRL_HTTP_STR        "HTTP CONTROL"
 #define CTRL_HTPP_SET_STR    "HTTP CONTROL SETTINGS"
 // #define CTRL_LOCAL_SEP_STR   "LOCAL CONTROL SETTINGS"
-#define CTRL_MQTT_PW_STR     "BROKER PASSWORD"
-#define CTRL_MQTT_PORT_STR   "BROKER PORT NUMBER"
 #define CTRL_MQTT_STR        "MQTT CONTROL"
 #define CTRL_MQTT_SEP_STR    "MQTT CONTROL SETTINGS"
-#define CTRL_MQTT_USER_STR   "BROKER USERNAME"
 #define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
 #define CTRL_USB_SERIAL_STR  "USB SERIAL CONTROL SETTINGS"
 
@@ -196,7 +193,6 @@ extern const PROGMEM char   N_message[];
 extern const PROGMEM char   N_messages[];
 extern const PROGMEM char   N_Messages[];
 extern const PROGMEM char   N_MQTT_IP_STR[];
-extern const PROGMEM char   N_MQTT_PW_STR[];
 extern const PROGMEM char   N_MQTT_USER_STR[];
 extern const PROGMEM char   N_name[];
 extern const PROGMEM char   N_path[];

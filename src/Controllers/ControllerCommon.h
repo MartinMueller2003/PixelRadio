@@ -47,7 +47,7 @@ public:
 
     virtual void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
     bool            ControllerIsEnabled ()  {return getBool ();}
-}; // class cControllerCommon
+};  // class cControllerCommon
 
 // *********************************************************************************************
 // EOF

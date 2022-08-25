@@ -27,9 +27,6 @@
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
 
-#include "MqttName.hpp"
-#include "MqttBrokerIpAddress.hpp"
-
 class c_ControllerMQTT : public cControllerCommon
 {
 public:
@@ -62,12 +59,8 @@ private:
     bool OnlineFlag = false;
     c_ControllerMessages Messages;
 
-    cMqttName MqttName;
-    cMqttBrokerIpAddress MqttBrokerIpAddress;
-
     /* If you have an MQTT Broker then configure it here. */
-// const IPAddress MQTT_IP_DEF = { 192u, 168u, 1u, 202u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
-    const uint32_t MQTT_PORT_DEF = 1883;    // 1883 is Default MQTT Port. Change it here if differnt port is needed.
+    // const IPAddress MQTT_IP_DEF = { 192u, 168u, 1u, 202u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
 
     uint16_t EspuiMessageAreaId = Control::noParent;
     uint16_t EspuiNameID        = Control::noParent;
@@ -75,10 +68,7 @@ private:
     uint16_t EspuiUserID        = Control::noParent;
     uint16_t EspuiPwID          = Control::noParent;
 
-    uint16_t mqttPort   = MQTT_PORT_DEF;
-    String mqttPwStr    = MQTT_PW_STR;              // Control.
-    String mqttUserStr  = MQTT_ID_STR;              // Control.
-    String MessageStr   = "";
+    String MessageStr = "";
 
     const uint8_t MQTT_FAIL_CNT         = 10;       // Maximum failed MQTT reconnects before disabling MQTT.
     const uint16_t MQTT_KEEP_ALIVE      = 90;       // MQTT Keep Alive Time, in Secs.

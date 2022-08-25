@@ -24,6 +24,12 @@
 #include "ControllerMQTT.h"
 #include "language.h"
 
+#include "MqttName.hpp"
+#include "MqttBrokerIpAddress.hpp"
+#include "MqttPassword.hpp"
+#include "MqttUser.hpp"
+#include "MqttPort.hpp"
+
 #include "memdebug.h"
 
 // *********************************************************************************************
@@ -47,49 +53,12 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
 
     MqttName.AddControls (TabId, color);
     MqttBrokerIpAddress.AddControls (TabId, color);
+    MqttPort.AddControls (TabId, color);
+    MqttUser.AddControls (TabId, color);
+    MqttPassword.AddControls (TabId, color);
 
 #ifdef OldWay
 
-        // DEBUG_V();
-
-        EspuiIpID = ESPUI.addControl (ControlType::Text,
-                                  CTRL_MQTT_IP_STR,
-                                  MqttBrokerIpAddress.get (),
-                                  ControlColor::Turquoise,
-                                  ctrlTab,
-                                  [] (Control * sender, int type, void * param)
-                                  {
-                                      if (param)
-                                      {
-                                          reinterpret_cast <c_ControllerMQTT *> (param)->setRemoteIpAddrCallback (sender, type);
-                                      }
-                                  },
-                                  this);
-        // DEBUG_V();
-
-        EspuiPortID = ESPUI.addControl (ControlType::Label,
-                                    CTRL_MQTT_PORT_STR,
-                                    String (mqttPort),
-                                    ControlColor::Turquoise,
-                                    ctrlTab);
-        ESPUI.setPanelStyle (EspuiPortID, String (F ("font-size: 1.25em;")));
-        ESPUI.setElementStyle (EspuiPortID, "max-width: 40%;");
-
-        // DEBUG_V();
-
-        EspuiUserID = ESPUI.addControl (ControlType::Text,
-                                    CTRL_MQTT_USER_STR,
-                                    mqttUserStr,
-                                    ControlColor::Turquoise,
-                                    ctrlTab,
-                                    [] (Control * sender, int type, void * param)
-                                    {
-                                        if (param)
-                                        {
-                                            reinterpret_cast <c_ControllerMQTT *> (param)->setMqttAuthenticationCallback (sender, type);
-                                        }
-                                    },
-                                    this);
         // DEBUG_V();
 
         EspuiPwID = ESPUI.addControl (ControlType::Text,
@@ -112,7 +81,7 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
 
         if ((ControllerIsEnabled () == true) &&
         ((INADDR_NONE != MqttBrokerIpAddress.getIpaddress ()) || (!MqttName.get ().length ()) ||
-         (!mqttUserStr.length ()) || (!mqttPwStr.length ())))
+         (!MqttUser.get ().length ()) || (!MqttPassword.get ().length ())))
         {
             // DEBUG_V();
             MessageStr = MQTT_MISSING_STR;
@@ -179,7 +148,7 @@ void c_ControllerMQTT::Init (void)
     {
         // DEBUG_V();
         Log.traceln (F ("Initializing MQTT"));
-        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), mqttPort);
+        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), MqttPort.get32 ());
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
                                 {
                                     c_ControllerMQTT * pMe =
@@ -190,7 +159,7 @@ void c_ControllerMQTT::Init (void)
         mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
         // DEBUG_V();
 
-        if (mqttClient.connect (MqttName.get ().c_str (), mqttUserStr.c_str (), mqttPwStr.c_str ()))
+        if (mqttClient.connect (MqttName.get ().c_str (), MqttUser.get ().c_str (), MqttPassword.get ().c_str ()))
         {
             // DEBUG_V();
             OnlineFlag  = true;
@@ -468,7 +437,7 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
         // DEBUG_V();
         updateUiMqttMsg (MQTT_RETRY_STR);
         Log.infoln ((String (F ("Attempting MQTT Reconnection #")) + String (ClientConnectionRetryCount)).c_str ());
-        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), mqttPort);
+        mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), MqttPort.get32 ());
         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
                                 {
                                     c_ControllerMQTT * pMe =
@@ -481,11 +450,11 @@ void c_ControllerMQTT::mqttReconnect (bool resetFlg)
 
         // DEBUG_V();
         Log.verboseln ( (String (F ("-> Broker Name: \"")) + MqttName.get () + "\"").c_str ());
-        Log.verboseln ( (String (F ("-> Broker User: \"")) + mqttUserStr + F ("\", Password: \"") + mqttPwStr + "\"").c_str ());
-        Log.verboseln ( (String (F ("-> Broker IP: ")) + MqttBrokerIpAddress.get () + F (", PORT: ") + String (mqttPort)).c_str ());
+        Log.verboseln ( (String (F ("-> Broker User: \"")) + MqttUser.get () + F ("\", Password: \"") + MqttPassword.get () + "\"").c_str ());
+        Log.verboseln ( (String (F ("-> Broker IP: ")) + MqttBrokerIpAddress.get () + F (", PORT: ") + MqttPort.get ()).c_str ());
         // DEBUG_V();
 
-        if (mqttClient.connect (MqttName.get ().c_str (), mqttUserStr.c_str (), mqttPwStr.c_str ()))
+        if (mqttClient.connect (MqttName.get ().c_str (), MqttUser.get ().c_str (), MqttPassword.get ().c_str ()))
         {   // Connect to MQTT Server
             // DEBUG_V();
             OnlineFlag  = true;
@@ -543,8 +512,8 @@ void c_ControllerMQTT::TestParameters ()
 
     if ((INADDR_NONE == MqttBrokerIpAddress.GetIpAddress ()) ||
         (MqttName.get ().isEmpty ()) ||
-        (mqttUserStr.isEmpty ()) ||
-        (mqttPwStr.isEmpty ()))
+        (MqttUser.get ().isEmpty ()) ||
+        (MqttPassword.get ().isEmpty ()))
     {   // Missing MQTT Entries
         // DEBUG_V();
         updateUiMqttMsg (MQTT_MISSING_STR);
@@ -578,10 +547,10 @@ void c_ControllerMQTT::setMqttAuthenticationCallback (Control * sender, int type
         if (sender->id == EspuiUserID)
         {
             // DEBUG_V();
-            mqttUserStr = sender->value.substring (0, MQTT_USER_MAX_SZ);
-            ESPUI.print (EspuiUserID, mqttUserStr);
+            // MqttUser.get() = sender->value.substring (0, MQTT_USER_MAX_SZ);
+            ESPUI.print (EspuiUserID, MqttUser.get ());
             displaySaveWarning ();
-            Log.infoln ((String (F ("MQTT Broker Username Set to: \"")) + mqttUserStr + "\"").c_str ());
+            Log.infoln ((String (F ("MQTT Broker Username Set to: \"")) + MqttUser.get () + "\"").c_str ());
         }
         else if (sender->id == EspuiPwID)
         {
@@ -594,16 +563,16 @@ void c_ControllerMQTT::setMqttAuthenticationCallback (Control * sender, int type
                 // DEBUG_V();
                 // ESPUI.print (EspuiPwID, MQTT_PASS_HIDE_STR);
 
-                // Log.infoln ( (String (F ("MQTT Broker Password Unchanged: ")) + mqttPwStr).c_str ()); // Show Password in log.
+                // Log.infoln ( (String (F ("MQTT Broker Password Unchanged: ")) + MqttPassword.get()).c_str ()); // Show Password in log.
                 // Log.infoln ((String (F ("MQTT Broker Password Unchanged: ")) + WIFI_PASS_HIDE_STR).c_str ());
             }
             else
             {
                 // DEBUG_V();
-                mqttPwStr = tempStr;
-                ESPUI.print (EspuiPwID, mqttPwStr);
+                // MqttPassword.get() = tempStr;
+                ESPUI.print (EspuiPwID, MqttPassword.get ());
                 displaySaveWarning ();
-                Log.infoln ((String (F ("MQTT Broker Password Set to: \"")) + mqttPwStr).c_str ());
+                Log.infoln ((String (F ("MQTT Broker Password Set to: \"")) + MqttPassword.get ()).c_str ());
             }
         }
         else
@@ -625,12 +594,10 @@ void c_ControllerMQTT::restoreConfiguration (ArduinoJson::JsonObject & config)
     cControllerCommon::restoreConfiguration (config);
     MqttName.restoreConfiguration (config);
     MqttBrokerIpAddress.restoreConfiguration (config);
+    MqttPort.restoreConfiguration (config);
+    MqttUser.restoreConfiguration (config);
+    MqttPassword.restoreConfiguration (config);
 
-    if (true == config.containsKey (F (N_MQTT_PW_STR)))
-    {
-        // DEBUG_V();
-        mqttPwStr = (const char *)config[F (N_MQTT_PW_STR)];
-    }
     // DEBUG_END;
 }   // restoreConfiguration
 
@@ -642,9 +609,9 @@ void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject & config)
     cControllerCommon::saveConfiguration (config);
     MqttName.saveConfiguration (config);
     MqttBrokerIpAddress.saveConfiguration (config);
-
-    config[N_MQTT_PW_STR]   = mqttPwStr;
-    config[N_MQTT_USER_STR] = mqttUserStr;
+    MqttPort.saveConfiguration (config);
+    MqttUser.saveConfiguration (config);
+    MqttPassword.saveConfiguration (config);
 
     // DEBUG_END;
 }   // saveConfiguration

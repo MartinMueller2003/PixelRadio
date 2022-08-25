@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: MqttPassword.cpp
+   File: MqttPort.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -13,18 +13,18 @@
    This Code was formatted with the uncrustify extension.
  */
 #include <Arduino.h>
-#include "PasswordControl.hpp"
+#include "NumberControl.hpp"
 
 // *********************************************************************************************
-class cMqttPassword : public cPasswordControl
+class cMqttPort : public cNumberControl
 {
 public:
 
-    cMqttPassword ();
-    virtual ~cMqttPassword ();
-};  // class cMqttPassword
+    cMqttPort ();
+    virtual ~cMqttPort ();
+};  // class cMqttPort
 
-extern cMqttPassword MqttPassword;
+extern cMqttPort MqttPort;
 
 // *********************************************************************************************
 // OEF

@@ -19,17 +19,17 @@
 #include "memdebug.h"
 #include "credentials_user.h"
 
-static const PROGMEM char   MQTT_NAME_STR            []     = "MQTT_NAME_STR";
-static const PROGMEM char   MQTT_SUBSCR_NM_STR    []        = "BROKER SUBSCRIBE NAME";
-static const PROGMEM char   MQTT_NAME_DEF_STR           []  = "pixelradio";
-static const PROGMEM uint32_t MQTT_NAME_MAX_SZ              = 18;
+static const PROGMEM char   MQTT_USER_STR       []  = "MQTT_USER_STR";
+static const PROGMEM char   CTRL_MQTT_USER_STR  []  = "BROKER USERNAME";
+static const PROGMEM uint32_t MQTT_NAME_MAX_SZ      = 18;
+
 
 // *********************************************************************************************
-cMqttUser::cMqttUser () :   cControlCommon (MQTT_NAME_STR,
-                                              ControlType::Text,
-                                              MQTT_SUBSCR_NM_STR,
-                                              LOGIN_USER_NAME_STR,
-                                              MQTT_NAME_MAX_SZ)
+cMqttUser::cMqttUser () :   cControlCommon (MQTT_USER_STR,
+                                            ControlType::Text,
+                                            CTRL_MQTT_USER_STR,
+                                            MQTT_ID_STR,
+                                            MQTT_NAME_MAX_SZ)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -56,7 +56,7 @@ void cMqttUser::AddControls (uint16_t value, ControlColor color)
 // *********************************************************************************************
 bool cMqttUser::validate (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     bool Response = cControlCommon::validate (value, ResponseMessage, ForceUpdate);
 
@@ -68,7 +68,7 @@ bool cMqttUser::validate (const String & value, String & ResponseMessage, bool F
             ResponseMessage = GetTitle () + F (": BAD_VALUE: '") + value + F ("'");
         }
     }
-    DEBUG_END;
+    // DEBUG_END;
 
     return Response;
 }

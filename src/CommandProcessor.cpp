@@ -261,7 +261,7 @@ bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid INFO Payload (") + payloadStr + F (
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "), Ignored.")).c_str ());
+"), Ignored.")).c_str ());
             response = false;
         }
         // DEBUG_END;
@@ -307,7 +307,7 @@ bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
                 break;
             }
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid LOG Payload (") + payloadStr + F (
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "), Ignored.")).c_str ());
+"), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -500,7 +500,7 @@ bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
         else
         {
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid START Payload (") + payloadStr + F (
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "), Ignored.")).c_str ());
+"), Ignored.")).c_str ());
             response = false;
         }
         // DEBUG_END;
