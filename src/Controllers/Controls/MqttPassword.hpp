@@ -24,7 +24,7 @@ public:
     virtual ~cMqttPassword ();
 
     void AddControls (uint16_t TabId, ControlColor color);
-};      // class cMqttPassword
+};  // class cMqttPassword
 
 extern cMqttPassword MqttPassword;
 

@@ -75,7 +75,7 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
         if (!ForceUpdate && (TempIp == IpAddress))
         {
             // DEBUG_V ("Address did not change");
-            Log.infoln ((GetTitle() + F (": Unchanged")).c_str ());
+            Log.infoln ((GetTitle () + F (": Unchanged")).c_str ());
             break;
         }
         IpAddress       = TempIp;
@@ -105,7 +105,7 @@ bool cIpAddressControl::validate (const String & value, String & ResponseMessage
     {
         if (!TempIp.fromString (value))
         {
-            ResponseMessage = GetTitle() + (F (": value: '")) + value + F ("' is not valid");
+            ResponseMessage = GetTitle () + (F (": value: '")) + value + F ("' is not valid");
             Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
@@ -113,7 +113,7 @@ bool cIpAddressControl::validate (const String & value, String & ResponseMessage
 
         if (!ForceUpdate && (TempIp == IPAddress (uint32_t (0))))
         {
-            ResponseMessage = GetTitle() + (F (" value: '")) + value + F ("' is not valid");
+            ResponseMessage = GetTitle () + (F (" value: '")) + value + F ("' is not valid");
             Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;

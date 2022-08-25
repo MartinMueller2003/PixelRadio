@@ -37,9 +37,9 @@ uint8_t i2cScanner (void)
 
         for (byte addr = 0x01; addr < 0x7f; addr++)
         {
-            Wire.beginTransmission (addr);              // Begin I2C transmission Address (i)
+            Wire.beginTransmission (addr);          // Begin I2C transmission Address (i)
 
-            if (Wire.endTransmission (true) == 0)       // Receive 0 = success (ACK response)
+            if (Wire.endTransmission (true) == 0)   // Receive 0 = success (ACK response)
             {
                 switch (addr)
                 {
@@ -53,7 +53,7 @@ uint8_t i2cScanner (void)
                     {
                         devStr = "Unknown";
                     }
-                }       // switch
+                }   // switch
 
                 Log.infoln (String (F ("-> Found i2c address: 0x%02X (%s)")).c_str (), addr, devStr.c_str ());
                 count++;
@@ -112,7 +112,7 @@ void rebootSystem (void)
         tmpStr  += "          ******************\r\n";
         tmpStr  += "          * SYSTEM REBOOT! *\r\n";
         tmpStr  += "          ******************\r\n\r\n";
-        Serial.println (tmpStr.c_str ());       // MUST use default serial print, not serial Log.
+        Serial.println (tmpStr.c_str ());   // MUST use default serial print, not serial Log.
 
         Serial.flush ();
         delay (1000);
@@ -212,12 +212,12 @@ void setGpioBootPins (void)
 // more reliable Code Flashing if the SD Card remains installed.
 void spiSdCardShutDown (void)
 {
-    pinMode (SD_CS_PIN, OUTPUT);                                // SD Card Chip Select.
-    digitalWrite (SD_CS_PIN, HIGH);                             // CS Active Low. High = Disable SD Card.
+    pinMode (SD_CS_PIN, OUTPUT);                // SD Card Chip Select.
+    digitalWrite (SD_CS_PIN, HIGH);             // CS Active Low. High = Disable SD Card.
 
-        pinMode (       MISO_PIN,       INPUT_PULLDOWN);        // SD D0, Allow pin to Pulldown Low (for reliable Flashing).
-        pinMode (       MOSI_PIN,       INPUT_PULLUP);          // SD CMD, Allow pin to Pullup High (for reliable Flashing).
-        pinMode (       SD_CLK_PIN,     INPUT_PULLUP);          // SD CLK.
+    pinMode (   MISO_PIN,   INPUT_PULLDOWN);    // SD D0, Allow pin to Pulldown Low (for reliable Flashing).
+    pinMode (   MOSI_PIN,   INPUT_PULLUP);      // SD CMD, Allow pin to Pullup High (for reliable Flashing).
+    pinMode (   SD_CLK_PIN, INPUT_PULLUP);      // SD CLK.
 }
 
 // *********************************************************************************************
@@ -231,7 +231,7 @@ bool strIsUint (String intStr)
         return false;
     }
 
-    for (i = 0; i < intStr.length (); i++)      // Arg must be integer >= 0.
+    for (i = 0; i < intStr.length (); i++)  // Arg must be integer >= 0.
     {
         char c = intStr.charAt (i);
 

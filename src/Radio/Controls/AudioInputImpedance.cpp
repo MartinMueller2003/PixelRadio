@@ -35,16 +35,16 @@ static ChoiceListVector_t MapOfImpedances
     {INP_IMP40K_STR, "40"},
 };
 
-static const PROGMEM char     INPUT_IMPED_STR        [] = "INPUT_IMPED_STR";
-static const PROGMEM char       INP_IMP_DEF_STR      [] = INP_IMP20K_STR;
-static const PROGMEM char     RADIO_INP_IMP_STR      [] = "INPUT IMPEDANCE";
+static const PROGMEM char   INPUT_IMPED_STR        []   = "INPUT_IMPED_STR";
+static const PROGMEM char   INP_IMP_DEF_STR      []     = INP_IMP20K_STR;
+static const PROGMEM char   RADIO_INP_IMP_STR      []   = "INPUT IMPEDANCE";
 
 // *********************************************************************************************
 cAudioInputImpedance::cAudioInputImpedance () :   cChoiceListControl (
         INPUT_IMPED_STR,
         RADIO_INP_IMP_STR,
         INP_IMP_DEF_STR,
-        &MapOfImpedances)
+        & MapOfImpedances)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

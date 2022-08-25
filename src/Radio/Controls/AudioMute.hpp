@@ -24,9 +24,9 @@ public:
 
     cAudioMute ();
     virtual ~cAudioMute ()    {}
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cAudioMute
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+};  // class cAudioMute
 
 extern cAudioMute AudioMute;
 

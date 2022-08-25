@@ -24,7 +24,7 @@ public:
     virtual ~cLoginUser ();
 
     void AddControls (uint16_t TabId, ControlColor color);
-};      // class cLoginUser
+};  // class cLoginUser
 
 extern cLoginUser LoginUser;
 

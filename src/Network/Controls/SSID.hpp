@@ -26,7 +26,7 @@ public:
     virtual ~cSSID ()    {}
 
     bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cSSID
+};  // class cSSID
 
 extern cSSID SSID;
 

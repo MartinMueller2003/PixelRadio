@@ -23,12 +23,11 @@
 class cButtonControl : public cControlCommon
 {
 public:
-    cButtonControl(const String &Title);
-    virtual ~cButtonControl();
+    cButtonControl (const String & Title);
+    virtual ~cButtonControl ();
 
     virtual void AddControls (uint16_t TabId, ControlColor color);
-
-};      // class cButtonControl
+};  // class cButtonControl
 
 // *********************************************************************************************
 // OEF

@@ -39,12 +39,12 @@ static ChoiceListVector_t MapOfGainValues
     {VGA_GAIN5_STR,  "5"},
 };
 
-static const PROGMEM char     RADIO_VGA_AUDIO_STR     [] = "ANALOG (VGA) AUDIO GAIN";
-static const PROGMEM char     ANALOG_GAIN_STR         [] = "ANALOG_GAIN_STR";
-static const PROGMEM char     Default                 [] = VGA_GAIN3_STR;
+static const PROGMEM char   RADIO_VGA_AUDIO_STR     []  = "ANALOG (VGA) AUDIO GAIN";
+static const PROGMEM char   ANALOG_GAIN_STR         []  = "ANALOG_GAIN_STR";
+static const PROGMEM char   Default                 []  = VGA_GAIN3_STR;
 
 // *********************************************************************************************
-cAnalogAudioGain::cAnalogAudioGain () :   cChoiceListControl (ANALOG_GAIN_STR, RADIO_VGA_AUDIO_STR, Default, &MapOfGainValues)
+cAnalogAudioGain::cAnalogAudioGain () :   cChoiceListControl (ANALOG_GAIN_STR, RADIO_VGA_AUDIO_STR, Default, & MapOfGainValues)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

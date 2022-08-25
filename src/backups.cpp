@@ -5,22 +5,22 @@
    Creation: Dec-16-2021
    Revised:  Jun-13-2022
    Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
+   Project Leader: T.Black (thomastech)
    Contributors: thomastech
 
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+   (c) copyright T.Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
    This Code was formatted with the uncrustify extension.
 
 
    SD Card Emergency Credential Restoration Feature:
    -------------------------------------------------
-   Credential Restoration allows the User to change WiFI credentials by SD Card. Reverts to DHCP WiFi.
+   Credential Restoration allows the User to change WiFI credentials by SD Card.Reverts to DHCP WiFi.
    (1) File Creation:
     Create file named credentials.txt and add the following JSON formatted text to it (fill in your SSID and WPA_KEY):
     {"WIFI_SSID_STR":"SSID",
     "WIFI_WPA_KEY_STR":"WPA_KEY"}
    (2) Instructions:
-       Install your prepared SD Card in PixelRadio. Reboot. Wait 30 secs, Remove card.
+       Install your prepared SD Card in PixelRadio.Reboot.Wait 30 secs, Remove card.
        Note: For Security the File is automatically deleted from card.
  */
 
@@ -50,12 +50,12 @@ const char * sdTypeStr[] = {
 const uint8_t SD_TYPE_CNT = sizeof (sdTypeStr) / sizeof (sdTypeStr[0]);
 
 // *************************************************************************************************************************
-// checkEmergencyCredentials(): Restore credentials if credentials.txt is available. For use during boot.
+// checkEmergencyCredentials(): Restore credentials if credentials.txt is available.For use during boot.
 //                              Return true if Emergency credentials were restored.
 bool checkEmergencyCredentials (const char * fileName)
 {
-    bool        successFlg = true;
-    File        file;
+    bool    successFlg = true;
+    File    file;
     SPIClass SPI2 (HSPI);
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
@@ -89,7 +89,7 @@ bool checkEmergencyCredentials (const char * fileName)
     DeserializationError error = deserializeJson (doc, file);
 
     file.close ();
-    SD.remove (fileName);       // Erase File for security protection.
+    SD.remove (fileName);   // Erase File for security protection.
     SD.end ();
     // SPI2.end();
     spiSdCardShutDown ();
@@ -106,8 +106,8 @@ bool checkEmergencyCredentials (const char * fileName)
     {
         JsonObject root = doc.as <JsonObject>();
         WiFiDriver.restoreConfiguration (root);
-        Log.    warningln (     "-> User Provided New WiFi Credentials.");
-        Log.    warningln (     "-> Will Use DHCP Mode on this Session.");
+        Log.warningln ( "-> User Provided New WiFi Credentials.");
+        Log.warningln ( "-> Will Use DHCP Mode on this Session.");
         Log.verboseln ("-> Credentials JSON used %u Bytes.", doc.memoryUsage ());
         Log.infoln ("-> Credentials Restore Complete.");
         Log.warningln ("-> For Your Security the Credential File Has Been Deleted.");
@@ -115,7 +115,7 @@ bool checkEmergencyCredentials (const char * fileName)
     else
     {
         Log.errorln ("-> Credential Restore Failed, Invalid / Incomplete File Contents.");
-        Log.warningln ("-> The Credential File Has NOT Been Deleted. Please Secure Your Data.");
+        Log.warningln ("-> The Credential File Has NOT Been Deleted.Please Secure Your Data.");
         successFlg = false;
     }
     // serializeJsonPretty(doc, Serial); // Debug Output
@@ -128,11 +128,11 @@ bool checkEmergencyCredentials (const char * fileName)
 
 // *************************************************************************************************************************
 // saveConfiguration(): Save the System Configuration to LittleFS or SD Card.
-// SD Card Date Stamp is Jan-01-1980. Wasn't able to write actual time stamp because SDFat library conflicts with PixelRadio_LittleFS.h.
+// SD Card Date Stamp is Jan-01-1980.Wasn't able to write actual time stamp because SDFat library conflicts with PixelRadio_LittleFS.h.
 bool saveConfiguration (uint8_t saveMode, const char * fileName)
 {
-    bool        successFlg = false;
-    File        file;
+    bool    successFlg = false;
+    File    file;
     SPIClass SPI2 (HSPI);
 
     if (saveMode == LITTLEFS_MODE)
@@ -145,8 +145,8 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     {
         Log.infoln ("Backup Configuration to SD Card ...");
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
-        pinMode (MISO_PIN, INPUT_PULLUP);       // MISO requires internal pull-up.
-        SD.end ();                              // Re-init Interface in case SD card had been swapped).
+        pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
+        SD.end ();                          // Re-init Interface in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
@@ -240,7 +240,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 }
 
 // *************************************************************************************************************************
-// restoreConfiguration(): Restore configuration from local file system (LittleFS). On exit, return true if successful.
+// restoreConfiguration(): Restore configuration from local file system (LittleFS).On exit, return true if successful.
 bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 {
     File file;
@@ -256,8 +256,8 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         Log.infoln ("Restore Configuration From SD Card ...");
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
 
-        pinMode (MISO_PIN, INPUT_PULLUP);       // MISO requires internal pull-up.
-        SD.end ();                              // Reset interface (in case SD card had been swapped).
+        pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
+        SD.end ();                          // Reset interface (in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
@@ -269,100 +269,100 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             }
             else
             {
-                Log.errorln ("-> SD Card Unknown Error."); \
+                Log.errorln ("-> SD Card Unknown Error.");  \
             }
-            SD.end ();
-            spiSdCardShutDown ();
+                SD.end ();
+                spiSdCardShutDown ();
+
+                return false;
+            }
+            Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
+            file = SD.open (fileName, FILE_READ);
+        }
+        else
+        {
+            Log.infoln ("restoreConfiguration: Undefined Backup Mode, Abort.");
 
             return false;
         }
-        Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
-        file = SD.open (fileName, FILE_READ);
-    }
-    else
-    {
-        Log.infoln ("restoreConfiguration: Undefined Backup Mode, Abort.");
 
-        return false;
-    }
+        if (!file)
+        {
+            Log.errorln (F ("-> Failed to Locate Configuration File (%s)."), fileName);
+            Log.infoln (F ("-> Create the Missing File by Performing a \"Save Settings\" in the PixelRadio App."));
 
-    if (!file)
-    {
-        Log.errorln (F ("-> Failed to Locate Configuration File (%s)."), fileName);
-        Log.infoln (F ("-> Create the Missing File by Performing a \"Save Settings\" in the PixelRadio App."));
+            if (restoreMode == SD_CARD_MODE)
+            {
+                SD.end ();
+                spiSdCardShutDown ();
+            }
+            return false;
+        }
+        else
+        {
+            Log.verboseln ("-> Located Configuration File (%s)", fileName);
+        }
+        // empirically Arduino Json needs 3.5 x the json text size to parse the file.
+        uint32_t DocSize = uint32_t (file.size ()) * 4;
+        DynamicJsonDocument raw_doc (DocSize);
+
+        DeserializationError error = deserializeJson (raw_doc, file);
+
+        // serializeJsonPretty(doc, Serial); // Debug Output
+
+        file.close ();
 
         if (restoreMode == SD_CARD_MODE)
         {
             SD.end ();
             spiSdCardShutDown ();
         }
-        return false;
+
+        if (error)
+        {
+            Log.errorln ("restoreConfiguration: Configure Deserialization Failed, Error:%s.", error.c_str ());
+
+            return false;
+        }
+        JsonObject doc = raw_doc.as <JsonObject>();
+
+        ControllerMgr.restoreConfiguration (doc);
+        WiFiDriver.restoreConfiguration (doc);
+        Radio.restoreConfiguration (doc);
+        LoginUser.restoreConfiguration (doc);
+        LoginPassword.restoreConfiguration (doc);
+
+        if (doc.containsKey ("USB_VOLUME"))
+        {
+            usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
+        }
+
+        if ((const char *)doc["GPIO19_STR"] != NULL)
+        {
+            gpio19BootStr = (const char *)doc["GPIO19_STR"];
+        }
+
+        if ((const char *)doc["GPIO23_STR"] != NULL)
+        {
+            gpio23BootStr = (const char *)doc["GPIO23_STR"];
+        }
+
+        if ((const char *)doc["GPIO33_STR"] != NULL)
+        {
+            gpio33BootStr = (const char *)doc["GPIO33_STR"];
+        }
+
+        if ((const char *)doc["LOG_LEVEL_STR"] != NULL)
+        {
+            logLevelStr = (const char *)doc["LOG_LEVEL_STR"];
+        }
+        Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
+        Log.infoln ("-> Configuration Restore Complete.");
+
+        // serializeJsonPretty(doc, Serial); // Debug Output
+        // Serial.println();
+
+        doc.clear ();
+
+        return true;
     }
-    else
-    {
-        Log.verboseln ("-> Located Configuration File (%s)", fileName);
-    }
-    // empirically Arduino Json needs 3.5 x the json text size to parse the file.
-    uint32_t DocSize = uint32_t (file.size ()) * 4;
-    DynamicJsonDocument raw_doc (DocSize);
-
-    DeserializationError error = deserializeJson (raw_doc, file);
-
-    // serializeJsonPretty(doc, Serial); // Debug Output
-
-    file.close ();
-
-    if (restoreMode == SD_CARD_MODE)
-    {
-        SD.end ();
-        spiSdCardShutDown ();
-    }
-
-    if (error)
-    {
-        Log.errorln ("restoreConfiguration: Configure Deserialization Failed, Error:%s.", error.c_str ());
-
-        return false;
-    }
-    JsonObject doc = raw_doc.as <JsonObject>();
-
-    ControllerMgr.restoreConfiguration (doc);
-    WiFiDriver.restoreConfiguration (doc);
-    Radio.restoreConfiguration (doc);
-    LoginUser.restoreConfiguration (doc);
-    LoginPassword.restoreConfiguration (doc);
-
-    if (doc.containsKey ("USB_VOLUME"))
-    {
-        usbVol = doc["USB_VOLUME"];     // Use Serial Control, "VOL=0" to "VOL=30".
-    }
-
-    if ((const char *)doc["GPIO19_STR"] != NULL)
-    {
-        gpio19BootStr = (const char *)doc["GPIO19_STR"];
-    }
-
-    if ((const char *)doc["GPIO23_STR"] != NULL)
-    {
-        gpio23BootStr = (const char *)doc["GPIO23_STR"];
-    }
-
-    if ((const char *)doc["GPIO33_STR"] != NULL)
-    {
-        gpio33BootStr = (const char *)doc["GPIO33_STR"];
-    }
-
-    if ((const char *)doc["LOG_LEVEL_STR"] != NULL)
-    {
-        logLevelStr = (const char *)doc["LOG_LEVEL_STR"];
-    }
-    Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
-    Log.infoln ("-> Configuration Restore Complete.");
-
-    // serializeJsonPretty(doc, Serial); // Debug Output
-    // Serial.println();
-
-    doc.clear ();
-
-    return true;
-}

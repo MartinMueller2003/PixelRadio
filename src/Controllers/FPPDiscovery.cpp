@@ -35,9 +35,9 @@
 c_FPPDiscovery::c_FPPDiscovery ()
 {
     // DEBUG_START;
-    memset ((void *)&MultiSyncStats, 0x00, sizeof (MultiSyncStats));
+    memset ((void *)& MultiSyncStats, 0x00, sizeof (MultiSyncStats));
     // DEBUG_END;
-}       // c_FPPDiscovery
+}   // c_FPPDiscovery
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
@@ -76,7 +76,7 @@ void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
                   WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     // DEBUG_END;
-}       // begin
+}   // begin
 
 // -----------------------------------------------------------------------------
 // Configure and start the web server
@@ -98,8 +98,8 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
         }
         // DEBUG_V ();
 
-        IPAddress address       = IPAddress (239, 70, 80, 80);
-        bool fail               = false;
+        IPAddress address   = IPAddress (239, 70, 80, 80);
+        bool fail           = false;
 
         // Try to listen to the broadcast port
         if (!udp.listen (FPP_DISCOVERY_PORT))
@@ -122,13 +122,13 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
         {
             Log.infoln ((String (F ("FPP Discovery: Listening on port ")) + String (FPP_DISCOVERY_PORT)).c_str ());
         }
-        udp.onPacket (std::bind (&c_FPPDiscovery::ProcessReceivedUdpPacket, this, std::placeholders::_1));
+        udp.onPacket (std::bind (& c_FPPDiscovery::ProcessReceivedUdpPacket, this, std::placeholders::_1));
 
         sendPingPacket ();
     } while (false);
 
     // DEBUG_END;
-}       // NetworkStateChanged
+}   // NetworkStateChanged
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
@@ -153,7 +153,7 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
         // DEBUG_V ();
 
         struct timeval tv;
-        gettimeofday (&tv, NULL);
+        gettimeofday (& tv, NULL);
         MultiSyncStats.lastReceiveTime = tv.tv_sec;
 
         switch (fppPacket->packet_type)
@@ -188,7 +188,7 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
                 break;
             }
 
-            case CTRL_PKT_EVENT:        // deprecated in favor of FPP Commands
+            case CTRL_PKT_EVENT:    // deprecated in favor of FPP Commands
             {
                 // DEBUG_V ("Unsupported PDU: CTRL_PKT_EVENT");
                 break;
@@ -256,11 +256,11 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
                 // DEBUG_V (String ("UnHandled PDU: packet_type:  ") + String (fppPacket->packet_type));
                 break;
             }
-        }       // switch (fppPacket->packet_type)
+        }   // switch (fppPacket->packet_type)
     } while (false);
 
     // DEBUG_END;
-}       // ProcessReceivedUdpPacket
+}   // ProcessReceivedUdpPacket
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::ProcessSyncPacket (uint8_t action, String FileName, float SecondsElapsed)
@@ -327,13 +327,13 @@ void c_FPPDiscovery::ProcessSyncPacket (uint8_t action, String FileName, float S
                 // DEBUG_V (String (F ("Sync: ERROR: Unknown Action: ")) + String (action));
                 break;
             }
-        }       // switch
+        }   // switch
     } while (false);
 
     FppdCb (CurrentFileName, UserParam);
 
     // DEBUG_END;
-}       // ProcessSyncPacket
+}   // ProcessSyncPacket
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::sendPingPacket (IPAddress destination)
@@ -343,38 +343,38 @@ void c_FPPDiscovery::sendPingPacket (IPAddress destination)
     FPPPingPacket packet;
 
     memset (packet.raw, 0, sizeof (packet));
-    packet.raw[0]               = 'F';
-    packet.raw[1]               = 'P';
-    packet.raw[2]               = 'P';
-    packet.raw[3]               = 'D';
-    packet.packet_type          = 0x04;
-    packet.data_len             = 294;
-    packet.ping_version         = 0x3;
-    packet.ping_subtype         = 0x0;
-    packet.ping_hardware        = FPP_TYPE_ID;
+    packet.raw[0]           = 'F';
+    packet.raw[1]           = 'P';
+    packet.raw[2]           = 'P';
+    packet.raw[3]           = 'D';
+    packet.packet_type      = 0x04;
+    packet.data_len         = 294;
+    packet.ping_version     = 0x3;
+    packet.ping_subtype     = 0x0;
+    packet.ping_hardware    = FPP_TYPE_ID;
 
     uint16_t v = (uint16_t)atoi (VERSION_STR);
 
     packet.versionMajor = (v >> 8) + ((v & 0xFF) << 8);
-    v                   = (uint16_t)atoi (&VERSION_STR[2]);
+    v                   = (uint16_t)atoi (& VERSION_STR[2]);
     packet.versionMinor = (v >> 8) + ((v & 0xFF) << 8);
 
-    packet.operatingMode = 0x08;        // Support remote mode : Bridge Mode
+    packet.operatingMode = 0x08;    // Support remote mode : Bridge Mode
 
     uint32_t ip = static_cast <uint32_t> (WiFi.localIP ());
 
-    memcpy (packet.ipAddress, &ip, 4);
+    memcpy (packet.ipAddress, & ip, 4);
 
-        strcpy (packet.hostName,        WiFi.getHostname ());
-        strcpy (packet.version,         VERSION_STR);
-        strcpy (packet.hardwareType,    FPP_VARIANT_NAME.c_str ());
+    strcpy (packet.hostName,        WiFi.getHostname ());
+    strcpy (packet.version,         VERSION_STR);
+    strcpy (packet.hardwareType,    FPP_VARIANT_NAME.c_str ());
     packet.ranges[0] = 0;
 
     // DEBUG_V ("Send Ping to " + destination.toString());
     udp.writeTo (packet.raw, sizeof (packet), destination, FPP_DISCOVERY_PORT);
 
     // DEBUG_END;
-}       // sendPingPacket
+}   // sendPingPacket
 
 // #define PRINT_DEBUG
 #ifdef PRINT_DEBUG
@@ -422,16 +422,16 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     DynamicJsonDocument JsonDoc (4 * 1024);
     JsonObject JsonData = JsonDoc.to <JsonObject>();
 
-    JsonData[F ("Name")]                = fname;
-    JsonData[F ("Version")]             = String (0) + "." + String (0);
-    JsonData[F ("ID")]                  = String (0);
-    JsonData[F ("StepTime")]            = String (0);
-    JsonData[F ("NumFrames")]           = String (0);
-    JsonData[F ("CompressionType")]     = 0;
+    JsonData[F ("Name")]            = fname;
+    JsonData[F ("Version")]         = String (0) + "." + String (0);
+    JsonData[F ("ID")]              = String (0);
+    JsonData[F ("StepTime")]        = String (0);
+    JsonData[F ("NumFrames")]       = String (0);
+    JsonData[F ("CompressionType")] = 0;
 
     static const int TIME_STR_CHAR_COUNT = 32;
     char timeStr[TIME_STR_CHAR_COUNT];
-    struct tm tm = *gmtime(&MultiSyncStats.lastReceiveTime);
+    struct tm tm = *gmtime(& MultiSyncStats.lastReceiveTime);
     // BUGBUG -- trusting the provided `tm` structure values contain valid data ... use `snprintf` to mitigate.
     int actuallyWritten = snprintf (timeStr, TIME_STR_CHAR_COUNT,
                                     "%4d-%.2d-%.2d %.2d:%.2d:%.2d",
@@ -443,25 +443,25 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     {
         JsonData[F ("lastReceiveTime")] = timeStr;
     }
-    JsonData[F ("pktCommand")]          = MultiSyncStats.pktCommand;
-    JsonData[F ("pktSyncSeqOpen")]      = MultiSyncStats.pktSyncSeqOpen;
-    JsonData[F ("pktSyncSeqStart")]     = MultiSyncStats.pktSyncSeqStart;
-    JsonData[F ("pktSyncSeqStop")]      = MultiSyncStats.pktSyncSeqStop;
-    JsonData[F ("pktSyncSeqSync")]      = MultiSyncStats.pktSyncSeqSync;
-    JsonData[F ("pktSyncMedOpen")]      = MultiSyncStats.pktSyncMedOpen;
-    JsonData[F ("pktSyncMedStart")]     = MultiSyncStats.pktSyncMedStart;
-    JsonData[F ("pktSyncMedStop")]      = MultiSyncStats.pktSyncMedStop;
-    JsonData[F ("pktSyncMedSync")]      = MultiSyncStats.pktSyncMedSync;
-    JsonData[F ("pktBlank")]            = MultiSyncStats.pktBlank;
-    JsonData[F ("pktPing")]             = MultiSyncStats.pktPing;
-    JsonData[F ("pktPlugin")]           = MultiSyncStats.pktPlugin;
-    JsonData[F ("pktFPPCommand")]       = MultiSyncStats.pktFPPCommand;
-    JsonData[F ("pktError")]            = MultiSyncStats.pktError;
-    JsonData[F ("MaxChannel")]          = String (0);
-    JsonData[F ("ChannelCount")]        = String (0);
+    JsonData[F ("pktCommand")]      = MultiSyncStats.pktCommand;
+    JsonData[F ("pktSyncSeqOpen")]  = MultiSyncStats.pktSyncSeqOpen;
+    JsonData[F ("pktSyncSeqStart")] = MultiSyncStats.pktSyncSeqStart;
+    JsonData[F ("pktSyncSeqStop")]  = MultiSyncStats.pktSyncSeqStop;
+    JsonData[F ("pktSyncSeqSync")]  = MultiSyncStats.pktSyncSeqSync;
+    JsonData[F ("pktSyncMedOpen")]  = MultiSyncStats.pktSyncMedOpen;
+    JsonData[F ("pktSyncMedStart")] = MultiSyncStats.pktSyncMedStart;
+    JsonData[F ("pktSyncMedStop")]  = MultiSyncStats.pktSyncMedStop;
+    JsonData[F ("pktSyncMedSync")]  = MultiSyncStats.pktSyncMedSync;
+    JsonData[F ("pktBlank")]        = MultiSyncStats.pktBlank;
+    JsonData[F ("pktPing")]         = MultiSyncStats.pktPing;
+    JsonData[F ("pktPlugin")]       = MultiSyncStats.pktPlugin;
+    JsonData[F ("pktFPPCommand")]   = MultiSyncStats.pktFPPCommand;
+    JsonData[F ("pktError")]        = MultiSyncStats.pktError;
+    JsonData[F ("MaxChannel")]      = String (0);
+    JsonData[F ("ChannelCount")]    = String (0);
 #ifdef DOWENEEDTHIS
-        uint32_t        FileOffsetToCurrentHeaderRecord = 0;
-        uint32_t        FileOffsetToStartOfSequenceData = 0;    // DataOffset
+        uint32_t    FileOffsetToCurrentHeaderRecord = 0;
+        uint32_t    FileOffsetToStartOfSequenceData = 0;    // DataOffset
 
         // DEBUG_V (String ("FileOffsetToCurrentHeaderRecord: ") + String (FileOffsetToCurrentHeaderRecord));
         // DEBUG_V (String ("FileOffsetToStartOfSequenceData: ") + String (FileOffsetToStartOfSequenceData));
@@ -481,8 +481,8 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
                                     sizeof (FSEQRawVariableDataHeader),
                                     FileOffsetToCurrentHeaderRecord);
 
-                int     VariableDataHeaderTotalLength   = read16 ((uint8_t *)&(pCurrentVariableHeader->length));
-                int     VariableDataHeaderDataLength    = VariableDataHeaderTotalLength - sizeof (FSEQRawVariableDataHeader);
+                int VariableDataHeaderTotalLength   = read16 ((uint8_t *)& (pCurrentVariableHeader->length));
+                int VariableDataHeaderDataLength    = VariableDataHeaderTotalLength - sizeof (FSEQRawVariableDataHeader);
 
                 String HeaderTypeCode (pCurrentVariableHeader->type);
 
@@ -508,7 +508,7 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     // DEBUG_V (String ("resp: ") + resp);
 
     // DEBUG_END;
-}       // BuildFseqResponse
+}   // BuildFseqResponse
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::ProcessGET (AsyncWebServerRequest * request)
@@ -552,7 +552,7 @@ void c_FPPDiscovery::ProcessGET (AsyncWebServerRequest * request)
     } while (false);    // do once
 
     // DEBUG_END;
-} // ProcessGET
+}  // ProcessGET
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::GetSysInfoJSON (JsonObject & jsonResponse)
@@ -567,7 +567,7 @@ void c_FPPDiscovery::GetSysInfoJSON (JsonObject & jsonResponse)
     jsonResponse[F ("Version")]         = VERSION_STR;
 
     jsonResponse[F ("majorVersion")]    = (uint16_t)atoi (VERSION_STR);
-    jsonResponse[F ("minorVersion")]    = (uint16_t)atoi (&VERSION_STR[2]);
+    jsonResponse[F ("minorVersion")]    = (uint16_t)atoi (& VERSION_STR[2]);
     jsonResponse[F ("typeId")]          = FPP_TYPE_ID;
 
     JsonObject jsonResponseUtilization = jsonResponse.createNestedObject (F ("Utilization"));
@@ -579,7 +579,7 @@ void c_FPPDiscovery::GetSysInfoJSON (JsonObject & jsonResponse)
     jsonResponseIpAddresses.add (WiFi.localIP ().toString ());
 
     // DEBUG_END;
-}       // GetSysInfoJSON
+}   // GetSysInfoJSON
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
@@ -612,8 +612,8 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
             }
             JsonObject JsonDataMqtt = JsonData.createNestedObject (F ("MQTT"));
 
-            JsonDataMqtt[F ("configured")]      = false;
-            JsonDataMqtt[F ("connected")]       = false;
+            JsonDataMqtt[F ("configured")]  = false;
+            JsonDataMqtt[F ("connected")]   = false;
 
             JsonObject JsonDataCurrentPlaylist = JsonData.createNestedObject (F ("current_playlist"));
 
@@ -623,10 +623,10 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
             JsonDataCurrentPlaylist[F ("playlist")]     = emptyString;
             JsonDataCurrentPlaylist[F ("type")]         = emptyString;
 
-            JsonData[F ("volume")]              = 70;
-            JsonData[F ("media_filename")]      = emptyString;
-            JsonData[F ("fppd")]                = F ("running");
-            JsonData[F ("current_song")]        = emptyString;
+            JsonData[F ("volume")]          = 70;
+            JsonData[F ("media_filename")]  = emptyString;
+            JsonData[F ("fppd")]            = F ("running");
+            JsonData[F ("current_song")]    = emptyString;
 
             JsonData[F ("current_sequence")]    = emptyString;
             JsonData[F ("playlist")]            = emptyString;
@@ -665,8 +665,8 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
 
         if (command == F ("getHostNameInfo"))
         {
-            JsonData[F ("HostName")]            = WiFi.getHostname ();
-            JsonData[F ("HostDescription")]     = F ("Pixel Radio");
+            JsonData[F ("HostName")]        = WiFi.getHostname ();
+            JsonData[F ("HostDescription")] = F ("Pixel Radio");
 
             String resp;
             serializeJson (JsonData, resp);
@@ -697,6 +697,6 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
     } while (false);
 
     // DEBUG_END;
-}       // ProcessFPPJson
+}   // ProcessFPPJson
 
 c_FPPDiscovery FPPDiscovery;

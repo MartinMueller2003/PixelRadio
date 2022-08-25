@@ -26,20 +26,20 @@ public:
     cRdsText ();
     virtual ~cRdsText ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        poll ();
-    bool        set (String & value, String & Response);
+    void    AddControls (uint16_t TabId, ControlColor color);
+    void    poll ();
+    bool    set (String & value, String & Response);
 
 private:
 
-    void        UpdateStatus ();
-    void        updateRdsMsgRemainingTime (uint32_t now);
+    void    UpdateStatus ();
+    void    updateRdsMsgRemainingTime (uint32_t now);
 
     c_ControllerMgr::RdsMsgInfo_t RdsMsgInfo;
     uint32_t CurrentMsgEndTime          = 0;
     uint32_t CurrentMsgLastUpdateTime   = 0;
     String LastMessageSent;
-};      // class cRdsText
+};  // class cRdsText
 
 extern cRdsText RdsText;
 

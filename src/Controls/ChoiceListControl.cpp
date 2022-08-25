@@ -19,10 +19,10 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cChoiceListControl::cChoiceListControl (const String                    & ConfigName,
-                                        const String                    & Title,
-                                        const String                    & DefaultValue,
-                                        const ChoiceListVector_t        * _ChoiceVector) :
+cChoiceListControl::cChoiceListControl (const String                & ConfigName,
+                                        const String                & Title,
+                                        const String                & DefaultValue,
+                                        const ChoiceListVector_t    * _ChoiceVector) :
     ChoiceVector (_ChoiceVector),
     cControlCommon (ConfigName, ControlType::Select, Title, DefaultValue, 64)
 {
@@ -149,8 +149,8 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
         {
             // DEBUG_V (String ("         first: ") + CurrentOption.first);
             ChoiceListEntry NewEntry;
-            NewEntry.VectorIndex        = Index++;
-            NewEntry.UiId               = ESPUI.addControl (ControlType::Option,
+            NewEntry.VectorIndex    = Index++;
+            NewEntry.UiId           = ESPUI.addControl (ControlType::Option,
                                              emptyString.c_str (),
                                              emptyString,
                                              ControlColor::None,
@@ -204,7 +204,7 @@ bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, boo
     {
         if (ChoiceVector->size () <= value)
         {
-            ResponseMessage = GetTitle() + F (": Set: BAD VALUE: '") + String (value) + F ("'");
+            ResponseMessage = GetTitle () + F (": Set: BAD VALUE: '") + String (value) + F ("'");
             // Log.errorln (ResponseMessage.c_str ());
             Response = false;
             break;
@@ -239,7 +239,7 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
             if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (value))
             {
                 // DEBUG_V ("Ignore duplicate setting");
-                ResponseMessage = GetTitle() + F (": Ignoring duplicate setting for '") + value + "'";
+                ResponseMessage = GetTitle () + F (": Ignoring duplicate setting for '") + value + "'";
                 Response        = false;
                 break;
             }
@@ -254,7 +254,7 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
         }
         // DEBUG_V ("No exact match for the value.");
 
-        ResponseMessage = GetTitle() + F (": Set: BAD VALUE: '") + value + F ("'");
+        ResponseMessage = GetTitle () + F (": Set: BAD VALUE: '") + value + F ("'");
         // Log.errorln (ResponseMessage.c_str ());
         Response = false;
         break;

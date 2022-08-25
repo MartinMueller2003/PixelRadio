@@ -25,7 +25,7 @@ public:
     cWpaKey ();
     virtual ~cWpaKey ()    {}
     bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cWpaKey
+};  // class cWpaKey
 
 extern cWpaKey WpaKey;
 

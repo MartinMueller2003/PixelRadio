@@ -29,12 +29,12 @@ static ChoiceListVector_t MapOfGainValues
     {"2 dB",  "2"},
 };
 
-static const PROGMEM char     RADIO_DIG_AUDIO_STR     [] = "DIGITAL AUDIO GAIN";
-static const PROGMEM char     DIG_GAIN_DEF_STR        [] = "0 dB";
-static const PROGMEM char     DIGITAL_GAIN_STR        [] = "DIGITAL_GAIN_STR";
+static const PROGMEM char   RADIO_DIG_AUDIO_STR     []  = "DIGITAL AUDIO GAIN";
+static const PROGMEM char   DIG_GAIN_DEF_STR        []  = "0 dB";
+static const PROGMEM char   DIGITAL_GAIN_STR        []  = "DIGITAL_GAIN_STR";
 
 // *********************************************************************************************
-cDigitalAudioGain::cDigitalAudioGain () :   cChoiceListControl (DIGITAL_GAIN_STR, RADIO_DIG_AUDIO_STR, DIG_GAIN_DEF_STR, &MapOfGainValues)
+cDigitalAudioGain::cDigitalAudioGain () :   cChoiceListControl (DIGITAL_GAIN_STR, RADIO_DIG_AUDIO_STR, DIG_GAIN_DEF_STR, & MapOfGainValues)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

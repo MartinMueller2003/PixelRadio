@@ -23,7 +23,7 @@ class cApFallback : public cBinaryControl
 public:
     cApFallback ();
     virtual ~cApFallback ()    {}
-};      // class cApFallback
+};  // class cApFallback
 
 extern cApFallback ApFallback;
 

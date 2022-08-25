@@ -26,12 +26,12 @@ public:
     cStatusControl ();
     virtual ~cStatusControl ()    {}
 
-    void restoreConfiguration(JsonObject &) {}
-    void                saveConfiguration (JsonObject &)        {}
+    void            restoreConfiguration (JsonObject &) {}
+    void            saveConfiguration (JsonObject &)    {}
 
-    virtual bool        set (const String & value);
-    virtual void        set (const String & value, eCssStyle style);
-};      // class cStatusControl
+    virtual bool    set (const String & value);
+    virtual void    set (const String & value, eCssStyle style);
+};  // class cStatusControl
 
 // *********************************************************************************************
 // OEF

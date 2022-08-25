@@ -24,7 +24,7 @@ public:
 
     cRfCarrierStatus ();
     virtual ~cRfCarrierStatus ()    {}
-};      // class cRfCarrierStatus
+};  // class cRfCarrierStatus
 
 extern cRfCarrierStatus RfCarrierStatus;
 

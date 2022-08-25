@@ -26,23 +26,22 @@ public:
     cFrequencyAdjust ();
     virtual ~cFrequencyAdjust ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        AddAdjustControls (uint16_t TabId, ControlColor color);
-    void        AddRadioControls (uint16_t TabId, ControlColor color);
-    void        AddHomeControls (uint16_t TabId, ControlColor color);
-    void        Callback (Control * sender, int type);
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    void    AddControls (uint16_t TabId, ControlColor color);
+    void    AddAdjustControls (uint16_t TabId, ControlColor color);
+    void    AddRadioControls (uint16_t TabId, ControlColor color);
+    void    AddHomeControls (uint16_t TabId, ControlColor color);
+    void    Callback (Control * sender, int type);
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
 
-    void        UpdateStatus ();
+    void    UpdateStatus ();
 
     cFrequencyStatus HomeFreqStatus;
     cFrequencyStatus AdjustFreqStatus;
     cFrequencyStatus RadioFreqStatus;
-
-};      // class cFrequencyAdjust
+};  // class cFrequencyAdjust
 
 extern cFrequencyAdjust FrequencyAdjust;
 

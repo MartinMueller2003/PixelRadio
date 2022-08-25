@@ -34,12 +34,12 @@
     // Must call wifiConnect() BEFORE calling otaInit().
     void otaInit (String & mdnsname)
     {
-        static int8_t   prog            = 0;            // Upload Progress, in percent.
-        static int8_t   oldProg         = -1;           // Previous Upload Progress.
-        static bool     updateLittleFS  = false;        // Flag for LITTLEFS OTA.
+        static int8_t   prog            = 0;        // Upload Progress, in percent.
+        static int8_t   oldProg         = -1;       // Previous Upload Progress.
+        static bool     updateLittleFS  = false;    // Flag for LITTLEFS OTA.
 
         ArduinoOTA.setPort (OTA_PORT);
-        ArduinoOTA.setTimeout (OTA_TIMEOUT);            // Default is 1000mS, increased to prevent OTA timeouts.
+        ArduinoOTA.setTimeout (OTA_TIMEOUT);        // Default is 1000mS, increased to prevent OTA timeouts.
         ArduinoOTA
         .onStart ([] ()
                   {
@@ -48,13 +48,13 @@
 
                       if (ArduinoOTA.getCommand () == U_FLASH)
                       {
-                          typeStr               = F ("Sketch Firmware.");
-                          updateLittleFS        = false;
+                          typeStr           = F ("Sketch Firmware.");
+                          updateLittleFS    = false;
                       }
                       else
                       {
-                          typeStr               = F ("LITTLEFS File System.");
-                          updateLittleFS        = true;
+                          typeStr           = F ("LITTLEFS File System.");
+                          updateLittleFS    = true;
                       }
                       char logBuff[50];
                       sprintf (logBuff, "Starting OTA Update: %s", typeStr.c_str ());
@@ -65,7 +65,7 @@
 
                       if (updateLittleFS == true)
                       {
-                          LittleFS.end ();      // Important, Must Unmount LITTLEFS!
+                          LittleFS.end ();  // Important, Must Unmount LITTLEFS!
                           Log.infoln (" -> Unmounted LITTLEFS.");
                       }
                   })
@@ -96,7 +96,7 @@
 
                          if ((prog == 0) && (prog != oldProg))
                          {
-                             Log.infoln (" -> Progress: %u", (progress / (total / 100)));       // Print progress to console.
+                             Log.infoln (" -> Progress: %u", (progress / (total / 100)));   // Print progress to console.
                          }
                          oldProg = prog;
                      })
@@ -145,11 +145,11 @@
                       }
                   });
 
-        ArduinoOTA.setHostname (mdnsname.c_str ());     // OTA and mDNS must share the same Host name.
+        ArduinoOTA.setHostname (mdnsname.c_str ()); // OTA and mDNS must share the same Host name.
  # ifdef OTA_REBOOT_ENB
-            ArduinoOTA. setRebootOnSuccess (    true);  // Enable reboot after OTA.
+            ArduinoOTA. setRebootOnSuccess (true);  // Enable reboot after OTA.
  # else // ifdef OTA_REBOOT_ENB
-            ArduinoOTA. setRebootOnSuccess (    false); // Disable reboot after OTA.
+            ArduinoOTA. setRebootOnSuccess (false); // Disable reboot after OTA.
  # endif // ifndef OTA_REBOOT_ENB
         ArduinoOTA.begin ();
         Log.infoln ("OTA Server Initialized.");

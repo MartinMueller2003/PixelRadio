@@ -31,11 +31,11 @@ public:
 
     cSerialControl ();
     virtual ~cSerialControl ();
-    virtual void AddControls(uint16_t TabId, ControlColor color);
-    void initSerialControl(HardwareSerial *port);
-    virtual void SetControllerEnabled(bool value) { ControllerIsEnabled = value; }
-    virtual bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    virtual void poll(void);
+    virtual void    AddControls (uint16_t TabId, ControlColor color);
+    void            initSerialControl (HardwareSerial * port);
+    virtual void    SetControllerEnabled (bool value) {ControllerIsEnabled = value;}
+    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual void    poll (void);
 
 private:
     bool ControllerIsEnabled = false;
@@ -46,9 +46,9 @@ private:
     RBD::SerialManager serial_manager;
     cCommandProcessor CommandProcessor;
 
-    String cmdStr;      // Serial Port Commands from user (CLI).
+    String cmdStr;  // Serial Port Commands from user (CLI).
     String paramStr;
-};
+}; // class cSerialControl
 
 // *********************************************************************************************
 // EOF

@@ -26,16 +26,16 @@ public:
     cBinaryControl (const String & ConfigName, const String & Title, bool DefaultValue);
     virtual ~cBinaryControl ()    {}
 
-    void                addInputCondition (const String & Name, bool value);
-    virtual bool        getBool () {return DataValue;}
-    virtual void        restoreConfiguration (JsonObject & json);
-    virtual void        saveConfiguration (JsonObject & json);
-    virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    virtual void        setOffMessage (const String & value, eCssStyle style);
-    virtual void        setOffMessageStyle (eCssStyle style);
-    virtual void        setOnMessage (const String & value, eCssStyle style);
-    virtual void        setOnMessageStyle (eCssStyle style);
-    virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    void            addInputCondition (const String & Name, bool value);
+    virtual bool    getBool () {return DataValue;}
+    virtual void    restoreConfiguration (JsonObject & json);
+    virtual void    saveConfiguration (JsonObject & json);
+    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual void    setOffMessage (const String & value, eCssStyle style);
+    virtual void    setOffMessageStyle (eCssStyle style);
+    virtual void    setOnMessage (const String & value, eCssStyle style);
+    virtual void    setOnMessageStyle (eCssStyle style);
+    virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
     bool DataValue = false;
@@ -44,7 +44,7 @@ private:
     String OffString;
     eCssStyle OnStyle   = eCssStyle::CssStyleBlack;
     eCssStyle OffStyle  = eCssStyle::CssStyleBlack;
-};      // class cBinaryControl
+};  // class cBinaryControl
 
 // *********************************************************************************************
 // OEF

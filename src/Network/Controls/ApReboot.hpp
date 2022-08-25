@@ -24,7 +24,7 @@ public:
 
     cApReboot ();
     virtual ~cApReboot ()    {}
-};      // class cApReboot
+};  // class cApReboot
 
 extern cApReboot ApReboot;
 

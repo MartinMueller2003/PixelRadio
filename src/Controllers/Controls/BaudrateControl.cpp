@@ -19,7 +19,7 @@
 // *********************************************************************************************
 #include <ArduinoLog.h>
 #include "BaudrateControl.hpp"
-# include "memdebug.h"
+#include "memdebug.h"
 
 static const PROGMEM char Name [] = "Baudrate";
 #define  SERIAL_DEF_STR SERIAL_115_STR
@@ -33,8 +33,8 @@ static const ChoiceListVector_t MapOfBaudrates
 };
 
 // ================================================================================================
-cBaudrateControl::cBaudrateControl () : cChoiceListControl (Name, Name, "115.2K", &MapOfBaudrates)
-{}      // cBaudrateControl
+cBaudrateControl::cBaudrateControl () :   cChoiceListControl (Name, Name, "115.2K", & MapOfBaudrates)
+{}  // cBaudrateControl
 
 // ================================================================================================
 cBaudrateControl::~cBaudrateControl ()
@@ -43,12 +43,12 @@ cBaudrateControl::~cBaudrateControl ()
 // *********************************************************************************************
 void cBaudrateControl::AddControls (uint16_t value, ControlColor color)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
-    ESPUI.addControl(ControlType::Label, Name, Name, color, value);
-    cChoiceListControl::AddControls(value, color);
+    ESPUI.addControl (ControlType::Label, Name, Name, color, value);
+    cChoiceListControl::AddControls (value, color);
 
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

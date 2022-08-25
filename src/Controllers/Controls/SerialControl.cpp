@@ -23,7 +23,7 @@
 #include "memdebug.h"
 
 // ================================================================================================
-cSerialControl::cSerialControl () : cBaudrateControl ()
+cSerialControl::cSerialControl () :   cBaudrateControl ()
 {
     cmdStr.reserve (40);    // Minimize memory re-allocations.
     paramStr.reserve (80);  // Minimize memory re-allocations.
@@ -36,20 +36,20 @@ cSerialControl::~cSerialControl ()
 // ************************************************************************************************
 void cSerialControl::AddControls (uint16_t TabId, ControlColor color)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
-    cBaudrateControl::AddControls(TabId, color);
+    cBaudrateControl::AddControls (TabId, color);
 
-    LastCmdProcessed.AddControls(TabId, color);
-    LastCmdProcessed.setControlStyle(eCssStyle::CssStyleWhite);
-    String Temp = F("Serial Control<br>Last Command Processed");
-    LastCmdProcessed.set(Temp);
+    LastCmdProcessed.AddControls (TabId, color);
+    LastCmdProcessed.setControlStyle (eCssStyle::CssStyleWhite);
+    String Temp = F ("Serial Control<br>Last Command Processed");
+    LastCmdProcessed.set (Temp);
 
     // DEBUG_END;
 }
 
 // ************************************************************************************************
-void cSerialControl::initSerialControl(HardwareSerial * port)
+void cSerialControl::initSerialControl (HardwareSerial * port)
 {
     // DEBUG_START;
 
@@ -58,14 +58,14 @@ void cSerialControl::initSerialControl(HardwareSerial * port)
     SerialPort->flush ();                   // Purge pending serial chars.
     SerialPort->end ();
 
-    serial_manager.start (*port);            // Start Command Line Processor.
+    serial_manager.start (*port);           // Start Command Line Processor.
     serial_manager.setFlag (CMD_EOL_TERM);  // EOL Termination character.
     serial_manager.setDelimiter ('=');      // Parameter delimiter character.
 
     SerialPort->flush ();                   // Purge pending serial chars.
     SerialPort->end ();
 
-    SerialPort->begin (get32());            // set the baudrate
+    SerialPort->begin (get32 ());           // set the baudrate
     SerialPort->flush ();                   // Repeat the flushing.
 
     // DEBUG_END;
@@ -86,19 +86,19 @@ void cSerialControl::poll (void)
 
         while (serial_manager.onReceive ())
         {
-         // DEBUG_V("Process any serial commands from user (CLI).");
-            cmdStr = serial_manager.getCmd();
-         // DEBUG_V((String(F("Raw CMD Parameter: '")) + cmdStr + "'").c_str());
+            // DEBUG_V("Process any serial commands from user (CLI).");
+            cmdStr = serial_manager.getCmd ();
+            // DEBUG_V((String(F("Raw CMD Parameter: '")) + cmdStr + "'").c_str());
 
             paramStr = serial_manager.getParam ();
-         // DEBUG_V((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
+            // DEBUG_V((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
 
-            LastCmdProcessed.set(String(F("Command: '")) + cmdStr + F("' <br>Parameter: '") + paramStr + F("'") );
+            LastCmdProcessed.set (String (F ("Command: '")) + cmdStr + F ("' <br>Parameter: '") + paramStr + F ("'"));
 
             String Response;
             CommandProcessor.ProcessCommand (cmdStr, paramStr, Response);
-            Response += F("\n");
-            serial_manager.print(Response);
+            Response += F ("\n");
+            serial_manager.print (Response);
             // DEBUG_V(String("Response.length: ") + String(Response.length()));
         }
     } while (false);
@@ -109,36 +109,35 @@ void cSerialControl::poll (void)
 // ************************************************************************************************
 bool cSerialControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
- // DEBUG_START;
-    uint32_t OriginalBaudrate = get32();
-    bool Response = true;
+    // DEBUG_START;
+    uint32_t OriginalBaudrate   = get32 ();
+    bool Response               = true;
 
-    do // once
+    do  // once
     {
-        Response = cChoiceListControl::set(value, ResponseMessage, ForceUpdate);
-        if(!ForceUpdate && !Response)
+        Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+
+        if (!ForceUpdate && !Response)
         {
-         // DEBUG_V("Data not valid");
+            // DEBUG_V("Data not valid");
             Response = false;
             break;
         }
 
-        if (OriginalBaudrate == get32())
+        if (OriginalBaudrate == get32 ())
         {
-         // DEBUG_V("Dont interrupt the port");
+            // DEBUG_V("Dont interrupt the port");
             break;
         }
-
-     // DEBUG_V("Change Baudrate");
-        SerialPort->flush ();             // Flush all characters in queue.
+        // DEBUG_V("Change Baudrate");
+        SerialPort->flush ();           // Flush all characters in queue.
         SerialPort->end ();             // Flush all characters in queue.
-        SerialPort->begin (get32());    // set the new baudrate
+        SerialPort->begin (get32 ());   // set the new baudrate
         SerialPort->println ();         // Push out any corrupted data due to baud change.
-     // DEBUG_V();
-
+        // DEBUG_V();
     } while (false);
 
- // DEBUG_END;
+    // DEBUG_END;
     return Response;
 }
 

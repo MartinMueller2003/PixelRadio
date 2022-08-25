@@ -19,10 +19,10 @@
 #include "FrequencyStatus.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     RADIO_FM_FRQ_STR        [] = "FM FREQUENCY";
+static const PROGMEM char RADIO_FM_FRQ_STR        [] = "FM FREQUENCY";
 
 // *********************************************************************************************
-cFrequencyStatus::cFrequencyStatus () : cStatusControl (RADIO_FM_FRQ_STR)
+cFrequencyStatus::cFrequencyStatus () :   cStatusControl (RADIO_FM_FRQ_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -33,10 +33,10 @@ void cFrequencyStatus::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls(value, color);
-    setControlStyle(eCssStyle::CssStyleWhite);
-    setControlPanelStyle(ePanelStyle::PanelStyle300);
-    
+    cStatusControl::AddControls (value, color);
+    setControlStyle (eCssStyle::CssStyleWhite);
+    setControlPanelStyle (ePanelStyle::PanelStyle300);
+
     // DEBUG_END;
 }
 

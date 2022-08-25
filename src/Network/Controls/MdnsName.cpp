@@ -20,8 +20,8 @@
 #include "WiFiDriver.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     MDNS_NAME_DEF_STR       [] = "PixelRadio";
-static const PROGMEM char     MDNS_NAME_STR           [] = "MDNS_NAME_STR";
+static const PROGMEM char   MDNS_NAME_DEF_STR       []  = "PixelRadio";
+static const PROGMEM char   MDNS_NAME_STR           []  = "MDNS_NAME_STR";
 static const PROGMEM uint32_t MDNS_NAME_MAX_SZ          = 18;
 #ifdef OTA_ENB
     static const PROGMEM char WIFI_MDNS_NAME_STR [] = "MDNS / OTA NAME";

@@ -24,7 +24,7 @@ public:
 
     cHotspotName ();
     virtual ~cHotspotName ();
-};      // class cHotspotName
+};  // class cHotspotName
 
 extern cHotspotName HotspotName;
 

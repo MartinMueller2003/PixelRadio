@@ -27,24 +27,24 @@ public:
     cTestTone ();
     virtual ~cTestTone ()    {}
 
-    void        Init ();
-    void        poll ();
+    void    Init ();
+    void    poll ();
 
 protected:
 
-    void        UpdateRdsTimeMsg ();
-    void        toneOn (uint16_t freq);
-    void        toneOff ();
+    void    UpdateRdsTimeMsg ();
+    void    toneOn (uint16_t freq);
+    void    toneOff ();
 
-    uint8_t hours       = 0;
-    uint8_t minutes     = 0;
-    uint8_t seconds     = 0;
+    uint8_t hours   = 0;
+    uint8_t minutes = 0;
+    uint8_t seconds = 0;
 
     friend class fsm_Tone_state_Idle;
     friend class fsm_Tone_state_SendingTone;
     fsm_Tone_state * pCurrentFsmState   = nullptr;
     uint32_t FsmTimerExpirationTime     = 0;
-};      // class cTestTone
+};  // class cTestTone
 
 class fsm_Tone_state
 {
@@ -62,12 +62,12 @@ public:
     virtual ~fsm_Tone_state ()
     {}
 
-    virtual void        Poll (uint32_t) = 0;
-    virtual void        Init (void)     = 0;
-    uint16_t            getCurrentToneFrequency ()      {return *CurrentTone;}
+    virtual void    Poll (uint32_t) = 0;
+    virtual void    Init (void)     = 0;
+    uint16_t        getCurrentToneFrequency ()      {return *CurrentTone;}
 
-    void                SetParent (cTestTone * parent)  {pTestTone = parent;}
-};      // fsm_Tone_state
+    void            SetParent (cTestTone * parent)  {pTestTone = parent;}
+};  // fsm_Tone_state
 
 /*****************************************************************************/
 // Wait for polling to start.
@@ -81,9 +81,9 @@ public:
     virtual ~fsm_Tone_state_Idle ()
     {}
 
-    virtual void        Poll (uint32_t now);
-    virtual void        Init (void);
-};      // class fsm_Tone_state_Idle
+    virtual void    Poll (uint32_t now);
+    virtual void    Init (void);
+};  // class fsm_Tone_state_Idle
 
 /*****************************************************************************/
 class fsm_Tone_state_SendingTone : public fsm_Tone_state
@@ -96,9 +96,9 @@ public:
     virtual ~fsm_Tone_state_SendingTone ()
     {}
 
-    virtual void        Poll (uint32_t now);
-    virtual void        Init (void);
-};      // class fsm_Tone_state_SendingTone
+    virtual void    Poll (uint32_t now);
+    virtual void    Init (void);
+};  // class fsm_Tone_state_SendingTone
 
 
 extern cTestTone TestTone;

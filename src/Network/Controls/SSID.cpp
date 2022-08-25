@@ -22,8 +22,8 @@
 #include "SSID.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     WIFI_SSID       [] = "WIFI SSID";
-static const PROGMEM char     WIFI_SSID_STR   [] = "WIFI_SSID_STR";
+static const PROGMEM char   WIFI_SSID       []  = "WIFI SSID";
+static const PROGMEM char   WIFI_SSID_STR   []  = "WIFI_SSID_STR";
 static const PROGMEM uint32_t SSID_MAX_SZ       = 32;
 
 // *********************************************************************************************

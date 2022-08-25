@@ -25,9 +25,9 @@ public:
     cRssiStatus ();
     virtual ~cRssiStatus ();
 
-    int32_t     getRssi ();
-    void        set ();
-};      // class cRssiStatus
+    int32_t getRssi ();
+    void    set ();
+};  // class cRssiStatus
 
 // *********************************************************************************************
 // OEF

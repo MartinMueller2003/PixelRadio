@@ -21,10 +21,10 @@
 #include "credentials_user.h"
 #include "memdebug.h"
 
-static const PROGMEM char     WIFI_DEV_USER_PW_STR    [] = "LOGIN USER PASSWORD";
-static const PROGMEM char     USER_PW_STR             [] = "USER_PW_STR";
-static const PROGMEM char     WIFI_BLANK_MSG_STR      [] = "LEAVE BLANK FOR AUTO LOGIN";
-static const PROGMEM uint32_t   USER_PW_MAX_SZ           = 10;
+static const PROGMEM char   WIFI_DEV_USER_PW_STR    []  = "LOGIN USER PASSWORD";
+static const PROGMEM char   USER_PW_STR             []  = "USER_PW_STR";
+static const PROGMEM char   WIFI_BLANK_MSG_STR      []  = "LEAVE BLANK FOR AUTO LOGIN";
+static const PROGMEM uint32_t USER_PW_MAX_SZ            = 10;
 
 // *********************************************************************************************
 cLoginPassword::cLoginPassword () :   cPasswordControl (USER_PW_STR,

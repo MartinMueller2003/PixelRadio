@@ -24,7 +24,7 @@ public:
     virtual ~cLoginPassword ();
 
     void AddControls (uint16_t TabId, ControlColor color);
-};      // class cLoginPassword
+};  // class cLoginPassword
 
 extern cLoginPassword LoginPassword;
 

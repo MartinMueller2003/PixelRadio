@@ -23,8 +23,8 @@
 #include "RfCarrier.hpp"
 #include "memdebug.h"
 
-#define PRE_EMPH_USA_STR    "North America (75uS)"      // North America / Japan.
-#define PRE_EMPH_EUR_STR    "Europe (50uS)"             // Europe, Australia, China.
+#define PRE_EMPH_USA_STR    "North America (75uS)"  // North America / Japan.
+#define PRE_EMPH_EUR_STR    "Europe (50uS)"         // Europe, Australia, China.
 #define PRE_EMPH_USA_VAL    OFF
 #define PRE_EMPH_EUR_VAL    ON
 
@@ -34,16 +34,16 @@ static ChoiceListVector_t ListOfRegions
     {PRE_EMPH_EUR_STR, "1"},
 };
 
-static const PROGMEM char PRE_EMPH_DEF_STR            [] = PRE_EMPH_USA_STR;
-static const PROGMEM char     RADIO_PRE_EMPH_STR      [] = "RADIO_PRE_EMPH_STR";
-static const PROGMEM char     PRE_EMPH_STR            [] = "FM PRE-EMPHASIS";
-static const PROGMEM uint8_t    PRE_EMPH_DEF_VAL        = uint8_t (PRE_EMPH_USA_VAL);
+static const PROGMEM char   PRE_EMPH_DEF_STR            []  = PRE_EMPH_USA_STR;
+static const PROGMEM char   RADIO_PRE_EMPH_STR      []      = "RADIO_PRE_EMPH_STR";
+static const PROGMEM char   PRE_EMPH_STR            []      = "FM PRE-EMPHASIS";
+static const PROGMEM uint8_t PRE_EMPH_DEF_VAL               = uint8_t (PRE_EMPH_USA_VAL);
 
 // *********************************************************************************************
 cPreEmphasis::cPreEmphasis () :   cChoiceListControl (RADIO_PRE_EMPH_STR,
                                                     PRE_EMPH_STR,
                                                     PRE_EMPH_DEF_STR,
-                                                    &ListOfRegions)
+                                                    & ListOfRegions)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

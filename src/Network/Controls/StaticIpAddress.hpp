@@ -26,7 +26,7 @@ public:
     virtual ~cStaticIpAddress ();
 
     bool set (const String & value, String & Response, bool ForceUpdate = false);
-};      // class cStaticIpAddress
+};  // class cStaticIpAddress
 
 extern cStaticIpAddress StaticIpAddress;
 

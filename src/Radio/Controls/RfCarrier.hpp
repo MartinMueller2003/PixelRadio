@@ -25,13 +25,13 @@ public:
     cRfCarrier ();
     virtual ~cRfCarrier ()    {}
 
-    void                AddHomeControls (uint16_t TabId, ControlColor color);
-    virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    void            AddHomeControls (uint16_t TabId, ControlColor color);
+    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 
 private:
 
     uint16_t HomeStatusMessageId;
-};      // class cRfCarrier
+};  // class cRfCarrier
 
 extern cRfCarrier RfCarrier;
 

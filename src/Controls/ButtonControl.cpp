@@ -22,8 +22,8 @@
 // *********************************************************************************************
 
 // *********************************************************************************************
-cButtonControl::cButtonControl (const String & Title) : 
-    cControlCommon ( emptyString, ControlType::Button, Title, emptyString, 10 )
+cButtonControl::cButtonControl (const String & Title) :
+    cControlCommon (emptyString, ControlType::Button, Title, emptyString, 10)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -41,12 +41,12 @@ void cButtonControl::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V (String ("color: ") + String (color))
 
     cControlCommon::AddControls (TabId, color);
-    setControlPanelStyle (ePanelStyle::PanelStyle135 );
-    setControlStyle (eCssStyle::CssStyleWhite );
+    setControlPanelStyle (ePanelStyle::PanelStyle135);
+    setControlStyle (eCssStyle::CssStyleWhite);
 /*
     ESPUI.      setElementStyle (       ControlId,
                                         String (F ("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
-*/
+ */
 
     // DEBUG_END;
 }

@@ -19,11 +19,11 @@
 #include "MqttBrokerIpAddress.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     CTRL_MQTT_IP_STR     [] = "BROKER IP ADDRESS";
-static const PROGMEM char     MQTT_IP_STR          [] = "MQTT_IP_STR";
+static const PROGMEM char   CTRL_MQTT_IP_STR     [] = "BROKER IP ADDRESS";
+static const PROGMEM char   MQTT_IP_STR          [] = "MQTT_IP_STR";
 
 // *********************************************************************************************
-cMqttBrokerIpAddress::cMqttBrokerIpAddress () : cIpAddressControl (MQTT_IP_STR, CTRL_MQTT_IP_STR, IPAddress (192, 168, 4, 1))
+cMqttBrokerIpAddress::cMqttBrokerIpAddress () :   cIpAddressControl (MQTT_IP_STR, CTRL_MQTT_IP_STR, IPAddress (192, 168, 4, 1))
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

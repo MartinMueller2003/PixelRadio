@@ -24,9 +24,8 @@ public:
 
     cFrequencyStatus ();
     virtual ~cFrequencyStatus ()    {}
-    void        AddControls (uint16_t TabId, ControlColor color);
-
-};      // class cFrequencyStatus
+    void AddControls (uint16_t TabId, ControlColor color);
+};  // class cFrequencyStatus
 
 // *********************************************************************************************
 // OEF

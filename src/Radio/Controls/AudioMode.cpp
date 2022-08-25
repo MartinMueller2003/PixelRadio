@@ -20,10 +20,10 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     RADIO_STEREO_FLAG       [] = "RADIO_STEREO_FLAG";
-static const PROGMEM char     RADIO_MONO_STR          [] = "MONO AUDIO";
-static const PROGMEM char     RADIO_STEREO_STR        [] = "STEREO AUDIO";
-static const PROGMEM char     RADIO_AUDIO_MODE_STR    [] = "AUDIO MODE";
+static const PROGMEM char   RADIO_STEREO_FLAG       []  = "RADIO_STEREO_FLAG";
+static const PROGMEM char   RADIO_MONO_STR          []  = "MONO AUDIO";
+static const PROGMEM char   RADIO_STEREO_STR        []  = "STEREO AUDIO";
+static const PROGMEM char   RADIO_AUDIO_MODE_STR    []  = "AUDIO MODE";
 
 // *********************************************************************************************
 cAudioMode::cAudioMode () :   cBinaryControl (RADIO_STEREO_FLAG, RADIO_AUDIO_MODE_STR, true)
@@ -41,10 +41,10 @@ void cAudioMode::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-        addInputCondition (     RADIO_STEREO_STR,       true);
-        addInputCondition (     RADIO_MONO_STR,         false);
-        addInputCondition (     F ("stereo"),           true);
-        addInputCondition (     F ("mono"),             false);
+    addInputCondition ( RADIO_STEREO_STR,   true);
+    addInputCondition ( RADIO_MONO_STR,     false);
+    addInputCondition ( F ("stereo"),       true);
+    addInputCondition ( F ("mono"),         false);
 
     cBinaryControl::AddControls (TabId, color);
 

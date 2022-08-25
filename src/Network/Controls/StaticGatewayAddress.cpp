@@ -19,8 +19,8 @@
 #include "DHCP.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char WIFI_GATEWAY_STR [] = "WIFI_GATEWAY_STR";
-static const PROGMEM char WIFI_IP_ADDR [] = "Gateway IP Address";
+static const PROGMEM char   WIFI_GATEWAY_STR [] = "WIFI_GATEWAY_STR";
+static const PROGMEM char   WIFI_IP_ADDR []     = "Gateway IP Address";
 
 // *********************************************************************************************
 cStaticGatewayAddress::cStaticGatewayAddress () :   cIpAddressControlStacked (WIFI_GATEWAY_STR, WIFI_IP_ADDR, IPAddress (uint32_t (0)))

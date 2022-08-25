@@ -26,7 +26,7 @@ public:
     virtual ~cStaticDnsAddress ();
 
     bool set (const String & value, String & Response, bool ForceUpdate = false);
-};      // class cStaticDnsAddress
+};  // class cStaticDnsAddress
 
 extern cStaticDnsAddress StaticDnsAddress;
 

@@ -26,7 +26,7 @@ public:
     virtual ~cApIpAddress ();
 
 private:
-};      // class cApIpAddress
+};  // class cApIpAddress
 
 extern cApIpAddress ApIpAddress;
 

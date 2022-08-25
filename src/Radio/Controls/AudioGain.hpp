@@ -26,7 +26,7 @@ public:
     virtual ~cAudioGain ()    {}
 
     void set ();
-};      // class cAudioGain
+};  // class cAudioGain
 
 extern cAudioGain AudioGain;
 

@@ -26,7 +26,7 @@ public:
     virtual ~cMqttBrokerIpAddress ();
 
 private:
-};      // class cMqttBrokerIpAddress
+};  // class cMqttBrokerIpAddress
 
 extern cMqttBrokerIpAddress MqttBrokerIpAddress;
 

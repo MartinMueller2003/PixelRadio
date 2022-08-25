@@ -25,9 +25,8 @@ public:
 
     cRdsTextStatus ();
     virtual ~cRdsTextStatus ()    {}
-    void AddControls(uint16_t value, ControlColor color);
-
-};      // class cRdsTextStatus
+    void AddControls (uint16_t value, ControlColor color);
+};  // class cRdsTextStatus
 
 extern cRdsTextStatus RdsTextStatus;
 

@@ -19,8 +19,8 @@
 #include "DHCP.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     WIFI_SUBNET_STR [] = "WIFI_SUBNET_STR";
-static const PROGMEM char     WIFI_IP_ADDR    [] = "Subnet Mask";
+static const PROGMEM char   WIFI_SUBNET_STR []  = "WIFI_SUBNET_STR";
+static const PROGMEM char   WIFI_IP_ADDR    []  = "Subnet Mask";
 
 // *********************************************************************************************
 cStaticNetmask::cStaticNetmask () :   cIpAddressControlStacked (WIFI_SUBNET_STR, WIFI_IP_ADDR, IPAddress (uint32_t (0)))
@@ -39,9 +39,9 @@ cStaticNetmask::~cStaticNetmask ()
 // *********************************************************************************************
 bool cStaticNetmask::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
-    // DEBUG_START;
+    DEBUG_START;
 
-    // DEBUG_V (String ("       value: ") + value);
+    DEBUG_V (String ("       value: ") + value);
 
     bool Response = true;
 
@@ -55,9 +55,9 @@ bool cStaticNetmask::set (const String & value, String & ResponseMessage, bool F
         }
     } while (false);
 
-    // DEBUG_V (String ("IpAddress: ") + GetIpAddress ());
+    DEBUG_V (String ("IpAddress: ") + GetIpAddress ());
 
-    // DEBUG_END;
+    DEBUG_END;
 
     return Response;
 }

@@ -24,15 +24,15 @@
 #include "TestTone.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     HOME_RDS_WAIT_STR       [] = "Waiting for RDS RadioText ...";
-static const PROGMEM char     HOME_CUR_TEXT_STR       [] = "CURRENT RADIOTEXT";
-static const PROGMEM char     HOME_RDS_TIMER_STR      [] = "RDS TIMER COUNTDOWN";
-static const PROGMEM char     RDS_RF_DISABLED_STR     [] = "{ RADIO CARRIER OFF }";
-static const PROGMEM char     RDS_DISABLED_STR        [] = "{ DISABLED }";
-static const PROGMEM char     RDS_EXPIRED_STR         [] = "{ EXPIRED }";
+static const PROGMEM char   HOME_RDS_WAIT_STR       []  = "Waiting for RDS RadioText ...";
+static const PROGMEM char   HOME_CUR_TEXT_STR       []  = "CURRENT RADIOTEXT";
+static const PROGMEM char   HOME_RDS_TIMER_STR      []  = "RDS TIMER COUNTDOWN";
+static const PROGMEM char   RDS_RF_DISABLED_STR     []  = "{ RADIO CARRIER OFF }";
+static const PROGMEM char   RDS_DISABLED_STR        []  = "{ DISABLED }";
+static const PROGMEM char   RDS_EXPIRED_STR         []  = "{ EXPIRED }";
 
 // *********************************************************************************************
-cRdsText::cRdsText () : cStatusControl (HOME_CUR_TEXT_STR)
+cRdsText::cRdsText () :   cStatusControl (HOME_CUR_TEXT_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -44,12 +44,12 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     cStatusControl::AddControls (value, color);
-    setControlStyle ( eCssStyle::CssStyleWhite );
-    setMessageStyle ( eCssStyle::CssStyleWhite );
+    setControlStyle (eCssStyle::CssStyleWhite);
+    setMessageStyle (eCssStyle::CssStyleWhite);
 
-    RdsTextStatus.AddControls(value, color);
-    
-    UpdateStatus();
+    RdsTextStatus.AddControls (value, color);
+
+    UpdateStatus ();
 
     // DEBUG_END;
 }
@@ -74,10 +74,9 @@ void cRdsText::poll ()
         {
             // DEBUG_V();
             CurrentMsgLastUpdateTime += 1000;
-            updateRdsMsgRemainingTime(now);
+            updateRdsMsgRemainingTime (now);
             break;
         }
-
         CurrentMsgLastUpdateTime = now;
         // _ DEBUG_V("One second later");
 
@@ -103,7 +102,7 @@ void cRdsText::poll ()
             set (RdsMsgInfo.Text, dummy);
         }
         // DEBUG_V();
-        updateRdsMsgRemainingTime(now);
+        updateRdsMsgRemainingTime (now);
     } while (false);
 
     // _ DEBUG_END;
@@ -131,17 +130,17 @@ void cRdsText::UpdateStatus ()
     if (TestTone.getBool ())
     {
         // DEBUG_V("Test Mode");
-        setControl(LastMessageSent, eCssStyle::CssStyleMaroon );
-        setMessage(emptyString, eCssStyle::CssStyleTransparent);
+        setControl (LastMessageSent, eCssStyle::CssStyleMaroon);
+        setMessage (emptyString, eCssStyle::CssStyleTransparent);
     }
-    else // not in test mode
+    else    // not in test mode
     {
-        setControl(String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR), eCssStyle::CssStyleWhite);
+        setControl (String (RfCarrier.get () ? LastMessageSent : RDS_RF_DISABLED_STR), eCssStyle::CssStyleWhite);
         String TempMsg;
-        TempMsg.reserve(128);
+        TempMsg.reserve (128);
 
-        TempMsg = RdsMsgInfo.DurationMilliSec ? String(F("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR;
-        setMessage(TempMsg, eCssStyle::CssStyleWhite);
+        TempMsg = RdsMsgInfo.DurationMilliSec ? String (F ("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR;
+        setMessage (TempMsg, eCssStyle::CssStyleWhite);
     }
     // DEBUG_END;
 }
@@ -158,33 +157,33 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
         if (TestTone.getBool ())
         {
             // DEBUG_V("Test Mode");
-            RdsTextStatus.set(String(F("Test Mode")));
+            RdsTextStatus.set (String (F ("Test Mode")));
             break;
         }
 
         if (!RfCarrier.getBool ())
         {
             // DEBUG_V("No Carrier");
-            RdsTextStatus.set(RDS_DISABLED_STR);
+            RdsTextStatus.set (RDS_DISABLED_STR);
             break;
         }
 
         if (0 == RdsMsgInfo.DurationMilliSec)
         {
             // DEBUG_V("No Message to send");
-            RdsTextStatus.set(HOME_RDS_WAIT_STR);
+            RdsTextStatus.set (HOME_RDS_WAIT_STR);
             break;
         }
 
         if (now > CurrentMsgEndTime)
         {
             // DEBUG_V("Timed Out");
-            RdsTextStatus.set(RDS_EXPIRED_STR);
+            RdsTextStatus.set (RDS_EXPIRED_STR);
             break;
         }
         unsigned long TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
         // DEBUG_V(String("Update Timer: ") + String(TimeRemaining));
-        RdsTextStatus.set(String (TimeRemaining) + F (" Secs"));
+        RdsTextStatus.set (String (TimeRemaining) + F (" Secs"));
     } while (false);
 
     // DEBUG_END;

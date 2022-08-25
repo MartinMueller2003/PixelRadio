@@ -68,18 +68,18 @@ const uint8_t   CMD_TIME_MAX_SZ = 4;    // Time Command Arg length is 3 (5-900).
 #define CMD_SYS_CODE_STR  "system"
 
 // const bool CTRL_SERIAL_DEF_FLG = true;
-const bool      RDS_TEXTX_DEF_FLG       = true;
-const bool      RF_AUTO_OFF_DEF_FLG     = false;
+const bool  RDS_TEXTX_DEF_FLG   = true;
+const bool  RF_AUTO_OFF_DEF_FLG = false;
 
 // EEPROM: (Currently Not Used in PixelRadio)
-const uint16_t  EEPROM_SZ       = 32;                   // E2Prom Size, must be large enough to hold all values below.
-const uint8_t   INIT_BYTE       = 0xA5;                 // E2Prom Initialization Stamping value.
-const int       INIT_ADDR       = 0;                    // E2Prom Address for Init value, 8-bits.
-const int       XXXX_SET_ADDR   = 10;                   // E2Prom Address for (unused), 16-bit.
+const uint16_t  EEPROM_SZ   = 32;               // E2Prom Size, must be large enough to hold all values below.
+const uint8_t   INIT_BYTE   = 0xA5;             // E2Prom Initialization Stamping value.
+const int   INIT_ADDR       = 0;                // E2Prom Address for Init value, 8-bits.
+const int   XXXX_SET_ADDR   = 10;               // E2Prom Address for (unused), 16-bit.
 
 // ESP32
-const uint32_t  ESP_BAUD_DEF            = 115200;       // Default ESP32 Baud Rate.
-const uint32_t  ELAPSED_TMR_TIME        = 1000;         // RDS Elapsed Time Update period, in mS. Do Not change.
+const uint32_t  ESP_BAUD_DEF        = 115200;   // Default ESP32 Baud Rate.
+const uint32_t  ELAPSED_TMR_TIME    = 1000;     // RDS Elapsed Time Update period, in mS. Do Not change.
 
 // ESPUI (Web UI):
 #define ANA_VOL_MIN_STR "0"
@@ -105,50 +105,50 @@ const uint8_t LITTLEFS_MODE = 1;
 const uint8_t SD_CARD_MODE = 2;
 
 // FM Radio RF
-const float     PA_VOLT_MIN     = 8.1f;         // Minimum allowed voltage for Power Amp, 9V -10%.
-const float     PA_VOLT_MAX     = 9.9f;         // Maximum allowed voltage for Power Amp, 9V + 10%.
+const float PA_VOLT_MIN = 8.1f;             // Minimum allowed voltage for Power Amp, 9V -10%.
+const float PA_VOLT_MAX = 9.9f;             // Maximum allowed voltage for Power Amp, 9V + 10%.
 // Free Memory
-const uint32_t FREE_MEM_UPD_TIME = 1750;        // Update time for Free Memory (on diagTab), in mS.
+const uint32_t FREE_MEM_UPD_TIME = 1750;    // Update time for Free Memory (on diagTab), in mS.
 
 // GPIO Pins:
 // Note: GPIOs 34-39 do not support internal pullups or pulldowns.
-const gpio_num_t        GPIO19_PIN      = gpio_num_t::GPIO_NUM_19;
-const gpio_num_t        GPIO23_PIN      = gpio_num_t::GPIO_NUM_23;
-const gpio_num_t        GPIO33_PIN      = gpio_num_t::GPIO_NUM_33;
-const gpio_num_t        MISO_PIN        = gpio_num_t::GPIO_NUM_2;       // SD Card D0, requires INPUT_PULLUP During SD Card Use.
-const gpio_num_t        MOSI_PIN        = gpio_num_t::GPIO_NUM_15;      // SD Card CMD.
-const gpio_num_t        ON_AIR_PIN      = gpio_num_t::GPIO_NUM_12;
-const gpio_num_t        SCL_PIN         = gpio_num_t::GPIO_NUM_22;      // I2C Clock Pin, Output.
-const gpio_num_t        SDA_PIN         = gpio_num_t::GPIO_NUM_18;      // I2C Data Pin, I/O.
-const gpio_num_t        SD_CLK_PIN      = gpio_num_t::GPIO_NUM_14;      // SD Card CLK.
-const gpio_num_t        SD_CS_PIN       = gpio_num_t::GPIO_NUM_13;      // SD Card CS.
-const gpio_num_t        SER1_RXD        = gpio_num_t::GPIO_NUM_34;      // Serial1 RxD Input, Optional 3.3V TTL, 5V tolerant.
-const gpio_num_t        SER1_TXD        = gpio_num_t::GPIO_NUM_32;      // Serial1 TxD Output, 3.3V TTL.
-const gpio_num_t        MUX_PIN         = gpio_num_t::GPIO_NUM_21;      // Audio Signal MUX Control, Output.
-const gpio_num_t        TONE_PIN        = gpio_num_t::GPIO_NUM_25;      // PWM Test Tone Pin, Output.
+const gpio_num_t    GPIO19_PIN  = gpio_num_t::GPIO_NUM_19;
+const gpio_num_t    GPIO23_PIN  = gpio_num_t::GPIO_NUM_23;
+const gpio_num_t    GPIO33_PIN  = gpio_num_t::GPIO_NUM_33;
+const gpio_num_t    MISO_PIN    = gpio_num_t::GPIO_NUM_2;   // SD Card D0, requires INPUT_PULLUP During SD Card Use.
+const gpio_num_t    MOSI_PIN    = gpio_num_t::GPIO_NUM_15;  // SD Card CMD.
+const gpio_num_t    ON_AIR_PIN  = gpio_num_t::GPIO_NUM_12;
+const gpio_num_t    SCL_PIN     = gpio_num_t::GPIO_NUM_22;  // I2C Clock Pin, Output.
+const gpio_num_t    SDA_PIN     = gpio_num_t::GPIO_NUM_18;  // I2C Data Pin, I/O.
+const gpio_num_t    SD_CLK_PIN  = gpio_num_t::GPIO_NUM_14;  // SD Card CLK.
+const gpio_num_t    SD_CS_PIN   = gpio_num_t::GPIO_NUM_13;  // SD Card CS.
+const gpio_num_t    SER1_RXD    = gpio_num_t::GPIO_NUM_34;  // Serial1 RxD Input, Optional 3.3V TTL, 5V tolerant.
+const gpio_num_t    SER1_TXD    = gpio_num_t::GPIO_NUM_32;  // Serial1 TxD Output, 3.3V TTL.
+const gpio_num_t    MUX_PIN     = gpio_num_t::GPIO_NUM_21;  // Audio Signal MUX Control, Output.
+const gpio_num_t    TONE_PIN    = gpio_num_t::GPIO_NUM_25;  // PWM Test Tone Pin, Output.
 
 // GPIO Pin States
-const int       SIGN_OFF        = 0;
-const int       SIGN_ON         = 1;
+const int   SIGN_OFF    = 0;
+const int   SIGN_ON     = 1;
 
 // HTTP Controller
-#define  HTTP_CMD_STR         "/cmd?"                   // Command preamble.
-#define  HTTP_EMPTY_RESP_STR  "get /favicon.ico"        // Empty Reply, ignore this payload.
-#define  HTTP_POST_STR        "content-length:"         // Post data length Keyword.
-#define  HTTP_CMD_END_STR     "http/"                   // This string marks the End of HTTP Controller Command.
+#define  HTTP_CMD_STR         "/cmd?"               // Command preamble.
+#define  HTTP_EMPTY_RESP_STR  "get /favicon.ico"    // Empty Reply, ignore this payload.
+#define  HTTP_POST_STR        "content-length:"     // Post data length Keyword.
+#define  HTTP_CMD_END_STR     "http/"               // This string marks the End of HTTP Controller Command.
 
 
-const uint16_t HTTP_RESPONSE_MAX_SZ = 225;              // Maximum Chars Allowed in HTTP client response.
+const uint16_t HTTP_RESPONSE_MAX_SZ = 225;          // Maximum Chars Allowed in HTTP client response.
 
 // Measurement:
-const int32_t MEAS_TIME = 50;                           // Measurement Refresh Time, in mS.
+const int32_t MEAS_TIME = 50;                       // Measurement Refresh Time, in mS.
 
 // Radio
-const uint8_t RADIO_CAL_RETRY = 3;                      // RF Port Calibration Retry Count (Maximum Retry Count).
+const uint8_t RADIO_CAL_RETRY = 3;                  // RF Port Calibration Retry Count (Maximum Retry Count).
 
 
 // Serial Controller
-#define SERIAL_LOG_STR       "log"      // Serial Log Command Keyword.
+#define SERIAL_LOG_STR       "log"  // Serial Log Command Keyword.
 
 // Time Conversion
 const uint32_t  MSECS_PER_SEC   = 1000UL;
@@ -157,13 +157,13 @@ const uint32_t  SECS_PER_DAY    = SECS_PER_HOUR * 24UL;
 const uint32_t  SECS_PER_MIN    = 60UL;
 
 // OTA:
-const uint16_t  OTA_PORT        = 3232;                 // Port for OTA.
-const uint16_t  OTA_TIMEOUT     = 3000;                 // Max allowed time to receive OTA data.
+const uint16_t  OTA_PORT    = 3232;         // Port for OTA.
+const uint16_t  OTA_TIMEOUT = 3000;         // Max allowed time to receive OTA data.
 
 // Volts:
-const float     MIN_VOLTS               = 4.5f;         // Minimum Power Supply volts.
-const float     VOLTS_HYSTERESIS        = 0.15f;        // Voltage Hysterisis.
-const uint16_t VOLTS_UPD_TIME           = 3750;         // Power Supply Volts GUI Update time (on diagTab), in mS.
+const float MIN_VOLTS           = 4.5f;     // Minimum Power Supply volts.
+const float VOLTS_HYSTERESIS    = 0.15f;    // Voltage Hysterisis.
+const uint16_t VOLTS_UPD_TIME   = 3750;     // Power Supply Volts GUI Update time (on diagTab), in mS.
 // const uint32_t CLIENT_TIMEOUT = 500;   // Webserver Client Timeout, in mS.
 
 // Web Server
@@ -187,26 +187,26 @@ bool    infoCmd (
     String              payloadStr,
     ControllerTypeId    controller);
 int16_t getCommandArg (
-    String      & requestStr,
-    uint8_t     maxSize);
+    String  & requestStr,
+    uint8_t maxSize);
 // uint8_t getControllerStatus(void);
 #ifdef OldWay
-    bool        gpioCmd (
-        String                  payloadStr,
-        ControllerTypeId        controller,
-        uint8_t                 pin);
-    bool        logCmd (
-        String                  payloadStr,
-        ControllerTypeId        controller);
-    bool        rebootCmd (
-        String                  payloadStr,
-        ControllerTypeId        controller);
-    bool        startCmd (
-        String                  payloadStr,
-        ControllerTypeId        controller);
-    bool        stopCmd (
-        String                  payloadStr,
-        ControllerTypeId        controller);
+    bool    gpioCmd (
+        String              payloadStr,
+        ControllerTypeId    controller,
+        uint8_t             pin);
+    bool    logCmd (
+        String              payloadStr,
+        ControllerTypeId    controller);
+    bool    rebootCmd (
+        String              payloadStr,
+        ControllerTypeId    controller);
+    bool    startCmd (
+        String              payloadStr,
+        ControllerTypeId    controller);
+    bool    stopCmd (
+        String              payloadStr,
+        ControllerTypeId    controller);
 #endif // def OldWay
 
 // ESPUI (WebGUI) Prototypes
@@ -221,20 +221,20 @@ void    updateUiVolts (void);
 
 // ESPUI Callbacks
 void    backupCallback (
-    Control     * sender,
-    int         type);
+    Control * sender,
+    int     type);
 void    diagBootCallback (
-    Control     * sender,
-    int         type);
+    Control * sender,
+    int     type);
 void    diagLogCallback (
-    Control     * sender,
-    int         type);
+    Control * sender,
+    int     type);
 void    gpioCallback (
-    Control     * sender,
-    int         type);
+    Control * sender,
+    int     type);
 void    saveSettingsCallback (
-    Control     * sender,
-    int         type);
+    Control * sender,
+    int     type);
 
 // File System (LITTLEFS) prototypes
 void            instalLogoImageFile (void);
@@ -299,8 +299,8 @@ bool            ReadFromJSON (float & OutValue, J & Json, N Name)
 
         if (fabs (temp - OutValue) > 0.000005F)
         {
-            OutValue            = temp;
-            HasBeenModified     = true;
+            OutValue        = temp;
+            HasBeenModified = true;
         }
     }
     return HasBeenModified;
@@ -317,8 +317,8 @@ bool ReadFromJSON (T & OutValue, J & Json, N Name)
 
         if (temp != OutValue)
         {
-            OutValue            = temp;
-            HasBeenModified     = true;
+            OutValue        = temp;
+            HasBeenModified = true;
         }
     }
     return HasBeenModified;

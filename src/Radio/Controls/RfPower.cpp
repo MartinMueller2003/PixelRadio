@@ -43,15 +43,15 @@ static ChoiceListVector_t MapOfPowerLevels
     {RF_PWR_HIGH_STR, "78"},
 };
 
-static const PROGMEM char     RADIO_RF_POWER_STR      [] = "RF POWER";
-static const PROGMEM char     RADIO_POWER_STR         [] = "RADIO_POWER_STR";
+static const PROGMEM char   RADIO_RF_POWER_STR      []  = "RF POWER";
+static const PROGMEM char   RADIO_POWER_STR         []  = "RADIO_POWER_STR";
 
 // *********************************************************************************************
 cRfPower::cRfPower () :   cChoiceListControl (
         RADIO_POWER_STR,
         RADIO_RF_POWER_STR,
         String (F (RF_PWR_HIGH_STR)),
-        &MapOfPowerLevels)
+        & MapOfPowerLevels)
 {
     // _ DEBUG_START;
 

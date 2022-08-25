@@ -19,11 +19,11 @@
 
 // *********************************************************************************************
 
-extern bool     newAutoRfFlg;
-extern bool     newGpio19Flg;
-extern bool     newGpio23Flg;
-extern bool     newGpio33Flg;
-extern bool     rebootFlg;
+extern bool newAutoRfFlg;
+extern bool newGpio19Flg;
+extern bool newGpio23Flg;
+extern bool newGpio33Flg;
+extern bool rebootFlg;
 extern uint8_t usbVol;
 
 extern float vbatVolts;

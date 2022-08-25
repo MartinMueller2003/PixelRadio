@@ -25,10 +25,10 @@ public:
     cPtyCode ();
     virtual ~cPtyCode ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    void        setPtyCodeOptionValues ();
-};      // class cPtyCode
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    void    setPtyCodeOptionValues ();
+};  // class cPtyCode
 
 extern cPtyCode PtyCode;
 

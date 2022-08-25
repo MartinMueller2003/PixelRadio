@@ -25,13 +25,13 @@ public:
     cIpAddressControl (const String & ConfigName, const String & Title, IPAddress DefaultValue);
     virtual ~cIpAddressControl ();
 
-    IPAddress           GetIpAddress ();
-    virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
-    virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    IPAddress       GetIpAddress ();
+    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
+    virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
     IPAddress IpAddress = IPAddress (uint32_t (0));
-};      // class cIpAddressControl
+};  // class cIpAddressControl
 
 // *********************************************************************************************
 // OEF

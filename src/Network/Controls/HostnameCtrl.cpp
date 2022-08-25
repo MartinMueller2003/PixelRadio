@@ -20,9 +20,9 @@
 #include "memdebug.h"
 #include "WiFiDriver.hpp"
 
-static const PROGMEM char     WIFI_WEBSRV_NAME_STR    [] = "WEBSERVER NAME";
-static const PROGMEM char     STA_NAME_DEF_STR        [] = "PixelRadio";
-static const PROGMEM char     STA_NAME_STR            [] = "STA_NAME_STR";
+static const PROGMEM char   WIFI_WEBSRV_NAME_STR    []  = "WEBSERVER NAME";
+static const PROGMEM char   STA_NAME_DEF_STR        []  = "PixelRadio";
+static const PROGMEM char   STA_NAME_STR            []  = "STA_NAME_STR";
 static const PROGMEM uint32_t STA_NAME_MAX_SZ           = 18;
 
 // *********************************************************************************************
@@ -44,8 +44,8 @@ void cHostnameCtrl::ResetToDefaults ()
 {
     // DEBUG_START;
 
-    String      value = STA_NAME_DEF_STR;
-    String      dummy;
+    String  value = STA_NAME_DEF_STR;
+    String  dummy;
 
     set (value, dummy);
 

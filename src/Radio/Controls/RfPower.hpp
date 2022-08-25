@@ -25,7 +25,7 @@ public:
     cRfPower ();
     virtual ~cRfPower ()    {}
     bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cRfPower
+};  // class cRfPower
 
 extern cRfPower RfPower;
 

@@ -19,8 +19,8 @@
 #include "DHCP.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     WIFI_DNS_STR    [] = "WIFI_DNS_STR";
-static const PROGMEM char     WIFI_IP_ADDR    [] = "DNS IP Address";
+static const PROGMEM char   WIFI_DNS_STR    []  = "WIFI_DNS_STR";
+static const PROGMEM char   WIFI_IP_ADDR    []  = "DNS IP Address";
 
 // *********************************************************************************************
 cStaticDnsAddress::cStaticDnsAddress () :   cIpAddressControlStacked (WIFI_DNS_STR, WIFI_IP_ADDR, IPAddress (uint32_t (0)))

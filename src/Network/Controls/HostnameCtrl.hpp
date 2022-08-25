@@ -25,9 +25,9 @@ public:
     cHostnameCtrl ();
     virtual ~cHostnameCtrl ();
 
-    void        ResetToDefaults ();
-    bool        set (const String & value, String & Response, bool ForceUpdate = false);
-};      // class cHostnameCtrl
+    void    ResetToDefaults ();
+    bool    set (const String & value, String & Response, bool ForceUpdate = false);
+};  // class cHostnameCtrl
 
 extern cHostnameCtrl HostnameCtrl;
 

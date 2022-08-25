@@ -73,8 +73,8 @@ cControlCommon::cControlCommon (const String    & _ConfigName,
 {
     // _ DEBUG_START;
 
-    Title = _Title;
-    DataValueStr = DefaultValue;
+    Title           = _Title;
+    DataValueStr    = DefaultValue;
 
     // _ DEBUG_END;
 }
@@ -85,7 +85,7 @@ cControlCommon::~cControlCommon () {}
 // *********************************************************************************************
 void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     ControlId = ESPUI.addControl (uiControltype,
                                   Title.c_str (),
@@ -122,7 +122,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
     set (DataValueStr, Response, true);
     Booting = false;
 
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // ************************************************************************************************

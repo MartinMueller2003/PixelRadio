@@ -62,8 +62,8 @@
 void instalLogoImageFile (void)
 {
     char logBuff[60 + sizeof (LOGO_GIF_NAME)];
-    int16_t     sdcFileSize;
-    int16_t     lfsFileSize;
+    int16_t sdcFileSize;
+    int16_t lfsFileSize;
     SPIClass SPI2 (HSPI);
 
     if (PixelRadio_LittleFS.exists (LOGO_GIF_NAME))
@@ -92,8 +92,8 @@ void instalLogoImageFile (void)
     }
     File sdcImageFile;  // SD Card Image File.
 
-    sdcImageFile        = SD.open (LOGO_GIF_NAME, FILE_READ);
-    sdcFileSize         = sdcImageFile.size ();
+    sdcImageFile    = SD.open (LOGO_GIF_NAME, FILE_READ);
+    sdcFileSize     = sdcImageFile.size ();
 
     if (sdcImageFile && (sdcFileSize > 0))
     {
@@ -126,8 +126,8 @@ void instalLogoImageFile (void)
         lfsImageFile.print (data);
     }
     lfsImageFile.close ();
-    lfsImageFile        = PixelRadio_LittleFS.open (LOGO_GIF_NAME, FILE_READ);
-    lfsFileSize         = lfsImageFile.size ();
+    lfsImageFile    = PixelRadio_LittleFS.open (LOGO_GIF_NAME, FILE_READ);
+    lfsFileSize     = lfsImageFile.size ();
 
     /*  // DEBUG ONLY
         Serial.println("START==>");
@@ -158,11 +158,11 @@ void littlefsInit (void)
 {
     char logBuff[100];
 
-    unsigned long       filesz          = 0;
-    const char          * content1      = "  This text was written to LittleFS because the Filesystem is missing\r\n";
-    const char          * content2      = "  >> If you see this message then please Upload the Filesystem Image <<";
+    unsigned long   filesz      = 0;
+    const char      * content1  = "  This text was written to LittleFS because the Filesystem is missing\r\n";
+    const char      * content2  = "  >> If you see this message then please Upload the Filesystem Image <<";
 
-    if (!PixelRadio_LittleFS.begin (true)) // true=Format on fail.
+    if (!PixelRadio_LittleFS.begin (true))  // true=Format on fail.
     {
         Log.errorln ("LittleFS: An Error has occurred while mounting File System");
     }
@@ -265,8 +265,8 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
     if (!imageFile)
     {
         sprintf (logBuff, "-> makeWebGif: Error opening Image file (%s)", fileName.c_str ());
-        Log.    warningln (     logBuff);
-        Log.    warningln (     "-> LittleFS Filesystem is Missing, YOU Need to Upload it.");
+        Log.warningln ( logBuff);
+        Log.warningln ( "-> LittleFS Filesystem is Missing, YOU Need to Upload it.");
         imageStr.clear ();
         imageStr.reserve (13);
         imageStr = "IMAGE FILE MISSING";
@@ -289,19 +289,19 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
             return imageStr;
         }
         imageStr.reserve (fileSz + 200);
-        imageStr        = "<p style=";
-        imageStr        += "\"background-color:";
-        imageStr        += backGroundColorStr;
-        imageStr        += ";margin-bottom:-3px;margin-top:-2px;margin-left:-6px;margin-right:-6px;\">";
-        imageStr        += "<img src=\'data:image/gif;base64,";
-        imageStr        += imageFile.readString ();
-        imageStr        += "\'; width=\"";
-        imageStr        += String (width);
-        imageStr        += "\" height=\"";
-        imageStr        += String (height);
-        imageStr        += "\" alt=\"";
-        imageStr        += fileName;
-        imageStr        += "\"/></p>";
+        imageStr    = "<p style=";
+        imageStr    += "\"background-color:";
+        imageStr    += backGroundColorStr;
+        imageStr    += ";margin-bottom:-3px;margin-top:-2px;margin-left:-6px;margin-right:-6px;\">";
+        imageStr    += "<img src=\'data:image/gif;base64,";
+        imageStr    += imageFile.readString ();
+        imageStr    += "\'; width=\"";
+        imageStr    += String (width);
+        imageStr    += "\" height=\"";
+        imageStr    += String (height);
+        imageStr    += "\" alt=\"";
+        imageStr    += fileName;
+        imageStr    += "\"/></p>";
 
         imageFile.close ();
         sprintf (logBuff, "-> Image File %s Successfully Loaded (%u bytes).", fileName.c_str (), fileSz);

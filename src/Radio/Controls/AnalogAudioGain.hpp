@@ -26,7 +26,7 @@ public:
     virtual ~cAnalogAudioGain ()    {}
 
     bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cAnalogAudioGain
+};  // class cAnalogAudioGain
 
 extern cAnalogAudioGain AnalogAudioGain;
 

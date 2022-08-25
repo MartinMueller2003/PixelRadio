@@ -23,10 +23,10 @@
 #include "StaticDnsAddress.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     STATIC_NETWORK_SETTINGS [] = "STATIC NETWORK SETTINGS";
-static const PROGMEM char     WIFI_DHCP_FLAG          [] = "WIFI_DHCP_FLAG";
-static const PROGMEM char     WIFI_WEB_DHCP_STR       [] = "WEBSERVER DHCP";
-static const PROGMEM char     DHCP_LOCKED_STR         [] = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
+static const PROGMEM char   STATIC_NETWORK_SETTINGS []  = "STATIC NETWORK SETTINGS";
+static const PROGMEM char   WIFI_DHCP_FLAG          []  = "WIFI_DHCP_FLAG";
+static const PROGMEM char   WIFI_WEB_DHCP_STR       []  = "WEBSERVER DHCP";
+static const PROGMEM char   DHCP_LOCKED_STR         []  = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
 
 // *********************************************************************************************
 cDHCP::cDHCP () :   cBinaryControl (WIFI_DHCP_FLAG, WIFI_WEB_DHCP_STR, true)
@@ -59,8 +59,8 @@ void cDHCP::AddControls (uint16_t TabId, ControlColor color)
     StaticGatewayAddress.AddControls (wifiStaticSettingsID, color);
     StaticDnsAddress.AddControls (wifiStaticSettingsID, color);
 
-    String      Dummy;
-    String      NewVal;
+    String  Dummy;
+    String  NewVal;
     NewVal = String (cBinaryControl::getBool ());
     set (NewVal, Dummy, true);
 
@@ -71,7 +71,7 @@ void cDHCP::AddControls (uint16_t TabId, ControlColor color)
 bool cDHCP::getBool ()
 {
     // DEBUG_START;
-    bool response = true;       // using DHCP
+    bool response = true;   // using DHCP
 
     String Dummy;
 
@@ -101,9 +101,9 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
     // DEBUG_V (       String ("cBinaryControl::getBool()Str: ") + cBinaryControl::getBool()Str);
     // DEBUG_V (       String ("OldcBinaryControl::getBool(): ") + String (cBinaryControl::getBool()));
 
-    bool        OldState        = getBool ();
-    bool        OldBool         = cBinaryControl::getBool ();
-    bool        Response        = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
+    bool    OldState    = getBool ();
+    bool    OldBool     = cBinaryControl::getBool ();
+    bool    Response    = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
     // DEBUG_V (       String ("   cBinaryControl::getBool(): ") + String (cBinaryControl::getBool()));
     // DEBUG_V (       String ("    OldState: ") + String (OldState));
     // DEBUG_V (       String ("    NewState: ") + String (getBool ()));

@@ -21,8 +21,8 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     RADIO_MUTE_FLAG [] = "RADIO_MUTE_FLAG";
-static const PROGMEM char     ADJUST_MUTE_STR [] = "AUDIO MUTE";
+static const PROGMEM char   RADIO_MUTE_FLAG []  = "RADIO_MUTE_FLAG";
+static const PROGMEM char   ADJUST_MUTE_STR []  = "AUDIO MUTE";
 
 // *********************************************************************************************
 cAudioMute::cAudioMute () :   cBinaryControl (RADIO_MUTE_FLAG, ADJUST_MUTE_STR, true)
@@ -41,10 +41,10 @@ void cAudioMute::AddControls (uint16_t TabId, ControlColor color)
 
     cBinaryControl::AddControls (TabId, color);
 
-    addInputCondition (F ("unmuted"),  true);
-    addInputCondition (F ("muted"),    false);
-    addInputCondition (F ("unmute"),   true);
-    addInputCondition (F ("mute"),     false);
+    addInputCondition ( F ("unmuted"),  true);
+    addInputCondition ( F ("muted"),    false);
+    addInputCondition ( F ("unmute"),   true);
+    addInputCondition ( F ("mute"),     false);
 
     // DEBUG_END;
 }

@@ -24,8 +24,8 @@
 
 // *********************************************************************************************
 
-const String PROGMEM RDS_RESET_SEP_STR = "LOCAL RDS RESET";
-const String PROGMEM RDS_RESET_STR = "RESET RDS SETTINGS";
+const String PROGMEM    RDS_RESET_SEP_STR   = "LOCAL RDS RESET";
+const String PROGMEM    RDS_RESET_STR       = "RESET RDS SETTINGS";
 
 // *********************************************************************************************
 cRdsReset::cRdsReset () :   cButtonControl (RDS_RESET_STR)
@@ -42,7 +42,7 @@ void cRdsReset::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V (String ("TabId: ") + String (TabId))
     // DEBUG_V (String ("color: ") + String (color))
 
-    ESPUI.addControl (ControlType::Separator, RDS_RESET_SEP_STR.c_str(), emptyString, ControlColor::None, TabId);
+    ESPUI.addControl (ControlType::Separator, RDS_RESET_SEP_STR.c_str (), emptyString, ControlColor::None, TabId);
     cButtonControl::AddControls (TabId, color);
 
     // DEBUG_END;

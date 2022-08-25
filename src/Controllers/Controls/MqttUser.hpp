@@ -23,9 +23,9 @@ public:
     cMqttUser ();
     virtual ~cMqttUser ();
 
-    void AddControls (uint16_t TabId, ControlColor color);
-    bool validate(const String &value, String &ResponseMessage, bool ForceUpdate = false);
-}; // class cMqttUser
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+};  // class cMqttUser
 
 extern cMqttUser MqttUser;
 

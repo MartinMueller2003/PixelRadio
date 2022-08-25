@@ -73,11 +73,11 @@
 #endif // AP_PSK_STR
 
 /* Fallback configuration if config is empty or fails */
-const PROGMEM char      default_ssid             []     = SSID_NM_STR;
-const PROGMEM char      default_passphrase       []     = WPA_KEY_STR;
-const PROGMEM char      default_AP_passphrase    []     = AP_PSK_STR;
+const PROGMEM char  default_ssid             [] = SSID_NM_STR;
+const PROGMEM char  default_passphrase       [] = WPA_KEY_STR;
+const PROGMEM char  default_AP_passphrase    [] = AP_PSK_STR;
 
-#define DNS_PORT 53     // Webserver DNS port.
+#define DNS_PORT 53 // Webserver DNS port.
 
 /*****************************************************************************/
 /* FSM                                                                       */
@@ -94,7 +94,7 @@ fsm_WiFi_state_Disabled fsm_WiFi_state_Disabled_imp;
 // -----------------------------------------------------------------------------
 ///< Start up the driver and put it into a safe mode
 c_WiFiDriver::c_WiFiDriver () :   c_WiFiDriverUi ()
-{}      // c_WiFiDriver
+{}  // c_WiFiDriver
 
 // -----------------------------------------------------------------------------
 ///< deallocate any resources and put the output channels into a safe state
@@ -154,8 +154,8 @@ void c_WiFiDriver::Begin ()
                 JsonObject jsonConfig = jsonConfigDoc.as <JsonObject>();
 
                 // copy the fields of interest into the local structure
-                setFromJSON (   ssid,           jsonConfig,     "WIFI_SSID_STR");
-                setFromJSON (   passphrase,     jsonConfig,     "WIFI_WPA_KEY_STR");
+                setFromJSON (   ssid,       jsonConfig, "WIFI_SSID_STR");
+                setFromJSON (   passphrase, jsonConfig, "WIFI_WPA_KEY_STR");
 
                 ConfigSaveNeeded = true;
 
@@ -175,22 +175,22 @@ void c_WiFiDriver::Begin ()
     // DEBUG_V ("");
 
     // Setup WiFi Handlers
-    WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
                          {
                              this->onWiFiStaConn (event, info);
                          }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
-    WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
                          {
                              this->onWiFiStaDisc (event, info);
                          }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
-    WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
                          {
                              this->onWiFiConnect    (event, info);
                          }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
-    WiFi.       onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
                          {
                              this->onWiFiDisconnect (event, info);
                          }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
@@ -201,7 +201,7 @@ void c_WiFiDriver::Begin ()
     // Main loop should start polling for us
 
     // DEBUG_END;
-}       // begin
+}   // begin
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::connectWifi (const String & current_ssid, const String & current_passphrase)
@@ -252,14 +252,14 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
     } while (false);
 
     // DEBUG_END;
-}       // connectWifi
+}   // connectWifi
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::Disable ()
 {
     // DEBUG_START;
 
-    if (pCurrentFsmState != &fsm_WiFi_state_Disabled_imp)
+    if (pCurrentFsmState != & fsm_WiFi_state_Disabled_imp)
     {
         // DEBUG_V ();
         WiFi.enableSTA (false);
@@ -267,14 +267,14 @@ void c_WiFiDriver::Disable ()
         fsm_WiFi_state_Disabled_imp.Init ();
     }
     // DEBUG_END;
-}       // Disable
+}   // Disable
 
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::Enable ()
 {
     // DEBUG_START;
 
-    if (pCurrentFsmState == &fsm_WiFi_state_Disabled_imp)
+    if (pCurrentFsmState == & fsm_WiFi_state_Disabled_imp)
     {
         // DEBUG_V ();
         WiFi.enableSTA (true);
@@ -286,16 +286,16 @@ void c_WiFiDriver::Enable ()
         // DEBUG_V (String ("WiFi is not disabled"));
     }
     // DEBUG_END;
-}       // Enable
+}   // Enable
 
 // -----------------------------------------------------------------------------
-String  c_WiFiDriver::GetDefaultWpaKey ()               {return default_passphrase;}
+String  c_WiFiDriver::GetDefaultWpaKey ()           {return default_passphrase;}
 
 // -----------------------------------------------------------------------------
-String  c_WiFiDriver::GetDefaultSsid ()                 {return default_ssid;}
+String  c_WiFiDriver::GetDefaultSsid ()             {return default_ssid;}
 
 // -----------------------------------------------------------------------------
-void    c_WiFiDriver::GetHostname (String & name)       {name = WiFi.getHostname ();}   // GetWiFiHostName
+void    c_WiFiDriver::GetHostname (String & name)   {name = WiFi.getHostname ();}   // GetWiFiHostName
 
 // -----------------------------------------------------------------------------
 void    c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
@@ -303,12 +303,12 @@ void    c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
 #ifdef OldWay
         // DEBUG_START;
 
-        jsonStatus[F ("WIFI_RSSI")]             = WiFiRssi.get ();
-        jsonStatus[F ("WIFI_IP_ADDR_STR")]      = getIpAddress ().toString ();
-        jsonStatus[F ("WIFI_SUBNET_STR")]       = getIpSubNetMask ().toString ();
-        jsonStatus[F ("WIFI_MAC_STR")]          = WiFi.macAddress ();
-        jsonStatus[F ("WIFI_SSID_STR")]         = WiFi.SSID ();
-        jsonStatus[F ("WIFI_CONNECTED")]        = IsWiFiConnected ();
+        jsonStatus[F ("WIFI_RSSI")]         = WiFiRssi.get ();
+        jsonStatus[F ("WIFI_IP_ADDR_STR")]  = getIpAddress ().toString ();
+        jsonStatus[F ("WIFI_SUBNET_STR")]   = getIpSubNetMask ().toString ();
+        jsonStatus[F ("WIFI_MAC_STR")]      = WiFi.macAddress ();
+        jsonStatus[F ("WIFI_SSID_STR")]     = WiFi.SSID ();
+        jsonStatus[F ("WIFI_CONNECTED")]    = IsWiFiConnected ();
 
         // DEBUG_END;
 #endif // def OldWay
@@ -394,8 +394,8 @@ bool c_WiFiDriver::restoreConfiguration (JsonObject & json)
     ApFallback.restoreConfiguration (json);
     ApReboot.restoreConfiguration (json);
 
-    ConfigChanged       |= ReadFromJSON (sta_timeout,                     json, F ("WIFI_STA_TIMEOUT"));
-    ConfigChanged       |= ReadFromJSON (ap_timeout,                      json, F ("WIFI_AP_TIMEOUT"));
+    ConfigChanged   |= ReadFromJSON (sta_timeout,                     json, F ("WIFI_STA_TIMEOUT"));
+    ConfigChanged   |= ReadFromJSON (ap_timeout,                      json, F ("WIFI_AP_TIMEOUT"));
 
     // DEBUG_V ("     ip: " + ip);
     // DEBUG_V ("gateway: " + gateway);
@@ -559,8 +559,8 @@ void fsm_WiFi_state_ConnectingUsingConfig::Init ()
     // DEBUG_V (String ("       this: ") + String (uint32_t (this), HEX));
     // DEBUG_V (String ("pWiFiDriver: ") + String (uint32_t (pWiFiDriver), HEX));
     // DEBUG_V();
-    String      CurrentSsid             = SSID.get ();
-    String      CurrentPassphrase       = WpaKey.get ();
+    String  CurrentSsid         = SSID.get ();
+    String  CurrentPassphrase   = WpaKey.get ();
 
     if (CurrentSsid.isEmpty ())
     {
@@ -677,7 +677,7 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
         String PSK;
 #ifdef REQUIRE_WIFI_AP_PSK
             Log.infoln (String (F ("-> HotSpot Requires PSK")).c_str ());
-            PSK = F (AP_PSK_STR);       // Enable PSK.
+            PSK = F (AP_PSK_STR);   // Enable PSK.
 #endif // ifdef REQUIRE_WIFI_AP_PSK
 
         WiFi.softAP (FinalSsid.c_str (), PSK.c_str ());
@@ -685,8 +685,8 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
         pWiFiDriver->setIpAddress (WiFi.localIP ());
         pWiFiDriver->setIpSubNetMask (WiFi.subnetMask ());
 
-        Log.    infoln (String (String (F ("WiFi SOFTAP:       ssid: '")) + FinalSsid).c_str ());
-        Log.    infoln (String (String (F ("WiFi SOFTAP: IP Address: '")) + pWiFiDriver->getIpAddress ().toString ()).c_str ());
+        Log.infoln (String (String (F ("WiFi SOFTAP:       ssid: '")) + FinalSsid).c_str ());
+        Log.infoln (String (String (F ("WiFi SOFTAP: IP Address: '")) + pWiFiDriver->getIpAddress ().toString ()).c_str ());
     }
     else
     {
@@ -723,7 +723,7 @@ void fsm_WiFi_state_ConnectedToAP::Poll ()
         pWiFiDriver->dnsServer.processNextRequest ();
 
 #ifdef OTA_ENB
-            ArduinoOTA.handle ();       // OTA Service.
+            ArduinoOTA.handle ();   // OTA Service.
 #endif // ifdef OTA_ENB
 
         pWiFiDriver->UpdateStatusFields ();
@@ -868,7 +868,7 @@ void fsm_WiFi_state_ConnectionFailed::Init ()
     }
     else
     {
-        if (0  != ApReboot.get ())
+        if (0 != ApReboot.get ())
         {
             // extern bool reboot;
             Log.infoln (String (F ("WiFi Requesting Reboot")).c_str ());

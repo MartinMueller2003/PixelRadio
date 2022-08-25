@@ -25,7 +25,7 @@ public:
     cMdnsName ();
     virtual ~cMdnsName ();
     bool set (const String & value, String & Response, bool ForceUpdate = false);
-};      // class cMdnsName
+};  // class cMdnsName
 
 extern cMdnsName MdnsName;
 

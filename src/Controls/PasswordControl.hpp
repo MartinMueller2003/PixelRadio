@@ -26,7 +26,7 @@ public:
     virtual ~cPasswordControl ();
 
     virtual bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cPasswordControl
+};  // class cPasswordControl
 
 // *********************************************************************************************
 // OEF

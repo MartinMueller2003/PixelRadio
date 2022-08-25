@@ -26,7 +26,7 @@ public:
     virtual ~cAudioInputImpedance ()    {}
 
     bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cAudioInputImpedance
+};  // class cAudioInputImpedance
 
 extern cAudioInputImpedance AudioInputImpedance;
 

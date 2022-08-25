@@ -57,8 +57,8 @@ bool cStatusControl::set (const String & value)
 {
     // DEBUG_START;
 
-    String      Dummy;
-    bool        Response = cControlCommon::set (value, Dummy);
+    String  Dummy;
+    bool    Response = cControlCommon::set (value, Dummy);
 
     // DEBUG_END;
 

@@ -92,16 +92,16 @@ uint8_t getLogLevel (void)
 // initSerialLog(): Initialize the Serial Log. If arg = true, then set to Verbose. Else, set to User Configuration.
 void initSerialLog (bool verbose)
 {
-    Log.setPrefix (printPrefix);        // set prefix similar to NLog
-    Log.setSuffix (printSuffix);        // set suffix
+    Log.setPrefix (printPrefix);    // set prefix similar to NLog
+    Log.setSuffix (printSuffix);    // set suffix
 
     if (verbose)
     {
-        Log.begin (LOG_LEVEL_VERBOSE, &Serial);
+        Log.begin (LOG_LEVEL_VERBOSE, & Serial);
     }
     else
     {
-        Log.begin (getLogLevel (), &Serial);
+        Log.begin (getLogLevel (), & Serial);
     }
     Log.setShowLevel (false);   // Do not show loglevel, we will do this in the prefix
 }
@@ -179,14 +179,14 @@ void    printTimestamp (Print * _logOutput)
     const unsigned long SECS_IN_DAY     = 86400;
 
     // Total time
-    const unsigned long msecs   =  millis ();
-    const unsigned long secs    =  msecs / MSECS_IN_SEC;
+    const unsigned long msecs   = millis ();
+    const unsigned long secs    = msecs / MSECS_IN_SEC;
 
     // Time in components
-    const unsigned long MiliSeconds     =  msecs % MSECS_IN_SEC;
-    const unsigned long Seconds         =  secs  % SECS_IN_MIN;
-    const unsigned long Minutes         = (secs  / SECS_IN_MIN) % SECS_IN_MIN;
-    const unsigned long Hours           = (secs  % SECS_IN_DAY) / SECS_IN_HOUR;
+    const unsigned long MiliSeconds = msecs % MSECS_IN_SEC;
+    const unsigned long Seconds     = secs % SECS_IN_MIN;
+    const unsigned long Minutes     = (secs / SECS_IN_MIN) % SECS_IN_MIN;
+    const unsigned long Hours       = (secs % SECS_IN_DAY) / SECS_IN_HOUR;
 
     // Time as string
     char timestamp[20];

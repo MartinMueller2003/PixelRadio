@@ -45,10 +45,10 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
  # ifdef HTTP_ENB
         int16_t getCommandArg (String & requestStr, uint8_t maxSize)
         {
-            int16_t     argStart        = 0;
-            int16_t     argStop         = 0;
-            String      argStr          = "";   // Copy of Argument String.
-            String      argLcStr        = "";   // Lowercase version.
+            int16_t argStart    = 0;
+            int16_t argStop     = 0;
+            String  argStr      = "";   // Copy of Argument String.
+            String  argLcStr    = "";   // Lowercase version.
 
             argLcStr = requestStr;
             argLcStr.toLowerCase ();
@@ -73,12 +73,12 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                 }
                 else if (argStr.length () == 0)
                 {
-                    return -1;          // Fail, Argument Missing.
+                    return -1;      // Fail, Argument Missing.
                 }
-                argStr. trim ();        // Trim one more time.
+                argStr. trim ();    // Trim one more time.
                 requestStr = argStr;
             }
-            else                        // Fail, Improper Argument Provided.
+            else                    // Fail, Improper Argument Provided.
             {
                 requestStr = "";
 
@@ -97,16 +97,16 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
     void gpioHttpControl (WiFiClient client, String requestStr, uint8_t pin)
     {
  # ifdef OldWay
-            bool        successFlg = true;
-            char        charBuff[60];
+            bool    successFlg = true;
+            char    charBuff[60];
 
             sprintf (charBuff, "-> HTTP Controller: Received GPIO Pin-%d Command", pin);
             Log.infoln (charBuff);
 
             successFlg = gpioCmd (requestStr, HttpControllerId, pin);
 
-            client.     print ( HTML_HEADER_STR);
-            client.     print ( HTML_DOCTYPE_STR);
+            client. print ( HTML_HEADER_STR);
+            client. print ( HTML_DOCTYPE_STR);
 
             if (!successFlg)
             {
@@ -152,10 +152,10 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
             uint16_t    charCnt         = 0;
             uint32_t    previousTime    = millis ();
 
-            String      argStr          = "";
-            String      currentLine     = "";
-            String      requestStr      = "";           // Var to capture the HTTP request reply.
-            String      requestLcStr    = "";           // Var to store the lower case HTTP request reply.
+            String  argStr          = "";
+            String  currentLine     = "";
+            String  requestStr      = "";               // Var to capture the HTTP request reply.
+            String  requestLcStr    = "";               // Var to store the lower case HTTP request reply.
 
             WiFiClient client = server.available ();    // Listen for incoming web clients.
 
@@ -170,15 +170,15 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                     previousTime = millis ();
                 }
 
-                if (!client.available ())       // If no bytes available then this is a Browser Prefetch.
+                if (!client.available ())   // If no bytes available then this is a Browser Prefetch.
                 {
                     Log.infoln ("-> HTTP Controller: Empty Prefetch, Close Connection.");
                     client.stop ();
 
                     return;
                 }
-                connectFlg      = true;
-                currentLine     = "";   // Init string to hold incoming data from the client,
+                connectFlg  = true;
+                currentLine = "";   // Init string to hold incoming data from the client,
 
                 // while (client.connected()) { // loop while the client is connected.
                 while (client.connected () && millis () - previousTime <= CLIENT_TIMEOUT)
@@ -220,7 +220,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 
                                         if (endCmdIndex > 0)
                                         {
-                                            requestStr =  requestStr.substring (0, endCmdIndex);
+                                            requestStr = requestStr.substring (0, endCmdIndex);
                                         }
 
                                         while (client.available () && charCnt < HTTP_RESPONSE_MAX_SZ)
@@ -265,8 +265,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -341,21 +341,21 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
                                         String HostName;
                                         WiFiDriver.GetHostName (HostName);
                                         client.printf (
-                                            "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}\r\n",
-                                            CMD_INFO_STR,
-                                            VERSION_STR,
-                                            HostName.c_str (),
-                                            WiFi.localIP ().toString ().c_str (),
-                                            WiFi.RSSI (),
-                                            ControllerMgr.getControllerStatusSummary ());
+                                    "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%04X\"}\r\n",
+                                    CMD_INFO_STR,
+                                    VERSION_STR,
+                                    HostName.c_str (),
+                                    WiFi.localIP ().toString ().c_str (),
+                                    WiFi.RSSI (),
+                                    ControllerMgr.getControllerStatusSummary ());
                                     }
                                     else
                                     {
@@ -381,8 +381,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -412,8 +412,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -443,8 +443,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -538,12 +538,12 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
-                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_RADIOTEXT_STR);      // JSON Fmt.
+                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_RADIOTEXT_STR);  // JSON Fmt.
                                     }
                                     else
                                     {
@@ -569,12 +569,12 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
-                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_RF_CARRIER_STR);     // JSON Fmt.
+                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_RF_CARRIER_STR); // JSON Fmt.
                                     }
                                     else
                                     {
@@ -600,8 +600,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -609,7 +609,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                     }
                                     else
                                     {
-                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_REBOOT_STR);       // JSON Fmt.
+                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_REBOOT_STR);   // JSON Fmt.
                                     }
                                     client.println (HTML_CLOSE_STR);
                                 }
@@ -631,8 +631,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -640,7 +640,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                     }
                                     else
                                     {
-                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_START_STR);        // JSON Fmt.
+                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_START_STR);    // JSON Fmt.
                                     }
                                     client.println (HTML_CLOSE_STR);
                                 }
@@ -662,8 +662,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -693,8 +693,8 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                             successFlg = false;
                                         }
                                     }
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
 
                                     if (successFlg)
                                     {
@@ -702,7 +702,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                     }
                                     else
                                     {
-                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_PERIOD_STR);       // JSON Fmt.
+                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_PERIOD_STR);   // JSON Fmt.
                                     }
                                     client.println (HTML_CLOSE_STR);
                                 }
@@ -711,16 +711,16 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                 else
                                 {
                                     Log.errorln ("-> HTTP CMD: COMMAND IS UNDEFINED");
-                                    client.     print ( HTML_HEADER_STR);
-                                    client.     print ( HTML_DOCTYPE_STR);
-                                    client.     println (       "{\"cmd\": \"undefined\"}\r\n");        // JSON Fmt.
-                                    client.     println (       HTML_CLOSE_STR);
+                                    client. print ( HTML_HEADER_STR);
+                                    client. print ( HTML_DOCTYPE_STR);
+                                    client. println (   "{\"cmd\": \"undefined\"}\r\n");    // JSON Fmt.
+                                    client. println (   HTML_CLOSE_STR);
                                 }
 
                                 // Break out of the while loop
                                 break;
                             }
-                            else        // if you got a newline, then clear currentLine
+                            else    // if you got a newline, then clear currentLine
                             {
                                 currentLine = "";
                             }
@@ -735,13 +735,13 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                 requestLcStr    = "";
 
                 connectFlg = false;
-                client.stop ();         // Close the GET HTTP connection.
+                client.stop ();     // Close the GET HTTP connection.
                 Log.infoln ("-> HTTP Controller: Client Disconnected.");
             }
-            else if (connectFlg)        // Client was connected, but now nothing to do.
+            else if (connectFlg)    // Client was connected, but now nothing to do.
             {
                 connectFlg = false;
-                client.stop ();         // Close the GET HTTP connection.
+                client.stop ();     // Close the GET HTTP connection.
                 Log.infoln ("-> HTTP Controller: Connected Client Now Idle, Disconnected).");
             }
  # endif // def OldWay
@@ -765,10 +765,10 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 
             if (c == '%')
             {
-                code0           = urlStr.charAt (++i);
-                code1           = urlStr.charAt (++i);
-                c               = (urlDecodeHex (code0) << 4) | urlDecodeHex (code1);
-                encodeStr       += c;
+                code0       = urlStr.charAt (++i);
+                code1       = urlStr.charAt (++i);
+                c           = (urlDecodeHex (code0) << 4) | urlDecodeHex (code1);
+                encodeStr   += c;
             }
             else if (c == '+')
             {

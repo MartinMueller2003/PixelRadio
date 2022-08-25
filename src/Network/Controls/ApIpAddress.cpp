@@ -18,8 +18,8 @@
 #include "ApIpAddress.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     WIFI_AP_IP_ADDR_STR     [] = "AP IP Address";
-static const PROGMEM char     AP_IP_ADDR_STR          [] = "AP_IP_ADDR_STR";
+static const PROGMEM char   WIFI_AP_IP_ADDR_STR     []  = "AP IP Address";
+static const PROGMEM char   AP_IP_ADDR_STR          []  = "AP_IP_ADDR_STR";
 
 // *********************************************************************************************
 cApIpAddress::cApIpAddress () :   cIpAddressControl (AP_IP_ADDR_STR, WIFI_AP_IP_ADDR_STR, IPAddress (192, 168, 4, 1))

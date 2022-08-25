@@ -46,10 +46,10 @@ public:
 // FM Radio: QN8027 Test response Codes
     typedef enum
     {
-        FM_TEST_OK = 0,         // QN8027 Is Ok.
-        FM_TEST_VSWR,           // QN8027 RF Out has Bad VSWR.
-        FM_TEST_MISSING,        // QN8027 Chip missing.
-        FM_TEST_FAIL,           // QN8027 Chip Bad.
+        FM_TEST_OK = 0,     // QN8027 Is Ok.
+        FM_TEST_VSWR,       // QN8027 RF Out has Bad VSWR.
+        FM_TEST_MISSING,    // QN8027 Chip missing.
+        FM_TEST_FAIL,       // QN8027 Chip Bad.
     } QN8027RadioFmTestStatus_e;
     QN8027RadioFmTestStatus_e   GetTestStatus () {return TestStatus;}
 
@@ -65,7 +65,7 @@ private:
     SemaphoreHandle_t RadioSemaphore = NULL;
 
     QN8027RadioFmTestStatus_e TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_FAIL;
-};      // class cQN8027RadioApi
+};  // class cQN8027RadioApi
 
 extern cQN8027RadioApi QN8027RadioApi;
 

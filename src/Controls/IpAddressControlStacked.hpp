@@ -27,7 +27,7 @@ public:
     virtual ~cIpAddressControlStacked ();
 
     virtual void AddControls (uint16_t TabId, ControlColor color);
-};      // class cIpAddressControlStacked
+};  // class cIpAddressControlStacked
 
 // *********************************************************************************************
 // OEF

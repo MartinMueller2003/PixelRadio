@@ -68,8 +68,8 @@ void cRssiStatus::set ()
 
     Result.reserve (128);
 
-    Result      = String (getRssi ());
-    Result      += UNITS_DBM_STR;
+    Result  = String (getRssi ());
+    Result  += UNITS_DBM_STR;
     // DEBUG_V (String ("Result: ") + Result);
     cStatusControl::set (Result);
 

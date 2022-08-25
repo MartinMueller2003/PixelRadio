@@ -25,9 +25,9 @@ public:
     cAudioMode ();
     virtual ~cAudioMode ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cAudioMode
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+};  // class cAudioMode
 
 extern cAudioMode AudioMode;
 

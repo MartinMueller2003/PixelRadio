@@ -19,8 +19,8 @@
 #include "BinaryControl.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     ENABLED_STR     [] = "Enabled";
-static const PROGMEM char     DISABLED_STR    [] = "Disabled";
+static const PROGMEM char   ENABLED_STR     []  = "Enabled";
+static const PROGMEM char   DISABLED_STR    []  = "Disabled";
 
 static std::map <String, bool> ValidInputValues =
 {
@@ -38,24 +38,24 @@ static std::map <String, bool> ValidInputValues =
 
 // *********************************************************************************************
 cBinaryControl::cBinaryControl (
-    const String        & ConfigName,
-    const String        & _Title,
-    bool                DefaultValue) :
+    const String    & ConfigName,
+    const String    & _Title,
+    bool            DefaultValue) :
     cControlCommon (ConfigName, ControlType::Switcher, _Title, String (DefaultValue), 10)
 {
     // _ DEBUG_START;
 
-    DataValue   = DefaultValue;
-    if(OnString.isEmpty())
+    DataValue = DefaultValue;
+
+    if (OnString.isEmpty ())
     {
-        OnString    = ENABLED_STR;
+        OnString = ENABLED_STR;
     }
 
-    if(OffString.isEmpty())
+    if (OffString.isEmpty ())
     {
-        OffString   = DISABLED_STR;
+        OffString = DISABLED_STR;
     }
-
     // _ DEBUG_END;
 }
 
@@ -151,7 +151,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         {
             String LogMsg;
             LogMsg.reserve (128);
-            LogMsg = GetTitle() + F (": Set To '") + ResponseMessage + F ("'");
+            LogMsg = GetTitle () + F (": Set To '") + ResponseMessage + F ("'");
             Log.infoln (LogMsg.c_str ());
         }
     }
@@ -171,13 +171,12 @@ void cBinaryControl::setOffMessage (const String & value, eCssStyle style)
     // DEBUG_START;
 
     OffString   = value;
-    OffStyle = style;
+    OffStyle    = style;
 
-    if(!getBool())
+    if (!getBool ())
     {
-        setMessage(OffString, OffStyle);
+        setMessage (OffString, OffStyle);
     }
-
     // DEBUG_END;
 }
 
@@ -188,12 +187,11 @@ void cBinaryControl::setOffMessageStyle (eCssStyle style)
     // DEBUG_V (String ("style: ") + String (style));
 
     OffStyle = style;
-    
-    if(!getBool())
-    {
-        setMessage(OffString, OffStyle);
-    }
 
+    if (!getBool ())
+    {
+        setMessage (OffString, OffStyle);
+    }
     // DEBUG_END;
 }
 
@@ -203,16 +201,14 @@ void cBinaryControl::setOnMessage (const String & value, eCssStyle style)
     // DEBUG_START;
 
     OnString    = value;
-    OnStyle = style;
+    OnStyle     = style;
 
-    if(getBool())
+    if (getBool ())
     {
-        setMessage(OnString, OnStyle);
+        setMessage (OnString, OnStyle);
     }
-
     // DEBUG_END;
 }
-
 
 // *********************************************************************************************
 void cBinaryControl::setOnMessageStyle (eCssStyle style)
@@ -221,15 +217,13 @@ void cBinaryControl::setOnMessageStyle (eCssStyle style)
     // DEBUG_V (String ("style: ") + String (style));
 
     OnStyle = style;
-    
-    if(getBool())
-    {
-        setMessage(OnString, OnStyle);
-    }
 
+    if (getBool ())
+    {
+        setMessage (OnString, OnStyle);
+    }
     // DEBUG_END;
 }
-
 
 // *********************************************************************************************
 bool cBinaryControl::validate (const String & value, String & ResponseMessage, bool)
@@ -247,7 +241,7 @@ bool cBinaryControl::validate (const String & value, String & ResponseMessage, b
 
     if (ValidInputValues.end () == ValidInputValues.find (Temp))
     {
-        ResponseMessage = GetTitle() + F (": BAD_VALUE: Invalid Binary Value '") + value + F ("'");
+        ResponseMessage = GetTitle () + F (": BAD_VALUE: Invalid Binary Value '") + value + F ("'");
         Response        = false;
         // DEBUG_V (String ("ResponseMessage: ") + ResponseMessage);
     }

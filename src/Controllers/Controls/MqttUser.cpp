@@ -19,10 +19,10 @@
 #include "memdebug.h"
 #include "credentials_user.h"
 
-static const PROGMEM char      MQTT_NAME_STR            []   = "MQTT_NAME_STR";
-static const PROGMEM char     MQTT_SUBSCR_NM_STR    [] = "BROKER SUBSCRIBE NAME";
-static const PROGMEM char     MQTT_NAME_DEF_STR           [] = "pixelradio";
-static const PROGMEM uint32_t   MQTT_NAME_MAX_SZ          = 18;
+static const PROGMEM char   MQTT_NAME_STR            []     = "MQTT_NAME_STR";
+static const PROGMEM char   MQTT_SUBSCR_NM_STR    []        = "BROKER SUBSCRIBE NAME";
+static const PROGMEM char   MQTT_NAME_DEF_STR           []  = "pixelradio";
+static const PROGMEM uint32_t MQTT_NAME_MAX_SZ              = 18;
 
 // *********************************************************************************************
 cMqttUser::cMqttUser () :   cControlCommon (MQTT_NAME_STR,
@@ -54,22 +54,22 @@ void cMqttUser::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cMqttUser::validate(const String &value, String &ResponseMessage, bool ForceUpdate)
+bool cMqttUser::validate (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     DEBUG_START;
 
-    bool Response = cControlCommon::validate(value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommon::validate (value, ResponseMessage, ForceUpdate);
 
-    if(Response)
+    if (Response)
     {
-        if(value.isEmpty())
+        if (value.isEmpty ())
         {
-            Response = false;
-            ResponseMessage = GetTitle() + F(": BAD_VALUE: '") + value + F("'");
+            Response        = false;
+            ResponseMessage = GetTitle () + F (": BAD_VALUE: '") + value + F ("'");
         }
     }
-
     DEBUG_END;
+
     return Response;
 }
 

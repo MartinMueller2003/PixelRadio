@@ -94,11 +94,11 @@ static std::vector <std::pair <String, String>> ListOfEuPtyCodes =
     {"Alarm",                     "31"                    },
 };
 
-static const PROGMEM char     RDS_PTY_CODE_STR        [] = "PTY CODE<br>Station Genre";
-static const PROGMEM char     RDS_PTY_CODE            [] = "RDS_PTY_CODE";
+static const PROGMEM char   RDS_PTY_CODE_STR        []  = "PTY CODE<br>Station Genre";
+static const PROGMEM char   RDS_PTY_CODE            []  = "RDS_PTY_CODE";
 
 // *********************************************************************************************
-cPtyCode::cPtyCode () :   cChoiceListControl (RDS_PTY_CODE, RDS_PTY_CODE_STR, "Top 40", &ListOfUsPtyCodes)
+cPtyCode::cPtyCode () :   cChoiceListControl (RDS_PTY_CODE, RDS_PTY_CODE_STR, "Top 40", & ListOfUsPtyCodes)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -157,12 +157,12 @@ void cPtyCode::setPtyCodeOptionValues ()
     if (0 == PreEmphasis.get32 ())
     {
         // DEBUG_V ("US");
-        RefreshOptionList (&ListOfUsPtyCodes);
+        RefreshOptionList (& ListOfUsPtyCodes);
     }
     else
     {
         // DEBUG_V ("EU");
-        RefreshOptionList (&ListOfEuPtyCodes);
+        RefreshOptionList (& ListOfEuPtyCodes);
     }
     // DEBUG_V (String ("    CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 

@@ -35,8 +35,8 @@ const uint16_t  TONE_E4         = 330;
 const uint16_t  TONE_F4         = 349;
 const uint16_t  TONE_NONE       = 0;
 
-const int       TONE_OFF        = 1;
-const int       TONE_ON         = 0;
+const int   TONE_OFF    = 1;
+const int   TONE_ON     = 0;
 
 static std::vector <uint16_t> toneList
 {
@@ -54,9 +54,9 @@ static std::vector <uint16_t> toneList
 fsm_Tone_state_Idle fsm_Tone_state_Idle_imp;
 fsm_Tone_state_SendingTone fsm_Tone_state_SendingTone_imp;
 
-static const PROGMEM char     ADJUST_TEST_STR [] = "TEST TONES";
-static const PROGMEM char     AUDIO_TEST_STR  [] = "PIXELRADIO AUDIO TEST";
-static const PROGMEM char     AUDIO_PSN_STR   [] = "TestTone";
+static const PROGMEM char   ADJUST_TEST_STR []  = "TEST TONES";
+static const PROGMEM char   AUDIO_TEST_STR  []  = "PIXELRADIO AUDIO TEST";
+static const PROGMEM char   AUDIO_PSN_STR   []  = "TestTone";
 
 // *********************************************************************************************
 cTestTone::cTestTone () :   cBinaryControl (emptyString, AUDIO_TEST_STR, false)
@@ -82,7 +82,7 @@ void cTestTone::Init ()
 
     fsm_Tone_state_Idle_imp.SetParent (this);
     fsm_Tone_state_SendingTone_imp.SetParent (this);
-    pCurrentFsmState = &fsm_Tone_state_Idle_imp;
+    pCurrentFsmState = & fsm_Tone_state_Idle_imp;
 
     // DEBUG_END;
 }
@@ -160,7 +160,7 @@ void cTestTone::UpdateRdsTimeMsg ()
     seconds++;
 
     FrequencyMessage = String (F ("Current Tone: ")) + String (pCurrentFsmState->getCurrentToneFrequency ()) + " hz";
-    setMessage(FrequencyMessage, eCssStyle::CssStyleWhite);
+    setMessage (FrequencyMessage, eCssStyle::CssStyleWhite);
     sprintf (rdsBuff, "[ %02u:%02u:%02u ]", hours, minutes, seconds);
     String tmpStr;
 
@@ -203,7 +203,7 @@ void fsm_Tone_state_Idle::Init ()
 
     ESPUI.setElementStyle (pTestTone->ControlId, String (F ("background: #bebebe;")));
 
-    pTestTone->pCurrentFsmState = &fsm_Tone_state_Idle_imp;
+    pTestTone->pCurrentFsmState = & fsm_Tone_state_Idle_imp;
 
     // DEBUG_END;
 }
@@ -213,7 +213,7 @@ void fsm_Tone_state_Idle::Poll (uint32_t)
 {
     // DEBUG_START;
 
-    if (pTestTone->getBool())
+    if (pTestTone->getBool ())
     {
         fsm_Tone_state_SendingTone_imp.Init ();
     }
@@ -238,7 +238,7 @@ void fsm_Tone_state_SendingTone::Init ()
 
     ESPUI.setElementStyle (pTestTone->ControlId, String (F ("background: red;")));
 
-    pTestTone->pCurrentFsmState = &fsm_Tone_state_SendingTone_imp;
+    pTestTone->pCurrentFsmState = & fsm_Tone_state_SendingTone_imp;
 
     // DEBUG_END;
 }
@@ -250,7 +250,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 
     do  // once
     {
-        if (!pTestTone->getBool())
+        if (!pTestTone->getBool ())
         {
             fsm_Tone_state_Idle_imp.Init ();
             break;

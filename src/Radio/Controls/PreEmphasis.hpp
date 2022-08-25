@@ -26,7 +26,7 @@ public:
     virtual ~cPreEmphasis ()    {}
 
     bool set (const String & value, String & Response, bool ForceUpdate = false);
-};      // class cPreEmphasis
+};  // class cPreEmphasis
 
 extern cPreEmphasis PreEmphasis;
 

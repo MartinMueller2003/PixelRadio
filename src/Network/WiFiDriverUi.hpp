@@ -42,8 +42,8 @@ protected:
     IPAddress CurrentGateway    = IPAddress (0, 0, 0, 0);
     IPAddress CurrentDns        = IPAddress (0, 0, 0, 0);
     bool ResetWiFi              = false;
-    uint32_t ap_timeout         = AP_TIMEOUT;           ///< How long to wait in AP mode with no connection before rebooting
-    uint32_t sta_timeout        = CLIENT_TIMEOUT;       ///< Timeout when connected as client (station)
+    uint32_t ap_timeout         = AP_TIMEOUT;       ///< How long to wait in AP mode with no connection before rebooting
+    uint32_t sta_timeout        = CLIENT_TIMEOUT;   ///< Timeout when connected as client (station)
     String ConnectionStatusMessage;
 
 private:
@@ -55,4 +55,4 @@ private:
     cWiFiStatus HomeStatus;
     cWiFiIpStatus WiFiIpStatus;
     cWiFiIpStatus HomeIpStatus;
-};      // class c_WiFiDriverUi
+};  // class c_WiFiDriverUi

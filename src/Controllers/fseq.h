@@ -21,9 +21,9 @@ typedef union
 {
     struct
     {
-        uint8_t         header[4];      // FPPD
-        uint8_t         packet_type;
-        uint16_t        data_len;
+        uint8_t     header[4];  // FPPD
+        uint8_t     packet_type;
+        uint16_t    data_len;
     } __attribute__((packed));
     uint8_t raw[301];
 } FPPPacket;
@@ -32,20 +32,20 @@ typedef union
 {
     struct
     {
-        uint8_t         header[4];      // FPPD
-        uint8_t         packet_type;
-        uint16_t        data_len;
-        uint8_t         ping_version;
-        uint8_t         ping_subtype;
-        uint8_t         ping_hardware;
-        uint16_t        versionMajor;
-        uint16_t        versionMinor;
-        uint8_t         operatingMode;
-        uint8_t         ipAddress[4];
-        char            hostName[65];
-        char            version[41];
-        char            hardwareType[41];
-        char            ranges[121];
+        uint8_t     header[4];  // FPPD
+        uint8_t     packet_type;
+        uint16_t    data_len;
+        uint8_t     ping_version;
+        uint8_t     ping_subtype;
+        uint8_t     ping_hardware;
+        uint16_t    versionMajor;
+        uint16_t    versionMinor;
+        uint8_t     operatingMode;
+        uint8_t     ipAddress[4];
+        char        hostName[65];
+        char        version[41];
+        char        hardwareType[41];
+        char        ranges[121];
     } __attribute__((packed));
     uint8_t raw[301];
 } FPPPingPacket;
@@ -54,14 +54,14 @@ typedef union
 {
     struct
     {
-        uint8_t         header[4];      // FPPD
-        uint8_t         packet_type;
-        uint16_t        data_len;
-        uint8_t         sync_action;
-        uint8_t         sync_type;
-        uint32_t        frame_number;
-        float           seconds_elapsed;
-        char            filename[250];
+        uint8_t     header[4];  // FPPD
+        uint8_t     packet_type;
+        uint16_t    data_len;
+        uint8_t     sync_action;
+        uint8_t     sync_type;
+        uint32_t    frame_number;
+        float       seconds_elapsed;
+        char        filename[250];
     } __attribute__((packed));
     uint8_t raw[301];
 } FPPMultiSyncPacket;
@@ -69,9 +69,9 @@ typedef union
 // https://github.com/FalconChristmas/fpp/blob/master/docs/FSEQ_Sequence_File_Format.txt
 struct FSEQRawVariableDataHeader
 {
-    uint8_t     length[2];
-    char        type[2];
-    uint8_t     data;
+    uint8_t length[2];
+    char    type[2];
+    uint8_t data;
 };
 
 struct FSEQParsedVariableDataHeader
@@ -83,8 +83,8 @@ struct FSEQParsedVariableDataHeader
 
 struct FSEQRawRangeEntry
 {
-    uint8_t     Start[3];
-    uint8_t     Length[3];
+    uint8_t Start[3];
+    uint8_t Length[3];
 } __attribute__((packed));
 
 struct FSEQParsedRangeEntry
@@ -95,25 +95,25 @@ struct FSEQParsedRangeEntry
 
 struct FSEQRawHeader
 {
-    uint8_t     header[4];      // PSEQ
-    uint8_t     dataOffset[2];
-    uint8_t     minorVersion;
-    uint8_t     majorVersion;
-    uint8_t     VariableHdrOffset[2];
-    uint8_t     channelCount[4];
-    uint8_t     TotalNumberOfFramesInSequence[4];
-    uint8_t     stepTime;
-    uint8_t     flags;
-    uint8_t     compressionType;
-    uint8_t     numCompressedBlocks;
-    uint8_t     numSparseRanges;
-    uint8_t     flags2;
-    uint8_t     id[8];
+    uint8_t header[4];  // PSEQ
+    uint8_t dataOffset[2];
+    uint8_t minorVersion;
+    uint8_t majorVersion;
+    uint8_t VariableHdrOffset[2];
+    uint8_t channelCount[4];
+    uint8_t TotalNumberOfFramesInSequence[4];
+    uint8_t stepTime;
+    uint8_t flags;
+    uint8_t compressionType;
+    uint8_t numCompressedBlocks;
+    uint8_t numSparseRanges;
+    uint8_t flags2;
+    uint8_t id[8];
 } __attribute__((packed));
 
 struct FSEQParsedHeader
 {
-    uint8_t     header[4];      // PSEQ
+    uint8_t     header[4];  // PSEQ
     uint16_t    dataOffset;
     uint8_t     minorVersion;
     uint8_t     majorVersion;
@@ -168,11 +168,11 @@ inline uint32_t read24 (uint8_t * pData)
     return (uint32_t)(pData[0]) |
            (uint32_t)(pData[1]) << 8 |
            (uint32_t)(pData[2]) << 16;
-}       // read24
+}   // read24
 
 // -----------------------------------------------------------------------------
 inline uint16_t read16 (uint8_t * pData)
 {
     return (uint16_t)(pData[0]) |
            (uint16_t)(pData[1]) << 8;
-}       // read16
+}   // read16

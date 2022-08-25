@@ -20,9 +20,9 @@
 #include "WiFiDriver.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     WIFI_AP_NAME_STR        [] = "AP (HOTSPOT) NAME";
-static const PROGMEM char     AP_NAME_STR             [] = "AP_NAME_STR";
-static const PROGMEM char     AP_NAME_DEF_STR         [] = "PixelRadioAP";
+static const PROGMEM char   WIFI_AP_NAME_STR        []  = "AP (HOTSPOT) NAME";
+static const PROGMEM char   AP_NAME_STR             []  = "AP_NAME_STR";
+static const PROGMEM char   AP_NAME_DEF_STR         []  = "PixelRadioAP";
 static const PROGMEM uint32_t AP_NAME_MAX_SZ            = 18;
 
 // *********************************************************************************************

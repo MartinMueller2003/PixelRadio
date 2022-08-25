@@ -19,10 +19,10 @@
 #include "RdsTextStatus.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     HOME_RDS_TIMER_STR      [] = "RDS TIMER COUNTDOWN";
+static const PROGMEM char HOME_RDS_TIMER_STR      [] = "RDS TIMER COUNTDOWN";
 
 // *********************************************************************************************
-cRdsTextStatus::cRdsTextStatus () : cStatusControl (HOME_RDS_TIMER_STR)
+cRdsTextStatus::cRdsTextStatus () :   cStatusControl (HOME_RDS_TIMER_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -34,8 +34,8 @@ void cRdsTextStatus::AddControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     cStatusControl::AddControls (value, color);
-    setControlStyle ( eCssStyle::CssStyleWhite );
-    setMessageStyle ( eCssStyle::CssStyleWhite );
+    setControlStyle (eCssStyle::CssStyleWhite);
+    setMessageStyle (eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }

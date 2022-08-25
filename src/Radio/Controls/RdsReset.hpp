@@ -25,9 +25,9 @@ public:
     cRdsReset ();
     virtual ~cRdsReset ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-};      // class cRdsReset
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+};  // class cRdsReset
 
 extern cRdsReset RdsReset;
 

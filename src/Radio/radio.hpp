@@ -27,21 +27,21 @@ public:
     cRadio ()    {}
     virtual ~cRadio ()    {}
 
-    void        AddAdjControls (uint16_t Tab, ControlColor color);
-    void        AddDiagControls (uint16_t Tab, ControlColor color);
-    void        AddHomeControls (uint16_t Tab, ControlColor color);
-    void        AddRadioControls (uint16_t Tab, ControlColor color);
-    void        AddRdsControls (uint16_t Tab, ControlColor color);
+    void    AddAdjControls (uint16_t Tab, ControlColor color);
+    void    AddDiagControls (uint16_t Tab, ControlColor color);
+    void    AddHomeControls (uint16_t Tab, ControlColor color);
+    void    AddRadioControls (uint16_t Tab, ControlColor color);
+    void    AddRdsControls (uint16_t Tab, ControlColor color);
 
-    void        begin ();
-    void        Poll ();
-    void        restoreConfiguration (JsonObject & json);
-    void        saveConfiguration (JsonObject & json);
+    void    begin ();
+    void    Poll ();
+    void    restoreConfiguration (JsonObject & json);
+    void    saveConfiguration (JsonObject & json);
 
 private:
 
-    void        updateOnAirSign (void);
-};      // class cRadio
+    void    updateOnAirSign (void);
+};  // class cRadio
 
 extern cRadio Radio;
 

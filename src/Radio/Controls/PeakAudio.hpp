@@ -30,7 +30,7 @@ public:
 private:
 
     uint32_t NextReadingTime = 0;
-};      // class cPeakAudio
+};  // class cPeakAudio
 
 extern cPeakAudio PeakAudio;
 

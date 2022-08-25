@@ -25,22 +25,22 @@ public:
     cDHCP ();
     virtual ~cDHCP ();
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    bool        getBool ();
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    void        SetControlMessage (String & ResponseMessage);
-    void        TestIpSettings ();
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    getBool ();
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    void    SetControlMessage (String & ResponseMessage);
+    void    TestIpSettings ();
 
-    void        restoreConfiguration (JsonObject & json);
-    void        saveConfiguration (JsonObject & json);
+    void    restoreConfiguration (JsonObject & json);
+    void    saveConfiguration (JsonObject & json);
 
 private:
 
-    void        SetStaticFieldsVisibility ();
-    bool        ValidateStaticSettings (String & ResponseMessage);
+    void    SetStaticFieldsVisibility ();
+    bool    ValidateStaticSettings (String & ResponseMessage);
 
     uint16_t wifiStaticSettingsID = Control::noParent;
-};      // class cDHCP
+};  // class cDHCP
 
 extern cDHCP DHCP;
 

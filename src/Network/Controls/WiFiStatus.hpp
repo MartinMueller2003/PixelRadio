@@ -26,7 +26,7 @@ public:
     virtual ~cWiFiStatus ()    {}
 
     void set ();
-};      // class cWiFiStatus
+};  // class cWiFiStatus
 
 // *********************************************************************************************
 // OEF

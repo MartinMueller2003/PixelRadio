@@ -22,9 +22,9 @@
 #include "RfCarrier.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char     RDS_PSN_DEF_STR         [] = "PixeyFM";
-static const PROGMEM char     RDS_PROG_SERV_STR       [] = "RDS_PROG_SERV_STR";
-static const PROGMEM char     RDS_PROG_SERV_NM_STR    [] = "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)";
+static const PROGMEM char   RDS_PSN_DEF_STR         []  = "PixeyFM";
+static const PROGMEM char   RDS_PROG_SERV_STR       []  = "RDS_PROG_SERV_STR";
+static const PROGMEM char   RDS_PROG_SERV_NM_STR    []  = "PROGRAM SERVICE NAME<br>Station Name (4-8 Chars)";
 
 // *********************************************************************************************
 cProgramServiceName::cProgramServiceName () :   cControlCommon (
@@ -78,7 +78,7 @@ bool cProgramServiceName::validate (const String & value, String & ResponseMessa
             // DEBUG_V ("Skip duplicate name");
             break;
         }
-        ResponseMessage = GetTitle() + F (": '") + value;
+        ResponseMessage = GetTitle () + F (": '") + value;
 
         if (value.length () < 4)
         {

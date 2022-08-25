@@ -150,23 +150,23 @@ QN8027Radio::QN8027Radio ()
  */
 void QN8027Radio::setFrequency (float frequency)
 {
-    uint16_t    frequencyB      = ((frequency + 0.001f) * 100.0f - 7600.0f) / 5.0f;
-    uint8_t     frequencyH      = frequencyB >> 8;
+    uint16_t    frequencyB  = ((frequency + 0.001f) * 100.0f - 7600.0f) / 5.0f;
+    uint8_t     frequencyH  = frequencyB >> 8;
 
     freqH = frequencyH;
     uint8_t frequencyL = frequencyB & 0XFF;
 
     // freqL = frequencyL;
-        write1Byte (    SYSTEM_REG,     frequencyH);
-        write1Byte (    CH1_REG,        frequencyL);
+    write1Byte (SYSTEM_REG, frequencyH);
+    write1Byte (CH1_REG,    frequencyL);
 }
 
 /* Get Currently Transmitting Frequency with decimal point */
 float QN8027Radio::getFrequency ()
 {
-    uint8_t     frequencyH      = read1Byte (SYSTEM_REG) & CH0_MASK;
-    uint8_t     frequencyL      = read1Byte (CH1_REG);
-    float       freqCombine     = (float)(((frequencyH << 8) | frequencyL) * 5 + 7600) / 100;
+    uint8_t frequencyH  = read1Byte (SYSTEM_REG) & CH0_MASK;
+    uint8_t frequencyL  = read1Byte (CH1_REG);
+    float   freqCombine = (float)(((frequencyH << 8) | frequencyL) * 5 + 7600) / 100;
 
     return freqCombine;
 }
@@ -183,7 +183,7 @@ uint8_t QN8027Radio::read1Byte (uint8_t regAddr)
     Wire.endTransmission ();
     Wire.requestFrom (QN8027_I2C_ADDR, 1);
 
-    if (Wire.available ())      // Mod by TEB, Dec-30-2021;
+    if (Wire.available ())  // Mod by TEB, Dec-30-2021;
     {
         readData = Wire.read ();
     }
@@ -201,8 +201,8 @@ void QN8027Radio::write1Byte (uint8_t regAddr, uint8_t comData)
 {
     //    noInterrupts();  // Mod by TEB, Feb-01-2022
     Wire.beginTransmission (QN8027_I2C_ADDR);
-    Wire.       write ( regAddr);
-    Wire.       write ( comData);
+    Wire.   write ( regAddr);
+    Wire.   write ( comData);
     Wire.endTransmission ();    // ACK read
     //    interrupts();
 }
@@ -212,14 +212,14 @@ void QN8027Radio::write1Byte (uint8_t regAddr, uint8_t comData)
 void QN8027Radio::sendRDS (char By0, char By1, char By2, char By3, char By4, char By5, char By6, char By7)
 {
     rdsSentStatus = read1Byte (STATUS_REG) & 8;
-        write1Byte (    RDSD0_REG,      By0);
-        write1Byte (    RDSD1_REG,      By1);
-        write1Byte (    RDSD2_REG,      By2);
-        write1Byte (    RDSD3_REG,      By3);
-        write1Byte (    RDSD4_REG,      By4);
-        write1Byte (    RDSD5_REG,      By5);
-        write1Byte (    RDSD6_REG,      By6);
-        write1Byte (    RDSD7_REG,      By7);
+    write1Byte (RDSD0_REG,  By0);
+    write1Byte (RDSD1_REG,  By1);
+    write1Byte (RDSD2_REG,  By2);
+    write1Byte (RDSD3_REG,  By3);
+    write1Byte (RDSD4_REG,  By4);
+    write1Byte (RDSD5_REG,  By5);
+    write1Byte (RDSD6_REG,  By6);
+    write1Byte (RDSD7_REG,  By7);
 
     if (rdsReady == 4)
     {
@@ -242,7 +242,7 @@ void    QN8027Radio::reset ()
 {
     write1Byte (SYSTEM_REG, 0x80);
     delayMicroseconds (100);
-    write1Byte (SYSTEM_REG, 0x00);      // Mod by TEB, Jan-29-2022.
+    write1Byte (SYSTEM_REG, 0x00);  // Mod by TEB, Jan-29-2022.
 }
 
 /* Recalibrates internal RF power amplifier for load antenna attached. this process is automatic and you just need to use this function
@@ -251,14 +251,14 @@ void QN8027Radio::reCalibrate ()
 {
     write1Byte (SYSTEM_REG, 0x40);
     delayMicroseconds (100);
-    write1Byte (SYSTEM_REG, 0x00);      // Mod by TEB, Jan-29-2022.
+    write1Byte (SYSTEM_REG, 0x00);  // Mod by TEB, Jan-29-2022.
 }
 
 /*mutes audio to transmitter output. transmitter will only transmite carrier frequency without audio.
    value of onOffCtrl variable can be:  ON or OFF
    default is OFF.
  */
-void QN8027Radio::mute (uint8_t onOffCtrl)      // also should set PAPower to 20
+void QN8027Radio::mute (uint8_t onOffCtrl)  // also should set PAPower to 20
 {
     if (onOffCtrl == ON)
     {
@@ -403,7 +403,7 @@ void    QN8027Radio::setClockSource (uint8_t Type)
    for example setCrystalCurrent(50) means 50% of 400 = 200uA
    default is 100 micro ampere.
  */
-void QN8027Radio::setCrystalCurrent (float percentOfMax)        // current between 0 to 400 uA
+void QN8027Radio::setCrystalCurrent (float percentOfMax)    // current between 0 to 400 uA
 {
     CrystalCurrentuA = (uint8_t)((percentOfMax * 64) / 100);
     // write1Byte(XTL_REG,(clockSource | CrystalCurrentuA));
@@ -425,7 +425,7 @@ void    QN8027Radio::setCrystalFreq (uint8_t Freq)
     {
         crystalFreqMHz = 128;
     }
-    else        // if 12 or wrong value
+    else    // if 12 or wrong value
     {
         crystalFreqMHz = 0;
     }
@@ -580,7 +580,7 @@ void QN8027Radio::clearAudioPeak ()
 
 void QN8027Radio::setTxPower (uint8_t setX)
 {
-    PAOutputPower = setX & 0x7F;        // Mod by TEB, Jan-31-2022.
+    PAOutputPower = setX & 0x7F;    // Mod by TEB, Jan-31-2022.
     write1Byte (PAC_REG, (AudioPeakClear | PAOutputPower));
 }
 
@@ -628,10 +628,10 @@ uint8_t QN8027Radio::getStatus ()
 
 // Read the PI Code.
 // See https://picodes.nrscstandards.org/ and https://www.fmsystems-inc.com/rds-pi-code-formula-station-callsigns/
-uint16_t        QN8027Radio::getPiCode (void)   {return piCode;}
+uint16_t    QN8027Radio::getPiCode (void)   {return piCode;}
 
 // Read the PTY Code, Mod By dkulp, Jun-13-2022
-uint8_t         QN8027Radio::getPTYCode (void)  {return ptyCode;}
+uint8_t     QN8027Radio::getPTYCode (void)  {return ptyCode;}
 
 // -------------------RDS sending---------------------------------------------------------------
 /*
@@ -639,18 +639,18 @@ uint8_t         QN8027Radio::getPTYCode (void)  {return ptyCode;}
    PSN must be maximum 8 byte long String.
    PSN shorter than 8 bytes will contain a null termination. This tells the RDS Receiver when to end decoding.
  */
-void            QN8027Radio::sendStationName (String SN)
+void        QN8027Radio::sendStationName (String SN)
 {
-    char        char_array[PSN_SIZE + 1];
-    int         str_len;
-    int         rds_len;
+    char    char_array[PSN_SIZE + 1];
+    int     str_len;
+    int     rds_len;
 
-    if (SN.length () > PSN_SIZE)        // Prevent Buffer Overflow.
+    if (SN.length () > PSN_SIZE)    // Prevent Buffer Overflow.
     {
         SN = SN.substring (0, PSN_SIZE);
     }
-    str_len     = SN.length () + 1;
-    rds_len     = str_len + (str_len % 2);      // Make it a multiple of 2.
+    str_len = SN.length () + 1;
+    rds_len = str_len + (str_len % 2);          // Make it a multiple of 2.
 
     memset (char_array, char(NULL), PSN_SIZE);  // Clear PSN Buffer (fill with nulls). Mod By TEB, Feb-03-2022.
     SN.toCharArray (char_array, str_len);
@@ -683,16 +683,16 @@ void QN8027Radio::waitForRDSSend ()
 
         do
         {
-            status      = read1Byte (STATUS_REG);
-            status      = status & 8;
+            status  = read1Byte (STATUS_REG);
+            status  = status & 8;
 
-            if (timeout++ > (100 / RDS_SEND_DELAY))     // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
+            if (timeout++ > (100 / RDS_SEND_DELAY)) // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
             {
                 Log.errorln ("-> Abort: waitForRDSSend() function time-out!");
                 break;
             }
-            delay (RDS_SEND_DELAY);             // This wait time allows the RDS buffer contents to be sent.
-        }while (status == rdsSentStatus);       // Wait for rdsSentStatus to toggle.
+            delay (RDS_SEND_DELAY);         // This wait time allows the RDS buffer contents to be sent.
+        } while (status == rdsSentStatus);  // Wait for rdsSentStatus to toggle.
         rdsSentStatus = status;
 #endif // def OldWay
 }
@@ -702,16 +702,16 @@ void QN8027Radio::waitForRDSSend ()
 /* Execution time is about 1.2mS */
 void QN8027Radio::sendRadioText (String RT)
 {
-    char        char_array[RADIOTEXT_SIZE + 1];
-    int         rds_len;
-    int         str_len;
+    char    char_array[RADIOTEXT_SIZE + 1];
+    int     rds_len;
+    int     str_len;
 
     if (RT.length () > RADIOTEXT_SIZE)  // Prevent Buffer Overflow.
     {
         RT = RT.substring (0, RADIOTEXT_SIZE);
     }
-    str_len     = RT.length () + 1;
-    rds_len     = str_len + (str_len % 4);              // Make it a multiple of 4.
+    str_len = RT.length () + 1;
+    rds_len = str_len + (str_len % 4);                  // Make it a multiple of 4.
     memset (char_array, char(NULL), RADIOTEXT_SIZE);    // Clear RadioText Buffer (fill with nulls). Mod By TEB, Feb-03-2022.
     RT.toCharArray (char_array, str_len);               // Copy RadioText to Buffer.
 

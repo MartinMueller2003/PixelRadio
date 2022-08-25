@@ -26,7 +26,7 @@ public:
     virtual ~cStaticGatewayAddress ();
 
     bool set (const String & value, String & Response, bool ForceUpdate = false);
-};      // class cStaticGatewayAddress
+};  // class cStaticGatewayAddress
 
 extern cStaticGatewayAddress StaticGatewayAddress;
 
