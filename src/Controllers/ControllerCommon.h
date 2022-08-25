@@ -39,16 +39,15 @@ public:
     cControllerCommon (const String & MyName, CtypeId MyId);
     virtual ~cControllerCommon ();
 
-    virtual void        begin ()        {}
-    virtual void        poll ()         {}
-    virtual void        AddControls (uint16_t tabId, ControlColor color);
-    String              GetName ()     {return GetTitle();}
-    virtual void        saveConfiguration (ArduinoJson::JsonObject & config);
+    virtual void    begin ()                {}
+    virtual void    poll ()                 {}
+    virtual void    AddControls (uint16_t tabId, ControlColor color);
+    String          GetName ()              {return GetTitle ();}
+    virtual void    saveConfiguration (ArduinoJson::JsonObject & config);
 
-    virtual void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
-    bool                ControllerIsEnabled ()  {return getBool();}
-
-};
+    virtual void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
+    bool            ControllerIsEnabled ()  {return getBool ();}
+}; // class cControllerCommon
 
 // *********************************************************************************************
 // EOF
