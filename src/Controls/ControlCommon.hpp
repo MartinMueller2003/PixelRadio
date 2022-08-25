@@ -41,7 +41,6 @@ public:
     virtual void        SetTitle(String &value) { Title = value; }
     virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
-protected:
     enum eCssStyle
     {
         CssStyleBlack = 0,
@@ -55,7 +54,7 @@ protected:
         CssStyleMaroon_bw,
         CssStyleRed_bw,
         CssStyleTransparent_bw,
-        CssStyleWhite_bw,
+        CssStyleWhite_bb,
     };
 
     virtual void        setControl (const String & value, eCssStyle style);
@@ -78,6 +77,7 @@ protected:
     };
     virtual void        setControlPanelStyle (ePanelStyle style);
     virtual void        setMessagePanelStyle (ePanelStyle style);
+protected:
 
     ePanelStyle ControlPanelStyle       = PanelStyle125;
     ePanelStyle MessagePanelStyle       = PanelStyle125;

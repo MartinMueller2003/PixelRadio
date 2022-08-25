@@ -32,7 +32,7 @@ const PROGMEM char CSS_LABEL_STYLE_RED_BW          [] =
     "background-color: white; color: red; margin-top: .1rem; margin-bottom: .1rem;";
 const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT_BW  [] =
     "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_WHITE_BW        [] =
+const PROGMEM char CSS_LABEL_STYLE_WHITE_BB        [] =
     "background-color: black; color: white; margin-top: .1rem; margin-bottom: .1rem;";
 
 const PROGMEM char * CssStyles [] =
@@ -48,7 +48,7 @@ const PROGMEM char * CssStyles [] =
     CSS_LABEL_STYLE_MAROON_BW,
     CSS_LABEL_STYLE_RED_BW,
     CSS_LABEL_STYLE_TRANSPARENT_BW,
-    CSS_LABEL_STYLE_WHITE_BW,
+    CSS_LABEL_STYLE_WHITE_BB,
 };
 
 const PROGMEM String PanelStyles [] =
