@@ -30,6 +30,10 @@ cSerialControl::cSerialControl () : cBaudrateControl ()
 }
 
 // ************************************************************************************************
+cSerialControl::~cSerialControl ()
+{}
+
+// ************************************************************************************************
 void cSerialControl::AddControls (uint16_t TabId, ControlColor color)
 {
  // DEBUG_START;
@@ -39,14 +43,11 @@ void cSerialControl::AddControls (uint16_t TabId, ControlColor color)
     String Temp = F("Serial Control<br>Last Command Processed");
     LastCmdProcessed.SetTitle(Temp);
     LastCmdProcessed.AddControls(TabId, color);
+    LastCmdProcessed.setControlStyle(eCssStyle::CssStyleWhite_bb);
     LastCmdProcessed.set(Temp);
 
- // DEBUG_END;
+    // DEBUG_END;
 }
-
-// ************************************************************************************************
-cSerialControl::~cSerialControl ()
-{}
 
 // ************************************************************************************************
 void cSerialControl::initSerialControl(HardwareSerial * port)
