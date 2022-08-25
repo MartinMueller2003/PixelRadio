@@ -96,9 +96,10 @@ void cSerialControl::poll (void)
             LastCmdProcessed.set(String(F("Command: '")) + cmdStr + F("' <br>Parameter: '") + paramStr + F("'") );
 
             String Response;
-            CommandProcessor.ProcessCommand (cmdStr, paramStr, Title, Response);
-            serial_manager.print (Response);
-         // DEBUG_V(String("Response.length: ") + String(Response.length()));
+            CommandProcessor.ProcessCommand (cmdStr, paramStr, Response);
+            Response += F("\n");
+            serial_manager.print(Response);
+            // DEBUG_V(String("Response.length: ") + String(Response.length()));
         }
     } while (false);
 

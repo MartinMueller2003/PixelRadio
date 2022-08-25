@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: RdsReset.cpp
+   File: RdsReset.hpp
    Project: PixelRdsReset, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021

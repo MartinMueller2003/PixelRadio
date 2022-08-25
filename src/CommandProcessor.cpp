@@ -17,104 +17,83 @@
  */
 
 // *************************************************************************************************************************
-#include "CommandProcessor.hpp"
-#include "language.h"
-#include "memdebug.h"
-#include "radio.hpp"
+#include <Arduino.h>
 #include <map>
 
-typedef bool (cCommandProcessor::*CmdHandler)(String &, String &, String &);
+#include "CommandProcessor.hpp"
+// #include "language.h"
+#include "memdebug.h"
+// #include "radio.hpp"
+
+#include "AudioMode.hpp"
+#include "AudioMute.hpp"
+#include "FrequencyAdjust.hpp"
+#include "PiCode.hpp"
+#include "ProgramServiceName.hpp"
+#include "PtyCode.hpp"
+#include "RdsReset.hpp"
+#include "RfCarrier.hpp"
+
+typedef bool (cCommandProcessor::*CmdHandler)(String & Parameter, String &ResponseMessage);
 std::map <String, CmdHandler> ListOfCommands
 {
-    {
-        "aud",     &cCommandProcessor::audioMode
-    },
-    {
-        "freq",    &cCommandProcessor::frequency
-    },
-    {
-        "gpio19",  &cCommandProcessor::gpio19
-    },
-    {
-        "gpio23",  &cCommandProcessor::gpio23
-    },
-    {
-        "gpio33",  &cCommandProcessor::gpio33
-    },
-    {
-        "mute",    &cCommandProcessor::mute
-    },
-    {
-        "pic",     &cCommandProcessor::piCode
-    },
-    {
-        "rtper",   &cCommandProcessor::rdsTimePeriod
-    },
-    {
-        "psn",     &cCommandProcessor::programServiceName
-    },
-    {
-        "pty",     &cCommandProcessor::ptyCode
-    },
-    {
-        "rfc",     &cCommandProcessor::rfCarrier
-    },
-    {
-        "rtm",     &cCommandProcessor::radioText
-    },
-    {
-        "start",   &cCommandProcessor::start
-    },
-    {
-        "stop",    &cCommandProcessor::stop
-    },
-    {
-        "?",       &cCommandProcessor::HelpCommand
-    },
-    {
-        "h",       &cCommandProcessor::HelpCommand
-    },
-    {
-        "help",    &cCommandProcessor::HelpCommand
-    },
+    { "aud",     &cCommandProcessor::audioMode          },
+    { "freq",    &cCommandProcessor::frequency          },
+    { "gpio19",  &cCommandProcessor::gpio19             },
+    { "gpio23",  &cCommandProcessor::gpio23             },
+    { "gpio33",  &cCommandProcessor::gpio33             },
+    { "mute",    &cCommandProcessor::mute               },
+    { "pic",     &cCommandProcessor::piCode             },
+    { "rtper",   &cCommandProcessor::rdsTimePeriod      },
+    { "psn",     &cCommandProcessor::programServiceName },
+    { "pty",     &cCommandProcessor::ptyCode            },
+    { "reboot",  &cCommandProcessor::reboot             },
+    { "rfc",     &cCommandProcessor::rfCarrier          },
+    { "rtm",     &cCommandProcessor::radioText          },
+    { "start",   &cCommandProcessor::start              },
+    { "stop",    &cCommandProcessor::stop               },
+    { "?",       &cCommandProcessor::HelpCommand        },
+    { "h",       &cCommandProcessor::HelpCommand        },
+    { "help",    &cCommandProcessor::HelpCommand        },
 };
 
 // *************************************************************************************************************************
 cCommandProcessor::cCommandProcessor ()
 {}
-
+#ifdef OldWay
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
     const String      & RawCommand,
-    const String      & ControllerName,
-    String      & Response)
+          String      & Response)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    String      Command;
+    String      Command = RawCommand;
     String      Parameter;
 
     bool response = ProcessCommand (Command, Parameter, ControllerName, Response);
 
-    DEBUG_END;
+    // DEBUG_END;
 
     return response;
 }
+#endif // def OldWay
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
-    const String      & Command,
-    const String      & Parameter,
-    const String      & ControllerName,
-          String      & Response)
+    String      & Command,
+    String      & Parameter,
+    String      & ResponseMessage)
 {
-    DEBUG_START;
+    // DEBUG_START;
+
+    // DEBUG_V(String("        Command: ") + Command);
+    // DEBUG_V(String("      Parameter: ") + Parameter);
+    // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
 
     bool response = false;
-#ifdef OldWay
-    Response.reserve (1000);
 
-    Command.trim ();
+    Command.trim();
     Command.toLowerCase ();
 
     Parameter.trim ();
@@ -123,97 +102,46 @@ bool cCommandProcessor::ProcessCommand (
     {
         if (ListOfCommands.end () == ListOfCommands.find (Command))
         {
-            Response = (String (F ("->ERROR: Unknown Command: '")) + Command + F ("'\n"));
-            HelpCommand (Parameter, ControllerName, Response);
+            ResponseMessage = (String (F ("->ERROR: Unknown Command: '")) + Command + F ("'\n"));
+            HelpCommand (Parameter, ResponseMessage);
             response = false;
             break;
         }
-        DEBUG_V ();
-        Response += String (F ("->")) + ControllerName;
-        (this->*ListOfCommands[Command])(Parameter, ControllerName, Response);
+        // DEBUG_V ();
+        response = (this->*ListOfCommands[Command])(Parameter, ResponseMessage);
     } while (false);
-#endif // def OldWay
 
-    DEBUG_END;
+    // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
+    // DEBUG_END;
 
     return response;
 }
 
 // *************************************************************************************************************************
-// AudioModeCmd(): Set the Mono/Stereo Audio Mode using the Payload String. On exit, return true if success.
-bool cCommandProcessor::audioMode (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::audioMode (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
-        bool    response        = true;
-        bool    stereoEnbFlg    = true;
+    // DEBUG_START;
 
-        payloadStr.toLowerCase ();
+    bool response = AudioMode.set(payloadStr, ResponseMessage);
 
-        do      // once
-        {
-            if (payloadStr.equals (F ("stereo")))
-            {
-                Response += F (": Audio Mode Set to 'STEREO'\n");
-                Radio.setMonoAudio (false);
-                break;
-            }
+    // DEBUG_END;
 
-            if (payloadStr.equals (F ("mono")))
-            {
-                Response += F (": Audio Mode Set to 'MONO'\n");
-                Radio.setMonoAudio (true);
-                break;
-            }
-            Response    += String (F (": Invalid Audio Mode Parameter '")) + payloadStr + F ("'\n");
-            response    = false;
-            break;
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::frequency (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::frequency (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
-        bool response = true;
+    // DEBUG_START;
 
-        do      // once
-        {
-            int freq = payloadStr.toInt ();
+    bool response = FrequencyAdjust.set(payloadStr, ResponseMessage);
 
-            if ((!strIsUint (payloadStr)) ||
-                (freq < FM_FREQ_MIN_X10) ||
-                (freq > FM_FREQ_MAX_X10))
-            {
-                Response        += String (F (": Invalid Radio Frequency Parameter ")) + payloadStr + F ("'\n");
-                response        = false;
-                break;
-            }
-            setFrequency (freq);
-
-            Response += String (F (": Transmit Frequency Set to ")) + String (((float(freq)) / 10.0f), 1) + F ("Mhz\n");
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::gpio19 (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::gpio19 (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
 
@@ -225,7 +153,7 @@ bool cCommandProcessor::gpio19 (String & payloadStr, String & ControllerName, St
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::gpio23 (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::gpio23 (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
 
@@ -237,7 +165,7 @@ bool cCommandProcessor::gpio23 (String & payloadStr, String & ControllerName, St
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::gpio33 (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::gpio33 (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
 
@@ -250,10 +178,10 @@ bool cCommandProcessor::gpio33 (String & payloadStr, String & ControllerName, St
 
 // *************************************************************************************************************************
 // gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
-bool cCommandProcessor::gpio (String & payloadStr, String & ControllerName, gpio_num_t pin, String & Response)
+bool cCommandProcessor::gpio (String & payloadStr, gpio_num_t pin, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
 
         bool response = true;
 
@@ -288,7 +216,7 @@ bool cCommandProcessor::gpio (String & payloadStr, String & ControllerName, gpio
  # endif // def OldWay
         } while (false);
 
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
@@ -297,52 +225,46 @@ bool cCommandProcessor::gpio (String & payloadStr, String & ControllerName, gpio
     return false;
 }
 
-// ================================================================================================
-// CommandError(): Create an error response.
-bool cCommandProcessor::HelpCommand (String & payloadStr, String & ControllerName, String & Response)
+// *************************************************************************************************************************
+bool cCommandProcessor::HelpCommand (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
 
-        Response        += ("\n");
-        Response        += ("=========================================\n");
-        Response        += ("**      CONTROLLER COMMAND SUMMARY     **\n");
-        Response        += ("=========================================\n");
-        Response        += (" AUDIO MODE      : aud=mono : stereo\n");
-        Response        += String (F (" FREQUENCY X10   : freq=")) + String (FM_FREQ_MIN_X10) + F ("<->") + String (FM_FREQ_MAX_X10) +
-                           F ("\n");
-        Response        += (" GPIO-19 CONTROL : gpio19=read : outhigh : outlow\n");
-        Response        += (" GPIO-23 CONTROL : gpio23=read : outhigh : outlow\n");
-        Response        += (" GPIO-33 CONTROL : gpio33=read : outhigh : outlow\n");
-        Response        += (" INFORMATION     : info=system\n");
-        Response        += (" MUTE AUDIO      : mute=on : off\n");
-        Response        += String (" PROG ID CODE    : pic=0x") +
-                           String (RDS_PI_CODE_MIN, HEX) + " <-> 0x" + String (RDS_PI_CODE_MAX, HEX) + F ("\n");
-        Response        += String (" PROG SERV NAME  : psn=[") + String (CMD_PSN_MAX_SZ) + F (" char name]\n");
-        Response        += String (" RADIOTXT MSG    : rtm=[") + String (CMD_RT_MAX_SZ) + F (" char message]\n");
-        Response        += String (" RADIOTXT PERIOD : rtper=5 <-> ") + String (RDS_DSP_TM_MAX) + F (" secs\n");
-        Response        += (" REBOOT SYSTEM   : reboot=system\n");
-        Response        += (" START RDS       : start=rds\n");
-        Response        += (" STOP RDS        : stop=rds\n");
-        Response        += (" LOG CONTROL     : log=silent : restore\n");
-        Response        += (" HELP            : ?  h  help\n");
-        Response        += ("=========================================\n");
-        Response        += ("\n");
+        ResponseMessage.reserve(1024);
 
-        DEBUG_END;
+        ResponseMessage        += ("\n");
+        ResponseMessage        += ("=========================================\n");
+        ResponseMessage        += ("**      CONTROLLER COMMAND SUMMARY     **\n");
+        ResponseMessage        += ("=========================================\n");
+        ResponseMessage        += (" AUDIO MODE      : aud=mono : stereo\n");
+        ResponseMessage        += (" FREQUENCY       : freq=88.1<->107.9\n");
+        ResponseMessage        += (" GPIO-19 CONTROL : gpio19=read : outhigh : outlow\n");
+        ResponseMessage        += (" GPIO-23 CONTROL : gpio23=read : outhigh : outlow\n");
+        ResponseMessage        += (" GPIO-33 CONTROL : gpio33=read : outhigh : outlow\n");
+        ResponseMessage        += (" INFORMATION     : info=system\n");
+        ResponseMessage        += (" MUTE AUDIO      : mute=mute : unmute\n");
+        ResponseMessage        += (" PROG ID CODE    : pic=0x00FF <-> 0xFFFF\n");
+        ResponseMessage        += (" PROG SERV NAME  : psn=[8 char station name]\n");
+        ResponseMessage        += (" RADIOTXT MSG    : rtm=[64 char message]\n");
+        ResponseMessage        += (" RADIOTXT PERIOD : rtper=5 <-> 900 secs\n");
+        ResponseMessage        += (" REBOOT SYSTEM   : reboot=system\n");
+        ResponseMessage        += (" START RDS       : start=rds\n");
+        ResponseMessage        += (" STOP RDS        : stop=rds\n");
+        ResponseMessage        += (" LOG CONTROL     : log=silent : restore\n");
+        ResponseMessage        += (" HELP            : ?  h  help\n");
+        ResponseMessage        += ("=========================================\n");
+        ResponseMessage        += ("\n");
+
+        // DEBUG_END;
 
         return true;
-
-#endif // def OldWay
-
-    return false;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::info (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
         bool response = true;
 
         if (payloadStr.length () > CMD_SYS_MAX_SZ)
@@ -360,7 +282,7 @@ bool cCommandProcessor::info (String & payloadStr, String & ControllerName, Stri
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   "), Ignored.")).c_str ());
             response = false;
         }
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
@@ -372,10 +294,10 @@ bool cCommandProcessor::info (String & payloadStr, String & ControllerName, Stri
 // *************************************************************************************************************************
 // logCmd(): Set the Serial Log Level to Silent or reset back to system (Web UI) setting.
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
-bool cCommandProcessor::log (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
 
         bool response = true;
 
@@ -410,7 +332,7 @@ bool cCommandProcessor::log (String & payloadStr, String & ControllerName, Strin
         Log.setShowLevel (false);       // Do not show loglevel, we will do this in the prefix
         Serial.flush ();
 
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
@@ -420,187 +342,54 @@ bool cCommandProcessor::log (String & payloadStr, String & ControllerName, Strin
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::mute (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::mute (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
+    // DEBUG_START;
 
-        bool response = true;
+    bool response = AudioMute.set(payloadStr, ResponseMessage);
 
-        do      // once
-        {
-            if (payloadStr.length () > CMD_MUTE_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_MUTE_MAX_SZ);
-            }
-
-            if (payloadStr.equals (CMD_MUTE_ON_STR))
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Mute Set to ON (Audio Off).")).c_str ());
-                // muteFlg    = true;
-                updateUiAudioMute (true);
-                break;
-            }
-
-            if (payloadStr == CMD_MUTE_OFF_STR)
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Mute Set to OFF (Audio On).")).c_str ());
-                // muteFlg    = false;
-                updateUiAudioMute (false);
-                break;
-            }
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid MUTE Payload (") + payloadStr + F (
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "), Ignored.")).c_str ());
-            response = false;
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::piCode (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::piCode (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
+    // DEBUG_START;
 
-        bool response = true;
-        uint32_t tempPiCode;
+    bool response = PiCode.set(payloadStr, ResponseMessage);
 
-        do      // once
-        {
-            if (payloadStr.length () > CMD_PI_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_PI_MAX_SZ);
-            }
-            tempPiCode = strtol (payloadStr.c_str (), NULL, HEX);
-
-            if ((tempPiCode < RDS_PI_CODE_MIN) || (tempPiCode > RDS_PI_CODE_MAX))
-            {
-                Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid RDS PI Code Value (") + payloadStr +
-                              F ("), Ignored.")).c_str ());
-                response = false;
-                break;
-            }
- # ifdef OldWay
-
-                if (radio.getPiCode () == (uint16_t)(tempPiCode))
-                {
-                    Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PI Code Unchanged (0x") +
-                                    String (tempPiCode, HEX) + F (").")).c_str ());
-                    break;
-                }
- # endif // def OldWay
-
-            // New PI Code.
-            // Radio.SetPiCode(controller, tempPiCode);
-            // ControllerMgr.SetTextFlag(controller, true);
-
-            // displaySaveWarning();
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PI Code Set to (0x") + String (tempPiCode, HEX) + F (
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ").")).c_str ());
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::ptyCode (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::ptyCode (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
+    // DEBUG_START;
 
-        bool response = true;
-        uint32_t tempPtyCode;
+    bool response = PtyCode.set(payloadStr, ResponseMessage);
 
-        do      // once
-        {
-            if (payloadStr.length () > CMD_PTY_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_PTY_MAX_SZ);
-            }
-            tempPtyCode = payloadStr.toInt ();
-
-            if ((tempPtyCode < RDS_PTY_CODE_MIN) || (tempPtyCode > RDS_PTY_CODE_MAX))
-            {
-                Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid RDS PTY Code Value (") + payloadStr +
-                              F ("), Ignored.")).c_str ());
-                response = false;
-                break;
-            }
- # ifdef OldWay
-
-                if (radio.getPTYCode () == (uint8_t)(tempPtyCode))
-                {
-                    Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PTY Code Unchanged (0x") +
-                                    String (tempPtyCode, HEX) + F (").")).c_str ());
-                    break;
-                }
- # endif // def OldWay
-
-            // New PTY Code.
-            // ControllerMgr.SetPtyCode(controller, tempPtyCode);
-            // ControllerMgr.SetTextFlag(controller, true);
-
-            // displaySaveWarning();
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: PTY Code Set to (0x") +
-                            String (tempPtyCode, HEX) + F (").")).c_str ());
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::programServiceName (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::programServiceName (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
-        bool response = true;
+    // DEBUG_START;
 
-        do      // once
-        {
-            if (payloadStr.length () > CMD_PSN_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_PSN_MAX_SZ);
-            }
-            // ControllerMgr.SetRdsProgramServiceName(controller, payloadStr);
-            // ControllerMgr.SetTextFlag(controller, true);
+    bool response = ProgramServiceName.set(payloadStr, ResponseMessage);
 
-            // displaySaveWarning();
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RDS PSN Set to ") + payloadStr).c_str ());
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::radioText (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
 
         bool response = true;
 
@@ -617,7 +406,7 @@ bool cCommandProcessor::radioText (String & payloadStr, String & ControllerName,
             Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RadioText Changed to ") + payloadStr).c_str ());
         } while (false);
 
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
@@ -628,10 +417,10 @@ bool cCommandProcessor::radioText (String & payloadStr, String & ControllerName,
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
-bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
         bool    response        = true;
         bool    capFlg          = false;
         int32_t rtTime          = 0;
@@ -678,7 +467,7 @@ bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ControllerN
             }
         } while (false);
 
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
@@ -688,87 +477,32 @@ bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ControllerN
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::reboot (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::reboot (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START
-        bool response = true;
+    // DEBUG_START;
 
-        if (payloadStr.length () > CMD_SYS_MAX_SZ)
-        {
-            payloadStr = payloadStr.substring (0, CMD_SYS_MAX_SZ);
-        }
+    bool response = false; // RebootControl.set(payloadStr, ResponseMessage);
 
-        if (payloadStr.equals (F (CMD_SYS_CODE_STR)))
-        {
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: System Rebooted.")).c_str ());
-            // rebootFlg = true; // Request system reboot.
-        }
-        else
-        {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid REBOOT Payload (") + payloadStr + F (
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  "), Ignored.")).c_str ());
-            response = false;
-        }
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::rfCarrier (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::rfCarrier (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
-        DEBUG_START;
+    // DEBUG_START;
 
-        bool response = true;
+    bool response = RfCarrier.set(payloadStr, ResponseMessage);
 
-        do      // once
-        {
-            if (payloadStr.length () > CMD_RF_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_RF_MAX_SZ);
-            }
-
-            if (payloadStr.equals (CMD_RF_ON_STR))
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RF Carrier Set to ON.")).c_str ());
-                // Radio.setRfCarrier(true);
-                updateUiRfCarrier ();
-                break;
-            }
-
-            if (payloadStr == CMD_RF_OFF_STR)
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RF Carrier Set to OFF.")).c_str ());
-                // rfCarrierFlg  = false;
-                // newCarrierFlg = true;
-                updateUiRfCarrier ();
-                break;
-            }
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid RF Carrier Payload (") + payloadStr +
-                          F ("), Ignored.")).c_str ());
-            response = false;
-        } while (false);
-
-        DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::start (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
         bool response = true;
 
         if (payloadStr.length () > CMD_RDS_MAX_SZ)
@@ -787,7 +521,7 @@ bool cCommandProcessor::start (String & payloadStr, String & ControllerName, Str
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   "), Ignored.")).c_str ());
             response = false;
         }
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
@@ -797,10 +531,10 @@ bool cCommandProcessor::start (String & payloadStr, String & ControllerName, Str
 }
 
 // *************************************************************************************************************************
-bool cCommandProcessor::stop (String & payloadStr, String & ControllerName, String & Response)
+bool cCommandProcessor::stop (String & payloadStr, String & ResponseMessage)
 {
 #ifdef OldWay
-        DEBUG_START;
+        // DEBUG_START;
         bool response = true;
 
         if (payloadStr.length () > CMD_RDS_MAX_SZ)
@@ -818,7 +552,7 @@ bool cCommandProcessor::stop (String & payloadStr, String & ControllerName, Stri
             Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid STOP Payload (") + payloadStr + F (
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   "), Ignored.")).c_str ());
         }
-        DEBUG_END;
+        // DEBUG_END;
 
         return response;
 
