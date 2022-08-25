@@ -24,25 +24,25 @@ class cCommandProcessor
 {
 public:
 
-    bool        audioMode          (String & payloadStr, String & ResponseMessage);
-    bool        frequency          (String & payloadStr, String & ResponseMessage);
-    bool        gpio19             (String & payloadStr, String & ResponseMessage);
-    bool        gpio23             (String & payloadStr, String & ResponseMessage);
-    bool        gpio33             (String & payloadStr, String & ResponseMessage);
-    bool        gpio               (String & payloadStr, gpio_num_t pin, String & Response);
-    bool        info               (String & payloadStr, String & ResponseMessage);
-    bool        log                (String & payloadStr, String & ResponseMessage);
-    bool        mute               (String & payloadStr, String & ResponseMessage);
-    bool        piCode             (String & payloadStr, String & ResponseMessage);
-    bool        ptyCode            (String & payloadStr, String & ResponseMessage);
-    bool        programServiceName (String & payloadStr, String & ResponseMessage);
-    bool        radioText          (String & payloadStr, String & ResponseMessage);
-    bool        rdsTimePeriod      (String & payloadStr, String & ResponseMessage);
-    bool        reboot             (String & payloadStr, String & ResponseMessage);
-    bool        rfCarrier          (String & payloadStr, String & ResponseMessage);
-    bool        start              (String & payloadStr, String & ResponseMessage);
-    bool        stop               (String & payloadStr, String & ResponseMessage);
-    bool        HelpCommand        (String & payloadStr, String & ResponseMessage);
+    bool    audioMode          (String & payloadStr, String & ResponseMessage);
+    bool    frequency          (String & payloadStr, String & ResponseMessage);
+    bool    gpio19             (String & payloadStr, String & ResponseMessage);
+    bool    gpio23             (String & payloadStr, String & ResponseMessage);
+    bool    gpio33             (String & payloadStr, String & ResponseMessage);
+    bool    gpio               (String & payloadStr, gpio_num_t pin, String & Response);
+    bool    info               (String & payloadStr, String & ResponseMessage);
+    bool    log                (String & payloadStr, String & ResponseMessage);
+    bool    mute               (String & payloadStr, String & ResponseMessage);
+    bool    piCode             (String & payloadStr, String & ResponseMessage);
+    bool    ptyCode            (String & payloadStr, String & ResponseMessage);
+    bool    programServiceName (String & payloadStr, String & ResponseMessage);
+    bool    radioText          (String & payloadStr, String & ResponseMessage);
+    bool    rdsTimePeriod      (String & payloadStr, String & ResponseMessage);
+    bool    reboot             (String & payloadStr, String & ResponseMessage);
+    bool    rfCarrier          (String & payloadStr, String & ResponseMessage);
+    bool    start              (String & payloadStr, String & ResponseMessage);
+    bool    stop               (String & payloadStr, String & ResponseMessage);
+    bool    HelpCommand        (String & payloadStr, String & ResponseMessage);
 
 public:
 
@@ -50,8 +50,8 @@ public:
     virtual ~cCommandProcessor ()    {}
 
     // bool        ProcessCommand (const String & RawCommand, String & ResponseMessage);
-    bool        ProcessCommand (String & Command, String & parameters, String & ResponseMessage);
-};      // CommandProcessor
+    bool ProcessCommand (String & Command, String & parameters, String & ResponseMessage);
+};  // CommandProcessor
 
 // *************************************************************************************************************************
 // EOF
