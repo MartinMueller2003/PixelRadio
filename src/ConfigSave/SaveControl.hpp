@@ -25,12 +25,11 @@ public:
     cSaveControl ();
     virtual ~cSaveControl ()    {}
 
-    void        AddControls (uint16_t TabId, ControlColor color);
-    void        ClearSaveNeeded ();
-    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    void        SetSaveNeeded ();
-
-};      // class cSaveControl
+    void    AddControls (uint16_t TabId, ControlColor color);
+    void    ClearSaveNeeded ();
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    void    SetSaveNeeded ();
+};  // class cSaveControl
 
 // *********************************************************************************************
 // OEF
