@@ -18,6 +18,8 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
+
 #include "ControllerCommon.h"
 #include "ControllerFPPD.h"
 #include "ControllerHTTP.h"
@@ -25,12 +27,11 @@
 #include "ControllerMgr.h"
 #include "ControllerMQTT.h"
 #include "ControllerNONE.h"
-#include "ControllerUsbSERIAL.h"
+#include "ControllerUsbSERIAL.hpp"
+#include "ControllerGpioSERIAL.hpp"
 #include "language.h"
 
-#if __has_include ("memdebug.h")
  # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
 
 struct ControllerDefinition_t
 {
@@ -41,24 +42,13 @@ struct ControllerDefinition_t
 
 static const ControllerDefinition_t ControllerDefinitions[] =
 {
-    {
-        c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL, SERIAL_CONTROLLER_ACTIVE_FLAG, 0x0008
-    },
-    {
-        c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,       MQTT_CONTROLLER_ACTIVE_FLAG,   0x0004
-    },
-    {
-        c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,       FPPD_CONTROLLER_ACTIVE_FLAG,   0x1000
-    },
-    {
-        c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,       HTTP_CONTROLLER_ACTIVE_FLAG,   0x0002
-    },
-    {
-        c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,      LOCAL_CONTROLLER_ACTIVE_FLAG,  0x0001
-    },
-    {
-        c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,         0,                             0x0000
-    },
+    {        c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL,  SERIAL_CONTROLLER_ACTIVE_FLAG,  0x0008    },
+    {        c_ControllerMgr::ControllerTypeId_t::GPIO_SERIAL_CNTRL, SERIAL1_CONTROLLER_ACTIVE_FLAG, 0x0200    },
+    {        c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,        MQTT_CONTROLLER_ACTIVE_FLAG,    0x0004    },
+    {        c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,        FPPD_CONTROLLER_ACTIVE_FLAG,    0x0100    },
+    {        c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,        HTTP_CONTROLLER_ACTIVE_FLAG,    0x0002    },
+    {        c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,       LOCAL_CONTROLLER_ACTIVE_FLAG,   0x0001    },
+    {        c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,          0,                              0x0000    },
 };
 
 // *********************************************************************************************
@@ -82,9 +72,16 @@ c_ControllerMgr::c_ControllerMgr ()
                 break;
             }
 
+            case ControllerTypeId_t::GPIO_SERIAL_CNTRL:
+            {
+                // DEBUG_V("GPIO_SERIAL_CNTRL");
+                ListOfControllers[index].pController = new cControllerGpioSERIAL ();
+                break;
+            }
+
             case ControllerTypeId_t::USB_SERIAL_CNTRL:
             {
-                // DEBUG_V("SERIAL_CNTRL");
+                // DEBUG_V("USB_SERIAL_CNTRL");
                 ListOfControllers[index].pController = new cControllerUsbSERIAL ();
                 break;
             }
@@ -170,10 +167,10 @@ void c_ControllerMgr::begin ()
 }       // begin
 
 // *********************************************************************************************
-cControllerCommon      * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
+cControllerCommon * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
 
 // *********************************************************************************************
-void                    c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
+void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -232,7 +229,7 @@ uint16_t c_ControllerMgr::getControllerStatusSummary ()
 }
 
 // *********************************************************************************************
-String  c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}        // GetName
+String c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}        // GetName
 
 // *********************************************************************************************
 void c_ControllerMgr::poll ()

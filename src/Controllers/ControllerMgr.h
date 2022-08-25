@@ -28,11 +28,12 @@ class cControllerCommon;       // forward declaration
 
 #define ControllerTypeId c_ControllerMgr::ControllerTypeId_t
 
-#define LOCAL_CONTROLLER_ACTIVE_FLAG  0x0010
-#define HTTP_CONTROLLER_ACTIVE_FLAG   0x0020
-#define MQTT_CONTROLLER_ACTIVE_FLAG   0x0040
-#define SERIAL_CONTROLLER_ACTIVE_FLAG 0x0080
-#define FPPD_CONTROLLER_ACTIVE_FLAG   0x1000
+#define LOCAL_CONTROLLER_ACTIVE_FLAG    0x0010
+#define HTTP_CONTROLLER_ACTIVE_FLAG     0x0020
+#define MQTT_CONTROLLER_ACTIVE_FLAG     0x0040
+#define SERIAL_CONTROLLER_ACTIVE_FLAG   0x0080
+#define FPPD_CONTROLLER_ACTIVE_FLAG     0x1000
+#define SERIAL1_CONTROLLER_ACTIVE_FLAG  0x2000
 
 
 class c_ControllerMgr
@@ -42,6 +43,7 @@ public:
     enum ControllerTypeId_t
     {
         USB_SERIAL_CNTRL = 0,
+        GPIO_SERIAL_CNTRL,
         MQTT_CNTRL,
         FPPD_CNTRL,
         HTTP_CNTRL,
