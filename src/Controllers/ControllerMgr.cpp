@@ -235,15 +235,18 @@ uint16_t c_ControllerMgr::getControllerStatusSummary ()
 String  c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}        // GetName
 
 // *********************************************************************************************
-void    c_ControllerMgr::poll ()
+void c_ControllerMgr::poll ()
 {
     // _ DEBUG_START;
     for (auto & CurrentController : ListOfControllers)
     {
-        CurrentController.pController->poll ();
+        if(CurrentController.pController->ControllerIsEnabled())
+        {
+            CurrentController.pController->poll ();
+        }
     }
     // _ DEBUG_END;
-}       // poll
+}
 
 // *********************************************************************************************
 void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
