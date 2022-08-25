@@ -43,12 +43,12 @@ cBaudrateControl::~cBaudrateControl ()
 // *********************************************************************************************
 void cBaudrateControl::AddControls (uint16_t value, ControlColor color)
 {
-    DEBUG_START;
+ // DEBUG_START;
 
     ESPUI.addControl(ControlType::Label, Name.c_str(), Name, color, value);
     cChoiceListControl::AddControls(value, color);
 
-    DEBUG_END;
+ // DEBUG_END;
 }
 
 // *********************************************************************************************

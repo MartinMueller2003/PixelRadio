@@ -30,6 +30,17 @@ cStatusControl::cStatusControl (const String & _Title) :
 }
 
 // *********************************************************************************************
+cStatusControl::cStatusControl () :
+    cControlCommon (emptyString, ControlType::Label, emptyString, emptyString, 0)
+{
+    // _ DEBUG_START;
+
+    SkipSetLog = true;
+
+    // _ DEBUG_END;
+}
+
+// *********************************************************************************************
 void cStatusControl::set (const String & value, eCssStyle style)
 {
     // DEBUG_START;

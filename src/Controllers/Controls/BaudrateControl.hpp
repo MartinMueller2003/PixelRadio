@@ -29,7 +29,6 @@ public:
     virtual ~cBaudrateControl ();
     virtual void    AddControls (uint16_t value, ControlColor color);
 
-
 };
 
 // *********************************************************************************************

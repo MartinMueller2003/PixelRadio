@@ -26,7 +26,7 @@ static const PROGMEM String Name = F("USB SERIAL");
 // ================================================================================================
 cControllerUsbSERIAL::cControllerUsbSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {
-    SerialControl.SetSerialPort(&Serial);
+    SerialControl.initSerialControl(&Serial);
 }
 
 // ================================================================================================
@@ -63,26 +63,6 @@ void cControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Re
         Messages.GetNextRdsMessage (Response);
     }
 }
-#ifdef OldWay
-// ************************************************************************************************
-void cControllerUsbSERIAL::initSerialControl (void)
-{
-    // DEBUG_START;
-
-    cmdStr.reserve (40);                        // Minimize memory re-allocations.
-    paramStr.reserve (80);                      // Minimize memory re-allocations.
-
-    Serial.flush ();                            // Purge pending serial chars.
-    Serial.end ();
-    serial_manager.start ();                    // Start Command Line Processor.
-    serial_manager.setFlag (CMD_EOL_TERM);      // EOL Termination character.
-    serial_manager.setDelimiter ('=');          // Parameter delimiter character.
-    Serial.flush ();                            // Repeat the flushing.
-    // Log.infoln(String(F("Serial Controller CLI is Enabled.")).c_str());
-
-    // DEBUG_END;
-}
-#endif // def OldWay
 
 // ************************************************************************************************
 void cControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
@@ -118,6 +98,7 @@ void cControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
 #endif // def OldWay
     // DEBUG_END;
 }
+
 #ifdef OldWay
 
 // ************************************************************************************************
@@ -180,73 +161,6 @@ void cControllerUsbSERIAL::serialCommands (void)
 }
 #endif // def OldWay
 
-#ifdef OldWay
-// ************************************************************************************************
-bool cControllerUsbSERIAL::SetBaudrate (String NewRate)
-{
-    // DEBUG_START;
-    bool Response               = true;
-    uint32_t OriginalBaudrate   = SerialControl.get32();
-#ifdef OldWay
-    do  // once
-    {
-        if (NewRate == SERIAL_096_STR)
-        {
-            // DEBUG_V(SERIAL_096_STR);
-            BaudRateStr = SERIAL_096_STR;
-            BaudRate    = 9600;
-            break;
-        }
-
-        if (NewRate == SERIAL_192_STR)
-        {
-            // DEBUG_V(SERIAL_192_STR);
-            BaudRateStr = SERIAL_192_STR;
-            BaudRate    = 19200;
-            break;
-        }
-
-        if (NewRate == SERIAL_576_STR)
-        {
-            // DEBUG_V(SERIAL_576_STR);
-            BaudRateStr = SERIAL_576_STR;
-            BaudRate    = 57600;
-            break;
-        }
-
-        if (NewRate == SERIAL_115_STR)
-        {
-            // DEBUG_V(SERIAL_115_STR);
-            BaudRateStr = SERIAL_115_STR;
-            BaudRate    = 115200;
-            break;
-        }
-        // DEBUG_V("Not a valid string");
-        Response                = false;
-        // ControllerIsEnabled()       = false;
-
-        // DEBUG_V();
-    } while (false);
-    // DEBUG_V();
-
-    if ((OriginalBaudrate != BaudRate) && (ControllerIsEnabled()))
-    {
-        // DEBUG_V("Change Baudrate");
-        Serial.end ();  // Flush all characters in queue.
-        Serial.begin (BaudRate);
-
-        while (!Serial && !Serial.available ())
-        {}                      // Wait for Serial Port to be available.
-        Serial.println ();      // Push out any corrupted data due to baud change.
-        // DEBUG_V("Change Baudrate - Done");
-    }
-#endif // def OldWay
-
-    // DEBUG_END;
-    return Response;
-}       // SetBaudrate
-#endif // def OldWay
-
 // *********************************************************************************************
 void cControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
@@ -268,6 +182,18 @@ void cControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
 
     // DEBUG_END;
 }       // saveConfiguration
+
+bool cControllerUsbSERIAL::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+{
+ // DEBUG_START;
+
+    bool Response = cControllerCommon::set(value, ResponseMessage, ForceUpdate);
+
+    SerialControl.SetControllerEnabled(getBool());
+
+ // DEBUG_END;
+    return Response;
+}
 
 // *********************************************************************************************
 // EOF

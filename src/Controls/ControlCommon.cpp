@@ -84,7 +84,7 @@ cControlCommon::~cControlCommon () {}
 // *********************************************************************************************
 void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
 {
-    // DEBUG_START;
+ // DEBUG_START;
 
     ControlId = ESPUI.addControl (uiControltype,
                                   Title.c_str (),
@@ -121,7 +121,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
     set (DataValueStr, Response, true);
     Booting = false;
 
-    // DEBUG_END;
+ // DEBUG_END;
 }
 
 // ************************************************************************************************

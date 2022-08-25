@@ -23,9 +23,10 @@ class cStatusControl : public cControlCommon
 public:
 
     cStatusControl (const String & Title);
+    cStatusControl ();
     virtual ~cStatusControl ()    {}
 
-    void                restoreConfiguration (JsonObject &)     {}
+    void restoreConfiguration(JsonObject &) {}
     void                saveConfiguration (JsonObject &)        {}
 
     virtual bool        set (const String & value);

@@ -22,6 +22,7 @@
 
 #include "CommandProcessor.hpp"
 #include "BaudrateControl.hpp"
+#include "StatusControl.hpp"
 #include "RBD_SerialManager.h"
 
 class cSerialControl : public cBaudrateControl
@@ -30,14 +31,17 @@ public:
 
     cSerialControl ();
     virtual ~cSerialControl ();
-    void SetSerialPort(HardwareSerial * port) { SerialPort = port; }
+    virtual void AddControls(uint16_t TabId, ControlColor color);
+    void initSerialControl(HardwareSerial *port);
+    virtual void SetControllerEnabled(bool value) { ControllerIsEnabled = value; }
+    virtual bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual void poll(void);
 
 private:
-    void    initSerialControl(void);
-    void    serialCommands (void);
-    bool    SetBaudrate (String NewRate);
+    bool ControllerIsEnabled = false;
 
-    HardwareSerial * SerialPort;
+    HardwareSerial * SerialPort = nullptr;
+    cStatusControl LastCmdProcessed;
 
     RBD::SerialManager serial_manager;
     cCommandProcessor CommandProcessor;
