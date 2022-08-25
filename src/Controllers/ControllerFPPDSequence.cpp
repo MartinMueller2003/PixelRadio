@@ -32,7 +32,7 @@ c_ControllerFPPDSequence::c_ControllerFPPDSequence ()
     // DEBUG_START;
 
     // DEBUG_END;
-}       // c_ControllerFPPDSequence
+}   // c_ControllerFPPDSequence
 
 // *********************************************************************************************
 c_ControllerFPPDSequence::~c_ControllerFPPDSequence ()
@@ -50,7 +50,7 @@ c_ControllerFPPDSequence::~c_ControllerFPPDSequence ()
         ESPUI.removeControl (EspuiElementId);
     }
     // DEBUG_END;
-}       // ~c_ControllerFPPDSequence
+}   // ~c_ControllerFPPDSequence
 
 // ************************************************************************************************
 void c_ControllerFPPDSequence::Activate (bool value)
@@ -78,15 +78,15 @@ void c_ControllerFPPDSequence::Activate (bool value)
     } while (false);
 
     // DEBUG_END;
-}       // Activate
+}   // Activate
 
 // ************************************************************************************************
 void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentElementId)
 {
     // DEBUG_START;
 
-    EspuiParentElementId        = ParentElementId;
-    EspuiRootElementId          = ctrlTab;
+    EspuiParentElementId    = ParentElementId;
+    EspuiRootElementId      = ctrlTab;
 
     if (Control::noParent == EspuiElementId)
     {
@@ -107,7 +107,7 @@ void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentEle
     Messages->AddControls (EspuiRootElementId);
 
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // *********************************************************************************************
 void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject & config)
@@ -124,7 +124,7 @@ void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject & config)
     // DEBUG_V(String("Name: ") + Name);
 
     // DEBUG_END;
-}       // RestoreConfig
+}   // RestoreConfig
 
 // *********************************************************************************************
 void c_ControllerFPPDSequence::SaveConfig (ArduinoJson::JsonObject & config)
@@ -134,7 +134,7 @@ void c_ControllerFPPDSequence::SaveConfig (ArduinoJson::JsonObject & config)
     config[N_name] = Name;
 
     // DEBUG_END;
-}       // SaveConfig
+}   // SaveConfig
 
 // ************************************************************************************************
 void c_ControllerFPPDSequence::SetName (String & value)
@@ -153,7 +153,7 @@ void c_ControllerFPPDSequence::SetName (String & value)
     Messages->ActivateMessageSet (Name);
 
     // DEBUG_END;
-}       // SetName
+}   // SetName
 
 // *********************************************************************************************
 // EOF
