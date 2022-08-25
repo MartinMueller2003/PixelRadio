@@ -12,18 +12,14 @@
    This Code was formatted with the uncrustify extension.
  */
 
+#include <ArduinoLog.h>
+#include <ESPUI.h>
 #include "config.h"
-#include "Controllers/ControllerUsbSERIAL.h"
-#include "ESPUI.h"
 #include "globals.h"
 #include "language.h"
 #include "PixelRadio.h"
 #include "webGUI.h"
-#include <ArduinoLog.h>
-
-#if __has_include ("memdebug.h")
- # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
+#include "memdebug.h"
 
 // ************************************************************************************************
 void backupCallback (Control * sender, int type)
@@ -254,8 +250,8 @@ void diagLogCallback (Control * sender, int type)
             Log.errorln (logBuff);
         }
         initSerialLog (false);  // Set new log level.
-        uint16_t ctrlSerialMsgID =
-            static_cast <c_ControllerUsbSERIAL *> (ControllerMgr.GetControllerById (UsbSerialControllerId))->GetMsgId ();
+//        uint16_t ctrlSerialMsgID =
+//            static_cast <c_ControllerUsbSERIAL *> (ControllerMgr.GetControllerById (UsbSerialControllerId))->GetMsgId ();
         ESPUI.print (ctrlSerialMsgID, serialMsg);
         displaySaveWarning ();
         sprintf (logBuff, "Serial Log Set to: %s.", tempStr.c_str ());
