@@ -25,12 +25,12 @@
  # include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
-static const String DefaultSequenceMsg = "No Sequence";
-static const PROGMEM char Name [] = "FPPD";
+static const String DefaultSequenceMsg  = "No Sequence";
+static const PROGMEM char Name []       = "FPPD";
 
 // *********************************************************************************************
 c_ControllerFPPD::c_ControllerFPPD () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
-{}      // c_ControllerFPPD
+{}  // c_ControllerFPPD
 
 // *********************************************************************************************
 c_ControllerFPPD::~c_ControllerFPPD ()
@@ -84,9 +84,9 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab, ControlColor color)
     Sequences.AddControls (EspuiParentElementId);
 
     ControlsHaveBeenAdded = true;
-*/
+ */
     // DEBUG_END;
-}       // AddControls
+}   // AddControls
 
 // *********************************************************************************************
 void c_ControllerFPPD::begin ()
@@ -105,7 +105,7 @@ void c_ControllerFPPD::begin ()
                         this);
 
     // DEBUG_END;
-}       // begin
+}   // begin
 
 // ************************************************************************************************
 void c_ControllerFPPD::CbSequenceLearningEnabled (Control * sender, int type)
@@ -118,7 +118,7 @@ void c_ControllerFPPD::CbSequenceLearningEnabled (Control * sender, int type)
     Log.infoln ((String (F ("FPPD Controller Sequence Learning Set to: ")) + String (SequenceLearningEnabled ? "On" : "Off")).c_str ());
 
     // DEBUG_END;
-}       // SequenceLearningEnabledCb
+}   // SequenceLearningEnabledCb
 
 // *********************************************************************************************
 void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
@@ -163,7 +163,7 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
         }
     }
     // DEBUG_END;
-}       // ProcessFppdFile
+}   // ProcessFppdFile
 
 // *********************************************************************************************
 void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
@@ -189,7 +189,7 @@ void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
     // serializeJsonPretty(config, Serial);
 
     // DEBUG_END;
-}       // restoreConfiguration
+}   // restoreConfiguration
 
 // *********************************************************************************************
 void c_ControllerFPPD::saveConfiguration (ArduinoJson::JsonObject & config)
@@ -207,7 +207,7 @@ void c_ControllerFPPD::saveConfiguration (ArduinoJson::JsonObject & config)
     // serializeJsonPretty(config, Serial);
 
     // DEBUG_END;
-}       // saveConfiguration
+}   // saveConfiguration
 
 // *********************************************************************************************
 // EOF
