@@ -603,9 +603,9 @@ void c_ControllerMessages::CbTextChange (Control *, int)
     } while (false);
 
     // DEBUG_V("Update Buttons");
-    ESPUI.setEnabled (ButtonCreateElementId,  EnableCreate);
-    ESPUI.setEnabled (ButtonDeleteElementId,  EnableDelete);
-    ESPUI.setEnabled (ButtonUpdateElementId,  EnableUpdate);
+    ESPUI.  setEnabled (ButtonCreateElementId,  EnableCreate);
+    ESPUI.  setEnabled (ButtonDeleteElementId,  EnableDelete);
+    ESPUI.  setEnabled (ButtonUpdateElementId,  EnableUpdate);
 
     // DEBUG_END;
 }   // TextChangeCb

@@ -28,7 +28,7 @@ public:
     cBaudrateControl ();
     virtual ~cBaudrateControl ();
     virtual void AddControls (uint16_t value, ControlColor color);
-}; // class cBaudrateControl
+};  // class cBaudrateControl
 
 // *********************************************************************************************
 // EOF

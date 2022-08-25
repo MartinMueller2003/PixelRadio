@@ -277,8 +277,8 @@ void c_ControllerFPPDSequences::CbButtonDelete (Control * sender, int type)
             break;
         }
         // DEBUG_V("now delete it");
-        ESPUI.updateControlValue (EspuiStatusMsgElementId, emptyString);
-        ESPUI.updateControlValue (EspuiTextEntryElementId, DefaultTextFieldValue);
+        ESPUI.  updateControlValue (EspuiStatusMsgElementId,    emptyString);
+        ESPUI.  updateControlValue (EspuiTextEntryElementId,    DefaultTextFieldValue);
         Activate ();
 
         Sequences[Key].Activate (false);
@@ -441,11 +441,11 @@ void c_ControllerFPPDSequences::CbTextChange (Control *, int)
     } while (false);
 
     // DEBUG_V(String("CreateAllowed: ") + String(CreateAllowed));
-    ESPUI.setEnabled (EspuiButtonCreateElementId, CreateAllowed);
+    ESPUI.  setEnabled (EspuiButtonCreateElementId, CreateAllowed);
     // DEBUG_V(String("DeleteAllowed: ") + String(DeleteAllowed));
-    ESPUI.setEnabled (EspuiButtonDeleteElementId, DeleteAllowed);
+    ESPUI.  setEnabled (EspuiButtonDeleteElementId, DeleteAllowed);
     // DEBUG_V(String("UpdateAllowed: ") + String(UpdateAllowed));
-    ESPUI.setEnabled (EspuiButtonUpdateElementId, UpdateAllowed);
+    ESPUI.  setEnabled (EspuiButtonUpdateElementId, UpdateAllowed);
 
     // DEBUG_END;
 }   // TextChangeCb

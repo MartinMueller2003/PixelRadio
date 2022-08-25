@@ -48,7 +48,7 @@ private:
 
     String cmdStr;  // Serial Port Commands from user (CLI).
     String paramStr;
-}; // class cSerialControl
+};                  // class cSerialControl
 
 // *********************************************************************************************
 // EOF

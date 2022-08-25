@@ -42,13 +42,13 @@ struct ControllerDefinition_t
 
 static const ControllerDefinition_t ControllerDefinitions[] =
 {
-    {c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL,  SERIAL_CONTROLLER_ACTIVE_FLAG,  0x0008},
-    {c_ControllerMgr::ControllerTypeId_t::GPIO_SERIAL_CNTRL, SERIAL1_CONTROLLER_ACTIVE_FLAG, 0x0200},
-    {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,        MQTT_CONTROLLER_ACTIVE_FLAG,    0x0004},
-    {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,        FPPD_CONTROLLER_ACTIVE_FLAG,    0x0100},
-    {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,        HTTP_CONTROLLER_ACTIVE_FLAG,    0x0002},
-    {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,       LOCAL_CONTROLLER_ACTIVE_FLAG,   0x0001},
-    {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,          0,                              0x0000},
+    {c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL,  SERIAL_CONTROLLER_ACTIVE_FLAG,                                   0x0008},
+    {c_ControllerMgr::ControllerTypeId_t::GPIO_SERIAL_CNTRL, SERIAL1_CONTROLLER_ACTIVE_FLAG,                                  0x0200},
+    {c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL,        MQTT_CONTROLLER_ACTIVE_FLAG,                                     0x0004},
+    {c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL,        FPPD_CONTROLLER_ACTIVE_FLAG,                                     0x0100},
+    {c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL,        HTTP_CONTROLLER_ACTIVE_FLAG,                                     0x0002},
+    {c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL,       LOCAL_CONTROLLER_ACTIVE_FLAG,                                    0x0001},
+    {c_ControllerMgr::ControllerTypeId_t::NO_CNTRL,                                           0,                              0x0000},
 };
 
 // *********************************************************************************************
