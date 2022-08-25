@@ -15,14 +15,15 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
+
 #include "ConfigSave.hpp"
-#include "memdebug.h"
 #include "SaveControl.hpp"
+#include "memdebug.h"
 
 // *********************************************************************************************
 
-static const PROGMEM char     SAVE_SETTINGS_STR       [] = "SAVE SETTINGS";
-static const PROGMEM char     SAVE_SETTINGS_MSG_STR   [] = "Settings Changed, Save Required";
+static const PROGMEM char   SAVE_SETTINGS_STR       []  = "SAVE SETTINGS";
+static const PROGMEM char   SAVE_SETTINGS_MSG_STR   []  = "Settings Changed, Save Required";
 
 // *********************************************************************************************
 cSaveControl::cSaveControl () :   cButtonControl (SAVE_SETTINGS_STR)
@@ -49,7 +50,7 @@ void cSaveControl::ClearSaveNeeded ()
 {
     // DEBUG_START;
 
-    setMessage(emptyString, eCssStyle::CssStyleTransparent);
+    setMessage (emptyString, eCssStyle::CssStyleTransparent);
 
     // DEBUG_END;
 }
@@ -58,9 +59,9 @@ void cSaveControl::ClearSaveNeeded ()
 bool cSaveControl::set (const String &, String & ResponseMessage, bool)
 {
     // DEBUG_START;
-    // DEBUG_V(String("       value: ") + value);
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
-    // DEBUG_V(String("   DataValue: ") + String(DataValue));
+    // DEBUG_V (   String ("       value: ") + value);
+    // DEBUG_V (   String ("DataValueStr: ") + DataValueStr);
+    // DEBUG_V (   String ("   DataValue: ") + String (DataValue));
 
     bool Response = true;
 
@@ -78,7 +79,7 @@ void cSaveControl::SetSaveNeeded ()
 {
     // DEBUG_START;
 
-    setMessage(SAVE_SETTINGS_MSG_STR, eCssStyle::CssStyleWhite);
+    setMessage (SAVE_SETTINGS_MSG_STR, eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }
