@@ -21,21 +21,21 @@
 #include "RfCarrier.hpp"
 #include "RfCarrierStatus.hpp"
 
-static const PROGMEM String     RADIO_RF_CARRIER_STR    = "RF CARRIER ENABLE";
-static const PROGMEM String     RADIO_RF_CARR_FLAG      = "RADIO_RF_CARR_FLAG";
-static const PROGMEM String     HOME_RAD_STAT_STR       = "RADIO STATUS";
+static const PROGMEM char     RADIO_RF_CARRIER_STR    [] = "RF CARRIER ENABLE";
+static const PROGMEM char     RADIO_RF_CARR_FLAG      [] = "RADIO_RF_CARR_FLAG";
+static const PROGMEM char     HOME_RAD_STAT_STR       [] = "RADIO STATUS";
 /*
-   static const PROGMEM String RADIO_OFF_AIR_STR     = "<font color=\"" COLOR_RED_STR "\">OFF AIR</font>";
-   static const PROGMEM String RADIO_ON_AIR_STR      = "<font color=\"" COLOR_GRN_STR "\">ON AIR</font>";
-   static const PROGMEM String RADIO_VOLT_STR        = "<font color=\"" COLOR_RED_STR "\">BAD-VDC</font>";
-   static const PROGMEM String RADIO_VSWR_STR        = "<font color=\"" COLOR_RED_STR "\">HI-VSWR</font>";
-   static const PROGMEM String RADIO_FAIL_STR        = "<font color=\"" COLOR_RED_STR "\">-FAIL-</font>";
+   static const PROGMEM char RADIO_OFF_AIR_STR     [] = "<font color=\"" COLOR_RED_STR "\">OFF AIR</font>";
+   static const PROGMEM char RADIO_ON_AIR_STR      [] = "<font color=\"" COLOR_GRN_STR "\">ON AIR</font>";
+   static const PROGMEM char RADIO_VOLT_STR        [] = "<font color=\"" COLOR_RED_STR "\">BAD-VDC</font>";
+   static const PROGMEM char RADIO_VSWR_STR        [] = "<font color=\"" COLOR_RED_STR "\">HI-VSWR</font>";
+   static const PROGMEM char RADIO_FAIL_STR        [] = "<font color=\"" COLOR_RED_STR "\">-FAIL-</font>";
  */
-static const PROGMEM String     RADIO_OFF_AIR_STR       = "OFF AIR";
-static const PROGMEM String     RADIO_ON_AIR_STR        = "ON AIR";
-static const PROGMEM String     RADIO_VOLT_STR          = "BAD-VDC";
-static const PROGMEM String     RADIO_VSWR_STR          = "HI-VSWR";
-static const PROGMEM String     RADIO_FAIL_STR          = "-FAIL-";
+static const PROGMEM char     RADIO_OFF_AIR_STR       [] = "OFF AIR";
+static const PROGMEM char     RADIO_ON_AIR_STR        [] = "ON AIR";
+static const PROGMEM char     RADIO_VOLT_STR          [] = "BAD-VDC";
+static const PROGMEM char     RADIO_VSWR_STR          [] = "HI-VSWR";
+static const PROGMEM char     RADIO_FAIL_STR          [] = "-FAIL-";
 
 // *********************************************************************************************
 cRfCarrier::cRfCarrier () :   cBinaryControl (RADIO_RF_CARR_FLAG, RADIO_RF_CARRIER_STR, false)
@@ -90,7 +90,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_OFF_AIR_STR;
             setMessage (RADIO_OFF_AIR_STR, eCssStyle::CssStyleBlack);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleWhite);
-            Log.infoln ((Title + F (": ") + ResponseMessage).c_str ());
+            Log.infoln ((GetTitle() + F (": ") + ResponseMessage).c_str ());
             break;
         }
         // DEBUG_V ("Get radio status");
@@ -102,7 +102,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_FAIL_STR;
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
-            Log.errorln ((Title + F (": ") + ResponseMessage).c_str ());
+            Log.errorln ((GetTitle() + F (": ") + ResponseMessage).c_str ());
             break;
         }
 
@@ -112,7 +112,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_VSWR_STR;
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
-            Log.warningln ((Title + F (": ") + ResponseMessage).c_str ());
+            Log.warningln ((GetTitle() + F (": ") + ResponseMessage).c_str ());
             break;
         }
 
@@ -122,14 +122,14 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_VOLT_STR;
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
-            Log.warningln ((Title + F (": ") + ResponseMessage).c_str ());
+            Log.warningln ((GetTitle() + F (": ") + ResponseMessage).c_str ());
             break;
         }
         // DEBUG_V (RADIO_ON_AIR_STR);
         ResponseMessage = RADIO_ON_AIR_STR;
         setMessage (ResponseMessage, eCssStyle::CssStyleWhite);
         RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleGreen);
-        Log.infoln ((Title + F (": ") + ResponseMessage).c_str ());
+        Log.infoln ((GetTitle() + F (": ") + ResponseMessage).c_str ());
     } while (false);
 
     // DEBUG_V (String ("Response: ") + ResponseMessage);

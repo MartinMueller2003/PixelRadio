@@ -21,8 +21,8 @@
 #include "RfCarrier.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     RDS_PI_CODE_STR = "PI CODE";
-static const PROGMEM String     RDS_PI_CODE     = "RDS_PI_CODE";
+static const PROGMEM char     RDS_PI_CODE_STR [] = "PI CODE";
+static const PROGMEM char     RDS_PI_CODE     [] = "RDS_PI_CODE";
 
 static const PROGMEM uint32_t   RDS_PI_CODE_DEF = uint32_t (0x6400);    // Default RDS PI Code, 16-bit hex value, 0x00ff - 0xffff.
 static const PROGMEM uint32_t   RDS_PI_CODE_MAX = uint32_t (0xffff);    // Maximum PI Code Value (hex).
@@ -124,7 +124,7 @@ bool cPiCode::validate (const String & value, String & ResponseMessage, bool For
             (NewPiCodeValue > RDS_PI_CODE_MAX))
         {
             // DEBUG_V ("Value is out of range");
-            ResponseMessage     = Title + (F (": BAD_VALUE: Value Out of Range: ")) + value;
+            ResponseMessage     = GetTitle() + (F (": BAD_VALUE: Value Out of Range: ")) + value;
             Response            = false;
             break;
         }

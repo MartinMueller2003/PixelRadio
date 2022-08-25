@@ -32,10 +32,10 @@ const PROGMEM char CSS_LABEL_STYLE_RED_BW          [] =
     "background-color: white; color: red; margin-top: .1rem; margin-bottom: .1rem;";
 const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT_BW  [] =
     "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_WHITE_BB        [] =
+static const PROGMEM char CSS_LABEL_STYLE_WHITE_BB        [] =
     "background-color: black; color: white; margin-top: .1rem; margin-bottom: .1rem;";
 
-const PROGMEM char * CssStyles [] =
+static const PROGMEM char * CssStyles [] =
 {
     CSS_LABEL_STYLE_BLACK,
     CSS_LABEL_STYLE_GREEN,
@@ -51,12 +51,12 @@ const PROGMEM char * CssStyles [] =
     CSS_LABEL_STYLE_WHITE_BB,
 };
 
-const PROGMEM String PanelStyles [] =
+static const String PanelStyles [] =
 {
-    {F ("font-size: 1.15em;")},
-    {F ("font-size: 1.25em;")},
-    {F ("font-size: 1.35em;")},
-    {F ("font-size: 3.0em;") },
+    {"font-size: 1.15em;"},
+    {"font-size: 1.25em;"},
+    {"font-size: 1.35em;"},
+    {"font-size: 3.0em;" },
 };
 
 // *********************************************************************************************
@@ -73,6 +73,7 @@ cControlCommon::cControlCommon (const String    & _ConfigName,
 {
     // _ DEBUG_START;
 
+    Title = _Title;
     DataValueStr = DefaultValue;
 
     // _ DEBUG_END;

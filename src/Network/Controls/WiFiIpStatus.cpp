@@ -20,10 +20,10 @@
 #include "WiFiIpStatus.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String IP_ADDR_STATUS_STR = "IP ADDRESS";
+static const PROGMEM char Name [] = "IP ADDRESS";
 
 // *********************************************************************************************
-cWiFiIpStatus::cWiFiIpStatus () :   cStatusControl (IP_ADDR_STATUS_STR)
+cWiFiIpStatus::cWiFiIpStatus () :   cStatusControl (Name)
 {
     // _ DEBUG_START;
 

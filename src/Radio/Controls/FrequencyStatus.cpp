@@ -19,7 +19,7 @@
 #include "FrequencyStatus.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     RADIO_FM_FRQ_STR        = "FM FREQUENCY";
+static const PROGMEM char     RADIO_FM_FRQ_STR        [] = "FM FREQUENCY";
 
 // *********************************************************************************************
 cFrequencyStatus::cFrequencyStatus () : cStatusControl (RADIO_FM_FRQ_STR)

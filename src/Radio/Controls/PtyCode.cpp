@@ -94,8 +94,8 @@ static std::vector <std::pair <String, String>> ListOfEuPtyCodes =
     {"Alarm",                     "31"                    },
 };
 
-static const PROGMEM String     RDS_PTY_CODE_STR        = "PTY CODE<br>Station Genre";
-static const PROGMEM String     RDS_PTY_CODE            = "RDS_PTY_CODE";
+static const PROGMEM char     RDS_PTY_CODE_STR        [] = "PTY CODE<br>Station Genre";
+static const PROGMEM char     RDS_PTY_CODE            [] = "RDS_PTY_CODE";
 
 // *********************************************************************************************
 cPtyCode::cPtyCode () :   cChoiceListControl (RDS_PTY_CODE, RDS_PTY_CODE_STR, "Top 40", &ListOfUsPtyCodes)

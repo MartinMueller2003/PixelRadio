@@ -19,10 +19,10 @@
 #include "memdebug.h"
 #include "credentials_user.h"
 
-static const PROGMEM String     WIFI_DEV_USER_NM_STR    = "LOGIN USER NAME";
-static const PROGMEM String     USER_NAME_STR           = "USER_NAME_STR";
+static const PROGMEM char     WIFI_DEV_USER_NM_STR    [] = "LOGIN USER NAME";
+static const PROGMEM char     USER_NAME_STR           [] = "USER_NAME_STR";
 static const PROGMEM uint32_t   USER_NM_MAX_SZ          = 10;
-static const PROGMEM String     WIFI_BLANK_MSG_STR      = "LEAVE BLANK FOR AUTO LOGIN";
+static const PROGMEM char     WIFI_BLANK_MSG_STR      [] = "LEAVE BLANK FOR AUTO LOGIN";
 
 // *********************************************************************************************
 cLoginUser::cLoginUser () :   cControlCommon (USER_NAME_STR,

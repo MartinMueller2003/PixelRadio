@@ -23,10 +23,10 @@
 #include "StaticDnsAddress.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     STATIC_NETWORK_SETTINGS = "STATIC NETWORK SETTINGS";
-static const PROGMEM String     WIFI_DHCP_FLAG          = "WIFI_DHCP_FLAG";
-static const PROGMEM String     WIFI_WEB_DHCP_STR       = "WEBSERVER DHCP";
-static const PROGMEM String     DHCP_LOCKED_STR         = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
+static const PROGMEM char     STATIC_NETWORK_SETTINGS [] = "STATIC NETWORK SETTINGS";
+static const PROGMEM char     WIFI_DHCP_FLAG          [] = "WIFI_DHCP_FLAG";
+static const PROGMEM char     WIFI_WEB_DHCP_STR       [] = "WEBSERVER DHCP";
+static const PROGMEM char     DHCP_LOCKED_STR         [] = "INCOMPLETE STATIC WIFI SETTINGS.<br>DHCP settings will be used.";
 
 // *********************************************************************************************
 cDHCP::cDHCP () :   cBinaryControl (WIFI_DHCP_FLAG, WIFI_WEB_DHCP_STR, true)
@@ -52,7 +52,7 @@ void cDHCP::AddControls (uint16_t TabId, ControlColor color)
 
     cBinaryControl::AddControls (TabId, color);
 
-    wifiStaticSettingsID = ESPUI.addControl (ControlType::Label, STATIC_NETWORK_SETTINGS.c_str (), emptyString, color, TabId);
+    wifiStaticSettingsID = ESPUI.addControl (ControlType::Label, STATIC_NETWORK_SETTINGS, emptyString, color, TabId);
 
     StaticIpAddress.AddControls (wifiStaticSettingsID, color);
     StaticNetmask.AddControls (wifiStaticSettingsID, color);

@@ -26,7 +26,7 @@
 #endif //  __has_include("memdebug.h")
 
 static const String DefaultSequenceMsg = "No Sequence";
-static const PROGMEM String Name = F("FPPD");
+static const PROGMEM char Name [] = "FPPD";
 
 // *********************************************************************************************
 c_ControllerFPPD::c_ControllerFPPD () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)

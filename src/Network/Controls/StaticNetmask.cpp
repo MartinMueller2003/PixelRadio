@@ -19,8 +19,8 @@
 #include "DHCP.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     WIFI_SUBNET_STR = "WIFI_SUBNET_STR";
-static const PROGMEM String     WIFI_IP_ADDR    = "Subnet Mask";
+static const PROGMEM char     WIFI_SUBNET_STR [] = "WIFI_SUBNET_STR";
+static const PROGMEM char     WIFI_IP_ADDR    [] = "Subnet Mask";
 
 // *********************************************************************************************
 cStaticNetmask::cStaticNetmask () :   cIpAddressControlStacked (WIFI_SUBNET_STR, WIFI_IP_ADDR, IPAddress (uint32_t (0)))

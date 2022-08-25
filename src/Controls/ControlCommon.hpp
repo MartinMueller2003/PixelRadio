@@ -38,7 +38,8 @@ public:
     virtual void        restoreConfiguration (JsonObject & json);
     virtual void        saveConfiguration (JsonObject & json);
     virtual bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    virtual void        SetTitle(String &value) { Title = value; }
+    virtual void        SetTitle(const String & value) { Title = value; }
+    virtual String      GetTitle() { return Title; }
     virtual bool        validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
     enum eCssStyle
@@ -86,11 +87,11 @@ protected:
 
     bool SkipSetLog     = false;
     bool Booting        = true;
-    String ConfigName;
-    String Title;
-    String DefaultValue;
+    const String ConfigName;
+    const String DefaultValue;
 
 private:
+    String Title = emptyString;
     ControlType uiControltype;
     uint32_t MaxDataLength = 0;
 };      // class cControlCommon

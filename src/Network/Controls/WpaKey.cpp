@@ -20,8 +20,8 @@
 #include "WiFiDriver.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     WIFI_WPA_KEY            = "WIFI WPA KEY";
-static const PROGMEM String     WIFI_WPA_KEY_STR        = "WIFI WPA KEY";
+static const PROGMEM char     WIFI_WPA_KEY            [] = "WIFI WPA KEY";
+static const PROGMEM char     WIFI_WPA_KEY_STR        [] = "WIFI WPA KEY";
 static const PROGMEM uint32_t PASSPHRASE_MAX_SZ         = 48;
 
 // *********************************************************************************************

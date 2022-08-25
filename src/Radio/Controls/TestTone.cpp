@@ -54,9 +54,9 @@ static std::vector <uint16_t> toneList
 fsm_Tone_state_Idle fsm_Tone_state_Idle_imp;
 fsm_Tone_state_SendingTone fsm_Tone_state_SendingTone_imp;
 
-static const PROGMEM String     ADJUST_TEST_STR = "TEST TONES";
-static const PROGMEM String     AUDIO_TEST_STR  = "PIXELRADIO AUDIO TEST";
-static const PROGMEM String     AUDIO_PSN_STR   = "TestTone";
+static const PROGMEM char     ADJUST_TEST_STR [] = "TEST TONES";
+static const PROGMEM char     AUDIO_TEST_STR  [] = "PIXELRADIO AUDIO TEST";
+static const PROGMEM char     AUDIO_PSN_STR   [] = "TestTone";
 
 // *********************************************************************************************
 cTestTone::cTestTone () :   cBinaryControl (emptyString, AUDIO_TEST_STR, false)

@@ -17,19 +17,18 @@
  */
 
 // *********************************************************************************************
-#include "ControllerMgr.h"
-#include "ControllerMQTT.h"
-#include "language.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-#if __has_include ("memdebug.h")
- # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
+#include "ControllerMgr.h"
+#include "ControllerMQTT.h"
+#include "language.h"
+
+#include "memdebug.h"
 
 // *********************************************************************************************
-static const PROGMEM String WIFI_PASS_HIDE_STR = "{PASSWORD HIDDEN}";
-static const PROGMEM String Name = F("MQTT");
+static const PROGMEM char WIFI_PASS_HIDE_STR [] = "PASSWORD HIDDEN";
+static const PROGMEM char Name [] = "MQTT";
 
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
@@ -784,7 +783,7 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
     String      topicStr;
     String      CmdString;
 
-    topicStr = Title + MQTT_GPIO_STR;
+    topicStr = GetTitle() + MQTT_GPIO_STR;
 
     Log.infoln ((String (F ("-> MQTT Controller: Received GPIO Pin-")) + String (pin) + " Command").c_str ());
 

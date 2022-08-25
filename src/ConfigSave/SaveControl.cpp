@@ -21,8 +21,8 @@
 
 // *********************************************************************************************
 
-static const PROGMEM String     SAVE_SETTINGS_STR       = "SAVE SETTINGS";
-static const PROGMEM String     SAVE_SETTINGS_MSG_STR   = "Settings Changed, Save Required";
+static const PROGMEM char     SAVE_SETTINGS_STR       [] = "SAVE SETTINGS";
+static const PROGMEM char     SAVE_SETTINGS_MSG_STR   [] = "Settings Changed, Save Required";
 
 // *********************************************************************************************
 cSaveControl::cSaveControl () :   cButtonControl (SAVE_SETTINGS_STR)
@@ -38,7 +38,7 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V(String("TabId: ") + String(TabId));
     // DEBUG_V(String("color: ") + String(color));
 
-    ESPUI.addControl (ControlType::Separator, SAVE_SETTINGS_STR.c_str (), emptyString, ControlColor::None, TabId);
+    ESPUI.addControl (ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, TabId);
     cButtonControl::AddControls (TabId, color);
 
     // DEBUG_END;

@@ -17,8 +17,8 @@
 #include "ApReboot.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     WIFI_AP_REBOOT_STR      = "AP REBOOT";
-static const PROGMEM String     WIFI_REBOOT_FLAG        = "WIFI_REBOOT_FLAG";
+static const PROGMEM char     WIFI_AP_REBOOT_STR      [] = "AP REBOOT";
+static const PROGMEM char     WIFI_REBOOT_FLAG        [] = "WIFI_REBOOT_FLAG";
 
 // *********************************************************************************************
 cApReboot::cApReboot () :   cBinaryControl (WIFI_REBOOT_FLAG, WIFI_AP_REBOOT_STR, true)

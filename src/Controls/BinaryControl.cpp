@@ -19,17 +19,21 @@
 #include "BinaryControl.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     ENABLED_STR     = "Enabled";
-static const PROGMEM String     DISABLED_STR    = "Disabled";
+static const PROGMEM char     ENABLED_STR     [] = "Enabled";
+static const PROGMEM char     DISABLED_STR    [] = "Disabled";
 
 static std::map <String, bool> ValidInputValues =
 {
+    {"enable",   true        },
+    {"disable",  false       },
     {"enabled",  true        },
     {"disabled", false       },
     {"1",        true        },
     {"0",        false       },
     {"on",       true        },
     {"off",      false       },
+    {"true",     true        },
+    {"false",    false       },
 };
 
 // *********************************************************************************************
@@ -147,7 +151,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         {
             String LogMsg;
             LogMsg.reserve (128);
-            LogMsg = Title + F (": Set To '") + ResponseMessage + F ("'");
+            LogMsg = GetTitle() + F (": Set To '") + ResponseMessage + F ("'");
             Log.infoln (LogMsg.c_str ());
         }
     }
@@ -243,7 +247,7 @@ bool cBinaryControl::validate (const String & value, String & ResponseMessage, b
 
     if (ValidInputValues.end () == ValidInputValues.find (Temp))
     {
-        ResponseMessage = Title + F (": BAD_VALUE: Invalid Binary Value '") + value + F ("'");
+        ResponseMessage = GetTitle() + F (": BAD_VALUE: Invalid Binary Value '") + value + F ("'");
         Response        = false;
         // DEBUG_V (String ("ResponseMessage: ") + ResponseMessage);
     }

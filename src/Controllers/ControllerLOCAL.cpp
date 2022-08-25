@@ -25,7 +25,7 @@
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
-static const PROGMEM String Name = F("LOCAL");
+static const PROGMEM char Name [] = "LOCAL";
 
 // *********************************************************************************************
 c_ControllerLOCAL::c_ControllerLOCAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::LOCAL_CNTRL)
@@ -44,7 +44,7 @@ void c_ControllerLOCAL::AddControls (uint16_t TabId, ControlColor color)
 
     // Messages.SetTitle(Name + " " + N_Messages);
     Messages.AddControls (TabId);
-    Messages.ActivateMessageSet (Title);
+    Messages.ActivateMessageSet (GetTitle());
 
     // DEBUG_END;
 }

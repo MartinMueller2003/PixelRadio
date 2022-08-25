@@ -204,8 +204,8 @@ bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, boo
     {
         if (ChoiceVector->size () <= value)
         {
-            ResponseMessage = String (Title + F (": Set: BAD VALUE: '")) + String (value) + F ("'");
-            Log.errorln (ResponseMessage.c_str ());
+            ResponseMessage = GetTitle() + F (": Set: BAD VALUE: '") + String (value) + F ("'");
+            // Log.errorln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
@@ -239,7 +239,7 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
             if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (value))
             {
                 // DEBUG_V ("Ignore duplicate setting");
-                ResponseMessage = Title + F (": Ignoring duplicate setting for '") + value + "'";
+                ResponseMessage = GetTitle() + F (": Ignoring duplicate setting for '") + value + "'";
                 Response        = false;
                 break;
             }
@@ -254,8 +254,8 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
         }
         // DEBUG_V ("No exact match for the value.");
 
-        ResponseMessage = String (Title + F (": Set: BAD VALUE: '")) + value + F ("'");
-        Log.errorln (ResponseMessage.c_str ());
+        ResponseMessage = GetTitle() + F (": Set: BAD VALUE: '") + value + F ("'");
+        // Log.errorln (ResponseMessage.c_str ());
         Response = false;
         break;
     } while (false);

@@ -25,7 +25,7 @@
 
 // *********************************************************************************************
 
-static const PROGMEM String Name = F("HTTP");
+static const PROGMEM char Name [] = "HTTP";
 
 // *********************************************************************************************
 c_ControllerHTTP::c_ControllerHTTP () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::HTTP_CNTRL)

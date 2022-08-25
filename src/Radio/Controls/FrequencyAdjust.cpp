@@ -21,9 +21,9 @@
 #include "RfCarrier.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     ADJUST_FRQ_ADJ_STR      = "FREQUENCY ADJUST";
-static const PROGMEM String     RADIO_FM_FREQ           = "RADIO_FM_FREQ";
-static const PROGMEM String     UNITS_MHZ_STR           = " MHz";
+static const PROGMEM char     ADJUST_FRQ_ADJ_STR      [] = "FREQUENCY ADJUST";
+static const PROGMEM char     RADIO_FM_FREQ           [] = "RADIO_FM_FREQ";
+static const PROGMEM char     UNITS_MHZ_STR           [] = " MHz";
 
 const float  FM_FREQ_DEF            = 88.7f;    // 88.7MHz FM.
 const float  FM_FREQ_MAX            = 107.9f;   // 107.9MHz FM.
@@ -187,14 +187,14 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
         uint32_t PointPosition = DataValueStr.indexOf('.');
         if(PointPosition < 0)
         {
-            ResponseMessage     = Title + F (": Set failed: Decimal point is missing.");
+            ResponseMessage     = GetTitle() + F (": Set failed: Decimal point is missing.");
             Response            = false;
             break;
         }
 
         if (NewData > FM_FREQ_MAX)
         {
-            ResponseMessage     = Title + F(": Set failed: Frequency is too high.");
+            ResponseMessage     = GetTitle() + F(": Set failed: Frequency is too high.");
             Response            = false;
             NewData             = FM_FREQ_MAX;
             break;
@@ -202,7 +202,7 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
 
         if (NewData < FM_FREQ_MIN)
         {
-            ResponseMessage     = Title + F (": Set failed: Frequency is too low");
+            ResponseMessage     = GetTitle() + F (": Set failed: Frequency is too low");
             Response            = false;
             NewData             = FM_FREQ_MIN;
             break;

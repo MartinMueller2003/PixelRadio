@@ -21,10 +21,10 @@
 #include "BaudrateControl.hpp"
 # include "memdebug.h"
 
-static const PROGMEM String Name = F("Baudrate");
+static const PROGMEM char Name [] = "Baudrate";
 #define  SERIAL_DEF_STR SERIAL_115_STR
 
-static ChoiceListVector_t MapOfBaudrates
+static const ChoiceListVector_t MapOfBaudrates
 {
     {"9600",    "9600"},
     {"19.2K",   "19200"},
@@ -45,7 +45,7 @@ void cBaudrateControl::AddControls (uint16_t value, ControlColor color)
 {
  // DEBUG_START;
 
-    ESPUI.addControl(ControlType::Label, Name.c_str(), Name, color, value);
+    ESPUI.addControl(ControlType::Label, Name, Name, color, value);
     cChoiceListControl::AddControls(value, color);
 
  // DEBUG_END;

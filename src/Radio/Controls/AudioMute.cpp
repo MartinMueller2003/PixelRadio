@@ -21,8 +21,8 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     RADIO_MUTE_FLAG = "RADIO_MUTE_FLAG";
-static const PROGMEM String     ADJUST_MUTE_STR = "AUDIO MUTE";
+static const PROGMEM char     RADIO_MUTE_FLAG [] = "RADIO_MUTE_FLAG";
+static const PROGMEM char     ADJUST_MUTE_STR [] = "AUDIO MUTE";
 
 // *********************************************************************************************
 cAudioMute::cAudioMute () :   cBinaryControl (RADIO_MUTE_FLAG, ADJUST_MUTE_STR, true)

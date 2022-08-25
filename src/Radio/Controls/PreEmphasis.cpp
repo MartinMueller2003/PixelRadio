@@ -34,10 +34,10 @@ static ChoiceListVector_t ListOfRegions
     {PRE_EMPH_EUR_STR, "1"},
 };
 
-static const PROGMEM String PRE_EMPH_DEF_STR            = PRE_EMPH_USA_STR;
+static const PROGMEM char PRE_EMPH_DEF_STR            [] = PRE_EMPH_USA_STR;
+static const PROGMEM char     RADIO_PRE_EMPH_STR      [] = "RADIO_PRE_EMPH_STR";
+static const PROGMEM char     PRE_EMPH_STR            [] = "FM PRE-EMPHASIS";
 static const PROGMEM uint8_t    PRE_EMPH_DEF_VAL        = uint8_t (PRE_EMPH_USA_VAL);
-static const PROGMEM String     RADIO_PRE_EMPH_STR      = "RADIO_PRE_EMPH_STR";
-static const PROGMEM String     PRE_EMPH_STR            = "FM PRE-EMPHASIS";
 
 // *********************************************************************************************
 cPreEmphasis::cPreEmphasis () :   cChoiceListControl (RADIO_PRE_EMPH_STR,

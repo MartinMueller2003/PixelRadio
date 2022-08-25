@@ -22,14 +22,16 @@
 #include "language.h"
 #include "memdebug.h"
 
-static const PROGMEM String Name = F("GPIO SERIAL");
-// ================================================================================================
+static const PROGMEM char Name [] = "GPIO SERIAL";
+
+// *********************************************************************************************
 cControllerGpioSERIAL::cControllerGpioSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {
     SerialControl.initSerialControl(&Serial1);
+    SetTitle(Name);
 }
 
-// ================================================================================================
+// *********************************************************************************************
 cControllerGpioSERIAL::~cControllerGpioSERIAL ()
 {}
 
@@ -37,6 +39,14 @@ cControllerGpioSERIAL::~cControllerGpioSERIAL ()
 void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
+
+    // DEBUG_V(String("    Name: ") + Name);
+    // DEBUG_V(String("GetTitle: ") + GetTitle());
+
+    SetTitle(Name);
+
+    // DEBUG_V(String("    Name: ") + Name);
+    // DEBUG_V(String("GetTitle: ") + GetTitle());
 
     cControllerCommon::AddControls (TabId, color);
     SerialControl.AddControls (ControlId, color);
@@ -53,7 +63,7 @@ void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
     #endif // def OldWay
     */
     // DEBUG_END;
-}       // AddControls
+}
 
 // ************************************************************************************************
 void cControllerGpioSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)

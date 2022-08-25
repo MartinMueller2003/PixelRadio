@@ -24,7 +24,7 @@
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
-static const PROGMEM String Name = F("NONE");
+static const PROGMEM char Name [] = "NONE";
 
 // *********************************************************************************************
 c_ControllerNONE::c_ControllerNONE () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)

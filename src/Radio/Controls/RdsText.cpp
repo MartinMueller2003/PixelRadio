@@ -24,12 +24,12 @@
 #include "TestTone.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     HOME_RDS_WAIT_STR       = "Waiting for RDS RadioText ...";
-static const PROGMEM String     HOME_CUR_TEXT_STR       = "CURRENT RADIOTEXT";
-static const PROGMEM String     HOME_RDS_TIMER_STR      = "RDS TIMER COUNTDOWN";
-static const PROGMEM String     RDS_RF_DISABLED_STR     = "{ RADIO CARRIER OFF }";
-static const PROGMEM String     RDS_DISABLED_STR        = "{ DISABLED }";
-static const PROGMEM String     RDS_EXPIRED_STR         = "{ EXPIRED }";
+static const PROGMEM char     HOME_RDS_WAIT_STR       [] = "Waiting for RDS RadioText ...";
+static const PROGMEM char     HOME_CUR_TEXT_STR       [] = "CURRENT RADIOTEXT";
+static const PROGMEM char     HOME_RDS_TIMER_STR      [] = "RDS TIMER COUNTDOWN";
+static const PROGMEM char     RDS_RF_DISABLED_STR     [] = "{ RADIO CARRIER OFF }";
+static const PROGMEM char     RDS_DISABLED_STR        [] = "{ DISABLED }";
+static const PROGMEM char     RDS_EXPIRED_STR         [] = "{ EXPIRED }";
 
 // *********************************************************************************************
 cRdsText::cRdsText () : cStatusControl (HOME_CUR_TEXT_STR)

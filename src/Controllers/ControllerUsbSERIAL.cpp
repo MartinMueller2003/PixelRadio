@@ -22,7 +22,7 @@
 #include "language.h"
 #include "memdebug.h"
 
-static const PROGMEM String Name = F("USB SERIAL");
+static const PROGMEM char Name [] = "USB SERIAL";
 // ================================================================================================
 cControllerUsbSERIAL::cControllerUsbSERIAL () : cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
 {

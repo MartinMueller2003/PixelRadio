@@ -21,7 +21,7 @@
 #include "AudioInputImpedance.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String RADIO_AUDIO_GAIN_STR        = "AUDIO GAIN";
+static const PROGMEM char RADIO_AUDIO_GAIN_STR        [] = "AUDIO GAIN";
 static const PROGMEM int32_t AUDIO_LEVEL_MAX            = uint32_t (675);
 
 // *********************************************************************************************

@@ -31,7 +31,7 @@
 #include <WiFi.h>
 
 extern void displaySaveWarning ();
-extern const PROGMEM String WIFI_PASS_HIDE_STR;
+static const PROGMEM char WIFI_PASS_HIDE_STR [] = "PASSWORD HIDDEN";
 
 // -----------------------------------------------------------------------------
 ///< Start up the driver and put it into a safe mode

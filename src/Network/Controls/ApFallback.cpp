@@ -18,8 +18,8 @@
 #include "ApFallback.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     WIFI_AP_FALLBK_STR      = "AP FALLBACK";
-static const PROGMEM String     WIFI_AP_FALLBACK        = "WIFI_AP_FALLBACK";
+static const PROGMEM char     WIFI_AP_FALLBK_STR      [] = "AP FALLBACK";
+static const PROGMEM char     WIFI_AP_FALLBACK        [] = "WIFI_AP_FALLBACK";
 
 // *********************************************************************************************
 cApFallback::cApFallback () :   cBinaryControl (WIFI_AP_FALLBACK, WIFI_AP_FALLBK_STR, true)

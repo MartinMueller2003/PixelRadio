@@ -20,7 +20,7 @@
 #include "WiFiDriver.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String WIFI_STA_STATUS_STR = "WiFi STA/AP STATUS";
+static const PROGMEM char WIFI_STA_STATUS_STR [] = "WiFi STA/AP STATUS";
 
 // *********************************************************************************************
 cWiFiStatus::cWiFiStatus () :   cStatusControl (WIFI_STA_STATUS_STR)

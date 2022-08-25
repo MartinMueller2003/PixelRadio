@@ -20,10 +20,10 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-static const PROGMEM String     RADIO_STEREO_FLAG       = "RADIO_STEREO_FLAG";
-static const PROGMEM String     RADIO_MONO_STR          = "MONO AUDIO";
-static const PROGMEM String     RADIO_STEREO_STR        = "STEREO AUDIO";
-static const PROGMEM String     RADIO_AUDIO_MODE_STR    = "AUDIO MODE";
+static const PROGMEM char     RADIO_STEREO_FLAG       [] = "RADIO_STEREO_FLAG";
+static const PROGMEM char     RADIO_MONO_STR          [] = "MONO AUDIO";
+static const PROGMEM char     RADIO_STEREO_STR        [] = "STEREO AUDIO";
+static const PROGMEM char     RADIO_AUDIO_MODE_STR    [] = "AUDIO MODE";
 
 // *********************************************************************************************
 cAudioMode::cAudioMode () :   cBinaryControl (RADIO_STEREO_FLAG, RADIO_AUDIO_MODE_STR, true)

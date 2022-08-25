@@ -18,7 +18,7 @@
 #include "PasswordControl.hpp"
 #include "memdebug.h"
 
-const PROGMEM String PasswordString = "{PASSWORD HIDDEN}";
+const PROGMEM char PasswordString [] = "PASSWORD HIDDEN";
 
 // *********************************************************************************************
 cPasswordControl::cPasswordControl (const String & ConfigName, const String & Title, const String & DefaultValue, uint32_t MaxDataLength) :

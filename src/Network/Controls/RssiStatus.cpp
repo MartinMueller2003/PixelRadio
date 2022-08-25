@@ -18,10 +18,10 @@
 #include "memdebug.h"
 #include "RssiStatus.hpp"
 
-static const PROGMEM String HOME_WIFI_STR = "WIFI RSSI";
+static const PROGMEM char Name [] = "WIFI RSSI";
 
 // *********************************************************************************************
-cRssiStatus::cRssiStatus () :   cStatusControl (HOME_WIFI_STR)
+cRssiStatus::cRssiStatus () :   cStatusControl (Name)
 {
     // _ DEBUG_START;
 

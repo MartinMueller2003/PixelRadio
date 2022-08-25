@@ -39,9 +39,8 @@ cControllerCommon::~cControllerCommon ()
 void cControllerCommon::AddControls(uint16_t tabId, ControlColor color)
 {
     // DEBUG_START;
-    // DEBUG_V(String("Title: ") + Title);
 
-    SeperatorName = Title + F(" SETTINGS");
+    SeperatorName = GetTitle() + F(" SETTINGS");
     ESPUI.addControl(ControlType::Separator,
                      SeperatorName.c_str(),
                      emptyString,
@@ -62,7 +61,7 @@ void cControllerCommon::saveConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cBinaryControl::saveConfiguration(config);
-    config[N_name]  = Title;
+    config[N_name]  = GetTitle();
     config[N_type]  = TypeId;
 
     // DEBUG_END;

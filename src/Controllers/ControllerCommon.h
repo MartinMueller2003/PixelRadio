@@ -26,9 +26,7 @@
 #include <ESPUI.h>
 
 #include "BinaryControl.hpp"
-// #include "ControllerMessages.h"
 #include "ControllerMgr.h"
-// #include "PixelRadio.h"
 
 class cControllerCommon : public cBinaryControl
 {
@@ -44,11 +42,12 @@ public:
     virtual void        begin ()        {}
     virtual void        poll ()         {}
     virtual void        AddControls (uint16_t tabId, ControlColor color);
-    String              GetName ()     {return Title;}
+    String              GetName ()     {return GetTitle();}
     virtual void        saveConfiguration (ArduinoJson::JsonObject & config);
 
     virtual void        GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
     bool                ControllerIsEnabled ()  {return getBool();}
+
 };
 
 // *********************************************************************************************
