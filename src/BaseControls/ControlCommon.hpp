@@ -41,6 +41,7 @@ public:
     virtual void    restoreConfiguration (JsonObject & json);
     virtual void    saveConfiguration (JsonObject & json);
     virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual void    setSaveUpdates(bool value) {SaveUpdate = value;}
     virtual void    SetTitle (const String & value) {Title = value;}
     virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
@@ -88,6 +89,7 @@ protected:
 
     String DataValueStr;
 
+    bool SaveUpdate = true;
     bool SkipSetLog = false;
     bool Booting    = true;
     const String ConfigName;

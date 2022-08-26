@@ -243,7 +243,7 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
         ValueChanged = true;
         ESPUI.print (ControlId, DataValueStr);
 
-        if (!Booting)
+        if (!Booting && SaveUpdate)
         {
             displaySaveWarning ();
         }

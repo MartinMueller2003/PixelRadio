@@ -23,7 +23,7 @@ cStatusControl::cStatusControl (const String & _Title) :
     cControlCommon (emptyString, ControlType::Label, _Title, emptyString, 0)
 {
     // _ DEBUG_START;
-
+    setSaveUpdates(false);
     SkipSetLog = true;
 
     // _ DEBUG_END;
