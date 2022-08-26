@@ -40,6 +40,7 @@ static const PROGMEM char   MQTT_NOT_AVAIL []   = "MQTT NOT AVAILABLE IN AP MODE
 static const PROGMEM char   MQTT_RETRY []       = "RETRY CONNECTION";
 static const PROGMEM char   MQTT_DISABLED []    = "CONNECTION FAILED!<br>DISABLED MQTT CONTROLLER";
 static const PROGMEM char   MQTT_MISSING []     = "MISSING SETTINGS : MQTT DISABLED";
+static const PROGMEM char   MQTT_CMD_STR []     = "/cmd/"; // Publish topic preamble, Client MQTT Command Preampble.
 
 static const String MQTT_SUBCR_FAIL_STR = MQTT_SUBCR_FAIL;
 static const String MQTT_NOT_AVAIL_STR  = MQTT_NOT_AVAIL;
@@ -138,6 +139,7 @@ void c_ControllerMQTT::begin ()
     mqttClient.setClient (wifiClient);
     mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
                             {
+                                // Serial.println("Got a callback");
                                 c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
                                 pMe->mqttClientCallback (topic, payload, length);
                             }); // Topic Subscription callback handler.
@@ -170,14 +172,14 @@ void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Respon
 // *************************************************************************************************************************
 void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     if(pCurrentFsmState)
     {
         pCurrentFsmState->mqttClientCallback(topic, payload, length);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }   // mqttClientCallback
 
 // *********************************************************************************************
@@ -312,6 +314,8 @@ void c_ControllerMQTT::poll (void)
 
     uint32_t Now = millis();
 
+    mqttClient.loop();
+
     if (Now > FsmTimerExpirationTime)
     {
         FsmTimerExpirationTime += 1000;
@@ -324,18 +328,7 @@ void c_ControllerMQTT::poll (void)
          // DEBUG_V("pCurrentFsmState not set");
         }
     }
-#ifdef OldWay
 
-        if (mqttClient.connected ())
-        {
-            mqttClient.loop (); // Service MQTT background tasks.
-            mqttSendMessages ();
-        }
-        else
-        {
-            mqttReconnect (false);
-        }
-#endif // def OldWay
     // _ DEBUG_END;
 }   // poll
 
@@ -559,6 +552,7 @@ void fsm_Connection_state_connected::Init ()
     topicStr    = MqttName.get ();
     topicStr    += MQTT_CMD_SUB_STR;
 
+    // if (pParent->mqttClient.subscribe ("pixelradio/#"))
     if (pParent->mqttClient.subscribe (topicStr.c_str ()))
     {
         // DEBUG_V();
@@ -604,62 +598,71 @@ void fsm_Connection_state_connected::Poll (uint32_t Now)
 // *********************************************************************************************
 void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byte * payload, unsigned int length)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-#ifdef OldWay
-        // char cBuff[length + 2];                    // Allocate Character buffer.
-        // char logBuff[length + strlen (topic) + 60]; // Allocate a big buffer space.
-        // char mqttBuff[140 + sizeof (VERSION_STR) + STA_NAME_MAX_SZ];
+    do // once
+    {
         String  payloadStr;
         String  topicStr;
 
         payloadStr.reserve (MQTT_PAYLD_MAX_SZ + 1);
         topicStr.reserve (MQTT_TOPIC_MAX_SZ + 1);
-        // DEBUG_V();
-
-        if (length > MQTT_PAYLD_MAX_SZ)
-        {
-            // DEBUG_V();
-            Log.warningln (F ("MQTT Message Length (%u bytes) too long! Truncated to %u bytes."), length, MQTT_PAYLD_MAX_SZ);
-            length = MQTT_PAYLD_MAX_SZ;
-        }
-        // Log.verboseln ("MQTT Message Length: %u", length);
-
-        // Copy payload to local char array.
-        {
-            char cBuff[length + 2];
-            memcpy (cBuff, payload, length);
-            cBuff[length]   = 0;
-            payloadStr      = cBuff;
-        }
-        payloadStr.trim (); // Remove leading/trailing spaces. Do NOT change to lowercase!
-        // DEBUG_V();
 
         topicStr = topic;
         topicStr.trim ();           // Remove leading/trailing spaces.
         topicStr.toLowerCase ();    // Force lowercase, prevent case matching problems.
 
+        // DEBUG_V(String("topicStr: ") + topicStr);
         if (topicStr.length () > MQTT_TOPIC_MAX_SZ)
         {
             // DEBUG_V();
-            topicStr = topicStr.substring (0, MQTT_TOPIC_MAX_SZ);
+            Log.warningln (String (F ("MQTT Topic Length (%u bytes) is too long! Discarding message")).c_str(), topicStr.length());
+            break;
         }
-        // char buff[topicStr.length () + payloadStr.length () + 30];
-        // sprintf (buff, "MQTT Message Arrived, [Topic]: %s", topicStr.c_str ());
-        // Log.infoln (buff);
-        // sprintf (buff, "MQTT Message Arrived, Payload: %s", payloadStr.c_str ());
-        // Log.infoln (buff);
 
-        // *************************************************************************************************************************
-        // START OF MQTT COMMAND ACTIONS:
-        // DEBUG_V();
+        if (length > MQTT_PAYLD_MAX_SZ)
+        {
+            // DEBUG_V();
+            Log.warningln (String (F ("MQTT Message Length (%u bytes) is too long! Discarding message")).c_str(), length);
+            break;
+        }
 
-        // send to command procesor
+        payloadStr = String(payload, length);
+        // DEBUG_V(String("payloadStr: ") + payloadStr);
 
+        // topic contains the command in the format: subscriberTopicName/cmd/???
+        if(0 != topicStr.indexOf(MqttName.get()))
+        {
+            Log.warningln ((String (F ("MQTT Subscription Topic '")) + topicStr + F("' does not match '") + MqttName.get() + F("'")).c_str());
+            break;
+        }
+
+        String Command = topicStr.substring(MqttName.get().length() + strlen(MQTT_CMD_STR));
+        // DEBUG_V(String("Command: ") + Command);
+
+        String Response;
+        CommandProcessor.ProcessCommand (Command, payloadStr, Response);
+        // DEBUG_V(String("Response: ") + Response);
+        Response += F ("\n");
+        pParent->mqttClient.publish(MqttName.get().c_str(), String(String(F("Response: ")) + Response).c_str());
+#ifdef OldWay
+            sprintf(mqttBuff,
+                    "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%02X\"}",
+                    CMD_INFO_STR,
+                    VERSION_STR,
+                    staNameStr.c_str(),
+                    WiFi.localIP().toString().c_str(),
+                    WiFi.RSSI(),
+                    getControllerStatus());
+                  }
+
+        topicStr = mqttNameStr + MQTT_INFORM_STR;
+        mqttClient.publish(topicStr.c_str(), mqttBuff);
 #endif // def OldWay
 
+    } while(false);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

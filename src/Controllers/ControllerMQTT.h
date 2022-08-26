@@ -26,6 +26,7 @@
 #include "credentials.h"
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
+#include "CommandProcessor.hpp"
 
 class fsm_Connection_state;
 
@@ -61,7 +62,6 @@ private:
     float oldPaVolts        = -1.0f;
 
 // MQTT Command
-#define MQTT_CMD_STR       F ("/cmd/")      // Publish topic preamble, Client MQTT Command Preampble.
 
 // MQTT Subscriptions
 #define MQTT_CMD_SUB_STR   F ("/cmd/#")     // MQTT wildcard Subscription, receive all /cmd messages.
@@ -142,6 +142,8 @@ public:
     void    mqttClientCallback (const char * topic, byte * payload, unsigned int length);
 private:
     uint32_t NextStatusMessageMS = 0;
+    cCommandProcessor CommandProcessor;
+
 };  // class fsm_Connection_state_connected
 
 // *********************************************************************************************
