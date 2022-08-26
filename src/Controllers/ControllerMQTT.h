@@ -46,33 +46,17 @@ public:
 
 private:
 
-    void    mqttReconnect (bool resetFlg);
-    void    mqttSendMessages (void);
+    void    SendStatusMessage (void);
     String  makeMqttCmdStr (String cmdStr);
     void    gpioMqttControl (String payloadStr, gpio_num_t pin);
-    String  returnClientCode (int code);
-    void    TestParameters ();
     bool    ValidateConfiguration();
+    bool    VoltagesHaveChanged();
     bool    ConfigHasChanged();
 
     WiFiClient wifiClient;
     PubSubClient mqttClient;
-    bool OnlineFlag = false;
     c_ControllerMessages Messages;
 
-    /* If you have an MQTT Broker then configure it here. */
-    // const IPAddress MQTT_IP_DEF = { 192u, 168u, 1u, 202u }; // Default IP of MQTT Broker server. Can be changed in Web UI.
-
-    uint16_t EspuiMessageAreaId = Control::noParent;
-    uint16_t EspuiNameID        = Control::noParent;
-    uint16_t EspuiPortID        = Control::noParent;
-    uint16_t EspuiUserID        = Control::noParent;
-    uint16_t EspuiPwID          = Control::noParent;
-
-    String MessageStr = "";
-
-    bool refresh            = true;
-    long previousMqttMillis = millis ();    // Timer for MQTT services.
     float oldVbatVolts      = -1.0f;
     float oldPaVolts        = -1.0f;
 
@@ -113,6 +97,7 @@ public:
 
     virtual void    Poll (uint32_t) = 0;
     virtual void    Init (void)     = 0;
+    virtual void    mqttClientCallback (const char * topic, byte * payload, unsigned int length) {}
     void            SetParent (c_ControllerMQTT * value) {pParent = value;}
 };  // class fsm_Connection_state
 
@@ -154,6 +139,9 @@ class fsm_Connection_state_connected : public fsm_Connection_state
 public:
     void    Poll (uint32_t);
     void    Init (void);
+    void    mqttClientCallback (const char * topic, byte * payload, unsigned int length);
+private:
+    uint32_t NextStatusMessageMS = 0;
 };  // class fsm_Connection_state_connected
 
 // *********************************************************************************************
