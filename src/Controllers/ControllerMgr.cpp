@@ -258,10 +258,7 @@ void    c_ControllerMgr::poll ()
     // _ DEBUG_START;
     for (auto & CurrentController : ListOfControllers)
     {
-        if (CurrentController.pController->ControllerIsEnabled ())
-        {
-            CurrentController.pController->poll ();
-        }
+        CurrentController.pController->poll ();
     }
     // _ DEBUG_END;
 }

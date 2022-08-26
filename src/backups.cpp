@@ -269,7 +269,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             }
             else
             {
-                Log.errorln ("-> SD Card Unknown Error.");                              \
+                Log.errorln ("-> SD Card Unknown Error.");                                                          \
             }
                 SD.end ();
                 spiSdCardShutDown ();

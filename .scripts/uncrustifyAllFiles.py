@@ -5,6 +5,8 @@ import filecmp
 import shutil
 
 Import("env")
+# importing the hashlib module
+import hashlib
 
 f = open("./MyEnv.txt", "w")
 f.write(env.Dump())
@@ -26,12 +28,36 @@ SRC_DIR     = PROJECT_DIR + "/src"
 
 ExtensionsOfInterest = ('.h', '.hpp', '.c', '.cpp')
 
+
+def hash_file(filename):
+   """"This function returns the SHA-1 hash
+   of the file passed into it"""
+
+   # make a hash object
+   h = hashlib.sha1()
+
+   # open file for reading in binary mode
+   with open(filename,'rb') as file:
+
+       # loop till the end of the file
+       chunk = 0
+       while chunk != b'':
+           # read only 1024 bytes at a time
+           chunk = file.read(1024)
+           h.update(chunk)
+
+   # return the hex representation of digest
+   return h.hexdigest()
+
 def ProcessDirectory(DirPath):
     # print("Display Files for: '" + DirPath + "'")
     for file in os.scandir(DirPath):
+
         if file.is_dir():
             ProcessDirectory(file.path)
+
         elif file.is_file():
+
             if file.path.endswith(ExtensionsOfInterest):
                 SRC_FILE_NAME = file.path
                 DST_FILE_NAME = SRC_FILE_NAME + ".txt"
@@ -42,9 +68,12 @@ def ProcessDirectory(DirPath):
                 # print("DST_FILE_NAME : '" + DST_FILE_NAME + "'")
                 # print("COMMAND: '" + COMMAND + "'")
                 os.system(COMMAND)
-                result = filecmp.cmp(SRC_FILE_NAME, DST_FILE_NAME, shallow=False)
+                # result = filecmp.cmp(SRC_FILE_NAME, DST_FILE_NAME, shallow=False)
+                result = hash_file(SRC_FILE_NAME) == hash_file(DST_FILE_NAME)
                 # print(result)
+
                 if(False == result):
+
                     originalFileSize = os.path.getsize(SRC_FILE_NAME)
                     modifiedFileSize = os.path.getsize(DST_FILE_NAME)
                     if((originalFileSize/2) < modifiedFileSize):
@@ -60,4 +89,4 @@ if(exeName == None):
     print("uncrustify command not found")
 else:
     print("exeName: '" + exeName + "'")
-    ProcessDirectory(SRC_DIR)
+    # ProcessDirectory(SRC_DIR)

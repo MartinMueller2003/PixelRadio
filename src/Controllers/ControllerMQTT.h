@@ -27,13 +27,15 @@
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
 
+class fsm_Connection_state;
+
 class c_ControllerMQTT : public cControllerCommon
 {
 public:
 
     c_ControllerMQTT (void);
     virtual ~c_ControllerMQTT (void);
-    void    Begin (void);
+    void    begin (void);
     void    poll (void);
     void    saveConfiguration (ArduinoJson::JsonObject & config);
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
@@ -44,13 +46,14 @@ public:
 
 private:
 
-    void    Init (void);
     void    mqttReconnect (bool resetFlg);
     void    mqttSendMessages (void);
     String  makeMqttCmdStr (String cmdStr);
     void    gpioMqttControl (String payloadStr, gpio_num_t pin);
     String  returnClientCode (int code);
     void    TestParameters ();
+    bool    ValidateConfiguration();
+    bool    ConfigHasChanged();
 
     WiFiClient wifiClient;
     PubSubClient mqttClient;
@@ -68,16 +71,6 @@ private:
 
     String MessageStr = "";
 
-    const uint8_t MQTT_FAIL_CNT         = 10;       // Maximum failed MQTT reconnects before disabling MQTT.
-    const uint16_t MQTT_KEEP_ALIVE      = 90;       // MQTT Keep Alive Time, in Secs.
-    const int32_t MQTT_MSG_TIME         = 30000;    // MQTT Periodic Message Broadcast Time, in mS.
-    const uint8_t MQTT_PAYLD_MAX_SZ     = 100;      // Must be larger than RDS_TEXT_MAX_SZ.
-    const uint8_t MQTT_PW_MAX_SZ        = 48;
-    const int32_t MQTT_RECONNECT_TIME   = 30000;    // MQTT Reconnect Delay Time, in mS;
-    const uint8_t MQTT_RETRY_CNT        = 6;        // MQTT Reconnection Count (max attempts).
-    const uint8_t MQTT_TOPIC_MAX_SZ     = 45;
-    const uint8_t MQTT_USER_MAX_SZ      = 48;
-
     bool refresh            = true;
     long previousMqttMillis = millis ();    // Timer for MQTT services.
     float oldVbatVolts      = -1.0f;
@@ -94,7 +87,83 @@ private:
 #define MQTT_GPIO_STR      F ("/gpio")      // Publish topic, Client MQTT Subscription.
 #define MQTT_INFORM_STR    F ("/info")      // Publish topic, Client MQTT Subscription.
 #define MQTT_VOLTS_STR     F ("/volts")     // Publish topic, Client MQTT Subscription.
-};                                          // c_ControllerMQTT
 
+    friend class fsm_Connection_state_disabled;
+    friend class fsm_Connection_state_WaitForWiFi;
+    friend class fsm_Connection_state_ValidateConfig;
+    friend class fsm_Connection_state_connecting;
+    friend class fsm_Connection_state_connected;
+    friend class fsm_Connection_state_Disconnecting;
+    fsm_Connection_state * pCurrentFsmState = nullptr;
+    uint32_t FsmTimerExpirationTime         = 1000;
+};  // class c_ControllerMQTT
+
+// *********************************************************************************************
+// *********************************************************************************************
+// *********************************************************************************************
+class fsm_Connection_state
+{
+protected:
+    c_ControllerMQTT * pParent = nullptr;
+
+public:
+    fsm_Connection_state () {}
+
+    virtual ~fsm_Connection_state () {}
+
+    virtual void    Poll (uint32_t) = 0;
+    virtual void    Init (void)     = 0;
+    void            SetParent (c_ControllerMQTT * value) {pParent = value;}
+};  // class fsm_Connection_state
+
+// *********************************************************************************************
+class fsm_Connection_state_disabled : public fsm_Connection_state
+{
+public:
+    void    Poll (uint32_t);
+    void    Init (void);
+};  // class fsm_Connection_state_disabled
+
+// *********************************************************************************************
+class fsm_Connection_state_WaitForWiFi : public fsm_Connection_state
+{
+public:
+    void    Poll (uint32_t);
+    void    Init (void);
+};  // class fsm_Connection_state_WaitForWiFi
+
+// *********************************************************************************************
+class fsm_Connection_state_ValidateConfig : public fsm_Connection_state
+{
+public:
+    void    Poll (uint32_t);
+    void    Init (void);
+};  // class fsm_Connection_state_ValidateConfig
+
+// *********************************************************************************************
+class fsm_Connection_state_connecting : public fsm_Connection_state
+{
+public:
+    void    Poll (uint32_t);
+    void    Init (void);
+};  // class fsm_Connection_state_connecting
+
+// *********************************************************************************************
+class fsm_Connection_state_connected : public fsm_Connection_state
+{
+public:
+    void    Poll (uint32_t);
+    void    Init (void);
+};  // class fsm_Connection_state_connected
+
+// *********************************************************************************************
+class fsm_Connection_state_Disconnecting : public fsm_Connection_state
+{
+public:
+    void    Poll (uint32_t);
+    void    Init (void);
+};  // class fsm_Connection_state_Disconnecting
+
+// *********************************************************************************************
 // *********************************************************************************************
 // EOF

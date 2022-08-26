@@ -141,7 +141,7 @@ void c_WiFiDriver::Begin ()
     {
         // saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
     }
-#ifdef FixMe
+#ifdef OldWay
 
         if (FileMgr.SdCardIsInstalled ())
         {
@@ -166,7 +166,7 @@ void c_WiFiDriver::Begin ()
                 // DEBUG_V ("ERROR: Could not read SD card config");
             }
         }
-#endif // def FixMe
+#endif // def OldWay
 
     // Disable persistant credential storage and configure SDK params
     WiFi.persistent (false);

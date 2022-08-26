@@ -151,6 +151,18 @@ void cControlCommon::Callback (Control * sender, int type)
 String  &cControlCommon::get () {return DataValueStr;}
 
 // *********************************************************************************************
+bool cControlCommon::GetAndResetValueChangedFlag()
+{
+    // DEBUG_START;
+
+    bool Response = ValueChanged;
+    ValueChanged = false;
+
+    // DEBUG_END;
+    return Response;
+}
+
+// *********************************************************************************************
 void    cControlCommon::ResetToDefaults ()
 {
     // DEBUG_START;
@@ -228,6 +240,7 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
         }
         // DEBUG_V ("Saving value");
 
+        ValueChanged = true;
         ESPUI.print (ControlId, DataValueStr);
 
         if (!Booting)
