@@ -96,29 +96,6 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
         CurrentControl->AddControls (TabId, color);
     }
 
-#ifdef OldWay
-
-        String tempStr;
-
-        if ((ControllerIsEnabled () == true) &&
-        ((INADDR_NONE != MqttBrokerIpAddress.getIpaddress ()) || (!MqttName.get ().length ()) ||
-         (!MqttUser.get ().length ()) || (!MqttPassword.get ().length ())))
-        {
-            // DEBUG_V();
-            MessageStr = MQTT_MISSING_STR;
-        }
-
-        else if (getWifiMode () == WIFI_AP)
-        {
-            // DEBUG_V();
-            MessageStr = MQTT_NOT_AVAIL_STR;
-        }
-        else
-        {
-            // DEBUG_V();
-            MessageStr = emptyString;
-        }
-#endif // def OldWay
     // DEBUG_END;
 }   // AddControls
 
@@ -644,7 +621,8 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
         CommandProcessor.ProcessCommand (Command, payloadStr, Response);
         // DEBUG_V(String("Response: ") + Response);
         Response += F ("\n");
-        pParent->mqttClient.publish(MqttName.get().c_str(), String(String(F("Response: ")) + Response).c_str());
+        pParent->mqttClient.publish(String(MqttName.get() + MQTT_INFORM_STR).c_str(), String(String(F("Response: ")) + Response).c_str());
+
 #ifdef OldWay
             sprintf(mqttBuff,
                     "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%02X\"}",
