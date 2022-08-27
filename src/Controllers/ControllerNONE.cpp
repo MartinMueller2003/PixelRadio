@@ -19,40 +19,18 @@
 // *********************************************************************************************
 #include "ControllerNONE.h"
 
-#if __has_include ("memdebug.h")
  # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
 static const PROGMEM char Name [] = "NONE";
 
 // *********************************************************************************************
-c_ControllerNONE::c_ControllerNONE () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
+c_ControllerNONE::c_ControllerNONE () :   cControllerCommon (emptyString, c_ControllerMgr::ControllerTypeId_t::NO_CNTRL)
 {}  // c_ControllerNONE
 
 // *********************************************************************************************
 c_ControllerNONE::~c_ControllerNONE ()
 {}
-
-// *********************************************************************************************
-void c_ControllerNONE::restoreConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    cControllerCommon::restoreConfiguration (config);
-
-    // DEBUG_END;
-}   // restoreConfiguration
-
-// *********************************************************************************************
-void c_ControllerNONE::saveConfiguration (ArduinoJson::JsonObject & config)
-{
-    // DEBUG_START;
-
-    cControllerCommon::saveConfiguration (config);
-
-    // DEBUG_END;
-}   // saveConfiguration
 
 // *********************************************************************************************
 // EOF
