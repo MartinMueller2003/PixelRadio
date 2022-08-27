@@ -59,6 +59,7 @@ public:
         CssStyleRed_bw,
         CssStyleTransparent_bw,
         CssStyleWhite_bb,
+        CssStyleWhite_grey,
     };
 
     virtual void    setControl (const String & value, eCssStyle style);

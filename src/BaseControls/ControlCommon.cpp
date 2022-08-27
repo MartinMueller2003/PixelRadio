@@ -22,18 +22,20 @@
 
 // *********************************************************************************************
 
-const PROGMEM char CSS_LABEL_STYLE_BLACK_BW        [] =
+const PROGMEM char CSS_LABEL_STYLE_BLACK_BW             [] =
     "background-color: white; color: black; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_GREEN_BW        [] =
+const PROGMEM char CSS_LABEL_STYLE_GREEN_BW             [] =
     "background-color: white; color: green; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_MAROON_BW       [] =
+const PROGMEM char CSS_LABEL_STYLE_MAROON_BW            [] =
     "background-color: white; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_RED_BW          [] =
+const PROGMEM char CSS_LABEL_STYLE_RED_BW               [] =
     "background-color: white; color: red; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT_BW  [] =
+const PROGMEM char CSS_LABEL_STYLE_TRANSPARENT_BW       [] =
     "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
-static const PROGMEM char CSS_LABEL_STYLE_WHITE_BB        [] =
+static const PROGMEM char CSS_LABEL_STYLE_WHITE_BB      [] =
     "background-color: black; color: white; margin-top: .1rem; margin-bottom: .1rem;";
+static const PROGMEM char CSS_LABEL_STYLE_WHITE_grey    [] =
+    "background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;";
 
 static const PROGMEM char * CssStyles [] =
 {
@@ -49,6 +51,7 @@ static const PROGMEM char * CssStyles [] =
     CSS_LABEL_STYLE_RED_BW,
     CSS_LABEL_STYLE_TRANSPARENT_BW,
     CSS_LABEL_STYLE_WHITE_BB,
+    CSS_LABEL_STYLE_WHITE_grey,
 };
 
 static const String PanelStyles [] =
