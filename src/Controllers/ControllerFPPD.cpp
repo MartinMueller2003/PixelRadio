@@ -115,7 +115,7 @@ void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
 
     cControllerCommon::restoreConfiguration (config);
     SequenceLearning.restoreConfiguration (config);
-    // Sequences.restoreConfiguration (config);
+    Sequences.RestoreConfig (config);
 
     // DEBUG_V("Final");
     // serializeJsonPretty(config, Serial);
