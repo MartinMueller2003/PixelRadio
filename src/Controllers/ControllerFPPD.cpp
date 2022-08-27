@@ -44,7 +44,7 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab, ControlColor color)
     cControllerCommon::AddControls (ctrlTab, color);
     SequenceLearning.AddControls (ctrlTab, color);
     CurrentSequence.AddControls (SequenceLearning.ControlId, color);
-    Sequences.AddControls (ctrlTab);
+    Sequences.AddControls (ctrlTab, color);
 
     // DEBUG_END;
 }   // AddControls

@@ -18,14 +18,11 @@
 
 // *********************************************************************************************
 #include "ControllerFPPDSequences.h"
-#include <map>
 
-#if __has_include ("memdebug.h")
- # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
+#include "memdebug.h"
 
-static const String Name                    = F ("FPPD Sequences");
-static const String DefaultTextFieldValue   = F ("Type New Sequence Name Here");
+static const PROGMEM char Name []                   = "FPPD Sequences";
+static const PROGMEM char DefaultTextFieldValue []  = "Type New Sequence Name Here";
 
 // *********************************************************************************************
 c_ControllerFPPDSequences::c_ControllerFPPDSequences ()
@@ -55,11 +52,11 @@ void c_ControllerFPPDSequences::Activate ()
 }   // Activate
 
 // ************************************************************************************************
-void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
+void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    EspuiParentElementId = ctrlTab;
+    EspuiParentElementId = TabId;
 
     if (Control::noParent == EspuiChoiceListElementId)
     {
@@ -67,7 +64,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
         EspuiChoiceListElementId = ESPUI.addControl (ControlType::Select,
                                                      "FPPD Sequences",
                                                      emptyString,
-                                                     ControlColor::Turquoise,
+                                                     color,
                                                      EspuiParentElementId,
                                                      [] (Control * sender, int type, void * param)
                                                      {
@@ -113,9 +110,9 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
 
         // DEBUG_V("Adding Instruction Msg");
         EspuiInstructionMsgElementId = ESPUI.addControl (ControlType::Label,
-                                                         DefaultTextFieldValue.c_str (),
                                                          DefaultTextFieldValue,
-                                                         ControlColor::Turquoise,
+                                                         DefaultTextFieldValue,
+                                                         color,
                                                          EspuiChoiceListElementId);
         ESPUI.setElementStyle (EspuiInstructionMsgElementId, CSS_LABEL_STYLE_BLACK);
 
@@ -158,7 +155,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t ctrlTab)
         EspuiStatusMsgElementId = ESPUI.addControl (ControlType::Label,
                                                     emptyString.c_str (),
                                                     emptyString,
-                                                    ControlColor::Turquoise,
+                                                    color,
                                                     EspuiChoiceListElementId);
         ESPUI.setElementStyle (EspuiStatusMsgElementId, CSS_LABEL_STYLE_BLACK);
     }

@@ -1,3 +1,4 @@
+#pragma once
 /*
    File: ControllerFPPDSequences.h
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
@@ -17,14 +18,13 @@
  */
 
 // *********************************************************************************************
-#pragma once
-
-#include "ControllerFPPDSequence.h"
-#include "Language.h"
 #include <Arduino.h>
 #include <ArduinoJson.h>
 #include <ESPUI.h>
 #include <map>
+
+#include "ControllerFPPDSequence.h"
+#include "Language.h"
 
 class c_ControllerFPPDSequences
 {
@@ -35,7 +35,7 @@ public:
     void    RestoreConfig (ArduinoJson::JsonObject & config);
     void    SaveConfig (ArduinoJson::JsonObject & config);
 
-    void    AddControls (uint16_t ctrlTab);
+    void    AddControls (uint16_t ctrlTab, ControlColor color);
     void    AddSequence (String & SequenceName);
     void    begin ();
     void    CbButtonCreate (Control * sender, int type);
