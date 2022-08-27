@@ -24,9 +24,9 @@
 #include "FPPDiscovery.h"
 #include "language.h"
 
- # include "memdebug.h"
+#include "memdebug.h"
 
-static const PROGMEM char Name []       = "FPPD";
+static const PROGMEM char Name [] = "FPPD";
 
 // *********************************************************************************************
 c_ControllerFPPD::c_ControllerFPPD () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::FPPD_CNTRL)
@@ -42,8 +42,8 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab, ControlColor color)
     // DEBUG_START;
 
     cControllerCommon::AddControls (ctrlTab, color);
-    SequenceLearning.AddControls(ctrlTab, color);
-    CurrentSequence.AddControls(SequenceLearning.ControlId, color);
+    SequenceLearning.AddControls (ctrlTab, color);
+    CurrentSequence.AddControls (SequenceLearning.ControlId, color);
     Sequences.AddControls (ctrlTab);
 
     // DEBUG_END;
@@ -90,16 +90,17 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
     {
         // DEBUG_V(String("New File: '") + FppdFileName + "'");
         CurrentPlayingSequence = FppdFileName;
+
         if (CurrentPlayingSequence.isEmpty ())
         {
-            CurrentSequence.setMessage(F("No Sequence Playing"), eCssStyle::CssStyleTransparent);
+            CurrentSequence.setMessage (F ("No Sequence Playing"), eCssStyle::CssStyleTransparent);
         }
         else
         {
-            CurrentSequence.setMessage(CurrentPlayingSequence, eCssStyle::CssStyleWhite);
+            CurrentSequence.setMessage (CurrentPlayingSequence, eCssStyle::CssStyleWhite);
 
             // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
-            if (SequenceLearning.getBool())
+            if (SequenceLearning.getBool ())
             {
                 Sequences.AddSequence (CurrentPlayingSequence);
             }

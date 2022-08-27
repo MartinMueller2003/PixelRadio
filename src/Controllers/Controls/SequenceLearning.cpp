@@ -21,8 +21,8 @@
 
 #include "memdebug.h"
 
-static const PROGMEM char   ConfigName  []   = "SequenceLearningEnabled";
-static const PROGMEM char   _Title []  = "Sequence Learning";
+static const PROGMEM char   ConfigName  []  = "SequenceLearningEnabled";
+static const PROGMEM char   _Title []       = "Sequence Learning";
 
 // *********************************************************************************************
 cSequenceLearning::cSequenceLearning () :   cBinaryControl (ConfigName, _Title, true)
@@ -32,14 +32,14 @@ cSequenceLearning::cSequenceLearning () :   cBinaryControl (ConfigName, _Title, 
 }
 
 // *********************************************************************************************
-void cSequenceLearning::AddControls(uint16_t TabId, ControlColor color)
+void cSequenceLearning::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cBinaryControl::AddControls(TabId, color);
-    setMessageStyle(eCssStyle::CssStyleWhite);
-    setOnMessageStyle(eCssStyle::CssStyleWhite);
-    setOffMessageStyle(eCssStyle::CssStyleWhite);
+    cBinaryControl::AddControls (TabId, color);
+    setMessageStyle (eCssStyle::CssStyleWhite);
+    setOnMessageStyle (eCssStyle::CssStyleWhite);
+    setOffMessageStyle (eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }

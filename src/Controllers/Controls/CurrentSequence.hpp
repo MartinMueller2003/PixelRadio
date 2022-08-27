@@ -24,8 +24,7 @@ public:
 
     cCurrentSequence ();
     virtual ~cCurrentSequence ()    {}
-    void AddControls(uint16_t TabId, ControlColor color);
-
+    void AddControls (uint16_t TabId, ControlColor color);
 };  // class cCurrentSequence
 
 extern cCurrentSequence CurrentSequence;

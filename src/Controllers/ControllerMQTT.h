@@ -50,16 +50,16 @@ private:
     void    SendStatusMessage (void);
     String  makeMqttCmdStr (String cmdStr);
     void    gpioMqttControl (String payloadStr, gpio_num_t pin);
-    bool    ValidateConfiguration();
-    bool    VoltagesHaveChanged();
-    bool    ConfigHasChanged();
+    bool    ValidateConfiguration ();
+    bool    VoltagesHaveChanged ();
+    bool    ConfigHasChanged ();
 
     WiFiClient wifiClient;
     PubSubClient mqttClient;
     c_ControllerMessages Messages;
 
-    float oldVbatVolts      = -1.0f;
-    float oldPaVolts        = -1.0f;
+    float oldVbatVolts  = -1.0f;
+    float oldPaVolts    = -1.0f;
 
 // MQTT Command
 
@@ -97,8 +97,8 @@ public:
 
     virtual void    Poll (uint32_t) = 0;
     virtual void    Init (void)     = 0;
-    virtual void    mqttClientCallback (const char * topic, byte * payload, unsigned int length) {}
-    void            SetParent (c_ControllerMQTT * value) {pParent = value;}
+    virtual void    mqttClientCallback (const char * topic, byte * payload, unsigned int length)    {}
+    void            SetParent (c_ControllerMQTT * value)                                            {pParent = value;}
 };  // class fsm_Connection_state
 
 // *********************************************************************************************
@@ -143,7 +143,6 @@ public:
 private:
     uint32_t NextStatusMessageMS = 0;
     cCommandProcessor CommandProcessor;
-
 };  // class fsm_Connection_state_connected
 
 // *********************************************************************************************

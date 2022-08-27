@@ -34,14 +34,14 @@ public:
     virtual void    AddControls (uint16_t TabId, ControlColor color);
     virtual void    Callback (Control * sender, int type);
     virtual String  &get ();
-    virtual String  getDefault() {return DefaultValue;}
-    virtual String  GetTitle ()                     {return Title;}
-    virtual bool    GetAndResetValueChangedFlag();
+    virtual String  getDefault ()   {return DefaultValue;}
+    virtual String  GetTitle ()     {return Title;}
+    virtual bool    GetAndResetValueChangedFlag ();
     virtual void    ResetToDefaults ();
     virtual void    restoreConfiguration (JsonObject & json);
     virtual void    saveConfiguration (JsonObject & json);
     virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    virtual void    setSaveUpdates(bool value) {SaveUpdate = value;}
+    virtual void    setSaveUpdates (bool value)     {SaveUpdate = value;}
     virtual void    SetTitle (const String & value) {Title = value;}
     virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 

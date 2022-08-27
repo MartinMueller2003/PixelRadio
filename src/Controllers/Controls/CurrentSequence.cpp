@@ -18,8 +18,8 @@
 #include "CurrentSequence.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char _Title [] = "Current Sequence";
-static const PROGMEM char DefaultMsg [] = "No Sequence Playing";
+static const PROGMEM char   _Title []       = "Current Sequence";
+static const PROGMEM char   DefaultMsg []   = "No Sequence Playing";
 
 // *********************************************************************************************
 cCurrentSequence::cCurrentSequence () :   cStatusControl (_Title)
@@ -29,12 +29,12 @@ cCurrentSequence::cCurrentSequence () :   cStatusControl (_Title)
 }
 
 // *********************************************************************************************
-void cCurrentSequence::AddControls(uint16_t TabId, ControlColor color)
+void cCurrentSequence::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls(TabId, color);
-    setControl(DefaultMsg, eCssStyle::CssStyleWhite);
+    cStatusControl::AddControls (TabId, color);
+    setControl (DefaultMsg, eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }

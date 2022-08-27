@@ -25,8 +25,7 @@ public:
 
     cSequenceLearning ();
     virtual ~cSequenceLearning ()    {}
-    void AddControls(uint16_t TabId, ControlColor color);
-
+    void AddControls (uint16_t TabId, ControlColor color);
 };  // class cSequenceLearning
 
 extern cSequenceLearning SequenceLearning;

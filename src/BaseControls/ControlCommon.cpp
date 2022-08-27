@@ -151,7 +151,7 @@ void cControlCommon::Callback (Control * sender, int type)
 String  &cControlCommon::get () {return DataValueStr;}
 
 // *********************************************************************************************
-bool cControlCommon::GetAndResetValueChangedFlag()
+bool    cControlCommon::GetAndResetValueChangedFlag ()
 {
     // DEBUG_START;
 
@@ -163,7 +163,7 @@ bool cControlCommon::GetAndResetValueChangedFlag()
 }
 
 // *********************************************************************************************
-void    cControlCommon::ResetToDefaults ()
+void cControlCommon::ResetToDefaults ()
 {
     // DEBUG_START;
 

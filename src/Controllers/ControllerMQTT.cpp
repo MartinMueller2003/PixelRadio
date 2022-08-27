@@ -40,7 +40,7 @@ static const PROGMEM char   MQTT_NOT_AVAIL []   = "MQTT NOT AVAILABLE IN AP MODE
 static const PROGMEM char   MQTT_RETRY []       = "RETRY CONNECTION";
 static const PROGMEM char   MQTT_DISABLED []    = "CONNECTION FAILED!<br>DISABLED MQTT CONTROLLER";
 static const PROGMEM char   MQTT_MISSING []     = "MISSING SETTINGS : MQTT DISABLED";
-static const PROGMEM char   MQTT_CMD_STR []     = "/cmd/"; // Publish topic preamble, Client MQTT Command Preampble.
+static const PROGMEM char   MQTT_CMD_STR []     = "/cmd/";  // Publish topic preamble, Client MQTT Command Preampble.
 
 static const String MQTT_SUBCR_FAIL_STR = MQTT_SUBCR_FAIL;
 static const String MQTT_NOT_AVAIL_STR  = MQTT_NOT_AVAIL;
@@ -48,12 +48,12 @@ static const String MQTT_RETRY_STR      = MQTT_RETRY;
 static const String MQTT_DISABLED_STR   = MQTT_DISABLED;
 static const String MQTT_MISSING_STR    = MQTT_MISSING;
 
-fsm_Connection_state_disabled       fsm_Connection_state_disabled_imp;
-fsm_Connection_state_WaitForWiFi    fsm_Connection_state_WaitForWiFi_imp;
+fsm_Connection_state_disabled fsm_Connection_state_disabled_imp;
+fsm_Connection_state_WaitForWiFi fsm_Connection_state_WaitForWiFi_imp;
 fsm_Connection_state_ValidateConfig fsm_Connection_state_ValidateConfig_imp;
-fsm_Connection_state_connecting     fsm_Connection_state_connecting_imp;
-fsm_Connection_state_connected      fsm_Connection_state_connected_imp;
-fsm_Connection_state_Disconnecting  fsm_Connection_state_Disconnecting_imp;
+fsm_Connection_state_connecting fsm_Connection_state_connecting_imp;
+fsm_Connection_state_connected  fsm_Connection_state_connected_imp;
+fsm_Connection_state_Disconnecting fsm_Connection_state_Disconnecting_imp;
 
 static cControlCommon * ListOfControls [] =
 {
@@ -64,20 +64,19 @@ static cControlCommon * ListOfControls [] =
     & MqttPassword
 };
 
-static    const uint8_t MQTT_FAIL_CNT         = 10;       // Maximum failed MQTT reconnects before disabling MQTT.
-static    const uint16_t MQTT_KEEP_ALIVE      = 90;       // MQTT Keep Alive Time, in Secs.
-static    const int32_t MQTT_MSG_TIME         = 30000;    // MQTT Periodic Message Broadcast Time, in mS.
-static    const uint8_t MQTT_PAYLD_MAX_SZ     = 100;      // Must be larger than RDS_TEXT_MAX_SZ.
-static    const uint8_t MQTT_PW_MAX_SZ        = 48;
-static    const int32_t MQTT_RECONNECT_TIME   = 30000;    // MQTT Reconnect Delay Time, in mS;
-static    const uint8_t MQTT_RETRY_CNT        = 6;        // MQTT Reconnection Count (max attempts).
-static    const uint8_t MQTT_TOPIC_MAX_SZ     = 45;
-static    const uint8_t MQTT_USER_MAX_SZ      = 48;
+static const uint8_t MQTT_FAIL_CNT          = 10;       // Maximum failed MQTT reconnects before disabling MQTT.
+static const uint16_t   MQTT_KEEP_ALIVE     = 90;       // MQTT Keep Alive Time, in Secs.
+static const int32_t    MQTT_MSG_TIME       = 30000;    // MQTT Periodic Message Broadcast Time, in mS.
+static const uint8_t    MQTT_PAYLD_MAX_SZ   = 100;      // Must be larger than RDS_TEXT_MAX_SZ.
+static const uint8_t    MQTT_PW_MAX_SZ      = 48;
+static const int32_t    MQTT_RECONNECT_TIME = 30000;    // MQTT Reconnect Delay Time, in mS;
+static const uint8_t    MQTT_RETRY_CNT      = 6;        // MQTT Reconnection Count (max attempts).
+static const uint8_t    MQTT_TOPIC_MAX_SZ   = 45;
+static const uint8_t    MQTT_USER_MAX_SZ    = 48;
 
 // *********************************************************************************************
 c_ControllerMQTT::c_ControllerMQTT () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::MQTT_CNTRL)
-{
-}   // c_ControllerMQTT
+{}  // c_ControllerMQTT
 
 // *********************************************************************************************
 c_ControllerMQTT::~c_ControllerMQTT ()
@@ -106,7 +105,7 @@ void c_ControllerMQTT::begin ()
 
     fsm_Connection_state_disabled_imp.SetParent (this);
     fsm_Connection_state_WaitForWiFi_imp.SetParent (this);
-    fsm_Connection_state_ValidateConfig_imp.SetParent(this);
+    fsm_Connection_state_ValidateConfig_imp.SetParent (this);
     fsm_Connection_state_connecting_imp.SetParent (this);
     fsm_Connection_state_connected_imp.SetParent (this);
     fsm_Connection_state_Disconnecting_imp.SetParent (this);
@@ -117,23 +116,23 @@ void c_ControllerMQTT::begin ()
     mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
                             {
                                 // Serial.println("Got a callback");
-                                c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
+                                c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById ( MqttControllerId));
                                 pMe->mqttClientCallback (topic, payload, length);
                             }); // Topic Subscription callback handler.
 
     // DEBUG_END;
-}   // Begin
+}                               // Begin
 
 // *********************************************************************************************
-bool c_ControllerMQTT::ConfigHasChanged()
+bool c_ControllerMQTT::ConfigHasChanged ()
 {
     // DEBUG_START;
 
     bool Response = false;
 
-    for(auto * CurrentControl : ListOfControls)
+    for (auto * CurrentControl : ListOfControls)
     {
-        Response |= CurrentControl->GetAndResetValueChangedFlag();
+        Response |= CurrentControl->GetAndResetValueChangedFlag ();
     }
 
     // DEBUG_END;
@@ -141,21 +140,17 @@ bool c_ControllerMQTT::ConfigHasChanged()
 }
 
 // *********************************************************************************************
-void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
-{
-    Messages.GetNextRdsMessage (Response);
-}
+void    c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) {Messages.GetNextRdsMessage (Response);}
 
 // *************************************************************************************************************************
-void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)
+void    c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)
 {
     // DEBUG_START;
 
-    if(pCurrentFsmState)
+    if (pCurrentFsmState)
     {
-        pCurrentFsmState->mqttClientCallback(topic, payload, length);
+        pCurrentFsmState->mqttClientCallback (topic, payload, length);
     }
-
     // DEBUG_END;
 }   // mqttClientCallback
 
@@ -229,11 +224,11 @@ void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
 // ************************************************************************************************
 // makeMqttCmdStr (): Return the MQTT command string. On entry cmdStr has command keyword.
 //                   This is a companion to mqttCallback ().
-String c_ControllerMQTT::makeMqttCmdStr (String cmdStr) {return String (MQTT_CMD_STR) + cmdStr;}    // makeMqttCmdStr
+String  c_ControllerMQTT::makeMqttCmdStr (String cmdStr) {return String (MQTT_CMD_STR) + cmdStr;}   // makeMqttCmdStr
 
 // *************************************************************************************************************************
 // Broadcast system messages to MQTT broker.
-void c_ControllerMQTT::SendStatusMessage (void)
+void    c_ControllerMQTT::SendStatusMessage (void)
 {
     // DEBUG_START;
     String  Payload;
@@ -247,10 +242,10 @@ void c_ControllerMQTT::SendStatusMessage (void)
     oldPaVolts      = paVolts;
     topicStr        = MqttName.get () + MQTT_VOLTS_STR;
 
-    StaticJsonDocument<256> doc;
-    doc[F("vbat")] = String (vbatVolts);
-    doc[F("pa")] = String (paVolts);
-    serializeJson(doc, Payload);
+    StaticJsonDocument <256> doc;
+    doc[F ("vbat")] = String (vbatVolts);
+    doc[F ("pa")]   = String (paVolts);
+    serializeJson (doc, Payload);
 
     // JSON Formatted Payload.
     mqttClient.publish (topicStr.c_str (), Payload.c_str ());   // Publish Power Supply Voltage.
@@ -264,7 +259,7 @@ void c_ControllerMQTT::SendStatusMessage (void)
 }   // mqttSendMessages
 
 // *************************************************************************************************************************
-bool c_ControllerMQTT::VoltagesHaveChanged()
+bool c_ControllerMQTT::VoltagesHaveChanged ()
 {
     // DEBUG_START;
     bool Response = false;
@@ -279,7 +274,6 @@ bool c_ControllerMQTT::VoltagesHaveChanged()
     {
         Response = true;
     }
-
     // DEBUG_END;
     return Response;
 }
@@ -289,71 +283,70 @@ void c_ControllerMQTT::poll (void)
 {
     // _ DEBUG_START;
 
-    uint32_t Now = millis();
+    uint32_t Now = millis ();
 
-    mqttClient.loop();
+    mqttClient.loop ();
 
     if (Now > FsmTimerExpirationTime)
     {
         FsmTimerExpirationTime += 1000;
-        if(pCurrentFsmState)
+
+        if (pCurrentFsmState)
         {
             pCurrentFsmState->Poll (Now);
         }
         else
         {
-         // DEBUG_V("pCurrentFsmState not set");
+            // DEBUG_V("pCurrentFsmState not set");
         }
     }
-
     // _ DEBUG_END;
 }   // poll
 
 // *********************************************************************************************
-bool c_ControllerMQTT::ValidateConfiguration()
+bool c_ControllerMQTT::ValidateConfiguration ()
 {
     // DEBUG_START;
 
     bool response = false;
 
-    do // once
+    do  // once
     {
         // clear this flag for later
-        ConfigHasChanged();
+        ConfigHasChanged ();
 
-        String Temp = MqttName.get();
-        if(Temp.isEmpty())
+        String Temp = MqttName.get ();
+
+        if (Temp.isEmpty ())
         {
-            setMessage(F("Broker Subscriber Name is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
+            setMessage (F ("Broker Subscriber Name is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
             break;
         }
 
-        if(MqttBrokerIpAddress.GetIpAddress() == IPAddress(uint32_t(0)))
+        if (MqttBrokerIpAddress.GetIpAddress () == IPAddress (uint32_t (0)))
         {
-            setMessage(F("Broker IP Address is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
+            setMessage (F ("Broker IP Address is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
             break;
         }
-
         // MqttPort: port is always a valid number
 
-        Temp = MqttUser.get();
-        if(Temp.isEmpty() || Temp.equals(MqttUser.getDefault()))
+        Temp = MqttUser.get ();
+
+        if (Temp.isEmpty () || Temp.equals (MqttUser.getDefault ()))
         {
-            setMessage(F("Broker Username Name is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
+            setMessage (F ("Broker Username Name is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
             break;
         }
+        Temp = MqttPassword.get ();
 
-        Temp = MqttPassword.get();
-        if(Temp.isEmpty() || Temp.equals(MqttPassword.getDefault()))
+        if (Temp.isEmpty () || Temp.equals (MqttPassword.getDefault ()))
         {
-            setMessage(F("Broker Password is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
+            setMessage (F ("Broker Password is not set"), cControlCommon::eCssStyle::CssStyleRed_bw);
             break;
         }
-
-     // DEBUG_V("Made it to the end");
+        // DEBUG_V("Made it to the end");
         response = true;
-
-    } while(false);
+    } while (false);
 
     // DEBUG_END;
     return response;
@@ -367,7 +360,7 @@ void fsm_Connection_state_disabled::Init ()
     // DEBUG_START;
 
     pParent->pCurrentFsmState = this;
-    pParent->setMessage(F("Disabled"), cControlCommon::eCssStyle::CssStyleWhite);
+    pParent->setMessage (F ("Disabled"), cControlCommon::eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }
@@ -381,7 +374,6 @@ void fsm_Connection_state_disabled::Poll (uint32_t Now)
     {
         fsm_Connection_state_ValidateConfig_imp.Init ();
     }
-
     // DEBUG_END;
 }
 
@@ -392,7 +384,7 @@ void fsm_Connection_state_ValidateConfig::Init ()
     // DEBUG_START;
 
     pParent->pCurrentFsmState = this;
-    pParent->ValidateConfiguration();
+    pParent->ValidateConfiguration ();
 
     // DEBUG_END;
 }
@@ -406,15 +398,14 @@ void fsm_Connection_state_ValidateConfig::Poll (uint32_t Now)
     {
         fsm_Connection_state_Disconnecting_imp.Init ();
     }
-    else if(pParent->ValidateConfiguration())
+    else if (pParent->ValidateConfiguration ())
     {
-        fsm_Connection_state_WaitForWiFi_imp.Init();
+        fsm_Connection_state_WaitForWiFi_imp.Init ();
     }
     else
     {
         // DEBUG_V("Waiting for a valid configuration");
     }
-
     // DEBUG_END;
 }
 
@@ -422,12 +413,12 @@ void fsm_Connection_state_ValidateConfig::Poll (uint32_t Now)
 // *********************************************************************************************
 void fsm_Connection_state_WaitForWiFi::Init ()
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     pParent->pCurrentFsmState = this;
-    pParent->setMessage(F("Waiting For WiFi to come up"), cControlCommon::eCssStyle::CssStyleWhite);
+    pParent->setMessage (F ("Waiting For WiFi to come up"), cControlCommon::eCssStyle::CssStyleWhite);
 
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -436,20 +427,19 @@ void fsm_Connection_state_WaitForWiFi::Poll (uint32_t Now)
     // DEBUG_START;
 
     if ((!pParent->getBool ()) ||
-        (pParent->ConfigHasChanged()) ||
-        (!pParent->ValidateConfiguration()))
+        (pParent->ConfigHasChanged ()) ||
+        (!pParent->ValidateConfiguration ()))
     {
         fsm_Connection_state_Disconnecting_imp.Init ();
     }
     else if (WiFi.status () == WL_CONNECTED)
     {
-        fsm_Connection_state_connecting_imp.Init();
+        fsm_Connection_state_connecting_imp.Init ();
     }
     else
     {
-     // DEBUG_V("if wifi is up then move to the connecting state");
+        // DEBUG_V("if wifi is up then move to the connecting state");
     }
-
     // DEBUG_END;
 }
 
@@ -457,16 +447,17 @@ void fsm_Connection_state_WaitForWiFi::Poll (uint32_t Now)
 // *********************************************************************************************
 void fsm_Connection_state_connecting::Init ()
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     pParent->pCurrentFsmState = this;
-    pParent->setMessage(F("Connecting to Broker"), cControlCommon::eCssStyle::CssStyleWhite);
+    pParent->setMessage (F ("Connecting to Broker"), cControlCommon::eCssStyle::CssStyleWhite);
 
     Log.traceln (F ("Initializing MQTT"));
+
     if (pParent->mqttClient.connected ())
     {
         // DEBUG_V();
-        fsm_Connection_state_Disconnecting_imp.Init();
+        fsm_Connection_state_Disconnecting_imp.Init ();
     }
     else
     {
@@ -478,51 +469,49 @@ void fsm_Connection_state_connecting::Init ()
                                         static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
                                     pMe->mqttClientCallback (topic, payload, length);
                                 }); // Topic Subscription callback handler.
-*/
+ */
         pParent->mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
         pParent->mqttClient.connect (MqttName.get ().c_str (), MqttUser.get ().c_str (), MqttPassword.get ().c_str ());
     }
     // DEBUG_END;
-
 }
 
 // *********************************************************************************************
 void fsm_Connection_state_connecting::Poll (uint32_t Now)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     if ((!pParent->getBool ()) ||
         (WiFi.status () != WL_CONNECTED) ||
-        (pParent->ConfigHasChanged()) ||
-        (!pParent->ValidateConfiguration()))
+        (pParent->ConfigHasChanged ()) ||
+        (!pParent->ValidateConfiguration ()))
     {
         fsm_Connection_state_Disconnecting_imp.Init ();
     }
-    else if(pParent->mqttClient.connected())
+    else if (pParent->mqttClient.connected ())
     {
         // DEBUG_V("mqtt has connected, move to the connected state.");
-        fsm_Connection_state_connected_imp.Init();
+        fsm_Connection_state_connected_imp.Init ();
     }
-
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 // *********************************************************************************************
 void fsm_Connection_state_connected::Init ()
 {
- // DEBUG_START;
+    // DEBUG_START;
 
-    pParent->pCurrentFsmState = this;
-    NextStatusMessageMS = millis(); // send a status message right away
-    pParent->setMessage(F("Connected to Broker"), cControlCommon::eCssStyle::CssStyleWhite);
+    pParent->pCurrentFsmState   = this;
+    NextStatusMessageMS         = millis ();    // send a status message right away
+    pParent->setMessage (F ("Connected to Broker"), cControlCommon::eCssStyle::CssStyleWhite);
 
     // DEBUG_V();
     String topicStr;
     topicStr    = MqttName.get ();
     topicStr    += MQTT_CONNECT_STR;
-    String payloadStr = F ("{\"boot\": 0}");                        // JSON Formatted payload.
-    pParent->mqttClient.publish (topicStr.c_str (), payloadStr.c_str ());    // Publish reconnect status.
+    String payloadStr = F ("{\"boot\": 0}");                                // JSON Formatted payload.
+    pParent->mqttClient.publish (topicStr.c_str (), payloadStr.c_str ());   // Publish reconnect status.
 
     Log.infoln ((String (F ("-> MQTT Started. Sent Topic: ")) + topicStr + F (", Payload: ") + payloadStr).c_str ());
 
@@ -539,37 +528,35 @@ void fsm_Connection_state_connected::Init ()
     {
         // DEBUG_V();
         Log.errorln (F ("-> MQTT subscribe failed!"));
-        fsm_Connection_state_Disconnecting_imp.Init();
+        fsm_Connection_state_Disconnecting_imp.Init ();
     }
-
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void fsm_Connection_state_connected::Poll (uint32_t Now)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     if ((!pParent->getBool ()) ||
-        (pParent->ConfigHasChanged()) ||
+        (pParent->ConfigHasChanged ()) ||
         (WiFi.status () != WL_CONNECTED) ||
-        (!pParent->ValidateConfiguration()) ||
-        (!pParent->mqttClient.connected()))
+        (!pParent->ValidateConfiguration ()) ||
+        (!pParent->mqttClient.connected ()))
     {
         fsm_Connection_state_Disconnecting_imp.Init ();
     }
     // The messages are sent periodically or immediately whenever they change.
-    else if ((Now > NextStatusMessageMS) || (pParent->VoltagesHaveChanged()))
+    else if ((Now > NextStatusMessageMS) || (pParent->VoltagesHaveChanged ()))
     {
         NextStatusMessageMS += MQTT_MSG_TIME;
-        pParent->SendStatusMessage();
+        pParent->SendStatusMessage ();
     }
     else
     {
         // DEBUG_V("Nothing to do");
     }
-
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -577,7 +564,7 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
 {
     // DEBUG_START;
 
-    do // once
+    do  // once
     {
         String  payloadStr;
         String  topicStr;
@@ -593,52 +580,50 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
         if (topicStr.length () > MQTT_TOPIC_MAX_SZ)
         {
             // DEBUG_V();
-            Log.warningln (String (F ("MQTT Topic Length (%u bytes) is too long! Discarding message")).c_str(), topicStr.length());
+            Log.warningln (String (F ("MQTT Topic Length (%u bytes) is too long! Discarding message")).c_str (), topicStr.length ());
             break;
         }
 
         if (length > MQTT_PAYLD_MAX_SZ)
         {
             // DEBUG_V();
-            Log.warningln (String (F ("MQTT Message Length (%u bytes) is too long! Discarding message")).c_str(), length);
+            Log.warningln (String (F ("MQTT Message Length (%u bytes) is too long! Discarding message")).c_str (), length);
             break;
         }
-
-        payloadStr = String(payload, length);
+        payloadStr = String (payload, length);
         // DEBUG_V(String("payloadStr: ") + payloadStr);
 
         // topic contains the command in the format: subscriberTopicName/cmd/???
-        if(0 != topicStr.indexOf(MqttName.get()))
+        if (0 != topicStr.indexOf (MqttName.get ()))
         {
-            Log.warningln ((String (F ("MQTT Subscription Topic '")) + topicStr + F("' does not match '") + MqttName.get() + F("'")).c_str());
+            Log.warningln ((String (F ("MQTT Subscription Topic '")) + topicStr + F ("' does not match '") + MqttName.get () + F ("'")).c_str ());
             break;
         }
-
-        String Command = topicStr.substring(MqttName.get().length() + strlen(MQTT_CMD_STR));
+        String Command = topicStr.substring (MqttName.get ().length () + strlen (MQTT_CMD_STR));
         // DEBUG_V(String("Command: ") + Command);
 
         String Response;
         CommandProcessor.ProcessCommand (Command, payloadStr, Response);
         // DEBUG_V(String("Response: ") + Response);
         Response += F ("\n");
-        pParent->mqttClient.publish(String(MqttName.get() + MQTT_INFORM_STR).c_str(), String(String(F("Response: ")) + Response).c_str());
+        pParent->mqttClient.publish (String (MqttName.get () + MQTT_INFORM_STR).c_str (),
+                                                                                      String (String (F ("Response: ")) + Response).c_str ());
 
 #ifdef OldWay
-            sprintf(mqttBuff,
+            sprintf (mqttBuff,
                     "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%02X\"}",
                     CMD_INFO_STR,
                     VERSION_STR,
-                    staNameStr.c_str(),
-                    WiFi.localIP().toString().c_str(),
-                    WiFi.RSSI(),
-                    getControllerStatus());
-                  }
+                    staNameStr.c_str (),
+                    WiFi.localIP ().toString ().c_str (),
+                    WiFi.RSSI (),
+                    getControllerStatus ());
+    }
 
-        topicStr = mqttNameStr + MQTT_INFORM_STR;
-        mqttClient.publish(topicStr.c_str(), mqttBuff);
+    topicStr = mqttNameStr + MQTT_INFORM_STR;
+    mqttClient.publish (topicStr.c_str (), mqttBuff);
 #endif // def OldWay
-
-    } while(false);
+    } while (false);
 
     // DEBUG_END;
 }
@@ -647,10 +632,10 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
 // *********************************************************************************************
 void fsm_Connection_state_Disconnecting::Init ()
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     pParent->pCurrentFsmState = this;
-    pParent->setMessage(F("Disconnecting From Broker"), cControlCommon::eCssStyle::CssStyleWhite);
+    pParent->setMessage (F ("Disconnecting From Broker"), cControlCommon::eCssStyle::CssStyleWhite);
 
     if (pParent->mqttClient.connected ())
     {
@@ -658,18 +643,17 @@ void fsm_Connection_state_Disconnecting::Init ()
         pParent->mqttClient.disconnect ();
         Log.traceln (F ("MQTT Controller Disabled: Closed Connection."));
     }
-
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void fsm_Connection_state_Disconnecting::Poll (uint32_t Now)
 {
- // DEBUG_START;
+    // DEBUG_START;
 
     fsm_Connection_state_disabled_imp.Init ();
 
- // DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
