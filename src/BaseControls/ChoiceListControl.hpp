@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: ChoiceListControl.cpp
+   File: ChoiceListControl.hpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
