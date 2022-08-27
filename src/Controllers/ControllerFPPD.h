@@ -42,14 +42,10 @@ private:
 
     void    updateVisibility ();
 
-    uint16_t SequenceLearningEnabledElementId       = Control::noParent;
-    uint16_t SequenceLearningLabelEnabledElementId  = Control::noParent;
     uint16_t SequencesElementId                     = Control::noParent;
     uint16_t CurrentSequenceElementId               = Control::noParent;
 
     bool ControlsHaveBeenAdded      = false;
-    bool SequenceLearningEnabled    = true;
-    uint16_t MaxIdleTimeSec         = 10;
     String CurrentPlayingSequence;
 
     c_ControllerFPPDSequences Sequences;

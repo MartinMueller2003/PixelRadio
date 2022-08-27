@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: StatusControl.hpp
+   File: CurrentSequence.hpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,23 +15,20 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ControlCommon.hpp"
+#include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cStatusControl : public cControlCommon
+class cCurrentSequence : public cStatusControl
 {
 public:
 
-    cStatusControl (const String & Title);
-    cStatusControl ();
-    virtual ~cStatusControl ()    {}
+    cCurrentSequence ();
+    virtual ~cCurrentSequence ()    {}
+    void AddControls(uint16_t TabId, ControlColor color);
 
-    void            restoreConfiguration (JsonObject &) {}
-    void            saveConfiguration (JsonObject &)    {}
+};  // class cCurrentSequence
 
-    virtual bool    set (const String & value);
-    virtual void    set (const String & value, eCssStyle style);
-};  // class cStatusControl
+extern cCurrentSequence CurrentSequence;
 
 // *********************************************************************************************
 // OEF

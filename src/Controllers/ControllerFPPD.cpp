@@ -17,15 +17,15 @@
  */
 
 // *********************************************************************************************
+#include <Arduino.h>
 #include "ControllerFPPD.h"
+#include "SequenceLearning.hpp"
+#include "CurrentSequence.hpp"
 #include "FPPDiscovery.h"
 #include "language.h"
 
-#if __has_include ("memdebug.h")
  # include "memdebug.h"
-#endif //  __has_include("memdebug.h")
 
-static const String DefaultSequenceMsg  = "No Sequence";
 static const PROGMEM char Name []       = "FPPD";
 
 // *********************************************************************************************
@@ -42,49 +42,10 @@ void c_ControllerFPPD::AddControls (uint16_t ctrlTab, ControlColor color)
     // DEBUG_START;
 
     cControllerCommon::AddControls (ctrlTab, color);
-/*
-    uint16_t LabelId;
+    SequenceLearning.AddControls(ctrlTab, color);
+    CurrentSequence.AddControls(SequenceLearning.ControlId, color);
+    Sequences.AddControls (ctrlTab);
 
-    LabelId = ESPUI.addControl (ControlType::Label,
-                                "Sequence Learning",
-                                "Sequence Learning",
-                                ControlColor::Turquoise,
-                                ControlLabelElementId);
-    ESPUI.setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
-
-    SequenceLearningEnabledElementId = ESPUI.addControl (ControlType::Switcher,
-                                                         "Sequence Learning",
-                                                         String (SequenceLearningEnabled ? F ("1") : F ("0")),
-                                                         ControlColor::Turquoise,
-                                                         ControlLabelElementId,
-                                                         [] (Control * sender, int type, void * param)
-                                                         {
-                                                             if (param)
-                                                             {
-                                                                 reinterpret_cast <c_ControllerFPPD *> (param)->CbSequenceLearningEnabled (
-                                                                     sender, type);
-                                                             }
-                                                         },
-                                                         this);
-
-    LabelId = ESPUI.addControl (ControlType::Label,
-                                emptyString.c_str (),
-                                "Cuurent Sequence",     // String("Current Sequence"),
-                                ControlColor::Turquoise,
-                                ControlLabelElementId);
-    ESPUI.      setElementStyle (LabelId, CSS_LABEL_STYLE_BLACK);
-
-    CurrentSequenceElementId = ESPUI.addControl (ControlType::Label,
-                                                 emptyString.c_str (),
-                                                 DefaultSequenceMsg,
-                                                 ControlColor::Turquoise,
-                                                 ControlLabelElementId);
-    ESPUI.      setElementStyle (CurrentSequenceElementId, CSS_LABEL_STYLE_WHITE);
-
-    Sequences.AddControls (EspuiParentElementId);
-
-    ControlsHaveBeenAdded = true;
- */
     // DEBUG_END;
 }   // AddControls
 
@@ -106,19 +67,6 @@ void c_ControllerFPPD::begin ()
 
     // DEBUG_END;
 }   // begin
-
-// ************************************************************************************************
-void c_ControllerFPPD::CbSequenceLearningEnabled (Control * sender, int type)
-{
-    // DEBUG_START;
-
-    SequenceLearningEnabled = (S_ACTIVE == type);
-
-    displaySaveWarning ();
-    Log.infoln ((String (F ("FPPD Controller Sequence Learning Set to: ")) + String (SequenceLearningEnabled ? "On" : "Off")).c_str ());
-
-    // DEBUG_END;
-}   // SequenceLearningEnabledCb
 
 // *********************************************************************************************
 void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
@@ -142,23 +90,18 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
     {
         // DEBUG_V(String("New File: '") + FppdFileName + "'");
         CurrentPlayingSequence = FppdFileName;
-        Control * control = ESPUI.getControl (CurrentSequenceElementId);
-
-        if (control)
+        if (CurrentPlayingSequence.isEmpty ())
         {
-            if (CurrentPlayingSequence.isEmpty ())
-            {
-                ESPUI.updateControlValue (control, DefaultSequenceMsg);
-            }
-            else
-            {
-                ESPUI.updateControlValue (control, CurrentPlayingSequence);
+            CurrentSequence.setMessage(F("No Sequence Playing"), eCssStyle::CssStyleTransparent);
+        }
+        else
+        {
+            CurrentSequence.setMessage(CurrentPlayingSequence, eCssStyle::CssStyleWhite);
 
-                // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
-                if (SequenceLearningEnabled)
-                {
-                    Sequences.AddSequence (CurrentPlayingSequence);
-                }
+            // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
+            if (SequenceLearning.getBool())
+            {
+                Sequences.AddSequence (CurrentPlayingSequence);
             }
         }
     }
@@ -171,19 +114,8 @@ void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cControllerCommon::restoreConfiguration (config);
-
-    if (config.containsKey (N_SequenceLearningEnabled))
-    {
-        SequenceLearningEnabled = config[N_SequenceLearningEnabled];
-        // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
-    }
-
-    if (config.containsKey (N_MaxIdleSec))
-    {
-        MaxIdleTimeSec = config[N_MaxIdleSec];
-        // DEBUG_V(String("MaxIdleTimeSec: ") + String(MaxIdleTimeSec));
-    }
-    Sequences.RestoreConfig (config);
+    SequenceLearning.restoreConfiguration (config);
+    // Sequences.restoreConfiguration (config);
 
     // DEBUG_V("Final");
     // serializeJsonPretty(config, Serial);
@@ -197,10 +129,7 @@ void c_ControllerFPPD::saveConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_START;
 
     cControllerCommon::saveConfiguration (config);
-
-    config[N_MaxIdleSec]                = MaxIdleTimeSec;
-    config[N_SequenceLearningEnabled]   = SequenceLearningEnabled;
-
+    SequenceLearning.saveConfiguration (config);
     Sequences.SaveConfig (config);
 
     // DEBUG_V("Final");
