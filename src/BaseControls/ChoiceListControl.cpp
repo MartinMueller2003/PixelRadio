@@ -166,7 +166,7 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
         String Dummy;
         // DEBUG_V();
-        setIndexValue (CurrentIndex, Dummy, true);
+        setIndex (CurrentIndex, Dummy, true);
 
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
 

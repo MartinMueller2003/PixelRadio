@@ -21,10 +21,8 @@
 
 static const PROGMEM char ConfigName [] = "GPIO33_STR";
 
-static const PROGMEM char Default [] = "DIGITAL OUTPUT = LOW";
-
 // *********************************************************************************************
-cGpio33::cGpio33 () : cGpioCommon ( ConfigName, Default, gpio_num_t(33))
+cGpio33::cGpio33 () : cGpioCommon ( ConfigName, gpio_num_t(33))
 {
     // _ DEBUG_START;
 

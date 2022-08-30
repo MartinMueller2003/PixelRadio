@@ -20,10 +20,9 @@
 #include "memdebug.h"
 
 static const PROGMEM char ConfigName [] = "GPIO19_STR";
-static const PROGMEM char Default [] = "DIGITAL OUTPUT = LOW";
 
 // *********************************************************************************************
-cGpio19::cGpio19 () : cGpioCommon ( ConfigName, Default, gpio_num_t(19))
+cGpio19::cGpio19 () : cGpioCommon ( ConfigName, gpio_num_t(19))
 {
     // _ DEBUG_START;
 
