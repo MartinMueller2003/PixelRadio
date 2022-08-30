@@ -95,6 +95,9 @@
 #include "radio.hpp"
 #include "LoginUser.hpp"
 #include "LoginPassword.hpp"
+#include "Gpio19.hpp"
+#include "Gpio23.hpp"
+#include "Gpio33.hpp"
 
 // ************************************************************************************************
 // Local Strings.
@@ -114,8 +117,6 @@ uint16_t    wifiTab     = Control::noParent;
 uint16_t    aboutLogoID     = Control::noParent;
 uint16_t    aboutVersionID  = Control::noParent;
 
-uint16_t    adjSaveID       = Control::noParent;
-uint16_t    adjSaveMsgID    = Control::noParent;
 uint16_t    adjUvolID       = Control::noParent;
 
 uint16_t    backupRestoreID     = Control::noParent;
@@ -124,11 +125,6 @@ uint16_t    backupSaveID        = Control::noParent;
 uint16_t    backupSaveMsgID     = Control::noParent;
 uint16_t    backupSaveSetID     = Control::noParent;
 uint16_t    backupSaveSetMsgID  = Control::noParent;
-
-uint16_t    ctrlSaveID      = Control::noParent;
-uint16_t    ctrlSaveMsgID   = Control::noParent;
-uint16_t    wifiSaveID      = Control::noParent;
-uint16_t    wifiSaveMsgID   = Control::noParent;
 
 uint16_t    diagBootID      = Control::noParent;
 uint16_t    diagBootMsgID   = Control::noParent;
@@ -139,22 +135,6 @@ uint16_t    diagTimerID     = Control::noParent;
 uint16_t    diagVbatID      = Control::noParent;
 uint16_t    diagVdcID       = Control::noParent;
 
-uint16_t    radioSaveID     = Control::noParent;
-uint16_t    radioSaveMsgID  = Control::noParent;
-
-uint16_t    gpio19ID        = Control::noParent;
-uint16_t    gpio23ID        = Control::noParent;
-uint16_t    gpio33ID        = Control::noParent;
-uint16_t    gpio19MsgID     = Control::noParent;
-uint16_t    gpio23MsgID     = Control::noParent;
-uint16_t    gpio33MsgID     = Control::noParent;
-uint16_t    gpioSaveID      = Control::noParent;
-uint16_t    gpioSaveMsgID   = Control::noParent;
-
-uint16_t    rdsSaveID       = Control::noParent;
-uint16_t    rdsSaveMsgID    = Control::noParent;
-uint16_t    rdsSnameID      = Control::noParent;
-
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
 //                   It is called AFTER ESPUI.begin(), see bottom of startGUI().
@@ -164,10 +144,6 @@ void initCustomCss (void)
     // DEBUG_START;
     // START OF PANEL INLINE STYLES
     ESPUI.      setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
-
-#ifdef OldWay
-        ESPUI.  setPanelStyle ( ctrlMqttPortID, "font-size: 1.25em;");
-#endif // def OldWay
 
     ESPUI.      setPanelStyle ( diagBootID,     "color: black;");
     ESPUI.      setPanelStyle ( diagLogID,      "color: black;");
@@ -190,13 +166,9 @@ void initCustomCss (void)
 
     ESPUI.      setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
 
-    ESPUI.      setElementStyle (   adjSaveMsgID,       CSS_LABEL_STYLE_RED);
-
     ESPUI.      setElementStyle (   backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
     ESPUI.      setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
     ESPUI.      setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
-
-    ESPUI.      setElementStyle (   ctrlSaveMsgID,      CSS_LABEL_STYLE_RED);
 
     ESPUI.      setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
     ESPUI.      setElementStyle (   diagMemoryID,       "max-width: 40%;");
@@ -205,21 +177,11 @@ void initCustomCss (void)
     ESPUI.      setElementStyle (   diagVbatID,         "max-width: 30%;");
     ESPUI.      setElementStyle (   diagVdcID,          "max-width: 30%;");
 
-    ESPUI.      setElementStyle (   gpio19MsgID,        CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   gpio23MsgID,        CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   gpio33MsgID,        CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   gpioSaveMsgID,      CSS_LABEL_STYLE_RED);
-
 #ifdef OldWay
         ESPUI.  setElementStyle (   homeOnAirID,        "max-width: 80%;");
 #endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
-
-    ESPUI.  setElementStyle (   radioSaveMsgID, CSS_LABEL_STYLE_RED);
-    ESPUI.  setElementStyle (   rdsSaveMsgID,   CSS_LABEL_STYLE_BLACK);
-
-    ESPUI.  setElementStyle (   wifiSaveMsgID,  CSS_LABEL_STYLE_MAROON);
 
     // DEBUG_END;
     // END OF STYLES
@@ -230,15 +192,6 @@ void initCustomCss (void)
 void displaySaveWarning (void)
 {
     ConfigSave.SetSaveNeeded ();
-#ifdef OldWay
-        ESPUI.  print ( adjSaveMsgID,       SAVE_SETTINGS_MSG_STR);
-        ESPUI.  print ( backupSaveSetMsgID, SAVE_SETTINGS_MSG_STR);
-        ESPUI.  print ( ctrlSaveMsgID,      SAVE_SETTINGS_MSG_STR);
-        ESPUI.  print ( gpioSaveMsgID,      SAVE_SETTINGS_MSG_STR);
-        ESPUI.  print ( radioSaveMsgID,     SAVE_SETTINGS_MSG_STR);
-        ESPUI.  print ( rdsSaveMsgID,       SAVE_SETTINGS_MSG_STR);
-        ESPUI.  print ( wifiSaveMsgID,      SAVE_SETTINGS_MSG_STR);
-#endif // def OldWay
 }
 
 // ************************************************************************************************
@@ -285,40 +238,6 @@ void StartESPUI ()
         // ESPUI.beginLITTLEFS ( APP_NAME_STR, LoginUser.getStr().c_str (), LoginPassword.getStr().c_str ());
     }
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiGpioMsg(): Update the GPIO Boot Control's Message Label Element.
-bool updateUiGpioMsg (uint8_t pin, String & ControllerName, bool PinState)
-{
-    // DEBUG_START;
-    uint16_t msgID;
-
-    switch (pin)
-    {
-        case GPIO19_PIN:
-        {
-            msgID = gpio19MsgID;
-            break;
-        }
-
-        case GPIO23_PIN:
-        {
-            msgID = gpio23MsgID;
-            break;
-        }
-
-        case GPIO33_PIN:
-        {
-            msgID = gpio33MsgID;
-            break;
-        }
-    }   // switch
-
-    ESPUI.print (msgID, String (F ("{ SET TO ")) + ((PinState) ? GPIO_OUT_HI_STR : GPIO_OUT_LO_STR) + F (" BY ") + ControllerName + F (" }"));
-
-    // DEBUG_END;
-    return true;
 }
 
 // ************************************************************************************************
@@ -420,6 +339,8 @@ void buildGUI (void)
 {
     // DEBUG_START;
 
+    delayMicroseconds(1);
+
     extern uint32_t paVolts;
 
     tempStr.reserve (125);  // Avoid memory re-allocation fragments on the Global String.
@@ -483,34 +404,10 @@ void buildGUI (void)
     // *****************
     // GPIO Tab
 
-    ESPUI.  addControl (ControlType::Separator, GPIO_SETTINGS_STR,  emptyString,        ControlColor::None, gpioTab);
-    gpio19ID =
-        ESPUI.addControl (ControlType::Select, GPIO_19_STR, gpio19BootStr, ControlColor::Dark, gpioTab, & gpioCallback);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_FT_STR,    GPIO_INP_FT_STR,    ControlColor::None, gpio19ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_PU_STR,    GPIO_INP_PU_STR,    ControlColor::None, gpio19ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_PD_STR,    GPIO_INP_PD_STR,    ControlColor::None, gpio19ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_OUT_LO_STR,    GPIO_OUT_LO_STR,    ControlColor::None, gpio19ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_OUT_HI_STR,    GPIO_OUT_HI_STR,    ControlColor::None, gpio19ID);
-    gpio19MsgID = ESPUI.addControl (ControlType::Label, "GPIO_MSG", " ", ControlColor::None, gpio19ID);
-
-    gpio23ID =
-        ESPUI.addControl (ControlType::Select, GPIO_23_STR, gpio23BootStr, ControlColor::Dark, gpioTab, & gpioCallback);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_FT_STR,    GPIO_INP_FT_STR,    ControlColor::None, gpio23ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_PU_STR,    GPIO_INP_PU_STR,    ControlColor::None, gpio23ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_PD_STR,    GPIO_INP_PD_STR,    ControlColor::None, gpio23ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_OUT_LO_STR,    GPIO_OUT_LO_STR,    ControlColor::None, gpio23ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_OUT_HI_STR,    GPIO_OUT_HI_STR,    ControlColor::None, gpio23ID);
-    gpio23MsgID = ESPUI.addControl (ControlType::Label, "GPIO_MSG", " ", ControlColor::None, gpio23ID);
-
-    gpio33ID =
-        ESPUI.addControl (ControlType::Select, GPIO_33_STR, gpio33BootStr, ControlColor::Dark, gpioTab, & gpioCallback);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_FT_STR,    GPIO_INP_FT_STR,    ControlColor::None, gpio33ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_PU_STR,    GPIO_INP_PU_STR,    ControlColor::None, gpio33ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_INP_PD_STR,    GPIO_INP_PD_STR,    ControlColor::None, gpio33ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_OUT_LO_STR,    GPIO_OUT_LO_STR,    ControlColor::None, gpio33ID);
-    ESPUI.  addControl (ControlType::Option,    GPIO_OUT_HI_STR,    GPIO_OUT_HI_STR,    ControlColor::None, gpio33ID);
-    gpio33MsgID = ESPUI.addControl (ControlType::Label, "GPIO_MSG", " ", ControlColor::None, gpio33ID);
-
+    ESPUI.addControl (ControlType::Separator, GPIO_SETTINGS_STR, emptyString, ControlColor::None, gpioTab);
+    Gpio19.AddControls(gpioTab,  ControlColor::Dark);
+    Gpio23.AddControls(gpioTab,  ControlColor::Dark);
+    Gpio33.AddControls(gpioTab,  ControlColor::Dark);
     ConfigSave. AddControls (gpioTab, ControlColor::Dark);
 
     //

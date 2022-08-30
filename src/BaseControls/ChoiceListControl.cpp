@@ -26,15 +26,16 @@ cChoiceListControl::cChoiceListControl (const String                & ConfigName
     ChoiceVector (_ChoiceVector),
     cControlCommon (ConfigName, ControlType::Select, Title, DefaultValue, 64)
 {
-    // DEBUG_START;
+    // _ DEBUG_START;
 
     setControlStyle (CssStyleBlack_bw);
 
     String Dummy;
+    KeyToChoiceVectorMap.clear();
     RefreshOptionList (ChoiceVector);
     set (DefaultValue, Dummy, true);
 
-    // DEBUG_END;
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -63,9 +64,9 @@ uint32_t cChoiceListControl::get32 ()
     }
     else
     {
-        // DEBUG_V (       String ("  Invalid Key: ") + DataValueStr);
-        // DEBUG_V (       String ("NewValue.size: ") + KeyToChoiceVectorMap.size ());
-        // DEBUG_V (       "Dumping NewValue");
+        // DEBUG_V ( String ("  Invalid Key: ") + DataValueStr);
+        // DEBUG_V ( String ("NewValue.size: ") + KeyToChoiceVectorMap.size ());
+        // DEBUG_V ( "Dumping NewValue");
 
         for (auto & CurrentOption : KeyToChoiceVectorMap)
         {
@@ -104,10 +105,10 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 {
     // DEBUG_START;
 
-    // DEBUG_V (       String ("Title: ") + Title);
-    // DEBUG_V (       String ("    NewValue.size: ") + String (KeyToChoiceVectorMap.size ()));
-    // DEBUG_V (       String (" OptionList->size: ") + String (OptionList->size ()));
-    // DEBUG_V (       String ("        ControlId: ") + String (ControlId));
+    // DEBUG_V ( String ("                    Title: ") + GetTitle());
+    // DEBUG_V ( String ("KeyToChoiceVectorMap.size: ") + String (KeyToChoiceVectorMap.size ()));
+    // DEBUG_V ( String ("         OptionList->size: ") + String (OptionList->size ()));
+    // DEBUG_V ( String ("                ControlId: ") + String (ControlId));
 
     if (OptionList->size () > 9)
     {
@@ -120,13 +121,12 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
     do  // once
     {
-        // DEBUG_V (       String ("  OldDataValueStr: '") + DataValueStr + "'");
+        // DEBUG_V ( String ("   OldDataValueStr: '") + DataValueStr + "'");
         uint32_t CurrentIndex = getIndex ();
-        // DEBUG_V (       String ("     CurrentIndex: ") + String (CurrentIndex));
+        // DEBUG_V ( String ("      CurrentIndex: ") + String (CurrentIndex));
         ChoiceVector = OptionList;
-        // DEBUG_V (       String ("ChoiceVector->size: ") + String (ChoiceVector->size ()));
+        // DEBUG_V ( String ("ChoiceVector->size: ") + String (ChoiceVector->size ()));
 
-        // DEBUG_V (       "release the current controls (not trying to reuse them)");
 
         for (auto & CurrentOption : KeyToChoiceVectorMap)
         {
@@ -139,8 +139,8 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
             }
         }
 
-        // DEBUG_V ("Delete all of the entries");
-        KeyToChoiceVectorMap.clear ();
+            // DEBUG_V ("Delete all of the entries");
+            KeyToChoiceVectorMap.clear ();
 
         // DEBUG_V ("Rebuild the map");
         uint32_t Index = 0;
@@ -162,16 +162,16 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
             KeyToChoiceVectorMap[CurrentOption.first] = NewEntry;
         }
-        // DEBUG_V (       String ("KeyToChoiceVectorMap.size: ") + KeyToChoiceVectorMap.size ());
+        // DEBUG_V ( String ("KeyToChoiceVectorMap.size: ") + KeyToChoiceVectorMap.size ());
 
-        // DEBUG_V (       "Override the existing data name to align with the new name.");
-        // DataValueStr = (*ChoiceVector)[CurrentIndex].first;
         String Dummy;
-        setIndex (CurrentIndex, Dummy, true);
+        // DEBUG_V();
+        setIndexValue (CurrentIndex, Dummy, true);
 
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
 
         ESPUI.updateControlValue (ControlId, DataValueStr);
+
     } while (false);
 
     // DEBUG_END;

@@ -86,14 +86,11 @@
 
 #define ERROR_MSG_STR  "ERROR"
 
-#define GPIO_19_STR        "GPIO PIN 19"
-#define GPIO_23_STR        "GPIO PIN 23"
-#define GPIO_33_STR        "GPIO PIN 33"
 #define GPIO_OUT_LO_STR    "DIGITAL OUTPUT = LOW"
 #define GPIO_OUT_HI_STR    "DIGITAL OUTPUT = HIGH"
 #define GPIO_INP_FT_STR    "DIGITAL INPUT = FLOAT"
 #define GPIO_INP_PU_STR    "DIGITAL INPUT = PULLUP"
-#define GPIO_INP_PD_STR    "DIGITAL INPUT = PULLDOWN"
+#define  GPIO_INP_PD_STR    "DIGITAL INPUT = PULLDOWN"
 #define GPIO_DEF_STR       GPIO_INP_PD_STR
 #define GPIO_RD_HI_STR     "PIN READ: 1"
 #define GPIO_RD_LO_STR     "PIN READ: 0"
@@ -201,9 +198,6 @@ extern const PROGMEM char   N_Version[];
 extern const PROGMEM char   CMD_AUDMODE_STR[];
 extern const PROGMEM char   CMD_FREQ_STR[];
 extern const PROGMEM char   CMD_GPIO_STR[];
-extern const PROGMEM char   CMD_GPIO19_STR[];
-extern const PROGMEM char   CMD_GPIO23_STR[];
-extern const PROGMEM char   CMD_GPIO33_STR[];
 extern const PROGMEM char   CMD_INFO_STR[];
 extern const PROGMEM char   CMD_MUTE_STR[];
 extern const PROGMEM char   CMD_PERIOD_STR[];

@@ -33,6 +33,9 @@
 #include "PtyCode.hpp"
 #include "RdsReset.hpp"
 #include "RfCarrier.hpp"
+#include "Gpio19.hpp"
+#include "Gpio23.hpp"
+#include "Gpio33.hpp"
 
 typedef bool (cCommandProcessor::*CmdHandler)(String & Parameter, String & ResponseMessage);
 std::map <String, CmdHandler> ListOfCommands
@@ -125,86 +128,34 @@ bool cCommandProcessor::frequency (String & payloadStr, String & ResponseMessage
 // *************************************************************************************************************************
 bool cCommandProcessor::gpio19 (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    // DEBUG_START;
 
-        return gpio (payloadStr, ControllerName, GPIO19_PIN, Response);
+    bool response = Gpio19.set (payloadStr, ResponseMessage);
 
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::gpio23 (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    // DEBUG_START;
 
-        return gpio (payloadStr, ControllerName, GPIO23_PIN, Response);
+    bool response = Gpio23.set (payloadStr, ResponseMessage);
 
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::gpio33 (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    // DEBUG_START;
 
-        return gpio (payloadStr, ControllerName, GPIO33_PIN, Response);
+    bool response = Gpio33.set (payloadStr, ResponseMessage);
 
-#endif // def OldWay
-
-    return false;
-}
-
-// *************************************************************************************************************************
-// gpioCmd(): Read/Write the User's GPIO Pin States.  On exit, return true if success.
-bool cCommandProcessor::gpio (String & payloadStr, gpio_num_t pin, String & ResponseMessage)
-{
-#ifdef OldWay
-        // DEBUG_START;
-
-        bool response = true;
-
-        do  // once
-        {
-            if (payloadStr.length () > CMD_GPIO_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_GPIO_MAX_SZ);
-            }
-
-            if (payloadStr.equals (F (CMD_GPIO_READ_STR)))
-            {
-                Log.infoln ((String (F ("-> ")) + ControllerName + F (" Controller: Read GPIO Pin-") + String (pin) + F (", Value= ") +
-                             String (digitalRead (pin))).c_str ());
-                break;
-            }
-
-            if (!payloadStr.equals (CMD_GPIO_OUT_HIGH_STR) &&
-                !payloadStr.equals (CMD_GPIO_OUT_LOW_STR))
-            {
-                Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid GPIO Payload (") + payloadStr + F (
-                                "), Ignored.")).c_str ());
-                response = false;
-                break;
-            }
-            bool NewPinState = payloadStr.equals (CMD_GPIO_OUT_HIGH_STR) ? HIGH : LOW;
-            digitalWrite (pin, NewPinState);
-            Log.infoln ((String (F ("-> ")) + ControllerName + F (" Controller: Setting GPIO Pin-") + String (pin) + F (" to ") +
-                         ((pin) ? F (CMD_GPIO_OUT_HIGH_STR) : F (CMD_GPIO_OUT_LOW_STR))).c_str ());
- # ifdef OldWay
-                updateUiGpioMsg (pin, ControllerName, NewPinState);
- # endif // def OldWay
-        } while (false);
-
-        // DEBUG_END;
-
-        return response;
-
-#endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************

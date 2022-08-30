@@ -37,6 +37,10 @@
 #include "WiFiDriver.hpp"
 #include "LoginUser.hpp"
 #include "LoginPassword.hpp"
+#include "LoginPassword.hpp"
+#include "Gpio19.hpp"
+#include "Gpio23.hpp"
+#include "Gpio33.hpp"
 
 #define PixelRadio_LittleFS LittleFS
 
@@ -201,15 +205,11 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     WiFiDriver.saveConfiguration (root);
     LoginUser.saveConfiguration (root);
     LoginPassword.saveConfiguration (root);
+    Gpio19.saveConfiguration (root);
+    Gpio23.saveConfiguration (root);
+    Gpio33.saveConfiguration (root);
 
-#ifdef OldWay
-#endif // def OldWay
     doc["USB_VOLUME"] = usbVol; // Use Serial Control, "VOL=0" to "VOL=30".
-
-    doc["GPIO19_STR"]   = gpio19BootStr;
-    doc["GPIO23_STR"]   = gpio23BootStr;
-    doc["GPIO33_STR"]   = gpio33BootStr;
-
     doc["LOG_LEVEL_STR"] = logLevelStr;
 
     // Serialize JSON to file
@@ -331,25 +331,13 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         Radio.restoreConfiguration (doc);
         LoginUser.restoreConfiguration (doc);
         LoginPassword.restoreConfiguration (doc);
+        Gpio19.restoreConfiguration (doc);
+        Gpio23.restoreConfiguration (doc);
+        Gpio33.restoreConfiguration (doc);
 
         if (doc.containsKey ("USB_VOLUME"))
         {
             usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
-        }
-
-        if ((const char *)doc["GPIO19_STR"] != NULL)
-        {
-            gpio19BootStr = (const char *)doc["GPIO19_STR"];
-        }
-
-        if ((const char *)doc["GPIO23_STR"] != NULL)
-        {
-            gpio23BootStr = (const char *)doc["GPIO23_STR"];
-        }
-
-        if ((const char *)doc["GPIO33_STR"] != NULL)
-        {
-            gpio33BootStr = (const char *)doc["GPIO33_STR"];
         }
 
         if ((const char *)doc["LOG_LEVEL_STR"] != NULL)

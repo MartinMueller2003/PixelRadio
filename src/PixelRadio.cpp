@@ -77,25 +77,14 @@
 
 // Global System Vars
 
-bool    newGpio19Flg    = false;    // New GPIO Pin 19 State.
-bool    newGpio23Flg    = false;    // New GPIO Pin 23 State.
-bool    newGpio33Flg    = false;    // New GPIO Pin 33 State.
 bool    rebootFlg       = false;    // Reboot System if true;
 
 float   vbatVolts   = 0.0f;         // ESP32's Onboard "VBAT" Voltage. Typically 5V.
 float   paVolts     = 0.0f;         // RF Power Amp's Power Supply Voltage. Typically 9V.
 
-String  gpio19CtrlStr   = "";       // GPIO-19 State if Changed by Serial/MQTT/HTTP Controller.
-String  gpio23CtrlStr   = "";       // GPIO-23 State if Changed by Serial/MQTT/HTTP Controller.
-String  gpio33CtrlStr   = "";       // GPIO-33 State if Changed by Serial/MQTT/HTTP Controller.
-
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
 uint8_t usbVol = (atoi (USB_VOL_DEF_STR));  // Control. Unused, for future expansion.
-
-String  gpio19BootStr   = GPIO_DEF_STR;     // Control.
-String  gpio23BootStr   = GPIO_DEF_STR;     // Control.
-String  gpio33BootStr   = GPIO_DEF_STR;     // Control.
 String  logLevelStr     = DIAG_LOG_DEF_STR; // Control, Serial Log Level.
 
 // *********************************************************************************************
@@ -164,8 +153,6 @@ void setup ()
 #ifdef OldWay
         resetControllerRdsValues ();            // Must be called after restoreConfiguration().
 
-        setGpioBootPins ();                     // Must be called after restoreConfiguration().
-
         digitalWrite (  MUX_PIN,    TONE_ON);   // Turn off Music (Mux) LED.
 
         digitalWrite (  MUX_PIN,    TONE_OFF);  // Turn on Music (Mux) LED, restore Line-In to external audio.
@@ -209,8 +196,6 @@ void loop ()
         updateUiDiagTimer ();       // Upddate the Elapsed Timer on UI diagTab.
         updateUiVolts ();           // Update the two system voltages on UI diagTab.
 
-        // no longer needed updateRadioSettings ();         // Update the QN8027 device registers.
-        updateGpioBootPins ();      // Update the User Programmable GPIO Pins.
         updateOnAirSign ();         // Update the Optional "On Air" 12V LED Sign.
 
         rebootSystem ();            // Check to see if Reboot has been requested.

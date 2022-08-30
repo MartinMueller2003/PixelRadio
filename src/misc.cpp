@@ -121,92 +121,6 @@ void rebootSystem (void)
 }
 
 // *********************************************************************************************
-// setGpioBootPins(): Set the GPIO Pin Boot States using Web UI settings.
-void setGpioBootPins (void)
-{
-    if (gpio19BootStr == GPIO_OUT_LO_STR)
-    {
-        pinMode (GPIO19_PIN, OUTPUT);
-        digitalWrite (GPIO19_PIN, LOW);
-    }
-    else if (gpio19BootStr == GPIO_OUT_HI_STR)
-    {
-        pinMode (GPIO19_PIN, OUTPUT);
-        digitalWrite (GPIO19_PIN, HIGH);
-    }
-    else if (gpio19BootStr == GPIO_INP_FT_STR)
-    {
-        pinMode (GPIO19_PIN, INPUT);
-    }
-    else if (gpio19BootStr == GPIO_INP_PU_STR)
-    {
-        pinMode (GPIO19_PIN, INPUT_PULLUP);
-    }
-    else if (gpio19BootStr == GPIO_INP_PD_STR)
-    {
-        pinMode (GPIO19_PIN, INPUT_PULLDOWN);
-    }
-    else
-    {
-        Log.errorln (String (F ("-> setGpioBootPins: GPIO-19 Has Invalid Value.")).c_str ());
-    }
-
-    if (gpio23BootStr == GPIO_OUT_LO_STR)
-    {
-        pinMode (GPIO23_PIN, OUTPUT);
-        digitalWrite (GPIO23_PIN, LOW);
-    }
-    else if (gpio23BootStr == GPIO_OUT_HI_STR)
-    {
-        pinMode (GPIO23_PIN, OUTPUT);
-        digitalWrite (GPIO23_PIN, HIGH);
-    }
-    else if (gpio23BootStr == GPIO_INP_FT_STR)
-    {
-        pinMode (GPIO23_PIN, INPUT);
-    }
-    else if (gpio23BootStr == GPIO_INP_PU_STR)
-    {
-        pinMode (GPIO23_PIN, INPUT_PULLUP);
-    }
-    else if (gpio23BootStr == GPIO_INP_PD_STR)
-    {
-        pinMode (GPIO23_PIN, INPUT_PULLDOWN);
-    }
-    else
-    {
-        Log.errorln (String (F ("-> setGpioBootPins: GPIO-23 Has Invalid Value.")).c_str ());
-    }
-
-    if (gpio33BootStr == GPIO_OUT_LO_STR)
-    {
-        pinMode (GPIO33_PIN, OUTPUT);
-        digitalWrite (GPIO33_PIN, LOW);
-    }
-    else if (gpio33BootStr == GPIO_OUT_HI_STR)
-    {
-        pinMode (GPIO33_PIN, OUTPUT);
-        digitalWrite (GPIO33_PIN, HIGH);
-    }
-    else if (gpio33BootStr == GPIO_INP_FT_STR)
-    {
-        pinMode (GPIO33_PIN, INPUT);
-    }
-    else if (gpio33BootStr == GPIO_INP_PU_STR)
-    {
-        pinMode (GPIO33_PIN, INPUT_PULLUP);
-    }
-    else if (gpio33BootStr == GPIO_INP_PD_STR)
-    {
-        pinMode (GPIO33_PIN, INPUT_PULLDOWN);
-    }
-    else
-    {
-        Log.errorln (String (F ("-> setGpioBootPins: GPIO-33 Has Invalid Value.")).c_str ());
-    }
-}
-
-// *********************************************************************************************
 // spiSdCardShutDown(): Shutdown SD Card SPI Interface and idle important ESP32 Boot Mode Pins.
 // This function should be called after any SPI usage (such as RD/WR SD Card). It will allow for
 // more reliable Code Flashing if the SD Card remains installed.
@@ -242,17 +156,4 @@ bool strIsUint (String intStr)
     }
 
     return true;
-}
-
-// *********************************************************************************************
-// updateGpioBootPins(): Update the GPIO Boot Pins if the Web UI has changed GPIO settings.
-void updateGpioBootPins (void)
-{
-    if (newGpio19Flg || newGpio23Flg || newGpio33Flg)
-    {
-        newGpio19Flg    = false;
-        newGpio23Flg    = false;
-        newGpio33Flg    = false;
-        setGpioBootPins ();
-    }
 }

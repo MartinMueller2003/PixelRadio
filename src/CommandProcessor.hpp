@@ -29,7 +29,6 @@ public:
     bool    gpio19             (String & payloadStr, String & ResponseMessage);
     bool    gpio23             (String & payloadStr, String & ResponseMessage);
     bool    gpio33             (String & payloadStr, String & ResponseMessage);
-    bool    gpio               (String & payloadStr, gpio_num_t pin, String & Response);
     bool    info               (String & payloadStr, String & ResponseMessage);
     bool    log                (String & payloadStr, String & ResponseMessage);
     bool    mute               (String & payloadStr, String & ResponseMessage);

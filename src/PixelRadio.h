@@ -112,9 +112,6 @@ const uint32_t FREE_MEM_UPD_TIME = 1750;    // Update time for Free Memory (on d
 
 // GPIO Pins:
 // Note: GPIOs 34-39 do not support internal pullups or pulldowns.
-const gpio_num_t    GPIO19_PIN  = gpio_num_t::GPIO_NUM_19;
-const gpio_num_t    GPIO23_PIN  = gpio_num_t::GPIO_NUM_23;
-const gpio_num_t    GPIO33_PIN  = gpio_num_t::GPIO_NUM_33;
 const gpio_num_t    MISO_PIN    = gpio_num_t::GPIO_NUM_2;   // SD Card D0, requires INPUT_PULLUP During SD Card Use.
 const gpio_num_t    MOSI_PIN    = gpio_num_t::GPIO_NUM_15;  // SD Card CMD.
 const gpio_num_t    ON_AIR_PIN  = gpio_num_t::GPIO_NUM_12;
@@ -215,7 +212,6 @@ void    displaySaveWarning (void);
 void    initCustomCss (void);
 void    startGUI (void);
 void    updateUiFreeMemory (void);
-bool    updateUiGpioMsg (gpio_num_t pin, String & ControllerName, bool PinState);
 void    updateUiDiagTimer (void);
 void    updateUiVolts (void);
 
@@ -227,9 +223,6 @@ void    diagBootCallback (
     Control * sender,
     int     type);
 void    diagLogCallback (
-    Control * sender,
-    int     type);
-void    gpioCallback (
     Control * sender,
     int     type);
 void    saveSettingsCallback (
@@ -266,10 +259,8 @@ void            processMeasurements (void);
 void            initEprom (void);
 uint8_t         i2cScanner (void);
 void            rebootSystem (void);
-void            setGpioBootPins (void);
 void            spiSdCardShutDown (void);
 bool            strIsUint (String intStr);
-void            updateGpioBootPins (void);
 
 const String    returnClientCode (int code);
 
