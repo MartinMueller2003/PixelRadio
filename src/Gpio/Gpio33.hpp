@@ -25,8 +25,6 @@ public:
     cGpio33 ();
     virtual ~cGpio33 ()    {}
 
-private:
-    gpio_num_t pinId;
 };  // class cGpio33
 
 extern cGpio33 Gpio33;
