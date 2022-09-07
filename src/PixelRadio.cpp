@@ -70,6 +70,7 @@
 #include "radio.hpp"
 #include "TestTone.hpp"
 #include "WiFiDriver.hpp"
+#include "Diagnostics.hpp"
 
 // ************************************************************************************************
 // Global Section
@@ -132,9 +133,8 @@ void setup ()
     // initEprom();
 
     // Setup ADC
-    initVdcAdc ();      // Initialize the Bat Voltage ADC.
     initVdcBuffer ();   // Initialize the two Power Supply Measurement Buffers.
-    Log.infoln (F ("Initialized VBAT and RF_VDC ADCs."));
+    Log.infoln (F ("Initialized RF_VDC ADCs."));
 
     // Setup the File System.
     littlefsInit ();
@@ -181,17 +181,13 @@ void loop ()
     Log.setLevel (LOG_LEVEL_INFO);
 
     // Background tasks
-    // _ DEBUG_V("WiFiDriver");
     WiFiDriver.Poll ();
-    // _ DEBUG_V("ControllerMgr");
     ControllerMgr.poll ();
-    // _ DEBUG_V("Radio");
     Radio.Poll ();
     PeakAudio.poll ();
+    Diagnostics.Poll();
 
 #ifdef OldWay
-        processMeasurements ();     // Measure the two system voltages.
-
         updateUiFreeMemory ();      // Update the Memory value on UI diagTab.
         updateUiDiagTimer ();       // Upddate the Elapsed Timer on UI diagTab.
         updateUiVolts ();           // Update the two system voltages on UI diagTab.

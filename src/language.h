@@ -29,8 +29,6 @@
 #define ADJUST_TAB_STR        "Adjust"
 #define ADJUST_USB_VOL_STR    "USB VOLUME"
 
-
-
 #define APP_NAME_STR  N_PixelRadio
 
 #define BACKUP_TAB_STR       "Backup"
@@ -65,7 +63,6 @@
 #define DIAG_SYSTEM_SEP_STR  "SYSTEM"
 #define DIAG_RUN_TIME_STR    "SYSTEM RUN TIME"
 #define DIAG_TAB_STR         "Diagnostic"
-#define DIAG_VBAT_STR        "SYSTEM VOLTAGE"
 #define DIAG_VDC_STR         "RF PA VOLTAGE"
 
 #define DIAG_LOG_ERROR_STR   "LOG_LEVEL_ERROR"

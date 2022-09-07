@@ -15,20 +15,15 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
-#include "language.h"
-#include "memdebug.h"
-#include "QN8027RadioApi.hpp"
+
 #include "SystemVoltage.hpp"
 
 static const PROGMEM char SYSTEM_VOLTAGE [] = "SYSTEM VOLTAGE";
 
 // *********************************************************************************************
-cSystemVoltage::cSystemVoltage () :   cStatusControl (SYSTEM_VOLTAGE)
+cSystemVoltage::cSystemVoltage () : cVoltageStatus (SYSTEM_VOLTAGE, ADC1_CHANNEL_7)
 {
     // _ DEBUG_START;
-
-    // setControlPanelStyle (ePanelStyle::PanelStyle300);
-
     // _ DEBUG_END;
 }
 

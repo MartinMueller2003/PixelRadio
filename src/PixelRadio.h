@@ -249,9 +249,7 @@ bool    saveConfiguration (
     const char  * filename);
 
 // Measure Prototypes
-void            initVdcAdc (void);
 void            initVdcBuffer (void);
-void            measureVbatVoltage (void);
 void            measureVdcVoltage (void);
 void            processMeasurements (void);
 

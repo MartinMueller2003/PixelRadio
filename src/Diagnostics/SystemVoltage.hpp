@@ -15,15 +15,18 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "StatusControl.hpp"
+#include <esp_adc_cal.h>
+
+#include "VoltageStatus.hpp"
 
 // *********************************************************************************************
-class cSystemVoltage : public cStatusControl
+class cSystemVoltage : public cVoltageStatus
 {
 public:
 
     cSystemVoltage ();
-    virtual ~cSystemVoltage ()    {}
+    virtual ~cSystemVoltage () {}
+
 };  // class cSystemVoltage
 
 extern cSystemVoltage SystemVoltage;

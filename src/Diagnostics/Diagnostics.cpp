@@ -18,16 +18,16 @@
 
 // #include "PixelRadio.h"
 #include "Diagnostics.hpp"
-#include "memdebug.h"
+#include "SystemVoltage.hpp"
 
-#include "Gpio19.hpp"
-#include "Gpio23.hpp"
-#include "Gpio33.hpp"
+#include "memdebug.h"
 
 // *********************************************************************************************
 void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
 {
     DEBUG_START;
+
+    SystemVoltage.AddControls(TabId, color);
 
     DEBUG_END;
 }
@@ -45,6 +45,7 @@ void cDiagnostics::Poll ()
 {
     // _ DEBUG_START;
 
+    SystemVoltage.Poll();
 
     // _ DEBUG_END;
 }

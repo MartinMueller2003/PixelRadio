@@ -98,6 +98,7 @@
 #include "Gpio19.hpp"
 #include "Gpio23.hpp"
 #include "Gpio33.hpp"
+#include "Diagnostics.hpp"
 
 // ************************************************************************************************
 // Local Strings.
@@ -132,7 +133,6 @@ uint16_t    diagLogID       = Control::noParent;
 uint16_t    diagLogMsgID    = Control::noParent;
 uint16_t    diagMemoryID    = Control::noParent;
 uint16_t    diagTimerID     = Control::noParent;
-uint16_t    diagVbatID      = Control::noParent;
 uint16_t    diagVdcID       = Control::noParent;
 
 // ************************************************************************************************
@@ -149,8 +149,6 @@ void initCustomCss (void)
     ESPUI.      setPanelStyle ( diagLogID,      "color: black;");
     ESPUI.      setPanelStyle ( diagMemoryID,   "color: black; font-size: 1.25em;");
     ESPUI.      setPanelStyle ( diagTimerID,    "color: black; font-size: 1.25em;");
-    ESPUI.      setPanelStyle ( diagVbatID,     "color: black; font-size: 1.25em;");
-    ESPUI.      setPanelStyle ( diagVdcID,      "color: black; font-size: 1.25em;");
 
 #ifdef OldWay
         ESPUI.  setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
@@ -174,7 +172,6 @@ void initCustomCss (void)
     ESPUI.      setElementStyle (   diagMemoryID,       "max-width: 40%;");
     ESPUI.      setElementStyle (   diagLogMsgID,       CSS_LABEL_STYLE_BLACK);
     ESPUI.      setElementStyle (   diagTimerID,        "max-width: 50%;");
-    ESPUI.      setElementStyle (   diagVbatID,         "max-width: 30%;");
     ESPUI.      setElementStyle (   diagVdcID,          "max-width: 30%;");
 
 #ifdef OldWay
@@ -297,33 +294,6 @@ void updateUiDiagTimer (void)
     }
 }
 
-// ************************************************************************************************
-void updateUiVolts (void)
-{
-    extern uint32_t paVolts;
-    static uint32_t previousMillis = 0;
-    char logBuff[60];
-
-    if (previousMillis == 0)
-    {
-        previousMillis = millis (); // Initialize First entry;
-    }
-    else if (millis () - previousMillis >= VOLTS_UPD_TIME)
-    {
-        previousMillis  = millis ();
-        tempStr         = String (vbatVolts, 1);
-        tempStr         += " VDC";
-        ESPUI.print (diagVbatID, tempStr);
-        sprintf (logBuff, "Health Check, System Voltage: %01.1f VDC.", vbatVolts);
-        Log.verboseln (logBuff);
-
-        tempStr = String (paVolts, 1);
-        tempStr += " VDC";
-        ESPUI.print (diagVdcID, tempStr);
-        sprintf (logBuff, "Health Check, RF AMP Voltage: %01.1f VDC.", paVolts);
-        Log.verboseln (logBuff);
-    }
-}
 
 // ************************************************************************************************
 // buildGUI(): Create the Web GUI. Must call this
@@ -338,8 +308,6 @@ void updateUiVolts (void)
 void buildGUI (void)
 {
     // DEBUG_START;
-
-    delayMicroseconds(1);
 
     extern uint32_t paVolts;
 
@@ -440,9 +408,7 @@ void buildGUI (void)
     // Diagnostics Tab
 
     ESPUI.  addControl (ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, diagTab);
-    tempStr     = String (vbatVolts, 1);
-    tempStr     += " VDC";
-    diagVbatID  = ESPUI.addControl (ControlType::Label, DIAG_VBAT_STR, tempStr, ControlColor::Sunflower, diagTab);
+    Diagnostics.AddControls(diagTab, ControlColor::Sunflower);
 
     tempStr     = String (paVolts, 1);
     tempStr     += " VDC";
