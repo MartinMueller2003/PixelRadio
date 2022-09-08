@@ -23,9 +23,6 @@
 
 // ************************************************************************************************
 
-#define ADJUST_ANA_VOL_STR    "AUDIO VOLUME"
-#define ADJUST_FRQ_CTRL_STR   "FM TRANSMIT FREQUENCY"
-#define ADJUST_AUDIO_SEP_STR  "AUDIO CONTROLS"
 #define ADJUST_TAB_STR        "Adjust"
 #define ADJUST_USB_VOL_STR    "USB VOLUME"
 
@@ -41,26 +38,16 @@
 #define BACKUP_RES_FAIL_STR  "RESTORE FAILED: CHECK SD CARD"
 #define BACKUP_RES_PASS_STR  "Restore Complete: Reboot Required"
 
-#define CTRL_LOCAL_STR       "LOCAL CONTROL"
 #define CTRL_TAB_STR         "Controllers"
-#define CTRL_HTTP_STR        "HTTP CONTROL"
-#define CTRL_HTPP_SET_STR    "HTTP CONTROL SETTINGS"
-// #define CTRL_LOCAL_SEP_STR   "LOCAL CONTROL SETTINGS"
-#define CTRL_MQTT_STR        "MQTT CONTROL"
-#define CTRL_MQTT_SEP_STR    "MQTT CONTROL SETTINGS"
+
 #define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
-#define CTRL_USB_SERIAL_STR  "USB SERIAL CONTROL SETTINGS"
 
 #define DIAG_BOOT_MSG1_STR   "WARNING: SYSTEM WILL REBOOT<br>** RELEASE NOW TO ABORT **"
 #define DIAG_BOOT_MSG2_STR   "** SYSTEM REBOOTING **<br>WAIT 30 SECONDS BEFORE ACCESSING WEB PAGE."
-#define DIAG_LOG_LVL_STR     "SERIAL LOG LEVEL"
 #define DIAG_LOG_MSG_STR     "WARNING: SERIAL CONTROLLER IS ON"
 #define DIAG_LONG_PRESS_STR  "Long Press (5secs)"
 #define DIAG_REBOOT_STR      "REBOOT SYSTEM"
-#define DIAG_RUN_TIME_STR    "SYSTEM RUN TIME"
 #define DIAG_TAB_STR         "Diagnostic"
-// #define DIAG_VDC_STR         "RF PA VOLTAGE"
-
 
 #define ERROR_MSG_STR  "ERROR"
 
@@ -76,39 +63,11 @@
 #define HOME_FM_SEP_STR     "FM RADIO STATUS"
 #define HOME_SEP_WIFI_STR   "WIFI"
 #define HOME_SEP_RDS_STR    "RADIO DATA SYSTEM (RDS)"
-#define HOME_STA_STR        "STA / AP STATUS"
 #define HOME_TAB_STR        "Home"
-
-#define MQTT_DISCONNECT_STR  "DISCONNECTED"
-#define MQTT_RETRY_FAIL_STR  "RETRY FAIL #"
-
-#define RADIO_AMEAS_SEP_STR   "AUDIO MEASUREMENT"
-#define RADIO_AUTO_OFF_STR    "RF AUTO OFF"
-#define RADIO_SEP_AUDIO_STR   "AUDIO SETTINGS"
-#define RADIO_SEP_MOD_STR     "MODULATION SETTINGS"
-#define RADIO_SEP_RF_SET_STR  "RF SETTINGS"
 #define RADIO_TAB_STR         "Radio"
 
-#define RDS_BLANK_STR         "{ RADIOTEXT MESSAGE IS BLANK }"
-#define RDS_CTRLS_DIS_STR     "{ ALL RDS CONTROLLERS DISABLED }"
-#define RDS_DISPLAY_TIME_STR  "RDS DISPLAY TIME (SECS)"
 #define RDS_GENERAL_SET_STR   "GENERAL RDS SETTINGS"
-#define RDS_LOCAL_DIS_STR     "{ LOCAL RADIOTEXT MESSAGES DISABLED }"
-#define RDS_LOCAL_BLANK_STR   "{ LOCAL RADIOTEXT MESSAGE IS BLANK }"
-#define RDS_LOCKED_STR        "{ LOCKED }"
-#define RDS_NOT_AVAIL_STR     "{ RADIOTEXT UNAVAILABLE }"
-#define RDS_REMOTE_BLANK_STR  "{ REMOTE RADIOTEXT MESSAGE IS BLANK }"
-#define RDS_RESTORE_STR       "Restore Defaults"
 #define RDS_TAB_STR           "Local RDS"
-#define RDS_TEXT1_DEF_STR     "Welcome to Our Drive-by Holiday Light Show"
-#define RDS_TEXT2_DEF_STR     "For Safety Keep Automobile Running Lights On"
-#define RDS_TEXT3_DEF_STR     "Please Drive Slowly and Watch Out for Children and Pets"
-#define RDS_WAITING_STR       "{ WAITING FOR RADIOTEXT }"
-
-#define RF_AUTO_DIS_STR  "RF Always On (default)"
-#define RF_AUTO_ENB_STR  "Turn Off RF >60 Secs Silence"
-#define RF_AUTO_DEF_STR  RF_AUTO_DIS_STR;
-
 
 #define SAVE_BACKUP_STR        "BACKUP SETTINGS TO SD CARD"
 

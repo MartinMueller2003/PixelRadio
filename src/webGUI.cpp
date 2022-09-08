@@ -129,8 +129,7 @@ uint16_t    backupSaveSetMsgID  = Control::noParent;
 
 uint16_t    diagBootID      = Control::noParent;
 uint16_t    diagBootMsgID   = Control::noParent;
-uint16_t    diagLogMsgID    = Control::noParent;
-uint16_t    diagTimerID     = Control::noParent;
+// uint16_t    diagLogMsgID    = Control::noParent;
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
@@ -143,7 +142,6 @@ void initCustomCss (void)
     ESPUI.   setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
     ESPUI.   setPanelStyle ( diagBootID,     "color: black;");
-    ESPUI.   setPanelStyle ( diagTimerID,    "color: black; font-size: 1.25em;");
 
 #ifdef OldWay
         ESPUI.setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
@@ -164,8 +162,6 @@ void initCustomCss (void)
     ESPUI.   setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
     ESPUI.   setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
-    ESPUI.   setElementStyle (   diagLogMsgID,       CSS_LABEL_STYLE_BLACK);
-    ESPUI.   setElementStyle (   diagTimerID,        "max-width: 50%;");
 
 #ifdef OldWay
         ESPUI.setElementStyle (   homeOnAirID,        "max-width: 80%;");
@@ -229,46 +225,6 @@ void StartESPUI ()
     }
     // DEBUG_END;
 }
-
-// *********************************************************************************************
-// updateUiDiagTimer(): Update Elapsed Time on diagTab Page. Show Days + HH:MM:SS.
-void updateUiDiagTimer (void)
-{
-    char timeBuff[30];
-    static uint8_t  seconds         = 0;
-    static uint8_t  minutes         = 0;
-    static uint8_t  hours           = 0;
-    static int16_t  days            = 0;
-    static uint32_t previousMillis  = millis ();
-    uint32_t currentMillis          = millis ();
-
-    if ((currentMillis - previousMillis) >= 1000)
-    {
-        previousMillis = millis () - ((currentMillis - previousMillis) - 1000);
-        seconds++;
-
-        if (seconds >= 60)
-        {
-            seconds = 0;
-            minutes++;
-
-            if (minutes >= 60)
-            {
-                minutes = 0;
-                hours++;
-
-                if (hours >= 24)
-                {
-                    hours = 0;
-                    days++;
-                }
-            }
-        }
-        sprintf (timeBuff, "Days:%u + %02u:%02u:%02u", days, hours, minutes, seconds);
-        ESPUI.print (diagTimerID, timeBuff);
-    }
-}
-
 
 // ************************************************************************************************
 // buildGUI(): Create the Web GUI. Must call this
@@ -340,7 +296,6 @@ void buildGUI (void)
     // *************
     //  Controller Tab
     ControllerMgr.AddControls (ctrlTab, ControlColor::Turquoise);
-    // ESPUI.addControl(ControlType::Separator, CTRL_USB_SERIAL_STR, emptyString, ControlColor::None, ctrlTab);
     ConfigSave.AddControls (ctrlTab, ControlColor::Turquoise);
 
     //
@@ -389,9 +344,6 @@ void buildGUI (void)
 #endif // def OldWay
 
     // DEBUG_V();
-
-    diagTimerID = ESPUI.addControl (ControlType::Label, DIAG_RUN_TIME_STR, emptyString, ControlColor::Sunflower, diagTab);
-
     diagBootID =
         ESPUI.addControl (ControlType::Button,
                           DIAG_REBOOT_STR,
