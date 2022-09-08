@@ -179,8 +179,6 @@ void loop ()
     Diagnostics.Poll();
 
 #ifdef OldWay
-        updateUiDiagTimer ();       // Upddate the Elapsed Timer on UI diagTab.
-
         updateOnAirSign ();         // Update the Optional "On Air" 12V LED Sign.
 
         rebootSystem ();            // Check to see if Reboot has been requested.

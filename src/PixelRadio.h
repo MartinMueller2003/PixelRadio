@@ -210,7 +210,6 @@ void    buildGUI (void);
 void    displaySaveWarning (void);
 void    initCustomCss (void);
 void    startGUI (void);
-void    updateUiDiagTimer (void);
 
 // ESPUI Callbacks
 void    backupCallback (
