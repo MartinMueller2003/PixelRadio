@@ -29,6 +29,17 @@ cSystemRunTime::cSystemRunTime () :  cStatusControl (DIAG_RUN_TIME_STR)
 }
 
 // *********************************************************************************************
+void cSystemRunTime::AddControls (uint16_t TabId, ControlColor color)
+{
+    // DEBUG_START;
+
+    cStatusControl::AddControls(TabId, color);
+    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 void cSystemRunTime::Poll ()
 {
     // _ DEBUG_START;

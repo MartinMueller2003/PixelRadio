@@ -161,7 +161,7 @@ void initCustomCss (void)
     ESPUI.   setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
     ESPUI.   setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
-    ESPUI.   setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
+    ESPUI.   setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_WHITE);
 
 #ifdef OldWay
         ESPUI.setElementStyle (   homeOnAirID,        "max-width: 80%;");

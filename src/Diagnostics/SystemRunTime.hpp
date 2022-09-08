@@ -27,6 +27,7 @@ public:
     cSystemRunTime ();
     virtual ~cSystemRunTime () {}
 
+    void    AddControls (uint16_t TabId, ControlColor color);
     void    Poll ();
 
 private:

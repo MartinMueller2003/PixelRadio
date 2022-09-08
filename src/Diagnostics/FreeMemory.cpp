@@ -28,6 +28,18 @@ cFreeMemory::cFreeMemory () :  cStatusControl (DIAG_FREE_MEM_STR)
     // _ DEBUG_END;
 }
 
+
+// *********************************************************************************************
+void cFreeMemory::AddControls (uint16_t TabId, ControlColor color)
+{
+    // DEBUG_START;
+
+    cStatusControl::AddControls(TabId, color);
+    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
+
+    // DEBUG_END;
+}
+
 // *********************************************************************************************
 void cFreeMemory::Poll ()
 {

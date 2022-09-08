@@ -27,6 +27,7 @@ public:
     cFreeMemory ();
     virtual ~cFreeMemory () {}
 
+    void    AddControls (uint16_t TabId, ControlColor color);
     void    Poll ();
 
 private:

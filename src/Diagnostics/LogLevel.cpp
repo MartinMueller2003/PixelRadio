@@ -52,7 +52,7 @@ std::vector<String> LogLevelPrefixes =
 };
 
 const PROGMEM char   ConfigName     [] = "LOG_LEVEL_STR";
-const PROGMEM char   ControlTitle   [] = "Serial Log Level";
+const PROGMEM char   ControlTitle   [] = "SERIAL LOG LEVEL";
 
 // *********************************************************************************************
 cLogLevel::cLogLevel () :   cChoiceListControl (
@@ -63,10 +63,21 @@ cLogLevel::cLogLevel () :   cChoiceListControl (
 {
 }
 
+
+// *********************************************************************************************
+void cLogLevel::AddControls (uint16_t TabId, ControlColor color)
+{
+    // DEBUG_START;
+
+    cChoiceListControl::AddControls(TabId, color);
+    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
+
+    // DEBUG_END;
+}
 // *************************************************************************************************************************
 void cLogLevel::begin()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     Log.setPrefix (printPrefix);    // set prefix similar to NLog
     Log.setSuffix (printSuffix);    // set suffix
@@ -74,7 +85,7 @@ void cLogLevel::begin()
     // Log.begin (LOG_LEVEL_VERBOSE, & Serial, false);
     Log.begin (LOG_LEVEL_INFO, & Serial, false);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *************************************************************************************************************************

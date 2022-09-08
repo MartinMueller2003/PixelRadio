@@ -35,6 +35,7 @@ void cVoltageStatus::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_START;
 
     cStatusControl::AddControls(TabId, color);
+    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
     initVdcAdc();
 
     // DEBUG_END;

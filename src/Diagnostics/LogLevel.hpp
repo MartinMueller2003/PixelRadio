@@ -26,6 +26,7 @@ public:
     virtual ~cLogLevel ()    {}
 
             void begin();
+            void AddControls (uint16_t TabId, ControlColor color);
             void printLogLevel (Print * _logOutput, int logLevel);
     static  void printPrefix (Print * _logOutput, int logLevel);
     static  void printSuffix (Print * _logOutput, int logLevel);
