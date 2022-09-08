@@ -143,7 +143,6 @@ void initCustomCss (void)
     ESPUI.   setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
     ESPUI.   setPanelStyle ( diagBootID,     "color: black;");
-    ESPUI.   setPanelStyle ( diagMemoryID,   "color: black; font-size: 1.25em;");
     ESPUI.   setPanelStyle ( diagTimerID,    "color: black; font-size: 1.25em;");
 
 #ifdef OldWay
@@ -165,7 +164,6 @@ void initCustomCss (void)
     ESPUI.   setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
     ESPUI.   setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
-    ESPUI.   setElementStyle (   diagMemoryID,       "max-width: 40%;");
     ESPUI.   setElementStyle (   diagLogMsgID,       CSS_LABEL_STYLE_BLACK);
     ESPUI.   setElementStyle (   diagTimerID,        "max-width: 50%;");
 
@@ -230,24 +228,6 @@ void StartESPUI ()
         // ESPUI.beginLITTLEFS ( APP_NAME_STR, LoginUser.getStr().c_str (), LoginPassword.getStr().c_str ());
     }
     // DEBUG_END;
-}
-
-// ************************************************************************************************
-// updateUiFreeMemory(): Update the Free Heap Memory on the diagTab.
-void updateUiFreeMemory (void)
-{
-    char logBuff[40];
-    static uint32_t oldMillis = millis ();
-
-    if (millis () > oldMillis + FREE_MEM_UPD_TIME)
-    {
-        oldMillis   = millis ();
-        tempStr     = ESP.getFreeHeap ();
-        tempStr     += " Bytes";
-        ESPUI.print (diagMemoryID, tempStr);
-        sprintf (logBuff, "Free Heap Memory: %s.", tempStr.c_str ());
-        Log.verboseln (logBuff);
-    }
 }
 
 // *********************************************************************************************
@@ -401,7 +381,6 @@ void buildGUI (void)
     //
     // ******************
     // Diagnostics Tab
-
     Diagnostics.AddControls(diagTab, ControlColor::Sunflower);
 
 #ifdef OldWay
@@ -410,10 +389,6 @@ void buildGUI (void)
 #endif // def OldWay
 
     // DEBUG_V();
-
-    tempStr         = ESP.getFreeHeap ();
-    tempStr         += " Bytes";
-    diagMemoryID    = ESPUI.addControl (ControlType::Label, DIAG_FREE_MEM_STR, tempStr, ControlColor::Sunflower, diagTab);
 
     diagTimerID = ESPUI.addControl (ControlType::Label, DIAG_RUN_TIME_STR, emptyString, ControlColor::Sunflower, diagTab);
 

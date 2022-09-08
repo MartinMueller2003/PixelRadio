@@ -49,20 +49,8 @@ extern uint16_t ctrlLocalID;
 
 extern uint16_t diagBootID;
 extern uint16_t diagBootMsgID;
-extern uint16_t diagLogID;
-extern uint16_t diagLogMsgID;
-extern uint16_t diagMemoryID;
 extern uint16_t diagSoundID;
 extern uint16_t diagTimerID;
-extern uint16_t diagVbatID;
-extern uint16_t diagVdcID;
-
-extern uint16_t gpio19ID;
-extern uint16_t gpio23ID;
-extern uint16_t gpio33ID;
-extern uint16_t gpio19MsgID;
-extern uint16_t gpio23MsgID;
-extern uint16_t gpio33MsgID;
 
 extern uint16_t homeOnAirID;
 

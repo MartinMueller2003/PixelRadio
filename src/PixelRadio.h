@@ -108,7 +108,6 @@ const uint8_t SD_CARD_MODE = 2;
 const float PA_VOLT_MIN = 8.1f;             // Minimum allowed voltage for Power Amp, 9V -10%.
 const float PA_VOLT_MAX = 9.9f;             // Maximum allowed voltage for Power Amp, 9V + 10%.
 // Free Memory
-const uint32_t FREE_MEM_UPD_TIME = 1750;    // Update time for Free Memory (on diagTab), in mS.
 
 // GPIO Pins:
 // Note: GPIOs 34-39 do not support internal pullups or pulldowns.
@@ -211,7 +210,6 @@ void    buildGUI (void);
 void    displaySaveWarning (void);
 void    initCustomCss (void);
 void    startGUI (void);
-void    updateUiFreeMemory (void);
 void    updateUiDiagTimer (void);
 
 // ESPUI Callbacks

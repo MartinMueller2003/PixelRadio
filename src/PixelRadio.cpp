@@ -171,8 +171,6 @@ void loop ()
 {
     // _ DEBUG_START;
 
-    Log.setLevel (LOG_LEVEL_INFO);
-
     // Background tasks
     WiFiDriver.Poll ();
     ControllerMgr.poll ();
@@ -181,9 +179,7 @@ void loop ()
     Diagnostics.Poll();
 
 #ifdef OldWay
-        updateUiFreeMemory ();      // Update the Memory value on UI diagTab.
         updateUiDiagTimer ();       // Upddate the Elapsed Timer on UI diagTab.
-        updateUiVolts ();           // Update the two system voltages on UI diagTab.
 
         updateOnAirSign ();         // Update the Optional "On Air" 12V LED Sign.
 

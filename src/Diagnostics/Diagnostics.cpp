@@ -21,8 +21,13 @@
 #include "SystemVoltage.hpp"
 #include "RfPaVoltage.hpp"
 #include "LogLevel.hpp"
+#include "FreeMemory.hpp"
 
 #include "memdebug.h"
+
+const char PROGMEM DIAG_HEALTH_SEP_STR  [] = "HEALTH";
+const char PROGMEM DIAG_DEBUG_SEP_STR   [] = "CODE DEBUGGING";
+const char PROGMEM DIAG_SYSTEM_SEP_STR  [] = "SYSTEM";
 
 // *********************************************************************************************
 void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
@@ -30,11 +35,17 @@ void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_START;
 
     ESPUI.addControl (ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, TabId);
+
     SystemVoltage.AddControls(TabId, color);
     RfPaVoltage.AddControls(TabId, color);
+
     ESPUI.addControl (ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, TabId);
+
     LogLevel.AddControls(TabId, color);
-    ESPUI.addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, diagTab);
+
+    ESPUI.addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, TabId);
+
+    FreeMemory.AddControls(TabId, color);
 
     // DEBUG_END;
 }
@@ -56,6 +67,7 @@ void cDiagnostics::Poll ()
 
     SystemVoltage.Poll();
     RfPaVoltage.Poll();
+    FreeMemory.Poll();
 
     // _ DEBUG_END;
 }
@@ -64,6 +76,8 @@ void cDiagnostics::Poll ()
 void cDiagnostics::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
+
+    LogLevel.restoreConfiguration(config);
 
     // DEBUG_END;
 }

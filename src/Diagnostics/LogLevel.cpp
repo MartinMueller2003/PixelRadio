@@ -71,8 +71,8 @@ void cLogLevel::begin()
     Log.setPrefix (printPrefix);    // set prefix similar to NLog
     Log.setSuffix (printSuffix);    // set suffix
 
-    Log.begin (LOG_LEVEL_VERBOSE, & Serial, false);
-    // Log.begin (LOG_LEVEL_INFO, & Serial, false);
+    // Log.begin (LOG_LEVEL_VERBOSE, & Serial, false);
+    Log.begin (LOG_LEVEL_INFO, & Serial, false);
 
     DEBUG_END;
 }
@@ -141,11 +141,13 @@ bool cLogLevel::set (const String & value, String & ResponseMessage, bool ForceU
 
     if (Response)
     {
-        // DEBUG_V(String("value: ") + value);
-        // DEBUG_V(String("get32: ") + String(get32()));
+        // DEBUG_V(String("      value: ") + value);
+        // DEBUG_V(String("      get32: ") + String(get32()));
+        // DEBUG_V(String("GetLogLevel: ") + String(Log.getLevel()));
 
-        Log.begin (get32 (), & Serial, false);
-        // Log.setShowLevel (false);   // Do not show loglevel, we will do this in the prefix
+        // Do not show loglevel, we will do this in the prefix
+        Log.setLevel (get32 ());
+        // DEBUG_V(String("GetLogLevel: ") + String(Log.getLevel()));
     }
     // DEBUG_END;
     return Response;
