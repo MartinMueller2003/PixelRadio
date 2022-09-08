@@ -86,7 +86,6 @@ float   paVolts     = 0.0f;         // RF Power Amp's Power Supply Voltage. Typi
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
 uint8_t usbVol = (atoi (USB_VOL_DEF_STR));  // Control. Unused, for future expansion.
-String  logLevelStr     = DIAG_LOG_DEF_STR; // Control, Serial Log Level.
 
 // *********************************************************************************************
 
@@ -121,8 +120,8 @@ void setup ()
     Serial.println ("\r\n\r\n");
     Serial.flush ();
 
-    // Initialize the System Serial Log.
-    initSerialLog (true);   // Initally Set to verbose log level. Will use config file setting at end of setup.
+    // init log
+    Diagnostics.begin();
 
     // Let's Start System Initialization
     Log.infoln ((String (F ("PixelRadio FM Transmitter ")) + F (AUTHOR_STR)).c_str ());
@@ -131,10 +130,6 @@ void setup ()
 
     // Initialize EEPROM Emulation.
     // initEprom();
-
-    // Setup ADC
-    initVdcBuffer ();   // Initialize the two Power Supply Measurement Buffers.
-    Log.infoln (F ("Initialized RF_VDC ADCs."));
 
     // Setup the File System.
     littlefsInit ();
@@ -167,8 +162,6 @@ void setup ()
     startGUI ();
     Log.infoln (F ("-> Web UI Loaded."));
 
-    Log.infoln ("Changing Log Level to %s", logLevelStr.c_str ());
-    initSerialLog (false);
     Serial.flush ();
 }
 

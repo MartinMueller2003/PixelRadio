@@ -19,25 +19,34 @@
 // #include "PixelRadio.h"
 #include "Diagnostics.hpp"
 #include "SystemVoltage.hpp"
+#include "RfPaVoltage.hpp"
+#include "LogLevel.hpp"
 
 #include "memdebug.h"
 
 // *********************************************************************************************
 void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
+    ESPUI.addControl (ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, TabId);
     SystemVoltage.AddControls(TabId, color);
+    RfPaVoltage.AddControls(TabId, color);
+    ESPUI.addControl (ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, TabId);
+    LogLevel.AddControls(TabId, color);
+    ESPUI.addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, diagTab);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cDiagnostics::begin ()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    DEBUG_END;
+    LogLevel.begin();
+
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -46,6 +55,7 @@ void cDiagnostics::Poll ()
     // _ DEBUG_START;
 
     SystemVoltage.Poll();
+    RfPaVoltage.Poll();
 
     // _ DEBUG_END;
 }
@@ -63,6 +73,7 @@ void cDiagnostics::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
+    LogLevel.saveConfiguration(config);
 
     // DEBUG_END;
 }
@@ -89,37 +100,6 @@ void cDiagnostics::updateOnAirSign (void)
     // DEBUG_END;
 }
 
-
-// ************************************************************************************************
-void updateUiVolts (void)
-{
-#ifdef OldWay
-    extern uint32_t paVolts;
-    static uint32_t previousMillis = 0;
-    char logBuff[60];
-
-    if (previousMillis == 0)
-    {
-        previousMillis = millis (); // Initialize First entry;
-    }
-    else if (millis () - previousMillis >= VOLTS_UPD_TIME)
-    {
-        previousMillis  = millis ();
-        tempStr         = String (vbatVolts, 1);
-        tempStr         += " VDC";
-        ESPUI.print (diagVbatID, tempStr);
-        sprintf (logBuff, "Health Check, System Voltage: %01.1f VDC.", vbatVolts);
-        Log.verboseln (logBuff);
-
-        tempStr = String (paVolts, 1);
-        tempStr += " VDC";
-        ESPUI.print (diagVdcID, tempStr);
-        sprintf (logBuff, "Health Check, RF AMP Voltage: %01.1f VDC.", paVolts);
-        Log.verboseln (logBuff);
-    }
-#endif // def OldWay
-
-}
 // *********************************************************************************************
 cDiagnostics Diagnostics;
 

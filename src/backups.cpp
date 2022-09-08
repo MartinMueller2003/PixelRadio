@@ -41,6 +41,7 @@
 #include "Gpio19.hpp"
 #include "Gpio23.hpp"
 #include "Gpio33.hpp"
+#include "Diagnostics.hpp"
 
 #define PixelRadio_LittleFS LittleFS
 
@@ -208,9 +209,9 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     Gpio19.saveConfiguration (root);
     Gpio23.saveConfiguration (root);
     Gpio33.saveConfiguration (root);
+    Diagnostics.saveConfiguration (root);
 
     doc["USB_VOLUME"] = usbVol; // Use Serial Control, "VOL=0" to "VOL=30".
-    doc["LOG_LEVEL_STR"] = logLevelStr;
 
     // Serialize JSON to file
     if (serializeJson (doc, file) == 0)
@@ -334,16 +335,13 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         Gpio19.restoreConfiguration (doc);
         Gpio23.restoreConfiguration (doc);
         Gpio33.restoreConfiguration (doc);
+        Diagnostics.saveConfiguration (doc);
 
         if (doc.containsKey ("USB_VOLUME"))
         {
             usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
         }
 
-        if ((const char *)doc["LOG_LEVEL_STR"] != NULL)
-        {
-            logLevelStr = (const char *)doc["LOG_LEVEL_STR"];
-        }
         Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
         Log.infoln ("-> Configuration Restore Complete.");
 

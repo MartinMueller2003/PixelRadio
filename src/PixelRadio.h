@@ -213,16 +213,12 @@ void    initCustomCss (void);
 void    startGUI (void);
 void    updateUiFreeMemory (void);
 void    updateUiDiagTimer (void);
-void    updateUiVolts (void);
 
 // ESPUI Callbacks
 void    backupCallback (
     Control * sender,
     int     type);
 void    diagBootCallback (
-    Control * sender,
-    int     type);
-void    diagLogCallback (
     Control * sender,
     int     type);
 void    saveSettingsCallback (
@@ -248,11 +244,6 @@ bool    saveConfiguration (
     uint8_t     saveMode,
     const char  * filename);
 
-// Measure Prototypes
-void            initVdcBuffer (void);
-void            measureVdcVoltage (void);
-void            processMeasurements (void);
-
 // Misc Prototypes
 void            initEprom (void);
 uint8_t         i2cScanner (void);
@@ -264,10 +255,6 @@ const String    returnClientCode (int code);
 
 // OTA Prototypes
 void            otaInit (String & mdnsname);
-
-// Serial Log
-uint8_t         getLogLevel (void);
-void            initSerialLog (bool verbose);
 
 // webServer Prototypes
 void            processWebClient (void);

@@ -20,8 +20,9 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cVoltageStatus::cVoltageStatus (String Title, adc1_channel_t _ADC_PORT) :
+cVoltageStatus::cVoltageStatus (String Title, adc1_channel_t _ADC_PORT, float _SCALE) :
     ADC_PORT(_ADC_PORT),
+    SCALE(_SCALE),
     cStatusControl (Title)
 {
     // _ DEBUG_START;
@@ -31,12 +32,12 @@ cVoltageStatus::cVoltageStatus (String Title, adc1_channel_t _ADC_PORT) :
 // *********************************************************************************************
 void cVoltageStatus::AddControls (uint16_t TabId, ControlColor color)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     cStatusControl::AddControls(TabId, color);
     initVdcAdc();
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
@@ -46,7 +47,7 @@ void cVoltageStatus::AddControls (uint16_t TabId, ControlColor color)
 // This MUST be called in setup() before first use of measureVbatVoltage().
 void cVoltageStatus::initVdcAdc (void)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     // Configure ADC
     adc1_config_width (ADC_WIDTH_BIT_12);
@@ -83,7 +84,7 @@ void cVoltageStatus::initVdcAdc (void)
         SumOfVoltages += SingleReadingValue;
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

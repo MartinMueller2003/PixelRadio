@@ -22,6 +22,3 @@
 extern bool newAutoRfFlg;
 extern bool rebootFlg;
 extern uint8_t usbVol;
-
-// GUI Strings
-extern String   logLevelStr;

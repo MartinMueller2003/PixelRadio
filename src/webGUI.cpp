@@ -129,11 +129,8 @@ uint16_t    backupSaveSetMsgID  = Control::noParent;
 
 uint16_t    diagBootID      = Control::noParent;
 uint16_t    diagBootMsgID   = Control::noParent;
-uint16_t    diagLogID       = Control::noParent;
 uint16_t    diagLogMsgID    = Control::noParent;
-uint16_t    diagMemoryID    = Control::noParent;
 uint16_t    diagTimerID     = Control::noParent;
-uint16_t    diagVdcID       = Control::noParent;
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
@@ -143,15 +140,14 @@ void initCustomCss (void)
 {
     // DEBUG_START;
     // START OF PANEL INLINE STYLES
-    ESPUI.      setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
+    ESPUI.   setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
-    ESPUI.      setPanelStyle ( diagBootID,     "color: black;");
-    ESPUI.      setPanelStyle ( diagLogID,      "color: black;");
-    ESPUI.      setPanelStyle ( diagMemoryID,   "color: black; font-size: 1.25em;");
-    ESPUI.      setPanelStyle ( diagTimerID,    "color: black; font-size: 1.25em;");
+    ESPUI.   setPanelStyle ( diagBootID,     "color: black;");
+    ESPUI.   setPanelStyle ( diagMemoryID,   "color: black; font-size: 1.25em;");
+    ESPUI.   setPanelStyle ( diagTimerID,    "color: black; font-size: 1.25em;");
 
 #ifdef OldWay
-        ESPUI.  setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
+        ESPUI.setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
 #endif // def OldWay
 
 
@@ -162,20 +158,19 @@ void initCustomCss (void)
 
     // START OF ELEMENT INLINE STYLES
 
-    ESPUI.      setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
+    ESPUI.   setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
 
-    ESPUI.      setElementStyle (   backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
+    ESPUI.   setElementStyle (   backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
+    ESPUI.   setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
+    ESPUI.   setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
-    ESPUI.      setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
-    ESPUI.      setElementStyle (   diagMemoryID,       "max-width: 40%;");
-    ESPUI.      setElementStyle (   diagLogMsgID,       CSS_LABEL_STYLE_BLACK);
-    ESPUI.      setElementStyle (   diagTimerID,        "max-width: 50%;");
-    ESPUI.      setElementStyle (   diagVdcID,          "max-width: 30%;");
+    ESPUI.   setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_BLACK);
+    ESPUI.   setElementStyle (   diagMemoryID,       "max-width: 40%;");
+    ESPUI.   setElementStyle (   diagLogMsgID,       CSS_LABEL_STYLE_BLACK);
+    ESPUI.   setElementStyle (   diagTimerID,        "max-width: 50%;");
 
 #ifdef OldWay
-        ESPUI.  setElementStyle (   homeOnAirID,        "max-width: 80%;");
+        ESPUI.setElementStyle (   homeOnAirID,        "max-width: 80%;");
 #endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
@@ -376,14 +371,14 @@ void buildGUI (void)
     Gpio19.AddControls(gpioTab,  ControlColor::Dark);
     Gpio23.AddControls(gpioTab,  ControlColor::Dark);
     Gpio33.AddControls(gpioTab,  ControlColor::Dark);
-    ConfigSave. AddControls (gpioTab, ControlColor::Dark);
+    ConfigSave.AddControls (gpioTab, ControlColor::Dark);
 
     //
     // *****************
     // Backup Tab
-    ConfigSave. AddControls (backupTab, ControlColor::Wetasphalt);
+    ConfigSave.AddControls (backupTab, ControlColor::Wetasphalt);
 
-    ESPUI.  addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
+    ESPUI.addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     backupSaveID =
         ESPUI.addControl (ControlType::Button,
                           BACKUP_SAV_CFG_STR,
@@ -407,57 +402,13 @@ void buildGUI (void)
     // ******************
     // Diagnostics Tab
 
-    ESPUI.  addControl (ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, diagTab);
     Diagnostics.AddControls(diagTab, ControlColor::Sunflower);
 
-    tempStr     = String (paVolts, 1);
-    tempStr     += " VDC";
-    diagVdcID   = ESPUI.addControl (ControlType::Label, DIAG_VDC_STR, tempStr, ControlColor::Sunflower, diagTab);
-
-    ESPUI.  addControl (ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, diagTab);
-    diagLogID =
-        ESPUI.addControl (ControlType::Select, DIAG_LOG_LVL_STR, logLevelStr, ControlColor::Sunflower, diagTab, & diagLogCallback);
-    ESPUI.  addControl (ControlType::Option,
-                                DIAG_LOG_SILENT_STR,
-                                DIAG_LOG_SILENT_STR,
-                                ControlColor::None,
-                                diagLogID);
-    ESPUI.  addControl (ControlType::Option,
-                            DIAG_LOG_FATAL_STR,
-                            DIAG_LOG_FATAL_STR,
-                            ControlColor::None,
-                            diagLogID);
-    ESPUI.  addControl (ControlType::Option,
-                            DIAG_LOG_ERROR_STR,
-                            DIAG_LOG_ERROR_STR,
-                            ControlColor::None,
-                            diagLogID);
-    ESPUI.  addControl (ControlType::Option,
-                            DIAG_LOG_WARN_STR,
-                            DIAG_LOG_WARN_STR,
-                            ControlColor::None,
-                            diagLogID);
-    ESPUI.  addControl (ControlType::Option,
-                            DIAG_LOG_INFO_STR,
-                            DIAG_LOG_INFO_STR,
-                            ControlColor::None,
-                            diagLogID);
-    ESPUI.  addControl (ControlType::Option,
-                            DIAG_LOG_TRACE_STR,
-                            DIAG_LOG_TRACE_STR,
-                            ControlColor::None,
-                            diagLogID);
-    ESPUI.  addControl (ControlType::Option,
-                            DIAG_LOG_VERB_STR,
-                            DIAG_LOG_VERB_STR,
-                            ControlColor::None,
-                            diagLogID);
 #ifdef OldWay
         tempStr         = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
         diagLogMsgID    = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
 #endif // def OldWay
 
-    ESPUI.  addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, diagTab);
     // DEBUG_V();
 
     tempStr         = ESP.getFreeHeap ();
