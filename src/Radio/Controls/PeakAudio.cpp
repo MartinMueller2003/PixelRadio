@@ -58,11 +58,12 @@ void cPeakAudio::poll ()
             Result = ">";
         }
         Result  += String (currentReading);
-        Result  += F ("mV");
-
-        cStatusControl::set (Result);
-
-        Log.verboseln (String (F ("Peak Audio Amplitude %03umV.")).c_str (), currentReading);
+        Result  += F (" mV");
+        if(!get().equals(Result))
+        {
+            set (Result);
+            Log.verboseln ((String (F ("Peak Audio Amplitude: ")) + Result).c_str ());
+        }
     } while (false);
 
     // _ DEBUG_END;
