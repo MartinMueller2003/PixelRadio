@@ -80,6 +80,14 @@ public:
         PanelStyle125,
         PanelStyle135,
         PanelStyle300,
+        PanelStyle115_black,
+        PanelStyle125_black,
+        PanelStyle135_black,
+        PanelStyle300_black,
+        PanelStyle115_white,
+        PanelStyle125_white,
+        PanelStyle135_white,
+        PanelStyle300_white,
     };
     virtual void    setControlPanelStyle (ePanelStyle style);
     virtual void    setMessagePanelStyle (ePanelStyle style);

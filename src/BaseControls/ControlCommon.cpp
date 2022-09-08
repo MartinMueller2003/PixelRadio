@@ -60,6 +60,14 @@ static const String PanelStyles [] =
     {"font-size: 1.25em;"},
     {"font-size: 1.35em;"},
     {"font-size: 3.0em;" },
+    {"font-size: 1.15em; color: black;"},
+    {"font-size: 1.25em; color: black;"},
+    {"font-size: 1.35em; color: black;"},
+    {"font-size: 3.0em; color: black;" },
+    {"font-size: 1.15em; color: white;"},
+    {"font-size: 1.25em; color: white;"},
+    {"font-size: 1.35em; color: white;"},
+    {"font-size: 3.0em; color: white;" },
 };
 
 // *********************************************************************************************
