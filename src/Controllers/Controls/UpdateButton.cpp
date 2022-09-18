@@ -21,7 +21,7 @@
 
 // *********************************************************************************************
 
-static const PROGMEM char   _Title       []  = " Update ";
+static const PROGMEM char _Title       [] = " Update ";
 
 // *********************************************************************************************
 cUpdateButton::cUpdateButton () :   cButtonControl (_Title)
@@ -38,7 +38,7 @@ void cUpdateButton::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V(String("color: ") + String(color));
 
     cButtonControl::AddControls (TabId, color);
-    setControl(_Title, eCssStyle::CssStyleBlack);
+    setControl (_Title, eCssStyle::CssStyleBlack);
 
     // DEBUG_END;
 }

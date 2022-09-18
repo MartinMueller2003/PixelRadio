@@ -42,10 +42,10 @@ private:
 
     void    updateVisibility ();
 
-    uint16_t SequencesElementId                     = Control::noParent;
-    uint16_t CurrentSequenceElementId               = Control::noParent;
+    uint16_t SequencesElementId         = Control::noParent;
+    uint16_t CurrentSequenceElementId   = Control::noParent;
 
-    bool ControlsHaveBeenAdded      = false;
+    bool ControlsHaveBeenAdded = false;
     String CurrentPlayingSequence;
 
     c_ControllerFPPDSequences Sequences;

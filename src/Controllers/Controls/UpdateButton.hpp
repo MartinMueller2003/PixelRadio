@@ -25,7 +25,7 @@ public:
     cUpdateButton ();
     virtual ~cUpdateButton ()    {}
 
-    void    AddControls (uint16_t TabId, ControlColor color);
+    void AddControls (uint16_t TabId, ControlColor color);
 };  // class cUpdateButton
 
 // *********************************************************************************************

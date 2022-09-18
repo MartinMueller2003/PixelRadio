@@ -21,8 +21,8 @@
 
 #include "memdebug.h"
 
-static const PROGMEM char Name []                   = "FPPD Sequences";
-static const PROGMEM char DefaultTextFieldValue []  = "Type New Sequence Name Here";
+static const PROGMEM char   Name []                     = "FPPD Sequences";
+static const PROGMEM char   DefaultTextFieldValue []    = "Type New Sequence Name Here";
 
 // *********************************************************************************************
 c_ControllerFPPDSequences::c_ControllerFPPDSequences ()

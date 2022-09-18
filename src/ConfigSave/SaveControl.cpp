@@ -42,7 +42,7 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor color)
     ESPUI.addControl (ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, TabId);
     cButtonControl::AddControls (TabId, color);
 
-    setControlStyle(eCssStyle::CssStyleWhite_grey);
+    setControlStyle (eCssStyle::CssStyleWhite_grey);
 
 
     // DEBUG_END;

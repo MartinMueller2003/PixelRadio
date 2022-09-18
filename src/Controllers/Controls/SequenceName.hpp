@@ -29,7 +29,6 @@ public:
 private:
     cStatusControl InstructionLabel;
     cStatusControl StatusMessage;
-
 };  // class cSequenceName
 
 extern cSequenceName SequenceName;

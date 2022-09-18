@@ -19,7 +19,7 @@
 #include "memdebug.h"
 #include "credentials_user.h"
 
-static const PROGMEM char DefaultTextFieldValue []  = "Type New Sequence Name Here";
+static const PROGMEM char DefaultTextFieldValue [] = "Type New Sequence Name Here";
 
 // *********************************************************************************************
 cSequenceName::cSequenceName () :   cControlCommon (emptyString,
@@ -44,12 +44,12 @@ void cSequenceName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    InstructionLabel.AddControls(value, color);
-    InstructionLabel.setControl(DefaultTextFieldValue, eCssStyle::CssStyleBlack);
+    InstructionLabel.AddControls (value, color);
+    InstructionLabel.setControl (DefaultTextFieldValue, eCssStyle::CssStyleBlack);
 
     cControlCommon::AddControls (value, color);
-    StatusMessage.AddControls(value, color);
-    StatusMessage.setControlStyle(eCssStyle::CssStyleTransparent);
+    StatusMessage.AddControls (value, color);
+    StatusMessage.setControlStyle (eCssStyle::CssStyleTransparent);
 
     // DEBUG_END;
 }

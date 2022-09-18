@@ -25,7 +25,7 @@ public:
     cCreateButton ();
     virtual ~cCreateButton ()    {}
 
-    void    AddControls (uint16_t TabId, ControlColor color);
+    void AddControls (uint16_t TabId, ControlColor color);
 };  // class cCreateButton
 
 // *********************************************************************************************
