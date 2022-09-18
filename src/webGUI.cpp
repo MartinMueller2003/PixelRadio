@@ -118,7 +118,7 @@ uint16_t    wifiTab     = Control::noParent;
 uint16_t    aboutLogoID     = Control::noParent;
 uint16_t    aboutVersionID  = Control::noParent;
 
-uint16_t    adjUvolID       = Control::noParent;
+uint16_t adjUvolID = Control::noParent;
 
 uint16_t    backupRestoreID     = Control::noParent;
 uint16_t    backupRestoreMsgID  = Control::noParent;
@@ -126,10 +126,6 @@ uint16_t    backupSaveID        = Control::noParent;
 uint16_t    backupSaveMsgID     = Control::noParent;
 uint16_t    backupSaveSetID     = Control::noParent;
 uint16_t    backupSaveSetMsgID  = Control::noParent;
-
-uint16_t    diagBootID      = Control::noParent;
-uint16_t    diagBootMsgID   = Control::noParent;
-// uint16_t    diagLogMsgID    = Control::noParent;
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
@@ -139,12 +135,10 @@ void initCustomCss (void)
 {
     // DEBUG_START;
     // START OF PANEL INLINE STYLES
-    ESPUI.   setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
-
-    ESPUI.   setPanelStyle ( diagBootID,     "color: black;");
+    ESPUI.      setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
 #ifdef OldWay
-        ESPUI.setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
+        ESPUI.  setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
 #endif // def OldWay
 
 
@@ -155,16 +149,14 @@ void initCustomCss (void)
 
     // START OF ELEMENT INLINE STYLES
 
-    ESPUI.   setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
+    ESPUI.      setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
 
-    ESPUI.   setElementStyle (   backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
-    ESPUI.   setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
-    ESPUI.   setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
-
-    ESPUI.   setElementStyle (   diagBootMsgID,      CSS_LABEL_STYLE_WHITE);
+    ESPUI.      setElementStyle (   backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
+    ESPUI.      setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
+    ESPUI.      setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
 #ifdef OldWay
-        ESPUI.setElementStyle (   homeOnAirID,        "max-width: 80%;");
+        ESPUI.  setElementStyle (   homeOnAirID,        "max-width: 80%;");
 #endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
@@ -175,14 +167,11 @@ void initCustomCss (void)
 
 // ************************************************************************************************
 // displaySaveWarning(): Show the "Save Required" Message on all configuration pages.
-void displaySaveWarning (void)
-{
-    ConfigSave.SetSaveNeeded ();
-}
+void    displaySaveWarning (void) {ConfigSave.SetSaveNeeded ();}
 
 // ************************************************************************************************
 // startGUI(): Must be called once in startup, AFTER wifiConnect()
-void startGUI (void)
+void    startGUI (void)
 {
     // DEBUG_START;
 
@@ -303,15 +292,15 @@ void buildGUI (void)
     // GPIO Tab
 
     ESPUI.addControl (ControlType::Separator, GPIO_SETTINGS_STR, emptyString, ControlColor::None, gpioTab);
-    Gpio19.AddControls(gpioTab,  ControlColor::Dark);
-    Gpio23.AddControls(gpioTab,  ControlColor::Dark);
-    Gpio33.AddControls(gpioTab,  ControlColor::Dark);
-    ConfigSave.AddControls (gpioTab, ControlColor::Dark);
+    Gpio19.AddControls (gpioTab, ControlColor::Dark);
+    Gpio23.AddControls (gpioTab, ControlColor::Dark);
+    Gpio33.AddControls (gpioTab, ControlColor::Dark);
+    ConfigSave. AddControls (gpioTab, ControlColor::Dark);
 
     //
     // *****************
     // Backup Tab
-    ConfigSave.AddControls (backupTab, ControlColor::Wetasphalt);
+    ConfigSave. AddControls (backupTab, ControlColor::Wetasphalt);
 
     ESPUI.addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     backupSaveID =
@@ -336,22 +325,12 @@ void buildGUI (void)
     //
     // ******************
     // Diagnostics Tab
-    Diagnostics.AddControls(diagTab, ControlColor::Sunflower);
+    Diagnostics.AddControls (diagTab, ControlColor::Sunflower);
 
 #ifdef OldWay
         tempStr         = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
         diagLogMsgID    = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
 #endif // def OldWay
-
-    // DEBUG_V();
-    diagBootID =
-        ESPUI.addControl (ControlType::Button,
-                          DIAG_REBOOT_STR,
-                          DIAG_LONG_PRESS_STR,
-                          ControlColor::Sunflower,
-                          diagTab,
-                          & diagBootCallback);
-    diagBootMsgID = ESPUI.addControl (ControlType::Label, "REBOOT_MSG", emptyString, ControlColor::Sunflower, diagBootID);
 
     //
     // ******************
