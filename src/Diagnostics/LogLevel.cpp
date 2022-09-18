@@ -20,24 +20,25 @@
 #include "LogLevel.hpp"
 #include "memdebug.h"
 
-#define DIAG_LOG_SILENT_STR "LOG_LEVEL_SILENT (default)"
-#define DIAG_LOG_FATAL_STR  "LOG_LEVEL_FATAL"
-#define DIAG_LOG_ERROR_STR  "LOG_LEVEL_ERROR"
-#define DIAG_LOG_WARN_STR   "LOG_LEVEL_WARNING"
-#define DIAG_LOG_INFO_STR   "LOG_LEVEL_INFO"
-#define DIAG_LOG_TRACE_STR  "LOG_LEVEL_TRACE"
-#define DIAG_LOG_VERB_STR   "LOG_LEVEL_VERBOSE"
-#define DIAG_LOG_DEF_STR    DIAG_LOG_VERB_STR
+#define DIAG_LOG_SILENT_STR "SILENT"
+#define DIAG_LOG_FATAL_STR  "FATAL"
+#define DIAG_LOG_ERROR_STR  "ERROR"
+#define DIAG_LOG_WARN_STR   "WARNING"
+#define DIAG_LOG_INFO_STR   "INFO"
+#define DIAG_LOG_TRACE_STR  "TRACE"
+#define DIAG_LOG_VERB_STR   "VERBOSE"
+// #define DIAG_LOG_DEF_STR    DIAG_LOG_SILENT_STR
+#define DIAG_LOG_DEF_STR    DIAG_LOG_INFO_STR
 
 static const ChoiceListVector_t MapOfLogLevels
 {
-    {DIAG_LOG_SILENT_STR,   String (LOG_LEVEL_SILENT)},
-    {DIAG_LOG_FATAL_STR,    String (LOG_LEVEL_FATAL)},
-    {DIAG_LOG_ERROR_STR,    String (LOG_LEVEL_ERROR)},
-    {DIAG_LOG_WARN_STR,     String (LOG_LEVEL_WARNING)},
-    {DIAG_LOG_INFO_STR,     String (LOG_LEVEL_INFO)},
-    {DIAG_LOG_TRACE_STR,    String (LOG_LEVEL_TRACE)},
-    {DIAG_LOG_VERB_STR,     String (LOG_LEVEL_VERBOSE)},
+    {String("SILENT"),   String (LOG_LEVEL_SILENT)},
+    {String("FATAL"),    String (LOG_LEVEL_FATAL)},
+    {String("ERROR"),    String (LOG_LEVEL_ERROR)},
+    {String("WARNING"),  String (LOG_LEVEL_WARNING)},
+    {String("INFO"),     String (LOG_LEVEL_INFO)},
+    {String("TRACE"),    String (LOG_LEVEL_TRACE)},
+    {String("VERBOSE"),  String (LOG_LEVEL_VERBOSE)},
 };
 
 std::vector <String> LogLevelPrefixes =
