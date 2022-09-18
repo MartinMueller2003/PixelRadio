@@ -34,8 +34,8 @@
     // Must call wifiConnect() BEFORE calling otaInit().
     void otaInit (String & mdnsname)
     {
-        static int8_t   prog            = 0;    // Upload Progress, in percent.
-        static int8_t   oldProg         = -1;   // Previous Upload Progress.
+        static int8_t   prog            = 0;        // Upload Progress, in percent.
+        static int8_t   oldProg         = -1;       // Previous Upload Progress.
         static bool     updateLittleFS  = false;    // Flag for LITTLEFS OTA.
 
         ArduinoOTA.setPort (OTA_PORT);

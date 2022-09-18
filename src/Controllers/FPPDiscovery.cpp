@@ -513,7 +513,7 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
 
                 FileOffsetToCurrentHeaderRecord += VariableDataHeaderTotalLength + sizeof (FSEQRawVariableDataHeader);
             }   // while there are headers to process
-        }   // there are headers to process
+        }       // there are headers to process
 
     #endif    // def DOWENEEDTHIS
 

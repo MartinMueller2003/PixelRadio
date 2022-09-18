@@ -78,7 +78,7 @@
 
 // Global System Vars
 
-bool rebootFlg = false; // Reboot System if true;
+bool rebootFlg = false;     // Reboot System if true;
 
 float   vbatVolts   = 0.0f; // ESP32's Onboard "VBAT" Voltage. Typically 5V.
 float   paVolts     = 0.0f; // RF Power Amp's Power Supply Voltage. Typically 9V.
@@ -95,12 +95,12 @@ void setup ()
     char    logBuff[80];
 
     // enableCore1WDT();
-    pinMode (   ON_AIR_PIN, OUTPUT);    // "ON AIR" Sign Driver Output.
+    pinMode (   ON_AIR_PIN, OUTPUT);        // "ON AIR" Sign Driver Output.
     pinMode (   MISO_PIN,   INPUT_PULLUP);  // MISO Requires Internal Pull-up.
     pinMode (   SCL_PIN,    INPUT_PULLUP);  // I2C Clock Pin.
-    pinMode (   SDA_PIN,    INPUT); // I2C Data Pin. Do NOT Enable Internal Pullup.
-    pinMode (   TONE_PIN,   OUTPUT);    // PWM Audio Test Tone, Output.
-    pinMode (   SD_CS_PIN,  OUTPUT);    // SD Card Chip Select, Output.
+    pinMode (   SDA_PIN,    INPUT);         // I2C Data Pin. Do NOT Enable Internal Pullup.
+    pinMode (   TONE_PIN,   OUTPUT);        // PWM Audio Test Tone, Output.
+    pinMode (   SD_CS_PIN,  OUTPUT);        // SD Card Chip Select, Output.
 
     digitalWrite (SD_CS_PIN, HIGH);
 
@@ -148,7 +148,7 @@ void setup ()
     restoreConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);
 
     #ifdef OldWay
-        resetControllerRdsValues ();    // Must be called after restoreConfiguration().
+        resetControllerRdsValues ();            // Must be called after restoreConfiguration().
 
         digitalWrite (  MUX_PIN,    TONE_ON);   // Turn off Music (Mux) LED.
 

@@ -22,10 +22,10 @@
 #include "QN8027RadioApi.hpp"
 #include "memdebug.h"
 
-#define INP_IMP05K_STR   "5K Ohms"
-#define INP_IMP10K_STR   "10K Ohms"
-#define INP_IMP20K_STR   "20K Ohms"
-#define INP_IMP40K_STR   "40K Ohms"
+#define INP_IMP05K_STR  "5K Ohms"
+#define INP_IMP10K_STR  "10K Ohms"
+#define INP_IMP20K_STR  "20K Ohms"
+#define INP_IMP40K_STR  "40K Ohms"
 
 static ChoiceListVector_t MapOfImpedances
 {

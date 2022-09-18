@@ -74,7 +74,7 @@ void cTestTone::Init ()
 {
     // DEBUG_START;
 
-    pinMode (MUX_PIN, OUTPUT);  // Audio MUX Control (Line-In:Tone-In), Output.
+    pinMode (MUX_PIN, OUTPUT);          // Audio MUX Control (Line-In:Tone-In), Output.
     digitalWrite (MUX_PIN, TONE_OFF);   // Init Audio Mux, Enable Audio Line-In Jack, Music LED On.
     ledcSetup (TEST_TONE_CHNL, 1000, 8);
 

@@ -79,7 +79,7 @@ void instalLogoImageFile (void)
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
     pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-    SD.end ();  // Reset interface (in case SD card had been swapped).
+    SD.end ();                          // Reset interface (in case SD card had been swapped).
 
     if (!SD.begin (SD_CS_PIN, SPI2))
     {

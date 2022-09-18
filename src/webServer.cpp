@@ -158,12 +158,12 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 
             String  argStr          = "";
             String  currentLine     = "";
-            String  requestStr      = "";   // Var to capture the HTTP request reply.
-            String  requestLcStr    = "";   // Var to store the lower case HTTP request reply.
+            String  requestStr      = "";               // Var to capture the HTTP request reply.
+            String  requestLcStr    = "";               // Var to store the lower case HTTP request reply.
 
             WiFiClient client = server.available ();    // Listen for incoming web clients.
 
-            if (client) // New client connection (web page access).
+            if (client)                                 // New client connection (web page access).
             {
                 requestStr.reserve (HTTP_RESPONSE_MAX_SZ + 10);
                 requestLcStr.reserve (HTTP_RESPONSE_MAX_SZ + 10);
@@ -758,7 +758,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                 currentLine = "";
                             }
                         }
-                        else if (c != '\r') // if you got anything else but a carriage return character,
+                        else if (c != '\r')     // if you got anything else but a carriage return character,
                         {
                             currentLine += c;   // add it to the end of the currentLine
                         }

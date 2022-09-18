@@ -665,7 +665,7 @@ void QN8027Radio::sendStationName (String SN)
     }
 
     str_len = SN.length () + 1;
-    rds_len = str_len + (str_len % 2);  // Make it a multiple of 2.
+    rds_len = str_len + (str_len % 2);          // Make it a multiple of 2.
 
     memset (char_array, char(NULL), PSN_SIZE);  // Clear PSN Buffer (fill with nulls). Mod By TEB, Feb-03-2022.
     SN.toCharArray (char_array, str_len);
@@ -708,7 +708,7 @@ void QN8027Radio::waitForRDSSend ()
                 break;
             }
 
-            delay (RDS_SEND_DELAY); // This wait time allows the RDS buffer contents to be sent.
+            delay (RDS_SEND_DELAY);         // This wait time allows the RDS buffer contents to be sent.
         } while (status == rdsSentStatus);  // Wait for rdsSentStatus to toggle.
 
         rdsSentStatus = status;
@@ -730,9 +730,9 @@ void QN8027Radio::sendRadioText (String RT)
     }
 
     str_len = RT.length () + 1;
-    rds_len = str_len + (str_len % 4);  // Make it a multiple of 4.
+    rds_len = str_len + (str_len % 4);                  // Make it a multiple of 4.
     memset (char_array, char(NULL), RADIOTEXT_SIZE);    // Clear RadioText Buffer (fill with nulls). Mod By TEB, Feb-03-2022.
-    RT.toCharArray (char_array, str_len);   // Copy RadioText to Buffer.
+    RT.toCharArray (char_array, str_len);               // Copy RadioText to Buffer.
 
     for (int i = 0;i < rds_len;i += 4)
     {

@@ -12,45 +12,45 @@
 #include <Wire.h>
 #ifndef QN8027Radio_h
     #    define QN8027Radio_h
-    #    define                 QN8027_I2C_ADDR           0x2C
-    #    define         RADIOTEXT_SIZE        64
-    #    define         PSN_SIZE              8
+    #    define                 QN8027_I2C_ADDR 0x2C
+    #    define         RADIOTEXT_SIZE          64
+    #    define         PSN_SIZE                8
 
     // QN8027 Register
-    #    define         SYSTEM_REG            0x00
-    #    define         CH1_REG               0x01
-    #    define         GPLT_REG              0x02
-    #    define         XTL_REG               0x03
-    #    define         VGA_REG               0x04
-    #    define         CID1_REG              0x05
-    #    define         CID2_REG              0x06
-    #    define         STATUS_REG            0x07
-    #    define         RDSD0_REG             0x08
-    #    define         RDSD1_REG             0x09
-    #    define         RDSD2_REG             0x0A
-    #    define         RDSD3_REG             0x0B
-    #    define         RDSD4_REG             0x0C
-    #    define         RDSD5_REG             0x0D
-    #    define         RDSD6_REG             0x0E
-    #    define         RDSD7_REG             0x0F
-    #    define         PAC_REG               0x10
-    #    define         FDEV_REG              0x11
-    #    define         RDS_REG               0x12
-    #    define         ANT_REG               0x1E
+    #    define         SYSTEM_REG  0x00
+    #    define         CH1_REG     0x01
+    #    define         GPLT_REG    0x02
+    #    define         XTL_REG     0x03
+    #    define         VGA_REG     0x04
+    #    define         CID1_REG    0x05
+    #    define         CID2_REG    0x06
+    #    define         STATUS_REG  0x07
+    #    define         RDSD0_REG   0x08
+    #    define         RDSD1_REG   0x09
+    #    define         RDSD2_REG   0x0A
+    #    define         RDSD3_REG   0x0B
+    #    define         RDSD4_REG   0x0C
+    #    define         RDSD5_REG   0x0D
+    #    define         RDSD6_REG   0x0E
+    #    define         RDSD7_REG   0x0F
+    #    define         PAC_REG     0x10
+    #    define         FDEV_REG    0x11
+    #    define         RDS_REG     0x12
+    #    define         ANT_REG     0x1E
 
     // indicate self definition
-    #    define                 ON                                        0x01
-    #    define                 OFF                                       0x00
-    #    define                 CH0_MASK                          0x03
-    #    define                 POWER_MAX                         75
-    #    define                 POWER_MIN                         20
+    #    define                 ON          0x01
+    #    define                 OFF         0x00
+    #    define                 CH0_MASK    0x03
+    #    define                 POWER_MAX   75
+    #    define                 POWER_MIN   20
 
     class QN8027Radio
     {
 private:
 
         uint8_t _address    = QN8027_I2C_ADDR;  // TEB, MAR-07-2022
-        uint8_t freqH       = 0x00; // TEB, MAR-07-2022
+        uint8_t freqH       = 0x00;             // TEB, MAR-07-2022
 
 public:
 
@@ -89,7 +89,7 @@ public:
         uint8_t     AudioPeakClear  = 0;    // Toggle between 1 and 0 to clear audioInputMaxPeak
         uint8_t     PAOutputPower   = 75;   // PowerAmp Output = 0.62*N + 71 dBu ; N={20 to 75}
 
-        uint8_t     rdsSentStatus = 0;  // Toggle between 8 and 0 when RDS is sent successfully.
+        uint8_t     rdsSentStatus = 0;      // Toggle between 8 and 0 when RDS is sent successfully.
 
 
         QN8027Radio ();

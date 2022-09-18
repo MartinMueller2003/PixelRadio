@@ -22,12 +22,12 @@
 #include "memdebug.h"
 #include "QN8027RadioApi.hpp"
 
-#define VGA_GAIN0_STR     "3dB"
-#define VGA_GAIN1_STR     "6dB"
-#define VGA_GAIN2_STR     "9dB"
-#define VGA_GAIN3_STR     "12dB"
-#define VGA_GAIN4_STR     "15dB"
-#define VGA_GAIN5_STR     "18dB"
+#define VGA_GAIN0_STR   "3dB"
+#define VGA_GAIN1_STR   "6dB"
+#define VGA_GAIN2_STR   "9dB"
+#define VGA_GAIN3_STR   "12dB"
+#define VGA_GAIN4_STR   "15dB"
+#define VGA_GAIN5_STR   "18dB"
 
 static ChoiceListVector_t MapOfGainValues
 {

@@ -27,18 +27,18 @@
 // *********************************************************************************************
 // VERSION STRING: Must be updated with each public release.
 // The version is shown during boot on Serial Log and on the "About" UI web Tab page.
-#define VERSION_STR       "1.1.0"
-#define AUTHOR_STR        "by Thomas Black"
-#define BLD_DATE_STR      "Jun-13-2022"
-#define GITHUB_REPO_STR   "<a href=\"https://github.com/thomastech/PixelRadio/\" target=\"_blank\">Click Here for Information</a>"
+#define VERSION_STR     "1.1.0"
+#define AUTHOR_STR      "by Thomas Black"
+#define BLD_DATE_STR    "Jun-13-2022"
+#define GITHUB_REPO_STR "<a href=\"https://github.com/thomastech/PixelRadio/\" target=\"_blank\">Click Here for Information</a>"
 
 // *********************************************************************************************
 
 /* Useful Macros for getting elapsed time */
 #define numberOfSeconds(_time_) (_time_ % SECS_PER_MIN)
 #define numberOfMinutes(_time_) ((_time_ / SECS_PER_MIN) % SECS_PER_MIN)
-#define numberOfHours(_time_) ((_time_ % SECS_PER_DAY) / SECS_PER_HOUR)
-#define elapsedDays(_time_) (_time_ / SECS_PER_DAY)
+#define numberOfHours(_time_)   ((_time_ % SECS_PER_DAY) / SECS_PER_HOUR)
+#define elapsedDays(_time_)     (_time_ / SECS_PER_DAY)
 
 // Controller Command Limits
 const uint8_t   CMD_GPIO_MAX_SZ = 7;    // GPIO Cmd Code max length is 7 ("input/inputpd/inputpu/outhigh/outlow/read").
@@ -47,25 +47,25 @@ const uint8_t   CMD_SYS_MAX_SZ  = 6;    // System Cmd Code length is 6 ("system"
 const uint8_t   CMD_TIME_MAX_SZ = 4;    // Time Command Arg length is 3 (5-900). Add +1 to trap typos.
 
 // Controller Command Parameters
-#define CMD_GPIO_OUT_HIGH_STR "outhigh"
-#define CMD_GPIO_OUT_LOW_STR  "outlow"
-#define CMD_GPIO_READ_STR     "read"
+#define CMD_GPIO_OUT_HIGH_STR   "outhigh"
+#define CMD_GPIO_OUT_LOW_STR    "outlow"
+#define CMD_GPIO_READ_STR       "read"
 
-#define CMD_LOG_RST_STR    "restore"
-#define CMD_LOG_SIL_STR    "silent"
+#define CMD_LOG_RST_STR "restore"
+#define CMD_LOG_SIL_STR "silent"
 
-#define CMD_MODE_MONO_STR  "mono"
-#define CMD_MODE_STER_STR  "stereo"
+#define CMD_MODE_MONO_STR   "mono"
+#define CMD_MODE_STER_STR   "stereo"
 
-#define CMD_MUTE_OFF_STR  "off"
-#define CMD_MUTE_ON_STR   "on"
+#define CMD_MUTE_OFF_STR    "off"
+#define CMD_MUTE_ON_STR     "on"
 
-#define CMD_RDS_CODE_STR  "rds"
+#define CMD_RDS_CODE_STR "rds"
 
-#define CMD_RF_OFF_STR    "off"
-#define CMD_RF_ON_STR     "on"
+#define CMD_RF_OFF_STR  "off"
+#define CMD_RF_ON_STR   "on"
 
-#define CMD_SYS_CODE_STR  "system"
+#define CMD_SYS_CODE_STR "system"
 
 // const bool CTRL_SERIAL_DEF_FLG = true;
 const bool  RDS_TEXTX_DEF_FLG   = true;
@@ -79,7 +79,7 @@ const int   XXXX_SET_ADDR   = 10;   // E2Prom Address for (unused), 16-bit.
 
 // ESP32
 const uint32_t  ESP_BAUD_DEF        = 115200;   // Default ESP32 Baud Rate.
-const uint32_t  ELAPSED_TMR_TIME    = 1000; // RDS Elapsed Time Update period, in mS. Do Not change.
+const uint32_t  ELAPSED_TMR_TIME    = 1000;     // RDS Elapsed Time Update period, in mS. Do Not change.
 
 // ESPUI (Web UI):
 #define ANA_VOL_MIN_STR "0"
@@ -98,9 +98,9 @@ const uint32_t  ELAPSED_TMR_TIME    = 1000; // RDS Elapsed Time Update period, i
 #define USB_VOL_DEF_STR USB_VOL_MAX_STR
 
 // File System
-#define  BACKUP_FILE_NAME "/backup.cfg"
-#define  CRED_FILE_NAME   "/credentials.txt"
-#define  LOGO_GIF_NAME    "/RadioLogo225x75_base64.gif" // Base64 gif file, 225 pixel W x 75 pixel H.
+#define  BACKUP_FILE_NAME   "/backup.cfg"
+#define  CRED_FILE_NAME     "/credentials.txt"
+#define  LOGO_GIF_NAME      "/RadioLogo225x75_base64.gif"   // Base64 gif file, 225 pixel W x 75 pixel H.
 const uint8_t LITTLEFS_MODE = 1;
 const uint8_t SD_CARD_MODE = 2;
 
@@ -128,10 +128,10 @@ const int   SIGN_OFF    = 0;
 const int   SIGN_ON     = 1;
 
 // HTTP Controller
-#define  HTTP_CMD_STR         "/cmd?"   // Command preamble.
-#define  HTTP_EMPTY_RESP_STR  "get /favicon.ico"    // Empty Reply, ignore this payload.
-#define  HTTP_POST_STR        "content-length:" // Post data length Keyword.
-#define  HTTP_CMD_END_STR     "http/"   // This string marks the End of HTTP Controller Command.
+#define  HTTP_CMD_STR           "/cmd?"             // Command preamble.
+#define  HTTP_EMPTY_RESP_STR    "get /favicon.ico"  // Empty Reply, ignore this payload.
+#define  HTTP_POST_STR          "content-length:"   // Post data length Keyword.
+#define  HTTP_CMD_END_STR       "http/"             // This string marks the End of HTTP Controller Command.
 
 
 const uint16_t HTTP_RESPONSE_MAX_SZ = 225;  // Maximum Chars Allowed in HTTP client response.
@@ -144,7 +144,7 @@ const uint8_t RADIO_CAL_RETRY = 3;  // RF Port Calibration Retry Count (Maximum 
 
 
 // Serial Controller
-#define SERIAL_LOG_STR       "log"  // Serial Log Command Keyword.
+#define SERIAL_LOG_STR "log"    // Serial Log Command Keyword.
 
 // Time Conversion
 const uint32_t  MSECS_PER_SEC   = 1000UL;
@@ -157,15 +157,15 @@ const uint16_t  OTA_PORT    = 3232; // Port for OTA.
 const uint16_t  OTA_TIMEOUT = 3000; // Max allowed time to receive OTA data.
 
 // Volts:
-const float MIN_VOLTS           = 4.5f; // Minimum Power Supply volts.
+const float MIN_VOLTS           = 4.5f;     // Minimum Power Supply volts.
 const float VOLTS_HYSTERESIS    = 0.15f;    // Voltage Hysterisis.
-const uint16_t VOLTS_UPD_TIME   = 3750; // Power Supply Volts GUI Update time (on diagTab), in mS.
+const uint16_t VOLTS_UPD_TIME   = 3750;     // Power Supply Volts GUI Update time (on diagTab), in mS.
 // const uint32_t CLIENT_TIMEOUT = 500;   // Webserver Client Timeout, in mS.
 
 // Web Server
-#define HTML_HEADER_STR   "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
-#define HTML_DOCTYPE_STR  "<!DOCTYPE HTML>\r\n<html>"
-#define HTML_CLOSE_STR    "</html>\r\n\r\n"
+#define HTML_HEADER_STR     "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
+#define HTML_DOCTYPE_STR    "<!DOCTYPE HTML>\r\n<html>"
+#define HTML_CLOSE_STR      "</html>\r\n\r\n"
 
 const uint16_t  HTTP_PORT       = 8080; // Port for HTTP commands
 const uint16_t  WEBSERVER_PORT  = 80;   // Port for Web Server. Do not change.

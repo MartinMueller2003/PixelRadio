@@ -21,8 +21,8 @@
 #include <Wire.h>
 
 // I2C:
-static const uint8_t    I2C_QN8027_ADDR = 0x2c; // I2C Address of QN8027 FM Radio Chip.
-static const uint8_t    I2C_DEV_CNT     = 1;    // Number of expected i2c devices on bus.
+static const uint8_t    I2C_QN8027_ADDR = 0x2c;     // I2C Address of QN8027 FM Radio Chip.
+static const uint8_t    I2C_DEV_CNT     = 1;        // Number of expected i2c devices on bus.
 static const uint32_t I2C_FREQ_HZ       = 100000;   // I2C master clock frequency
 
 // *********************************************************************************************
@@ -32,7 +32,7 @@ void cQN8027RadioApi::begin ()
 
     // Initialize i2c.
     Wire.begin (SDA_PIN, SCL_PIN);
-    Wire.setClock (I2C_FREQ_HZ);    // 100KHz i2c speed.
+    Wire.setClock (I2C_FREQ_HZ);        // 100KHz i2c speed.
     pinMode (SCL_PIN, INPUT_PULLUP);    // I2C Clock Pin.
 
     if (!checkRadioIsPresent ())
@@ -198,10 +198,10 @@ void cQN8027RadioApi::initRadioChip (void)
         FmRadio.reset ();
         delay (30);
 
-        FmRadio.setClockSource (0x00);  // XTAL on pins 1 & 2.
+        FmRadio.setClockSource (0x00);          // XTAL on pins 1 & 2.
         FmRadio.setCrystalFreq (12);
-        FmRadio.setCrystalCurrent (30); // 30% of 400uA Max = 120uA.
-        FmRadio.setTxFreqDeviation (0x81);  // 75Khz, Total Broadcast channel Bandwidth
+        FmRadio.setCrystalCurrent (30);         // 30% of 400uA Max = 120uA.
+        FmRadio.setTxFreqDeviation (0x81);      // 75Khz, Total Broadcast channel Bandwidth
         FmRadio.setTxPilotFreqDeviation (9);    // Use default 9% (6.75KHz) Pilot Tone Deviation.
 
         #ifdef OldWay

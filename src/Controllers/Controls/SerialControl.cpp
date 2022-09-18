@@ -58,15 +58,15 @@ void cSerialControl::initSerialControl (HardwareSerial * port)
     SerialPort->flush ();   // Purge pending serial chars.
     SerialPort->end ();
 
-    serial_manager.start (*port);   // Start Command Line Processor.
+    serial_manager.start (*port);           // Start Command Line Processor.
     serial_manager.setFlag (CMD_EOL_TERM);  // EOL Termination character.
-    serial_manager.setDelimiter ('=');  // Parameter delimiter character.
+    serial_manager.setDelimiter ('=');      // Parameter delimiter character.
 
-    SerialPort->flush ();   // Purge pending serial chars.
+    SerialPort->flush ();                   // Purge pending serial chars.
     SerialPort->end ();
 
     SerialPort->begin (get32 ());   // set the baudrate
-    SerialPort->flush ();   // Repeat the flushing.
+    SerialPort->flush ();           // Repeat the flushing.
 
     // DEBUG_END;
 }
@@ -131,10 +131,10 @@ bool cSerialControl::set (const String & value, String & ResponseMessage, bool F
         }
 
         // DEBUG_V("Change Baudrate");
-        SerialPort->flush ();   // Flush all characters in queue.
-        SerialPort->end (); // Flush all characters in queue.
+        SerialPort->flush ();           // Flush all characters in queue.
+        SerialPort->end ();             // Flush all characters in queue.
         SerialPort->begin (get32 ());   // set the new baudrate
-        SerialPort->println (); // Push out any corrupted data due to baud change.
+        SerialPort->println ();         // Push out any corrupted data due to baud change.
         // DEBUG_V();
     } while (false);
 

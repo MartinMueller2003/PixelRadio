@@ -40,7 +40,7 @@ private:
     float                           SCALE                   = 1.0;
     adc1_channel_t                  ADC_PORT                = ADC1_CHANNEL_7;   // GPIO-35, Onboard ESP32 "VBAT" Voltage.
 
-    #define NumberOfReadingsToSave    16
+    #define NumberOfReadingsToSave 16
     int32_t                         ArrayOfVoltageReadings[NumberOfReadingsToSave];
     uint32_t                        CurrentReadingIndex = 0;    // Index of the current voltage reading
     uint32_t                        SumOfVoltages       = 0;    // average voltage

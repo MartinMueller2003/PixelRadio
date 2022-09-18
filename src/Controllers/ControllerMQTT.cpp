@@ -64,13 +64,13 @@ static cControlCommon * ListOfControls [] =
     & MqttPassword
 };
 
-static const uint8_t MQTT_FAIL_CNT          = 10;   // Maximum failed MQTT reconnects before disabling MQTT.
-static const uint16_t   MQTT_KEEP_ALIVE     = 90;   // MQTT Keep Alive Time, in Secs.
+static const uint8_t MQTT_FAIL_CNT          = 10;       // Maximum failed MQTT reconnects before disabling MQTT.
+static const uint16_t   MQTT_KEEP_ALIVE     = 90;       // MQTT Keep Alive Time, in Secs.
 static const int32_t    MQTT_MSG_TIME       = 30000;    // MQTT Periodic Message Broadcast Time, in mS.
-static const uint8_t    MQTT_PAYLD_MAX_SZ   = 100;  // Must be larger than RDS_TEXT_MAX_SZ.
+static const uint8_t    MQTT_PAYLD_MAX_SZ   = 100;      // Must be larger than RDS_TEXT_MAX_SZ.
 static const uint8_t    MQTT_PW_MAX_SZ      = 48;
 static const int32_t    MQTT_RECONNECT_TIME = 30000;    // MQTT Reconnect Delay Time, in mS;
-static const uint8_t    MQTT_RETRY_CNT      = 6;    // MQTT Reconnection Count (max attempts).
+static const uint8_t    MQTT_RETRY_CNT      = 6;        // MQTT Reconnection Count (max attempts).
 static const uint8_t    MQTT_TOPIC_MAX_SZ   = 45;
 static const uint8_t    MQTT_USER_MAX_SZ    = 48;
 
@@ -473,14 +473,14 @@ void fsm_Connection_state_connecting::Init ()
     else
     {
         pParent->mqttClient.setServer (MqttBrokerIpAddress.GetIpAddress (), MqttPort.get32 ());
-/*
-  *         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
-  *                                 {
-  *                                     c_ControllerMQTT * pMe =
-  *                                         static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
-  *                                     pMe->mqttClientCallback (topic, payload, length);
-  *                                 }); // Topic Subscription callback handler.
-  */
+        /*
+          *         mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
+          *                                 {
+          *                                     c_ControllerMQTT * pMe =
+          *                                         static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
+          *                                     pMe->mqttClientCallback (topic, payload, length);
+          *                                 }); // Topic Subscription callback handler.
+          */
         pParent->mqttClient.setKeepAlive (MQTT_KEEP_ALIVE);
         pParent->mqttClient.connect (MqttName.get ().c_str (), MqttUser.get ().c_str (), MqttPassword.get ().c_str ());
     }
@@ -523,7 +523,7 @@ void fsm_Connection_state_connected::Init ()
     String topicStr;
     topicStr    = MqttName.get ();
     topicStr    += MQTT_CONNECT_STR;
-    String payloadStr = F ("{\"boot\": 0}");    // JSON Formatted payload.
+    String payloadStr = F ("{\"boot\": 0}");                                // JSON Formatted payload.
     pParent->mqttClient.publish (topicStr.c_str (), payloadStr.c_str ());   // Publish reconnect status.
 
     Log.infoln ((String (F ("-> MQTT Started. Sent Topic: ")) + topicStr + F (", Payload: ") + payloadStr).c_str ());
@@ -588,7 +588,7 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
         topicStr.reserve (MQTT_TOPIC_MAX_SZ + 1);
 
         topicStr = topic;
-        topicStr.trim ();   // Remove leading/trailing spaces.
+        topicStr.trim ();           // Remove leading/trailing spaces.
         topicStr.toLowerCase ();    // Force lowercase, prevent case matching problems.
 
         // DEBUG_V(String("topicStr: ") + topicStr);

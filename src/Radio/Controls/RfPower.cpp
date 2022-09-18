@@ -31,10 +31,10 @@
 // *********************************************************************************************
 // *********************************************************************************************
 
-#define RF_PWR_LOW_STR   "Low"
-#define RF_PWR_MED_STR   "Med"
-#define RF_PWR_HIGH_STR  "High (default)"
-#define RF_PWR_DEF_STR   RF_PWR_HIGH_STR;
+#define RF_PWR_LOW_STR  "Low"
+#define RF_PWR_MED_STR  "Med"
+#define RF_PWR_HIGH_STR "High (default)"
+#define RF_PWR_DEF_STR  RF_PWR_HIGH_STR;
 
 static ChoiceListVector_t MapOfPowerLevels
 {

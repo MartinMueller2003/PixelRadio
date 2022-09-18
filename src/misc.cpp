@@ -37,7 +37,7 @@ uint8_t i2cScanner (void)
 
         for (byte addr = 0x01;addr < 0x7f;addr++)
         {
-            Wire.beginTransmission (addr);  // Begin I2C transmission Address (i)
+            Wire.beginTransmission (addr);          // Begin I2C transmission Address (i)
 
             if (Wire.endTransmission (true) == 0)   // Receive 0 = success (ACK response)
             {
@@ -127,12 +127,12 @@ void rebootSystem (void)
 // more reliable Code Flashing if the SD Card remains installed.
 void spiSdCardShutDown (void)
 {
-    pinMode (SD_CS_PIN, OUTPUT);    // SD Card Chip Select.
-    digitalWrite (SD_CS_PIN, HIGH); // CS Active Low. High = Disable SD Card.
+    pinMode (SD_CS_PIN, OUTPUT);                // SD Card Chip Select.
+    digitalWrite (SD_CS_PIN, HIGH);             // CS Active Low. High = Disable SD Card.
 
     pinMode (   MISO_PIN,   INPUT_PULLDOWN);    // SD D0, Allow pin to Pulldown Low (for reliable Flashing).
-    pinMode (   MOSI_PIN,   INPUT_PULLUP);  // SD CMD, Allow pin to Pullup High (for reliable Flashing).
-    pinMode (   SD_CLK_PIN, INPUT_PULLUP);  // SD CLK.
+    pinMode (   MOSI_PIN,   INPUT_PULLUP);      // SD CMD, Allow pin to Pullup High (for reliable Flashing).
+    pinMode (   SD_CLK_PIN, INPUT_PULLUP);      // SD CLK.
 }
 
 // *********************************************************************************************

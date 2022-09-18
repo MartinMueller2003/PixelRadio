@@ -105,9 +105,9 @@ void backupCallback (Control * sender, int type)
 }
 
 #ifdef OldWay
-// ************************************************************************************************
-// diagBootCallback(): Reboot ESP32
-//                     Must hold button for several seconds, will reboot upon release.
+    // ************************************************************************************************
+    // diagBootCallback(): Reboot ESP32
+    //                     Must hold button for several seconds, will reboot upon release.
     void diagBootCallback (Control * sender, int type)
     {
         char logBuff[60];
@@ -151,9 +151,9 @@ void backupCallback (Control * sender, int type)
                         tempStr = "color: ";
                         tempStr += COLOR_BLK_STR;
                         tempStr += ";";
-                        ESPUI.setPanelStyle (diagBootID, tempStr);  // White (default) Panel Name.
+                        ESPUI.setPanelStyle (diagBootID, tempStr);                      // White (default) Panel Name.
                         ESPUI.getControl (diagBootID)->color = ControlColor::Sunflower; // Restore orig panel color
-                        ESPUI.updateControl (diagBootID);   // Apply changes to control.
+                        ESPUI.updateControl (diagBootID);                               // Apply changes to control.
                         ESPUI.print (diagBootMsgID, "");
                         Log.infoln ("diagBootCallback: Reboot Button Released (Canceled).");
                     }

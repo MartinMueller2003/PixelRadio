@@ -28,8 +28,8 @@ static const PROGMEM char   UNITS_MHZ_STR           []  = " MHz";
 const float FM_FREQ_DEF         = 88.7f;    // 88.7MHz FM.
 const float FM_FREQ_MAX         = 107.9f;   // 107.9MHz FM.
 const float FM_FREQ_MIN         = 88.1f;    // 88.1MHz FM.
-const float FM_FREQ_SKP_KHZ_10X = 1;    // 100Khz.
-const float FM_FREQ_SKP_MHZ_10X = 10;   // 1MHz.
+const float FM_FREQ_SKP_KHZ_10X = 1;        // 100Khz.
+const float FM_FREQ_SKP_MHZ_10X = 10;       // 1MHz.
 
 // *********************************************************************************************
 cFrequencyAdjust::cFrequencyAdjust ()  :

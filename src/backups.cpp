@@ -66,7 +66,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
     pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-    SD.end ();  // Reset interface (in case SD card had been swapped).
+    SD.end ();                          // Reset interface (in case SD card had been swapped).
     spiSdCardShutDown ();
 
     if (!SD.begin (SD_CS_PIN, SPI2))    // SD Card Missing, nothing to do, exit.
@@ -154,7 +154,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         Log.infoln ("Backup Configuration to SD Card ...");
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-        SD.end ();  // Re-init Interface in case SD card had been swapped).
+        SD.end ();                          // Re-init Interface in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
@@ -266,7 +266,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
 
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-        SD.end ();  // Reset interface (in case SD card had been swapped).
+        SD.end ();                          // Reset interface (in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {

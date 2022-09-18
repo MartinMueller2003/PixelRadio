@@ -24,7 +24,7 @@
 #include "memdebug.h"
 
 #define PRE_EMPH_USA_STR    "North America (75uS)"  // North America / Japan.
-#define PRE_EMPH_EUR_STR    "Europe (50uS)" // Europe, Australia, China.
+#define PRE_EMPH_EUR_STR    "Europe (50uS)"         // Europe, Australia, China.
 #define PRE_EMPH_USA_VAL    OFF
 #define PRE_EMPH_EUR_VAL    ON
 

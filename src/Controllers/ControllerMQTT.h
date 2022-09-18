@@ -61,16 +61,16 @@ private:
     float                   oldVbatVolts    = -1.0f;
     float                   oldPaVolts      = -1.0f;
 
-// MQTT Command
+    // MQTT Command
 
-// MQTT Subscriptions
-    #define MQTT_CMD_SUB_STR   F ("/cmd/#") // MQTT wildcard Subscription, receive all /cmd messages.
+    // MQTT Subscriptions
+    #define MQTT_CMD_SUB_STR F ("/cmd/#")   // MQTT wildcard Subscription, receive all /cmd messages.
 
-// MQTT Publish Topics
-    #define MQTT_CONNECT_STR   F ("/connect")   // Publish topic, Client MQTT Subscription.
-    #define MQTT_GPIO_STR      F ("/gpio")  // Publish topic, Client MQTT Subscription.
-    #define MQTT_INFORM_STR    F ("/info")  // Publish topic, Client MQTT Subscription.
-    #define MQTT_VOLTS_STR     F ("/volts") // Publish topic, Client MQTT Subscription.
+    // MQTT Publish Topics
+    #define MQTT_CONNECT_STR    F ("/connect")  // Publish topic, Client MQTT Subscription.
+    #define MQTT_GPIO_STR       F ("/gpio")     // Publish topic, Client MQTT Subscription.
+    #define MQTT_INFORM_STR     F ("/info")     // Publish topic, Client MQTT Subscription.
+    #define MQTT_VOLTS_STR      F ("/volts")    // Publish topic, Client MQTT Subscription.
 
     friend class fsm_Connection_state_disabled;
     friend class fsm_Connection_state_WaitForWiFi;

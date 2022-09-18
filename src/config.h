@@ -34,7 +34,7 @@
 /* COMMAND LINE INTERFACE SECTION (SERIAL PORT RDS CONTROLLER)
   *    Change CMD_EOL_TERM if your serial console doesn't send a Carriage Return <CR> when [ENTER] is pressed.
   *    For example, change to  '\n' if your terminal only sends a NEWLINE <LF> when [ENTER] is pressed. */
-#define CMD_EOL_TERM    '\r'    // Serial Manager EOL termination character.
+#define CMD_EOL_TERM '\r'   // Serial Manager EOL termination character.
 
 /* Uncomment MQTT_ENB define statement to enable the MQTT Controller. Approx 17KB used. */
 #define MQTT_ENB
