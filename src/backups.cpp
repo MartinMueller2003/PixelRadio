@@ -270,7 +270,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             }
             else
             {
-                Log.errorln ("-> SD Card Unknown Error.");                                                          \
+                Log.errorln ("-> SD Card Unknown Error.");                                                           \
             }
                 SD.end ();
                 spiSdCardShutDown ();
@@ -341,7 +341,6 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         {
             usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
         }
-
         Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
         Log.infoln ("-> Configuration Restore Complete.");
 

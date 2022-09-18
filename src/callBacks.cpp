@@ -103,75 +103,78 @@ void backupCallback (Control * sender, int type)
 #endif // def OldWay
 }
 
+#ifdef OldWay
 // ************************************************************************************************
 // diagBootCallback(): Reboot ESP32
 //                     Must hold button for several seconds, will reboot upon release.
-void diagBootCallback (Control * sender, int type)
-{
-    char logBuff[60];
-    uint32_t currentMillis      = millis ();    // Snapshot of System Timer.
-    static uint32_t oldMillis   = 0;
-
-    // sprintf(logBuff, "diagBootCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
-    // Log.verboseln(logBuff);
-
-    if (sender->id == diagBootID)
+    void diagBootCallback (Control * sender, int type)
     {
-        switch (type)
+        char logBuff[60];
+        uint32_t currentMillis      = millis ();    // Snapshot of System Timer.
+        static uint32_t oldMillis   = 0;
+
+        // sprintf(logBuff, "diagBootCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
+        // Log.verboseln(logBuff);
+
+        if (sender->id == diagBootID)
         {
-            case B_DOWN:
+            switch (type)
             {
-                oldMillis   = millis ();
-                tempStr     = "color: ";
-                tempStr     += COLOR_RED_STR;
-                tempStr     += ";";
-                ESPUI.setPanelStyle (diagBootID, tempStr);  // Red Panel Name.
-                ESPUI.print (diagBootMsgID, DIAG_BOOT_MSG1_STR);
-                Log.infoln ("diagBootCallback: Reboot Button Pressed.");
-                break;
-            }
-
-            case B_UP:
-            {
-                if (currentMillis > oldMillis + 5000)
+                case B_DOWN:
                 {
-                    tempStr = "background-color: ";
-                    tempStr += COLOR_RED_STR;
-                    tempStr += ";";
-                    ESPUI.setPanelStyle (diagBootID, tempStr);  // Red Panel Body
-                    ESPUI.print (diagBootMsgID, DIAG_BOOT_MSG2_STR);
-                    Log.warningln ("diagBootCallback: Reboot Activated. Goodbye!");
-                    Serial.flush ();
-                    rebootFlg = true;   // Tell Main Loop to reboot.
+                    oldMillis   = millis ();
+                    tempStr     = "color: ";
+                    tempStr     += COLOR_RED_STR;
+                    tempStr     += ";";
+                    ESPUI.setPanelStyle (diagBootID, tempStr);  // Red Panel Name.
+                    ESPUI.print (diagBootMsgID, DIAG_BOOT_MSG1_STR);
+                    Log.infoln ("diagBootCallback: Reboot Button Pressed.");
+                    break;
                 }
-                else
-                {
-                    tempStr = "color: ";
-                    tempStr += COLOR_BLK_STR;
-                    tempStr += ";";
-                    ESPUI.setPanelStyle (diagBootID, tempStr);                      // White (default) Panel Name.
-                    ESPUI.getControl (diagBootID)->color = ControlColor::Sunflower; // Restore orig panel color
-                    ESPUI.updateControl (diagBootID);                               // Apply changes to control.
-                    ESPUI.print (diagBootMsgID, "");
-                    Log.infoln ("diagBootCallback: Reboot Button Released (Canceled).");
-                }
-                break;
-            }
 
-            default:
-            {
-                sprintf (logBuff, "diagBootCallback: %s.", BAD_VALUE_STR);
-                Log.errorln (logBuff);
-                break;
-            }
-        }   // switch
+                case B_UP:
+                {
+                    if (currentMillis > oldMillis + 5000)
+                    {
+                        tempStr = "background-color: ";
+                        tempStr += COLOR_RED_STR;
+                        tempStr += ";";
+                        ESPUI.setPanelStyle (diagBootID, tempStr);  // Red Panel Body
+                        ESPUI.print (diagBootMsgID, DIAG_BOOT_MSG2_STR);
+                        Log.warningln ("diagBootCallback: Reboot Activated. Goodbye!");
+                        Serial.flush ();
+                        rebootFlg = true;   // Tell Main Loop to reboot.
+                    }
+                    else
+                    {
+                        tempStr = "color: ";
+                        tempStr += COLOR_BLK_STR;
+                        tempStr += ";";
+                        ESPUI.setPanelStyle (diagBootID, tempStr);                      // White (default) Panel Name.
+                        ESPUI.getControl (diagBootID)->color = ControlColor::Sunflower; // Restore orig panel color
+                        ESPUI.updateControl (diagBootID);                               // Apply changes to control.
+                        ESPUI.print (diagBootMsgID, "");
+                        Log.infoln ("diagBootCallback: Reboot Button Released (Canceled).");
+                    }
+                    break;
+                }
+
+                default:
+                {
+                    sprintf (logBuff, "diagBootCallback: %s.", BAD_VALUE_STR);
+                    Log.errorln (logBuff);
+                    break;
+                }
+            }   // switch
+        }
+        else
+        {
+            sprintf (logBuff, "diagBootCallback: %s.", BAD_SENDER_STR);
+            Log.errorln (logBuff);
+        }
     }
-    else
-    {
-        sprintf (logBuff, "diagBootCallback: %s.", BAD_SENDER_STR);
-        Log.errorln (logBuff);
-    }
-}
+
+#endif // def OldWay
 
 // ************************************************************************************************
 void saveSettingsCallback (Control * sender, int type)

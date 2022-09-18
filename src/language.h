@@ -40,13 +40,8 @@
 
 #define CTRL_TAB_STR         "Controllers"
 
-#define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
+// #define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
 
-#define DIAG_BOOT_MSG1_STR   "WARNING: SYSTEM WILL REBOOT<br>** RELEASE NOW TO ABORT **"
-#define DIAG_BOOT_MSG2_STR   "** SYSTEM REBOOTING **<br>WAIT 30 SECONDS BEFORE ACCESSING WEB PAGE."
-#define DIAG_LOG_MSG_STR     "WARNING: SERIAL CONTROLLER IS ON"
-#define DIAG_LONG_PRESS_STR  "Long Press (5secs)"
-#define DIAG_REBOOT_STR      "REBOOT SYSTEM"
 #define DIAG_TAB_STR         "Diagnostic"
 
 #define ERROR_MSG_STR  "ERROR"
@@ -87,7 +82,7 @@
 #define WIFI_TAB_STR           "WiFi"
 #define WIFI_UNKNOWN_STR       "(- ? -)"
 
-extern const PROGMEM char   CSS_LABEL_STYLE_BLACK[];
+extern const PROGMEM char CSS_LABEL_STYLE_BLACK[];
 extern const PROGMEM char   CSS_LABEL_STYLE_GREEN[];
 extern const PROGMEM char   CSS_LABEL_STYLE_RED[];
 extern const PROGMEM char   CSS_LABEL_STYLE_MAROON[];
