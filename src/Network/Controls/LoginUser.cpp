@@ -25,7 +25,7 @@ static const PROGMEM uint32_t USER_NM_MAX_SZ            = 10;
 static const PROGMEM char WIFI_BLANK_MSG_STR      []    = "LEAVE BLANK FOR AUTO LOGIN";
 
 // *********************************************************************************************
-cLoginUser::cLoginUser () :   cControlCommon (USER_NAME_STR,
+cLoginUser::cLoginUser () :   cControlCommonMsg (USER_NAME_STR,
                                               ControlType::Text,
                                               WIFI_DEV_USER_NM_STR,
                                               LOGIN_USER_NAME_STR,
@@ -47,7 +47,7 @@ void cLoginUser::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, color);
+    cControlCommonMsg::AddControls (value, color);
     setMessage (WIFI_BLANK_MSG_STR, eCssStyle::CssStyleBlack);
 
     // DEBUG_END;
