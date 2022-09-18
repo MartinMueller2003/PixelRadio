@@ -25,7 +25,7 @@ static const PROGMEM char   MQTT_NAME_DEF_STR     []    = "pixelradio";
 static const PROGMEM uint32_t MQTT_NAME_MAX_SZ          = 18;
 
 // *********************************************************************************************
-cMqttName::cMqttName () :   cControlCommon (MQTT_NAME_STR,
+cMqttName::cMqttName () :   cControlCommonMsg (MQTT_NAME_STR,
                                               ControlType::Text,
                                               MQTT_SUBSCR_NM_STR,
                                               MQTT_NAME_DEF_STR,
@@ -47,7 +47,7 @@ void cMqttName::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, color);
+    cControlCommonMsg::AddControls (value, color);
     setMessage (emptyString, eCssStyle::CssStyleTransparent);
 
     // DEBUG_END;
@@ -58,7 +58,7 @@ bool cMqttName::validate (const String & value, String & ResponseMessage, bool F
 {
     // DEBUG_START;
 
-    bool Response = cControlCommon::validate (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::validate (value, ResponseMessage, ForceUpdate);
 
     if (Response)
     {
