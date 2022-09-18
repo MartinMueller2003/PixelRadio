@@ -13,10 +13,10 @@
    This Code was formatted with the uncrustify extension.
  */
 #include <Arduino.h>
-#include "ControlCommon.hpp"
+#include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cMqttUser : public cControlCommon
+class cMqttUser : public cControlCommonMsg
 {
 public:
 

@@ -25,7 +25,7 @@ static const PROGMEM uint32_t MQTT_NAME_MAX_SZ      = 18;
 
 
 // *********************************************************************************************
-cMqttUser::cMqttUser () :   cControlCommon (MQTT_USER_STR,
+cMqttUser::cMqttUser () :   cControlCommonMsg (MQTT_USER_STR,
                                             ControlType::Text,
                                             CTRL_MQTT_USER_STR,
                                             MQTT_ID_STR,
@@ -47,7 +47,7 @@ void cMqttUser::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cControlCommon::AddControls (value, color);
+    cControlCommonMsg::AddControls (value, color);
     setMessage (emptyString, eCssStyle::CssStyleTransparent);
 
     // DEBUG_END;
@@ -58,7 +58,7 @@ bool cMqttUser::validate (const String & value, String & ResponseMessage, bool F
 {
     // DEBUG_START;
 
-    bool Response = cControlCommon::validate (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::validate (value, ResponseMessage, ForceUpdate);
 
     if (Response)
     {
