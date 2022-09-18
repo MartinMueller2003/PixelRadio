@@ -105,8 +105,8 @@ const uint8_t LITTLEFS_MODE = 1;
 const uint8_t SD_CARD_MODE = 2;
 
 // FM Radio RF
-const float PA_VOLT_MIN = 8.1f;             // Minimum allowed voltage for Power Amp, 9V -10%.
-const float PA_VOLT_MAX = 9.9f;             // Maximum allowed voltage for Power Amp, 9V + 10%.
+const float PA_VOLT_MIN = 8.1f; // Minimum allowed voltage for Power Amp, 9V -10%.
+const float PA_VOLT_MAX = 9.9f; // Maximum allowed voltage for Power Amp, 9V + 10%.
 // Free Memory
 
 // GPIO Pins:
@@ -213,9 +213,6 @@ void    startGUI (void);
 
 // ESPUI Callbacks
 void    backupCallback (
-    Control * sender,
-    int     type);
-void    diagBootCallback (
     Control * sender,
     int     type);
 void    saveSettingsCallback (
