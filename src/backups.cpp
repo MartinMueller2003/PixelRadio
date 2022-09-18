@@ -278,51 +278,29 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             }
             else
             {
-                Log.errorln ("-> SD Card Unknown Error.");                                                                 \
-            }
-                SD.end ();
-                spiSdCardShutDown ();
-
-                return false;
+                Log.errorln ("-> SD Card Unknown Error.");
             }
 
-            Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
-            file = SD.open (fileName, FILE_READ);
-        }
-        else
-        {
-            Log.infoln ("restoreConfiguration: Undefined Backup Mode, Abort.");
+            SD.end ();
+            spiSdCardShutDown ();
 
             return false;
         }
 
-        if (!file)
-        {
-            Log.errorln (F ("-> Failed to Locate Configuration File (%s)."), fileName);
-            Log.infoln (F ("-> Create the Missing File by Performing a \"Save Settings\" in the PixelRadio App."));
+        Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
+        file = SD.open (fileName, FILE_READ);
+    }
+    else
+    {
+        Log.infoln ("restoreConfiguration: Undefined Backup Mode, Abort.");
 
-            if (restoreMode == SD_CARD_MODE)
-            {
-                SD.end ();
-                spiSdCardShutDown ();
-            }
+        return false;
+    }
 
-            return false;
-        }
-        else
-        {
-            Log.verboseln ("-> Located Configuration File (%s)", fileName);
-        }
-
-        // empirically Arduino Json needs 3.5 x the json text size to parse the file.
-        uint32_t DocSize = uint32_t (file.size ()) * 4;
-        DynamicJsonDocument raw_doc (DocSize);
-
-        DeserializationError error = deserializeJson (raw_doc, file);
-
-        // serializeJsonPretty(doc, Serial); // Debug Output
-
-        file.close ();
+    if (!file)
+    {
+        Log.errorln (F ("-> Failed to Locate Configuration File (%s)."), fileName);
+        Log.infoln (F ("-> Create the Missing File by Performing a \"Save Settings\" in the PixelRadio App."));
 
         if (restoreMode == SD_CARD_MODE)
         {
@@ -330,37 +308,60 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             spiSdCardShutDown ();
         }
 
-        if (error)
-        {
-            Log.errorln ("restoreConfiguration: Configure Deserialization Failed, Error:%s.", error.c_str ());
-
-            return false;
-        }
-
-        JsonObject doc = raw_doc.as <JsonObject>();
-
-        ControllerMgr.restoreConfiguration (doc);
-        WiFiDriver.restoreConfiguration (doc);
-        Radio.restoreConfiguration (doc);
-        LoginUser.restoreConfiguration (doc);
-        LoginPassword.restoreConfiguration (doc);
-        Gpio19.restoreConfiguration (doc);
-        Gpio23.restoreConfiguration (doc);
-        Gpio33.restoreConfiguration (doc);
-        Diagnostics.saveConfiguration (doc);
-
-        if (doc.containsKey ("USB_VOLUME"))
-        {
-            usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
-        }
-
-        Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
-        Log.infoln ("-> Configuration Restore Complete.");
-
-        // serializeJsonPretty(doc, Serial); // Debug Output
-        // Serial.println();
-
-        doc.clear ();
-
-        return true;
+        return false;
     }
+    else
+    {
+        Log.verboseln ("-> Located Configuration File (%s)", fileName);
+    }
+
+    // empirically Arduino Json needs 3.5 x the json text size to parse the file.
+    uint32_t DocSize = uint32_t (file.size ()) * 4;
+    DynamicJsonDocument raw_doc (DocSize);
+
+    DeserializationError error = deserializeJson (raw_doc, file);
+
+    // serializeJsonPretty(doc, Serial); // Debug Output
+
+    file.close ();
+
+    if (restoreMode == SD_CARD_MODE)
+    {
+        SD.end ();
+        spiSdCardShutDown ();
+    }
+
+    if (error)
+    {
+        Log.errorln ("restoreConfiguration: Configure Deserialization Failed, Error:%s.", error.c_str ());
+
+        return false;
+    }
+
+    JsonObject doc = raw_doc.as <JsonObject>();
+
+    ControllerMgr.restoreConfiguration (doc);
+    WiFiDriver.restoreConfiguration (doc);
+    Radio.restoreConfiguration (doc);
+    LoginUser.restoreConfiguration (doc);
+    LoginPassword.restoreConfiguration (doc);
+    Gpio19.restoreConfiguration (doc);
+    Gpio23.restoreConfiguration (doc);
+    Gpio33.restoreConfiguration (doc);
+    Diagnostics.saveConfiguration (doc);
+
+    if (doc.containsKey ("USB_VOLUME"))
+    {
+        usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
+    }
+
+    Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
+    Log.infoln ("-> Configuration Restore Complete.");
+
+    // serializeJsonPretty(doc, Serial); // Debug Output
+    // Serial.println();
+
+    doc.clear ();
+
+    return true;
+}
