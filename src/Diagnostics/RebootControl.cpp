@@ -21,8 +21,9 @@
 
 // *********************************************************************************************
 
-// static const PROGMEM char   DIAG_BOOT_MSG1_STR    []    = "WARNING: SYSTEM WILL REBOOT<br>** RELEASE NOW TO ABORT **";
-// static const PROGMEM char   DIAG_BOOT_MSG2_STR    []    = "** SYSTEM REBOOTING **<br>WAIT 30 SECONDS BEFORE ACCESSING WEB PAGE.";
+static const PROGMEM char   DIAG_BOOT_MSG1_STR    []    = "WARNING: SYSTEM WILL REBOOT<br>** RELEASE NOW TO ABORT **";
+static const PROGMEM char   DIAG_BOOT_MSG2_STR    []    = "WARNING: SYSTEM WILL REBOOT WHEN BUTTON IS RELEASED";
+static const PROGMEM char   DIAG_BOOT_MSG3_STR    []    = "** SYSTEM REBOOTING **<br>WAIT 30 SECONDS BEFORE ACCESSING WEB PAGE.";
 // static const PROGMEM char   DIAG_LOG_MSG_STR      []    = "WARNING: SERIAL CONTROLLER IS ON";
 static const PROGMEM char   DIAG_LONG_PRESS_STR   []    = "Long Press (5secs)";
 static const PROGMEM char   DIAG_REBOOT_STR       []    = "REBOOT SYSTEM";
@@ -46,37 +47,81 @@ void cRebootControl::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-void cRebootControl::Callback (Control * sender, int type)
+void cRebootControl::Callback (Control *, int type)
 {
     // DEBUG_START;
+    // DEBUG_V(String("         type: ") + String(type));
+    // DEBUG_V(String("ButtonEndTime: ") + String(ButtonEndTime));
+    // DEBUG_V(String("  WarningSent: ") + String(WarningSent));
+    // DEBUG_V(String("   RebootTime: ") + String(RebootTime));
     // DEBUG_V(String("TabId: ") + String(TabId));
     // DEBUG_V(String("color: ") + String(color));
 
-    // if button pressed
-    // record time
-    // Set message and color to tell user to hold for 5 seconds
+    if (B_DOWN == type)
+    {
+        // DEBUG_V("Button Pressed");
 
-    // if button released
-    // if time > min hold time
-    // schedule a reboot
-    // else
-    // restore button
+        ButtonEndTime = millis() + FiveSecondsInMs;
+        WarningSent = false;
+        // Set message and color to tell user to hold for 5 seconds
+        setMessage(DIAG_BOOT_MSG1_STR);
+        setMessageStyle(cControlCommon::eCssStyle::CssStyleRed);
+    }
+    else
+    {
+        // DEBUG_V("Button Released");
+        if(WarningSent)
+        {
+            // DEBUG_V("Schedule a reboot");
+            setMessage(DIAG_BOOT_MSG3_STR);
+            setMessageStyle(cControlCommon::eCssStyle::CssStyleRed_bw);
+            ButtonEndTime = 0;
+            // give time to update the UI
+            RebootTime = millis() + 1000;
+        }
+        else
+        {
+            // DEBUG_V("restore button");
+            ButtonEndTime = 0;
+            setMessage(emptyString);
+            setMessageStyle(cControlCommon::eCssStyle::CssStyleTransparent);
+        }
+    }
+
+    // DEBUG_V(String("ButtonEndTime: ") + String(ButtonEndTime));
+    // DEBUG_V(String("  WarningSent: ") + String(WarningSent));
+    // DEBUG_V(String("   RebootTime: ") + String(RebootTime));
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cRebootControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+void cRebootControl::Poll()
 {
-    // DEBUG_START;
-    // DEBUG_V (   String ("       value: ") + value);
-    // DEBUG_V (   String ("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (   String ("   DataValue: ") + String (DataValue));
+    // _ DEBUG_START;
 
-    bool Response = cButtonControl::set (value, ResponseMessage, ForceUpdate);
+    if(ButtonEndTime)
+    {
+        // DEBUG_V(String("ButtonEndTime: ") + String(ButtonEndTime));
+        if(millis() >= ButtonEndTime)
+        {
+            if(!WarningSent)
+            {
+                // DEBUG_V("Reboot on release");
+                setMessage(DIAG_BOOT_MSG2_STR);
+                setMessageStyle(cControlCommon::eCssStyle::CssStyleRed_bw);
+                WarningSent = true;
+            }
+        }
+    }
 
-    // DEBUG_END;
-    return Response;
+    if(RebootTime && (millis() > RebootTime))
+    {
+        // DEBUG_V("reboot");
+        ESP.restart();
+    }
+
+    // _ DEBUG_END;
 }
 
 // *********************************************************************************************

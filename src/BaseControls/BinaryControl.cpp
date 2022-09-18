@@ -87,7 +87,7 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
         ReadFromJSON (NewValue, config, ConfigName);
         String  NewValueStr = String (DataValue);
         String  Response;
-        cControlCommon::set (NewValueStr, Response, false);
+        set (NewValueStr, Response, false);
     }
 
     // DEBUG_V (       String (" OnString: ") + OnString);
@@ -141,7 +141,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
 
     bool OldSkipSetLog = SkipSetLog;
     SkipSetLog = true;
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::set (value, ResponseMessage, ForceUpdate);
     SkipSetLog = OldSkipSetLog;
 
     if (Response)

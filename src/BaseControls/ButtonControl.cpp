@@ -40,7 +40,7 @@ void cButtonControl::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V (String ("TabId: ") + String (TabId))
     // DEBUG_V (String ("color: ") + String (color))
 
-    cControlCommon::AddControls (TabId, color);
+    cControlCommonMsg::AddControls (TabId, color);
     setControlPanelStyle (ePanelStyle::PanelStyle135);
     setControlStyle (eCssStyle::CssStyleWhite);
     /*
