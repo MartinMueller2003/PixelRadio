@@ -23,12 +23,13 @@
 #include "LogLevel.hpp"
 #include "FreeMemory.hpp"
 #include "SystemRunTime.hpp"
+#include "RebootControl.hpp"
 
 #include "memdebug.h"
 
-const char PROGMEM DIAG_HEALTH_SEP_STR  [] = "HEALTH";
-const char PROGMEM DIAG_DEBUG_SEP_STR   [] = "CODE DEBUGGING";
-const char PROGMEM DIAG_SYSTEM_SEP_STR  [] = "SYSTEM";
+const char PROGMEM  DIAG_HEALTH_SEP_STR  [] = "HEALTH";
+const char PROGMEM  DIAG_DEBUG_SEP_STR   [] = "CODE DEBUGGING";
+const char PROGMEM  DIAG_SYSTEM_SEP_STR  [] = "SYSTEM";
 
 // *********************************************************************************************
 void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
@@ -37,17 +38,18 @@ void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
 
     ESPUI.addControl (ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, TabId);
 
-    SystemVoltage.AddControls(TabId, color);
-    RfPaVoltage.AddControls(TabId, color);
+    SystemVoltage.AddControls (TabId, color);
+    RfPaVoltage.AddControls (TabId, color);
 
     ESPUI.addControl (ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, TabId);
 
-    LogLevel.AddControls(TabId, color);
+    LogLevel.AddControls (TabId, color);
 
     ESPUI.addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, TabId);
 
-    FreeMemory.AddControls(TabId, color);
-    SystemRunTime.AddControls(TabId, color);
+    FreeMemory.AddControls (TabId, color);
+    SystemRunTime.AddControls (TabId, color);
+    RebootControl.AddControls (TabId, color);
 
     // DEBUG_END;
 }
@@ -57,7 +59,7 @@ void cDiagnostics::begin ()
 {
     // DEBUG_START;
 
-    LogLevel.begin();
+    LogLevel.begin ();
 
     // DEBUG_END;
 }
@@ -67,10 +69,10 @@ void cDiagnostics::Poll ()
 {
     // _ DEBUG_START;
 
-    SystemVoltage.Poll();
-    RfPaVoltage.Poll();
-    FreeMemory.Poll();
-    SystemRunTime.Poll();
+    SystemVoltage.Poll ();
+    RfPaVoltage.Poll ();
+    FreeMemory.Poll ();
+    SystemRunTime.Poll ();
 
     // _ DEBUG_END;
 }
@@ -80,7 +82,7 @@ void cDiagnostics::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
-    LogLevel.restoreConfiguration(config);
+    LogLevel.restoreConfiguration (config);
 
     // DEBUG_END;
 }
@@ -90,7 +92,7 @@ void cDiagnostics::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
-    LogLevel.saveConfiguration(config);
+    LogLevel.saveConfiguration (config);
 
     // DEBUG_END;
 }

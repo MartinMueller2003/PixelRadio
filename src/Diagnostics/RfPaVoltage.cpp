@@ -22,9 +22,8 @@ const PROGMEM char RfPaTitle [] = "RF PA VOLTAGE";
 const float Scale = ((100000.0 + 33000.0) / 33000.0);
 
 // *********************************************************************************************
-cRfPaVoltage::cRfPaVoltage () : cVoltageStatus (RfPaTitle, ADC1_CHANNEL_0, Scale)
-{
-}
+cRfPaVoltage::cRfPaVoltage () :   cVoltageStatus (RfPaTitle, ADC1_CHANNEL_0, Scale)
+{}
 
 // *********************************************************************************************
 cRfPaVoltage RfPaVoltage;

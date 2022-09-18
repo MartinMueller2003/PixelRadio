@@ -25,15 +25,15 @@ public:
     cLogLevel ();
     virtual ~cLogLevel ()    {}
 
-            void begin();
-            void AddControls (uint16_t TabId, ControlColor color);
-            void printLogLevel (Print * _logOutput, int logLevel);
-    static  void printPrefix (Print * _logOutput, int logLevel);
-    static  void printSuffix (Print * _logOutput, int logLevel);
-            void printTimestamp (Print * _logOutput);
+    void        begin ();
+    void        AddControls (uint16_t TabId, ControlColor color);
+    void        printLogLevel (Print * _logOutput, int logLevel);
+    static void printPrefix (Print * _logOutput, int logLevel);
+    static void printSuffix (Print * _logOutput, int logLevel);
+    void        printTimestamp (Print * _logOutput);
 
 
-            bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool        set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
 private:
 
     // Division constants
@@ -41,8 +41,6 @@ private:
     const unsigned long SECS_IN_MIN     = 60;
     const unsigned long SECS_IN_HOUR    = 3600;
     const unsigned long SECS_IN_DAY     = 86400;
-
-
 };  // class cLogLevel
 
 extern cLogLevel LogLevel;

@@ -26,7 +26,6 @@ public:
 
     cSystemVoltage ();
     virtual ~cSystemVoltage () {}
-
 };  // class cSystemVoltage
 
 extern cSystemVoltage SystemVoltage;

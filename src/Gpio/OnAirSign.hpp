@@ -24,8 +24,7 @@ public:
 
     cOnAirSign ();
     virtual ~cOnAirSign ()    {}
-    void     AddControls (uint16_t, ControlColor) {};
-
+    void AddControls (uint16_t, ControlColor) {}
 };  // class cOnAirSign
 
 extern cOnAirSign OnAirSign;

@@ -32,11 +32,10 @@ public:
 
 private:
 
-    const int32_t   MeasurementIntervalMs   = 1750;   // Measurement Refresh Time, in mS.
-    uint32_t        NextReadingTimeMs       = MeasurementIntervalMs;
-    uint32_t        PreviousReading         = 0;
-
-};  // class cFreeMemory
+    const int32_t MeasurementIntervalMs = 1750; // Measurement Refresh Time, in mS.
+    uint32_t NextReadingTimeMs          = MeasurementIntervalMs;
+    uint32_t PreviousReading            = 0;
+};                                              // class cFreeMemory
 
 extern cFreeMemory FreeMemory;
 

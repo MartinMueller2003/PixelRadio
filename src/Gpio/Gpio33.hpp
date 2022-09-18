@@ -24,7 +24,6 @@ public:
 
     cGpio33 ();
     virtual ~cGpio33 ()    {}
-
 };  // class cGpio33
 
 extern cGpio33 Gpio33;

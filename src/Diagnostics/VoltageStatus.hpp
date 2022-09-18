@@ -34,20 +34,19 @@ private:
     void    initVdcAdc (void);
     float   measureVoltage (void);
 
-    const int32_t   MeasurementIntervalMs   = 1000;   // Measurement Refresh Time, in mS.
-    uint32_t        NextReadingTimeMs       = MeasurementIntervalMs;
-    const uint32_t  DEFAULT_VREF            = 1100;
-    float           SCALE                   = 1.0;
-    adc1_channel_t  ADC_PORT                = ADC1_CHANNEL_7;                       // GPIO-35, Onboard ESP32 "VBAT" Voltage.
+    const int32_t MeasurementIntervalMs = 1000; // Measurement Refresh Time, in mS.
+    uint32_t NextReadingTimeMs          = MeasurementIntervalMs;
+    const uint32_t DEFAULT_VREF         = 1100;
+    float SCALE                         = 1.0;
+    adc1_channel_t ADC_PORT             = ADC1_CHANNEL_7;   // GPIO-35, Onboard ESP32 "VBAT" Voltage.
 
-    #define NumberOfReadingsToSave    16
+#define NumberOfReadingsToSave    16
     int32_t ArrayOfVoltageReadings[NumberOfReadingsToSave];
     uint32_t CurrentReadingIndex    = 0;    // Index of the current voltage reading
     uint32_t SumOfVoltages          = 0;    // average voltage
 
     esp_adc_cal_characteristics_t * adc_chars = nullptr;
-
-};  // class cVoltageStatus
+};                                          // class cVoltageStatus
 
 // *********************************************************************************************
 // OEF

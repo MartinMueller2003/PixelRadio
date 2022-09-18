@@ -23,9 +23,8 @@ const PROGMEM char SYSTEM_VOLTAGE [] = "SYSTEM VOLTAGE";
 const float Scale = ((100000.0 + 100000.0) / 100000.0);
 
 // *********************************************************************************************
-cSystemVoltage::cSystemVoltage () : cVoltageStatus (SYSTEM_VOLTAGE, ADC1_CHANNEL_7, Scale)
-{
-}
+cSystemVoltage::cSystemVoltage () :   cVoltageStatus (SYSTEM_VOLTAGE, ADC1_CHANNEL_7, Scale)
+{}
 
 // *********************************************************************************************
 cSystemVoltage SystemVoltage;

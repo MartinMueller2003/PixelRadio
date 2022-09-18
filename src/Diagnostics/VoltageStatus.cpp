@@ -21,8 +21,8 @@
 
 // *********************************************************************************************
 cVoltageStatus::cVoltageStatus (String Title, adc1_channel_t _ADC_PORT, float _SCALE) :
-    ADC_PORT(_ADC_PORT),
-    SCALE(_SCALE),
+    ADC_PORT (_ADC_PORT),
+    SCALE (_SCALE),
     cStatusControl (Title)
 {
     // _ DEBUG_START;
@@ -34,9 +34,9 @@ void cVoltageStatus::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls(TabId, color);
-    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
-    initVdcAdc();
+    cStatusControl::AddControls (TabId, color);
+    setControlPanelStyle (ePanelStyle::PanelStyle135_black);
+    initVdcAdc ();
 
     // DEBUG_END;
 }
@@ -52,7 +52,7 @@ void cVoltageStatus::initVdcAdc (void)
 
     // Configure ADC
     adc1_config_width (ADC_WIDTH_BIT_12);
-    adc1_config_channel_atten (ADC_PORT,  ADC_ATTEN_DB_11);
+    adc1_config_channel_atten (ADC_PORT, ADC_ATTEN_DB_11);
 
     // Characterize ADC
     adc_chars = (esp_adc_cal_characteristics_t *)calloc (1, sizeof (esp_adc_cal_characteristics_t));
@@ -70,19 +70,19 @@ void cVoltageStatus::initVdcAdc (void)
     {
         Log.infoln ("ADC eFuse not supported, using Default VRef (1100mV).");   // Low Quality Accuracy.
     }
-
     // make sure the poll routine fires right away
-    NextReadingTimeMs = millis() - MeasurementIntervalMs;
+    NextReadingTimeMs = millis () - MeasurementIntervalMs;
 
     // do a reading
-    measureVoltage();
+    measureVoltage ();
 
     uint32_t SingleReadingValue = SumOfVoltages;
     SumOfVoltages = 0;
-    for(auto & CurrentEntry : ArrayOfVoltageReadings)
+
+    for (auto & CurrentEntry : ArrayOfVoltageReadings)
     {
-        CurrentEntry = SingleReadingValue;
-        SumOfVoltages += SingleReadingValue;
+        CurrentEntry    = SingleReadingValue;
+        SumOfVoltages   += SingleReadingValue;
     }
 
     // DEBUG_END;
@@ -99,18 +99,18 @@ float cVoltageStatus::measureVoltage (void)
     SumOfVoltages -= ArrayOfVoltageReadings[CurrentReadingIndex];
 
     // get a new reading
-    int32_t currentReading = adc1_get_raw (ADC_PORT);
-    int32_t currentVoltage = esp_adc_cal_raw_to_voltage (currentReading, adc_chars);  // Convert to unscaled mV.
+    int32_t currentReading  = adc1_get_raw (ADC_PORT);
+    int32_t currentVoltage  = esp_adc_cal_raw_to_voltage (currentReading, adc_chars);   // Convert to unscaled mV.
 
-    SumOfVoltages += currentVoltage;
+    SumOfVoltages                               += currentVoltage;
     ArrayOfVoltageReadings[CurrentReadingIndex] = currentVoltage;
 
     // advance to the next entry in the array
     CurrentReadingIndex = (++CurrentReadingIndex) >= NumberOfReadingsToSave ? 0 : CurrentReadingIndex;
 
-    float response   = float(SumOfVoltages) / float(NumberOfReadingsToSave);
-    response         = (response * SCALE) / 1000.0f; // Apply Attenuator Scaling, covert from mV to VDC.
-    response         = constrain (response, 0.0f, 99.0f);
+    float response = float(SumOfVoltages) / float(NumberOfReadingsToSave);
+    response    = (response * SCALE) / 1000.0f; // Apply Attenuator Scaling, covert from mV to VDC.
+    response    = constrain (response, 0.0f, 99.0f);
 
     // DEBUG_END;
     return response;
@@ -121,8 +121,9 @@ void cVoltageStatus::Poll ()
 {
     // _ DEBUG_START;
 
-    uint32_t Now = millis();
-    if(Now >= NextReadingTimeMs)
+    uint32_t Now = millis ();
+
+    if (Now >= NextReadingTimeMs)
     {
         // forward one second
         NextReadingTimeMs += MeasurementIntervalMs;
@@ -130,18 +131,17 @@ void cVoltageStatus::Poll ()
         uint32_t OldSumOfVoltages = SumOfVoltages;
         // DEBUG_V(String(" OldSumOfVoltages: ") + String(OldSumOfVoltages));
 
-        float NewAverageVoltage = measureVoltage();
+        float NewAverageVoltage = measureVoltage ();
         // DEBUG_V(String(" NewSumOfVoltages: ") + String(SumOfVoltages));
         // DEBUG_V(String("NewAverageVoltage: ") + String(float(NewAverageVoltage)));
 
         // has the voltage changed?
-        if(OldSumOfVoltages != SumOfVoltages)
+        if (OldSumOfVoltages != SumOfVoltages)
         {
             // DEBUG_V("Set a new value");
-            cStatusControl::set(String(NewAverageVoltage, 2) + F(" Vdc"));
+            cStatusControl::set (String (NewAverageVoltage, 2) + F (" Vdc"));
         }
     }
-
     // _ DEBUG_END;
 }
 

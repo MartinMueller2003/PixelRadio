@@ -26,7 +26,6 @@ public:
 
     cRfPaVoltage ();
     virtual ~cRfPaVoltage () {}
-
 };  // class cRfPaVoltage
 
 extern cRfPaVoltage RfPaVoltage;

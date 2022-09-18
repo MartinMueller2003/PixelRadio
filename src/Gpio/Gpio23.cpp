@@ -22,7 +22,7 @@
 static const PROGMEM char ConfigName [] = "GPIO23_STR";
 
 // *********************************************************************************************
-cGpio23::cGpio23 () : cGpioCommon ( ConfigName, gpio_num_t(23))
+cGpio23::cGpio23 () :   cGpioCommon (ConfigName, gpio_num_t (23))
 {
     // _ DEBUG_START;
 

@@ -31,28 +31,28 @@
 
 static const ChoiceListVector_t MapOfLogLevels
 {
-    {DIAG_LOG_SILENT_STR,   String(LOG_LEVEL_SILENT)},
-    {DIAG_LOG_FATAL_STR,    String(LOG_LEVEL_FATAL)},
-    {DIAG_LOG_ERROR_STR,    String(LOG_LEVEL_ERROR)},
-    {DIAG_LOG_WARN_STR,     String(LOG_LEVEL_WARNING)},
-    {DIAG_LOG_INFO_STR,     String(LOG_LEVEL_INFO)},
-    {DIAG_LOG_TRACE_STR,    String(LOG_LEVEL_TRACE)},
-    {DIAG_LOG_VERB_STR,     String(LOG_LEVEL_VERBOSE)},
+    {DIAG_LOG_SILENT_STR,   String (LOG_LEVEL_SILENT)},
+    {DIAG_LOG_FATAL_STR,    String (LOG_LEVEL_FATAL)},
+    {DIAG_LOG_ERROR_STR,    String (LOG_LEVEL_ERROR)},
+    {DIAG_LOG_WARN_STR,     String (LOG_LEVEL_WARNING)},
+    {DIAG_LOG_INFO_STR,     String (LOG_LEVEL_INFO)},
+    {DIAG_LOG_TRACE_STR,    String (LOG_LEVEL_TRACE)},
+    {DIAG_LOG_VERB_STR,     String (LOG_LEVEL_VERBOSE)},
 };
 
-std::vector<String> LogLevelPrefixes =
+std::vector <String> LogLevelPrefixes =
 {
-    {F("{SILENT } ")},
-    {F("{FATAL  } ")},
-    {F("{ERROR  } ")},
-    {F("{WARNING} ")},
-    {F("{INFORM } ")},
-    {F("{TRACE  } ")},
-    {F("{VERBOSE} ")},
+    {F ("{SILENT } ")},
+    {F ("{FATAL  } ")},
+    {F ("{ERROR  } ")},
+    {F ("{WARNING} ")},
+    {F ("{INFORM } ")},
+    {F ("{TRACE  } ")},
+    {F ("{VERBOSE} ")},
 };
 
-const PROGMEM char   ConfigName     [] = "LOG_LEVEL_STR";
-const PROGMEM char   ControlTitle   [] = "SERIAL LOG LEVEL";
+const PROGMEM char  ConfigName     []   = "LOG_LEVEL_STR";
+const PROGMEM char  ControlTitle   []   = "SERIAL LOG LEVEL";
 
 // *********************************************************************************************
 cLogLevel::cLogLevel () :   cChoiceListControl (
@@ -60,22 +60,21 @@ cLogLevel::cLogLevel () :   cChoiceListControl (
         ControlTitle,
         DIAG_LOG_DEF_STR,
         & MapOfLogLevels)
-{
-}
-
+{}
 
 // *********************************************************************************************
 void cLogLevel::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cChoiceListControl::AddControls(TabId, color);
-    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
+    cChoiceListControl::AddControls (TabId, color);
+    setControlPanelStyle (ePanelStyle::PanelStyle135_black);
 
     // DEBUG_END;
 }
+
 // *************************************************************************************************************************
-void cLogLevel::begin()
+void cLogLevel::begin ()
 {
     // DEBUG_START;
 
@@ -93,7 +92,7 @@ void cLogLevel::printLogLevel (Print * _logOutput, int _logLevel)
 {
     // DEBUG_START;
 
-    _logOutput->print (LogLevelPrefixes[_logLevel].c_str());
+    _logOutput->print (LogLevelPrefixes[_logLevel].c_str ());
 
     // DEBUG_END;
 }
@@ -137,7 +136,7 @@ void cLogLevel::printTimestamp (Print * _logOutput)
     // Time as string
     char timestamp[20];
 
-    snprintf (timestamp, sizeof(timestamp) -1, "%02lu:%02lu:%02lu.%03lu ", Hours, Minutes, Seconds, MiliSeconds);
+    snprintf (timestamp, sizeof (timestamp) - 1, "%02lu:%02lu:%02lu.%03lu ", Hours, Minutes, Seconds, MiliSeconds);
     _logOutput->print (timestamp);
 
     // DEBUG_END;

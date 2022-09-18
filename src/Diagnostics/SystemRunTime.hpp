@@ -32,11 +32,10 @@ public:
 
 private:
 
-    const int32_t   MeasurementIntervalMs   = 1000;   // Measurement Refresh Time, in mS.
-    uint32_t        NextReadingTimeMs       = MeasurementIntervalMs;
-    uint32_t        PreviousReading         = 0;
-
-};  // class cSystemRunTime
+    const int32_t MeasurementIntervalMs = 1000; // Measurement Refresh Time, in mS.
+    uint32_t NextReadingTimeMs          = MeasurementIntervalMs;
+    uint32_t PreviousReading            = 0;
+};                                              // class cSystemRunTime
 
 extern cSystemRunTime SystemRunTime;
 

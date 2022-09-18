@@ -78,10 +78,10 @@
 
 // Global System Vars
 
-bool    rebootFlg       = false;    // Reboot System if true;
+bool rebootFlg = false;     // Reboot System if true;
 
-float   vbatVolts   = 0.0f;         // ESP32's Onboard "VBAT" Voltage. Typically 5V.
-float   paVolts     = 0.0f;         // RF Power Amp's Power Supply Voltage. Typically 9V.
+float   vbatVolts   = 0.0f; // ESP32's Onboard "VBAT" Voltage. Typically 5V.
+float   paVolts     = 0.0f; // RF Power Amp's Power Supply Voltage. Typically 9V.
 
 // ************************************************************************************************
 // Configuration Vars (Can be saved to LittleFS and SD Card)
@@ -121,7 +121,7 @@ void setup ()
     Serial.flush ();
 
     // init log
-    Diagnostics.begin();
+    Diagnostics.begin ();
 
     // Let's Start System Initialization
     Log.infoln ((String (F ("PixelRadio FM Transmitter ")) + F (AUTHOR_STR)).c_str ());
@@ -176,7 +176,7 @@ void loop ()
     ControllerMgr.poll ();
     Radio.Poll ();
     PeakAudio.poll ();
-    Diagnostics.Poll();
+    Diagnostics.Poll ();
 
 #ifdef OldWay
         updateOnAirSign ();         // Update the Optional "On Air" 12V LED Sign.

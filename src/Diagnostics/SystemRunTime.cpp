@@ -22,7 +22,7 @@
 const char PROGMEM DIAG_RUN_TIME_STR    [] = "SYSTEM RUN TIME";
 
 // *********************************************************************************************
-cSystemRunTime::cSystemRunTime () :  cStatusControl (DIAG_RUN_TIME_STR)
+cSystemRunTime::cSystemRunTime () :   cStatusControl (DIAG_RUN_TIME_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -33,8 +33,8 @@ void cSystemRunTime::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls(TabId, color);
-    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
+    cStatusControl::AddControls (TabId, color);
+    setControlPanelStyle (ePanelStyle::PanelStyle135_black);
 
     // DEBUG_END;
 }
@@ -44,22 +44,23 @@ void cSystemRunTime::Poll ()
 {
     // _ DEBUG_START;
 
-    uint32_t Now = millis();
-    if(Now >= NextReadingTimeMs)
+    uint32_t Now = millis ();
+
+    if (Now >= NextReadingTimeMs)
     {
         // forward one second
         NextReadingTimeMs += MeasurementIntervalMs;
 
-        uint8_t  seconds    = (Now / 1000) % 60;
-        uint8_t  minutes    = (Now / (60 * 1000)) % 60;
-        uint8_t  hours      = (Now / (60 * 60 * 1000)) % 24;
-        int16_t  days       = (Now / (24 * 60 * 60 * 1000));
+        uint8_t seconds = (Now / 1000) % 60;
+        uint8_t minutes = (Now / (60 * 1000)) % 60;
+        uint8_t hours   = (Now / (60 * 60 * 1000)) % 24;
+        int16_t days    = (Now / (24 * 60 * 60 * 1000));
 
         char timeBuff[30];
+        memset (timeBuff, 0x0, sizeof (timeBuff));
         sprintf (timeBuff, "Days:%u + %02u:%02u:%02u", days, hours, minutes, seconds);
-        set(String(timeBuff));
+        set (String (timeBuff));
     }
-
     // _ DEBUG_END;
 }
 

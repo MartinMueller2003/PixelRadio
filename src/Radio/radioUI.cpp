@@ -36,12 +36,12 @@
 #include "RfCarrier.hpp"
 #include "TestTone.hpp"
 
-const char PROGMEM ADJUST_FRQ_CTRL_STR  [] = "FM TRANSMIT FREQUENCY";
-const char PROGMEM ADJUST_AUDIO_SEP_STR [] = "AUDIO CONTROLS";
-const char PROGMEM RADIO_AMEAS_SEP_STR  [] = "AUDIO MEASUREMENT";
-const char PROGMEM RADIO_SEP_AUDIO_STR  [] = "AUDIO SETTINGS";
-const char PROGMEM RADIO_SEP_MOD_STR    [] = "MODULATION SETTINGS";
-const char PROGMEM RADIO_SEP_RF_SET_STR [] = "RF SETTINGS";
+const char PROGMEM  ADJUST_FRQ_CTRL_STR  [] = "FM TRANSMIT FREQUENCY";
+const char PROGMEM  ADJUST_AUDIO_SEP_STR [] = "AUDIO CONTROLS";
+const char PROGMEM  RADIO_AMEAS_SEP_STR  [] = "AUDIO MEASUREMENT";
+const char PROGMEM  RADIO_SEP_AUDIO_STR  [] = "AUDIO SETTINGS";
+const char PROGMEM  RADIO_SEP_MOD_STR    [] = "MODULATION SETTINGS";
+const char PROGMEM  RADIO_SEP_RF_SET_STR [] = "RF SETTINGS";
 
 // *********************************************************************************************
 void cRadio::AddAdjControls (uint16_t adjTab, ControlColor color)

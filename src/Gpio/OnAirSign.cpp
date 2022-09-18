@@ -21,7 +21,7 @@
 #include "memdebug.h"
 
 // *********************************************************************************************
-cOnAirSign::cOnAirSign () : cGpioCommon ( emptyString, ON_AIR_PIN)
+cOnAirSign::cOnAirSign () :   cGpioCommon (emptyString, ON_AIR_PIN)
 {
     // _ DEBUG_START;
 

@@ -22,20 +22,19 @@
 const char PROGMEM DIAG_FREE_MEM_STR    [] = "FREE MEMORY";
 
 // *********************************************************************************************
-cFreeMemory::cFreeMemory () :  cStatusControl (DIAG_FREE_MEM_STR)
+cFreeMemory::cFreeMemory () :   cStatusControl (DIAG_FREE_MEM_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
-
 
 // *********************************************************************************************
 void cFreeMemory::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls(TabId, color);
-    setControlPanelStyle(ePanelStyle::PanelStyle135_black);
+    cStatusControl::AddControls (TabId, color);
+    setControlPanelStyle (ePanelStyle::PanelStyle135_black);
 
     // DEBUG_END;
 }
@@ -45,23 +44,24 @@ void cFreeMemory::Poll ()
 {
     // _ DEBUG_START;
 
-    uint32_t Now = millis();
-    if(Now >= NextReadingTimeMs)
+    uint32_t Now = millis ();
+
+    if (Now >= NextReadingTimeMs)
     {
         // forward one second
         NextReadingTimeMs += MeasurementIntervalMs;
 
         uint32_t NewReading = ESP.getFreeHeap () / 1024;
-        if(NewReading != PreviousReading)
+
+        if (NewReading != PreviousReading)
         {
             // DEBUG_V();
             PreviousReading = NewReading;
-            String TempStr = String(NewReading) + F(" KB");
-            set(TempStr);
-            Log.verboseln ((String(F("Free Heap Memory: ")) + TempStr).c_str());
+            String TempStr = String (NewReading) + F (" KB");
+            set (TempStr);
+            Log.verboseln ((String (F ("Free Heap Memory: ")) + TempStr).c_str ());
         }
     }
-
     // _ DEBUG_END;
 }
 
