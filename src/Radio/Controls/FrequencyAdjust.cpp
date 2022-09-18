@@ -33,7 +33,7 @@ const float FM_FREQ_SKP_MHZ_10X = 10;       // 1MHz.
 
 // *********************************************************************************************
 cFrequencyAdjust::cFrequencyAdjust ()  :
-    cControlCommon (RADIO_FM_FREQ, ControlType::Pad, ADJUST_FRQ_ADJ_STR, String (FM_FREQ_DEF), 5)
+    cControlCommonMsg (RADIO_FM_FREQ, ControlType::Pad, ADJUST_FRQ_ADJ_STR, String (FM_FREQ_DEF), 5)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -77,7 +77,7 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     AdjustFreqStatus.AddControls (value, color);
-    cControlCommon::AddControls (value, color);
+    cControlCommonMsg::AddControls (value, color);
     UpdateStatus ();
 
     // DEBUG_END;
@@ -147,7 +147,7 @@ bool cFrequencyAdjust::set (const String & value, String & ResponseMessage, bool
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("       value: ") + value);
 
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::set (value, ResponseMessage, ForceUpdate);
 
     if (Response)
     {

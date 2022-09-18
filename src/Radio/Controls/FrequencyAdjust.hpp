@@ -15,11 +15,11 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ControlCommon.hpp"
+#include "ControlCommonMsg.hpp"
 #include "FrequencyStatus.hpp"
 
 // *********************************************************************************************
-class cFrequencyAdjust : public cControlCommon
+class cFrequencyAdjust : public cControlCommonMsg
 {
 public:
 
