@@ -21,7 +21,7 @@
 
 // *********************************************************************************************
 
-static const PROGMEM char   _Title       []  = " Create ";
+static const PROGMEM char _Title       [] = " Create ";
 
 // *********************************************************************************************
 cCreateButton::cCreateButton () :   cButtonControl (_Title)
@@ -38,7 +38,7 @@ void cCreateButton::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V(String("color: ") + String(color));
 
     cButtonControl::AddControls (TabId, color);
-    setControl(_Title, eCssStyle::CssStyleBlack);
+    setControl (_Title, eCssStyle::CssStyleBlack);
 
     // DEBUG_END;
 }
