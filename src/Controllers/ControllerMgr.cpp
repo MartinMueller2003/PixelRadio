@@ -253,7 +253,7 @@ uint16_t c_ControllerMgr::getControllerStatusSummary ()
 }
 
 // *********************************************************************************************
-String c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();} // GetName
+String c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}  // GetName
 
 // *********************************************************************************************
 void c_ControllerMgr::poll ()

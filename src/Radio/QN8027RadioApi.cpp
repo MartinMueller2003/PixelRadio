@@ -287,7 +287,7 @@ uint16_t cQN8027RadioApi::GetPeakAudioLevel (void)
     }
 
     // DEBUG_END;
-    return mV * 45; // Audio Peak is 45mV per count.
+    return mV * 45;  // Audio Peak is 45mV per count.
 }
 
 // *********************************************************************************************

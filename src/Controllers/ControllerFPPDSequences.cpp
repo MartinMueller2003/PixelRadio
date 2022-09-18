@@ -190,7 +190,7 @@ void c_ControllerFPPDSequences::AddSequence (String & SequenceName)
 
     SelectedSequenceName = SequenceName;
 
-    Sequences[SequenceName].SetMessages (& ControllerMessages); // must be first
+    Sequences[SequenceName].SetMessages (& ControllerMessages);  // must be first
     Sequences[SequenceName].SetName (SequenceName);
 
     if (Control::noParent != EspuiParentElementId)

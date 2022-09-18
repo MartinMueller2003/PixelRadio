@@ -119,7 +119,7 @@ void c_ControllerMQTT::begin ()
             // Serial.println("Got a callback");
             c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
             pMe->mqttClientCallback (topic, payload, length);
-        }); // Topic Subscription callback handler.
+        });  // Topic Subscription callback handler.
 
     // DEBUG_END;
 }   // Begin

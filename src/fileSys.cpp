@@ -89,7 +89,7 @@ void instalLogoImageFile (void)
         sprintf (logBuff, "-> SD Card Not Installed. Cannot Load Missing Logo Gif File.");
         Log.errorln (logBuff);
 
-        return; // No SD Card, nothing to do, exit.
+        return;  // No SD Card, nothing to do, exit.
     }
 
     File sdcImageFile;  // SD Card Image File.

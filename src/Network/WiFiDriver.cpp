@@ -77,7 +77,7 @@ const PROGMEM char  default_ssid             [] = SSID_NM_STR;
 const PROGMEM char  default_passphrase       [] = WPA_KEY_STR;
 const PROGMEM char  default_AP_passphrase    [] = AP_PSK_STR;
 
-#define DNS_PORT 53 // Webserver DNS port.
+#define DNS_PORT 53  // Webserver DNS port.
 
 /*****************************************************************************/
 /* FSM                                                                       */

@@ -39,7 +39,7 @@ public:
     };
 
     c_ControllerMessage ();
-    c_ControllerMessage (const c_ControllerMessage & source) {} // Empty Copy constructor
+    c_ControllerMessage (const c_ControllerMessage & source) {}  // Empty Copy constructor
 
     virtual~c_ControllerMessage ();
     void        Activate (bool value);

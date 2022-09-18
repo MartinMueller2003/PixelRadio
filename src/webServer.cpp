@@ -598,7 +598,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 
                                     if (successFlg)
                                     {
-                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_RF_CARRIER_STR); // JSON Fmt.
+                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_RF_CARRIER_STR);  // JSON Fmt.
                                     }
                                     else
                                     {
@@ -631,7 +631,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 
                                     if (successFlg)
                                     {
-                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_REBOOT_STR); // JSON Fmt.
+                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_REBOOT_STR);  // JSON Fmt.
                                     }
                                     else
                                     {
@@ -701,7 +701,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                                     }
                                     else
                                     {
-                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_STOP_STR); // JSON Fmt.
+                                        client.printf ("{\"%s\": \"fail\"}\r\n", CMD_STOP_STR);  // JSON Fmt.
                                     }
 
                                     client.println (HTML_CLOSE_STR);
@@ -730,7 +730,7 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
 
                                     if (successFlg)
                                     {
-                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_PERIOD_STR); // JSON Fmt.
+                                        client.printf ("{\"%s\": \"ok\"}\r\n", CMD_PERIOD_STR);  // JSON Fmt.
                                     }
                                     else
                                     {
@@ -769,13 +769,13 @@ WiFiServer server (HTTP_PORT);  // WiFi WebServer object.
                 requestLcStr    = "";
 
                 connectFlg = false;
-                client.stop (); // Close the GET HTTP connection.
+                client.stop ();  // Close the GET HTTP connection.
                 Log.infoln ("-> HTTP Controller: Client Disconnected.");
             }
             else if (connectFlg)    // Client was connected, but now nothing to do.
             {
                 connectFlg = false;
-                client.stop (); // Close the GET HTTP connection.
+                client.stop ();  // Close the GET HTTP connection.
                 Log.infoln ("-> HTTP Controller: Connected Client Now Idle, Disconnected).");
             }
 

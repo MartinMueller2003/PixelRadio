@@ -33,7 +33,7 @@ void backupCallback (Control * sender, int type)
         // sprintf(logBuff, "dhcpCallback ID: %d, Value: %s", sender->id, sender->value.c_str());
         // Log.verboseln(logBuff);
 
-        sprintf (fileName, "%s", BACKUP_FILE_NAME); // Create filename for backup.
+        sprintf (fileName, "%s", BACKUP_FILE_NAME);  // Create filename for backup.
 
         if (sender->id == backupSaveID)
         {

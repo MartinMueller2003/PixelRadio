@@ -702,7 +702,7 @@ void QN8027Radio::waitForRDSSend ()
             status  = read1Byte (STATUS_REG);
             status  = status & 8;
 
-            if (timeout++ > (100 / RDS_SEND_DELAY)) // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
+            if (timeout++ > (100 / RDS_SEND_DELAY))  // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
             {
                 Log.errorln ("-> Abort: waitForRDSSend() function time-out!");
                 break;

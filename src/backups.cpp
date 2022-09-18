@@ -217,7 +217,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     Gpio33.saveConfiguration (root);
     Diagnostics.saveConfiguration (root);
 
-    doc["USB_VOLUME"] = usbVol; // Use Serial Control, "VOL=0" to "VOL=30".
+    doc["USB_VOLUME"] = usbVol;  // Use Serial Control, "VOL=0" to "VOL=30".
 
     // Serialize JSON to file
     if (serializeJson (doc, file) == 0)
@@ -352,7 +352,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
     if (doc.containsKey ("USB_VOLUME"))
     {
-        usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
+        usbVol = doc["USB_VOLUME"];  // Use Serial Control, "VOL=0" to "VOL=30".
     }
 
     Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());

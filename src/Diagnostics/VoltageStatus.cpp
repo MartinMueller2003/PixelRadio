@@ -60,7 +60,7 @@ void cVoltageStatus::initVdcAdc (void)
 
     if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF)
     {
-        Log.infoln ("ADC eFuse provided Factory Stored Vref Calibration."); // Best Accuracy.
+        Log.infoln ("ADC eFuse provided Factory Stored Vref Calibration.");  // Best Accuracy.
     }
     else if (val_type == ESP_ADC_CAL_VAL_EFUSE_TP)
     {

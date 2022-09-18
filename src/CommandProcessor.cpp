@@ -252,7 +252,7 @@ bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
 
             if (payloadStr == CMD_LOG_RST_STR)
             {
-                String logLevelStr; // TBD
+                String logLevelStr;  // TBD
                 Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Log Level Restored to ") + logLevelStr).c_str ());
                 Serial.flush ();
                 Log.begin (getLogLevel (), & Serial);
