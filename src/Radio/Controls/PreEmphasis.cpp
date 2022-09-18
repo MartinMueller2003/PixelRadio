@@ -1,16 +1,16 @@
 /*
-   File: PreEmphasis.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: PreEmphasis.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -24,7 +24,7 @@
 #include "memdebug.h"
 
 #define PRE_EMPH_USA_STR    "North America (75uS)"  // North America / Japan.
-#define PRE_EMPH_EUR_STR    "Europe (50uS)"         // Europe, Australia, China.
+#define PRE_EMPH_EUR_STR    "Europe (50uS)" // Europe, Australia, China.
 #define PRE_EMPH_USA_VAL    OFF
 #define PRE_EMPH_EUR_VAL    ON
 
@@ -41,9 +41,9 @@ static const PROGMEM uint8_t PRE_EMPH_DEF_VAL               = uint8_t (PRE_EMPH_
 
 // *********************************************************************************************
 cPreEmphasis::cPreEmphasis () :   cChoiceListControl (RADIO_PRE_EMPH_STR,
-                                                    PRE_EMPH_STR,
-                                                    PRE_EMPH_DEF_STR,
-                                                    & ListOfRegions)
+        PRE_EMPH_STR,
+        PRE_EMPH_DEF_STR,
+        & ListOfRegions)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -64,6 +64,7 @@ bool cPreEmphasis::set (const String & value, String & ResponseMessage, bool For
         QN8027RadioApi.setPreEmphasis (get32 (), RfCarrier.get ());
         PtyCode.setPtyCodeOptionValues ();
     }
+
     // DEBUG_V (       String ("   DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("          get32: ") + String (get32 ()));
     // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);

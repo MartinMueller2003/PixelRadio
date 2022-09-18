@@ -1,17 +1,17 @@
 /*
-   File: FPPDiscovery.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Mar-30-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech, Martin Mueller
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: FPPDiscovery.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Mar-30-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech, Martin Mueller
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 #include <Arduino.h>
 #include <time.h>
@@ -21,7 +21,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
- # include "memdebug.h"
+ #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 #define FPP_TYPE_ID         0xC3
@@ -52,28 +52,28 @@ void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
 
     // register for changes in the WiFi State
     WiFi.onEvent ([] (WiFiEvent_t)
-                  {
-                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-                  },
-                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+        {
+            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
     WiFi.onEvent ([] (WiFiEvent_t)
-                  {
-                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-                  },
-                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+        {
+            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     WiFi.onEvent ([] (WiFiEvent_t)
-                  {
-                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-                  },
-                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+        {
+            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
     WiFi.onEvent ([] (WiFiEvent_t)
-                  {
-                      FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
-                  },
-                  WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+        {
+            FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     // DEBUG_END;
 }   // begin
@@ -90,12 +90,14 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
         {
             break;
         }
+
         OldNetworkState = NewNetworkState;
 
         if (false == NewNetworkState)
         {
             break;
         }
+
         // DEBUG_V ();
 
         IPAddress address   = IPAddress (239, 70, 80, 80);
@@ -108,6 +110,7 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
             fail = true;
             break;
         }
+
         // Log.infoln (String (F ("FPPDiscovery subscribed to broadcast")));
 
         if (!udp.listenMulticast (address, FPP_DISCOVERY_PORT))
@@ -116,12 +119,14 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
             fail = true;
             break;
         }
+
         // Log.infoln (String (F ("FPPDiscovery subscribed to multicast: ")) + address.toString ());
 
         if (!fail)
         {
             Log.infoln ((String (F ("FPP Discovery: Listening on port ")) + String (FPP_DISCOVERY_PORT)).c_str ());
         }
+
         udp.onPacket (std::bind (& c_FPPDiscovery::ProcessReceivedUdpPacket, this, std::placeholders::_1));
 
         sendPingPacket ();
@@ -150,6 +155,7 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
             MultiSyncStats.pktError++;
             break;
         }
+
         // DEBUG_V ();
 
         struct timeval tv;
@@ -185,6 +191,7 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
                 {
                     // DEBUG_V (String (F ("Unexpected Multisync msPacket->sync_type: ")) + String (msPacket->sync_type));
                 }
+
                 break;
             }
 
@@ -234,6 +241,7 @@ void c_FPPDiscovery::ProcessReceivedUdpPacket (AsyncUDPPacket UDPpacket)
                 {
                     // DEBUG_V (String (F ("Unexpected Ping sub type: ")) + String (pingPacket->ping_subtype));
                 }
+
                 break;
             }
 
@@ -300,12 +308,12 @@ void c_FPPDiscovery::ProcessSyncPacket (uint8_t action, String FileName, float S
                 // DEBUG_V (String ("SecondsElapsed: ") + SecondsElapsed);
 
                 /*
-                   Log.infoln (String(float(millis()/1000.0)) + "," +
-                                String(InputFPPRemotePlayFile.GetLastFrameId()) + "," +
-                                String (seconds_elapsed) + "," +
-                                String (FrameId) + "," +
-                                String(InputFPPRemotePlayFile.GetTimeOffset(),5));
-                 */
+                  *    Log.infoln (String(float(millis()/1000.0)) + "," +
+                  *                 String(InputFPPRemotePlayFile.GetLastFrameId()) + "," +
+                  *                 String (seconds_elapsed) + "," +
+                  *                 String (FrameId) + "," +
+                  *                 String(InputFPPRemotePlayFile.GetTimeOffset(),5));
+                  */
 
                 MultiSyncStats.pktSyncSeqSync++;
                 // DEBUG_V (String ("SecondsElapsed: ") + String (SecondsElapsed));
@@ -387,7 +395,7 @@ void c_FPPDiscovery::sendPingPacket (IPAddress destination)
 
         // DEBUG_V (String ("   Num Params: ") + String (params));
 
-        for (int i = 0; i < params; i++)
+        for (int i = 0;i < params;i++)
         {
             // DEBUG_V (String ("current Param: ") + String (i));
             AsyncWebParameter * p = request->getParam (i);
@@ -395,7 +403,8 @@ void c_FPPDiscovery::sendPingPacket (IPAddress destination)
             // DEBUG_V (String ("     p->value: ") + String (p->value()));
 
             if (p->isFile ())
-            {   // p->isPost() is also true
+            {
+                // p->isPost() is also true
                 LOG_PORT.printf_P (PSTR ("FILE[%s]: %s, size: %u\n"), p->name ().c_str (), p->value ().c_str (), p->size ());
             }
             else if (p->isPost ())
@@ -407,11 +416,12 @@ void c_FPPDiscovery::sendPingPacket (IPAddress destination)
                 LOG_PORT.printf_P (PSTR ("GET[%s]: %s\n"), p->name ().c_str (), p->value ().c_str ());
             }
         }
+
         // DEBUG_END;
     }   // printReq
 
 #else // ifdef PRINT_DEBUG
- # define printReq(a, b)
+    #    define printReq(a, b)
 #endif // !def PRINT_DEBUG
 
 // -----------------------------------------------------------------------------
@@ -434,15 +444,16 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     struct tm tm = *gmtime(& MultiSyncStats.lastReceiveTime);
     // BUGBUG -- trusting the provided `tm` structure values contain valid data ... use `snprintf` to mitigate.
     int actuallyWritten = snprintf (timeStr, TIME_STR_CHAR_COUNT,
-                                    "%4d-%.2d-%.2d %.2d:%.2d:%.2d",
-                                    1900 + tm.tm_year, tm.tm_mon + 1, tm.tm_mday,
-                                    tm.tm_hour, tm.tm_min, tm.tm_sec);
+        "%4d-%.2d-%.2d %.2d:%.2d:%.2d",
+        1900 + tm.tm_year, tm.tm_mon + 1, tm.tm_mday,
+        tm.tm_hour, tm.tm_min, tm.tm_sec);
 
     // TODO: assert ((actuallyWritten > 0) && (actuallyWritten < TIME_STR_CHAR_COUNT))
     if ((actuallyWritten > 0) && (actuallyWritten < TIME_STR_CHAR_COUNT))
     {
         JsonData[F ("lastReceiveTime")] = timeStr;
     }
+
     JsonData[F ("pktCommand")]      = MultiSyncStats.pktCommand;
     JsonData[F ("pktSyncSeqOpen")]  = MultiSyncStats.pktSyncSeqOpen;
     JsonData[F ("pktSyncSeqStart")] = MultiSyncStats.pktSyncSeqStart;
@@ -459,7 +470,7 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     JsonData[F ("pktError")]        = MultiSyncStats.pktError;
     JsonData[F ("MaxChannel")]      = String (0);
     JsonData[F ("ChannelCount")]    = String (0);
-#ifdef DOWENEEDTHIS
+    #ifdef DOWENEEDTHIS
         uint32_t    FileOffsetToCurrentHeaderRecord = 0;
         uint32_t    FileOffsetToStartOfSequenceData = 0;    // DataOffset
 
@@ -477,9 +488,9 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
             while (FileOffsetToCurrentHeaderRecord < FileOffsetToStartOfSequenceData)
             {
                 FileMgr.ReadSdFile (fseq,
-                                    (byte *)FSEQVariableDataHeaderBuffer,
-                                    sizeof (FSEQRawVariableDataHeader),
-                                    FileOffsetToCurrentHeaderRecord);
+                    (byte *)FSEQVariableDataHeaderBuffer,
+                    sizeof (FSEQRawVariableDataHeader),
+                    FileOffsetToCurrentHeaderRecord);
 
                 int VariableDataHeaderTotalLength   = read16 ((uint8_t *)& (pCurrentVariableHeader->length));
                 int VariableDataHeaderDataLength    = VariableDataHeaderTotalLength - sizeof (FSEQRawVariableDataHeader);
@@ -492,17 +503,19 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
                     memset (VariableDataHeaderDataBuffer, 0x00, VariableDataHeaderDataLength + 1);
 
                     FileMgr.ReadSdFile (fseq, (byte *)VariableDataHeaderDataBuffer, VariableDataHeaderDataLength,
-                                        FileOffsetToCurrentHeaderRecord);
+                        FileOffsetToCurrentHeaderRecord);
 
                     JsonObject JsonDataHeader = JsonDataHeaders.createNestedObject ();
                     JsonDataHeader[HeaderTypeCode] = String (VariableDataHeaderDataBuffer);
 
                     free (VariableDataHeaderDataBuffer);
                 }
+
                 FileOffsetToCurrentHeaderRecord += VariableDataHeaderTotalLength + sizeof (FSEQRawVariableDataHeader);
             }   // while there are headers to process
-        }       // there are headers to process
-#endif    // def DOWENEEDTHIS
+        }   // there are headers to process
+
+    #endif    // def DOWENEEDTHIS
 
     serializeJson (JsonData, resp);
     // DEBUG_V (String ("resp: ") + resp);
@@ -524,6 +537,7 @@ void c_FPPDiscovery::ProcessGET (AsyncWebServerRequest * request)
             // DEBUG_V ();
             break;
         }
+
         // DEBUG_V ();
 
         String path = request->getParam (ulrPath)->value ();
@@ -548,11 +562,12 @@ void c_FPPDiscovery::ProcessGET (AsyncWebServerRequest * request)
                 break;
             }
         }
+
         request->send (404);
     } while (false);    // do once
 
     // DEBUG_END;
-}  // ProcessGET
+}   // ProcessGET
 
 // -----------------------------------------------------------------------------
 void c_FPPDiscovery::GetSysInfoJSON (JsonObject & jsonResponse)
@@ -596,6 +611,7 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
 
             break;
         }
+
         DynamicJsonDocument JsonDoc (2048);
         JsonObject JsonData = JsonDoc.to <JsonObject>();
 
@@ -610,6 +626,7 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
             {
                 adv = request->getParam (F ("advancedView"))->value ();
             }
+
             JsonObject JsonDataMqtt = JsonData.createNestedObject (F ("MQTT"));
 
             JsonDataMqtt[F ("configured")]  = false;
@@ -692,6 +709,7 @@ void c_FPPDiscovery::ProcessFPPJson (AsyncWebServerRequest * request)
                 }
             }
         }
+
         // DEBUG_V (String ("Unknown command: ") + command);
         request->send (404);
     } while (false);

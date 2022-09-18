@@ -1,16 +1,16 @@
 /*
-   File: PtyCode.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: PtyCode.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -133,6 +133,7 @@ bool cPtyCode::set (const String & value, String & ResponseMessage, bool ForceUp
     {
         QN8027RadioApi.setPtyCode (get32 (), RfCarrier.get ());
     }
+
     // DEBUG_V (       String ("   DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("          get32: ") + String (get32 ()));
     // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
@@ -164,6 +165,7 @@ void cPtyCode::setPtyCodeOptionValues ()
         // DEBUG_V ("EU");
         RefreshOptionList (& ListOfEuPtyCodes);
     }
+
     // DEBUG_V (String ("    CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 
     // DEBUG_END;

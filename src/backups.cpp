@@ -1,28 +1,28 @@
 /*
-   File: backups.cpp (System Configuration Backup and Restore)
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T.Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T.Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-
-   SD Card Emergency Credential Restoration Feature:
-   -------------------------------------------------
-   Credential Restoration allows the User to change WiFI credentials by SD Card.Reverts to DHCP WiFi.
-   (1) File Creation:
-    Create file named credentials.txt and add the following JSON formatted text to it (fill in your SSID and WPA_KEY):
-    {"WIFI_SSID_STR":"SSID",
-    "WIFI_WPA_KEY_STR":"WPA_KEY"}
-   (2) Instructions:
-       Install your prepared SD Card in PixelRadio.Reboot.Wait 30 secs, Remove card.
-       Note: For Security the File is automatically deleted from card.
- */
+  *    File: backups.cpp (System Configuration Backup and Restore)
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T.Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T.Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *
+  *    SD Card Emergency Credential Restoration Feature:
+  *    -------------------------------------------------
+  *    Credential Restoration allows the User to change WiFI credentials by SD Card.Reverts to DHCP WiFi.
+  *    (1) File Creation:
+  *     Create file named credentials.txt and add the following JSON formatted text to it (fill in your SSID and WPA_KEY):
+  *     {"WIFI_SSID_STR":"SSID",
+  *     "WIFI_WPA_KEY_STR":"WPA_KEY"}
+  *    (2) Instructions:
+  *        Install your prepared SD Card in PixelRadio.Reboot.Wait 30 secs, Remove card.
+  *        Note: For Security the File is automatically deleted from card.
+  */
 
 // *************************************************************************************************************************
 #include <ArduinoJson.h>
@@ -49,7 +49,8 @@
 const uint16_t  JSON_CFG_SZ     = 10000;
 const uint16_t  JSON_CRED_SIZE  = 300;
 
-const char * sdTypeStr[] = {
+const char * sdTypeStr[] =
+{
     "Not Installed", "V1", "V2", "SDHC", "Unknown"
 };
 const uint8_t SD_TYPE_CNT = sizeof (sdTypeStr) / sizeof (sdTypeStr[0]);
@@ -65,7 +66,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
     pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-    SD.end ();                          // Reset interface (in case SD card had been swapped).
+    SD.end ();  // Reset interface (in case SD card had been swapped).
     spiSdCardShutDown ();
 
     if (!SD.begin (SD_CS_PIN, SPI2))    // SD Card Missing, nothing to do, exit.
@@ -87,6 +88,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
         return false;
     }
+
     Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
     file = SD.open (fileName, FILE_READ);
 
@@ -123,6 +125,7 @@ bool checkEmergencyCredentials (const char * fileName)
         Log.warningln ("-> The Credential File Has NOT Been Deleted.Please Secure Your Data.");
         successFlg = false;
     }
+
     // serializeJsonPretty(doc, Serial); // Debug Output
     // Serial.println();
 
@@ -151,7 +154,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         Log.infoln ("Backup Configuration to SD Card ...");
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-        SD.end ();                          // Re-init Interface in case SD card had been swapped).
+        SD.end ();  // Re-init Interface in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
@@ -161,6 +164,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 
             return false;
         }
+
         // SD.remove(fileName);
         Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
         file = SD.open (fileName, FILE_WRITE);
@@ -186,12 +190,14 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         {
             Log.errorln ("-> Failed to create LittleFS File.");
         }
+
         return false;
     }
     else
     {
         Log.verboseln ("-> Created file: %s", fileName);
     }
+
     // *****************************************************************
     // Allocate a temporary JsonDocument
     // MUST set the capacity to match your requirements.
@@ -227,6 +233,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         // serializeJsonPretty(doc, Serial); // Debug Output
         // Serial.println();
     }
+
     // Close the file
     file.close ();
 
@@ -235,6 +242,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         SD.end ();
         spiSdCardShutDown ();
     }
+
     doc.clear ();
 
     return successFlg;
@@ -258,7 +266,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
 
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-        SD.end ();                          // Reset interface (in case SD card had been swapped).
+        SD.end ();  // Reset interface (in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
@@ -270,13 +278,14 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             }
             else
             {
-                Log.errorln ("-> SD Card Unknown Error.");                                                           \
+                Log.errorln ("-> SD Card Unknown Error.");                                                                 \
             }
                 SD.end ();
                 spiSdCardShutDown ();
 
                 return false;
             }
+
             Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
             file = SD.open (fileName, FILE_READ);
         }
@@ -297,12 +306,14 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
                 SD.end ();
                 spiSdCardShutDown ();
             }
+
             return false;
         }
         else
         {
             Log.verboseln ("-> Located Configuration File (%s)", fileName);
         }
+
         // empirically Arduino Json needs 3.5 x the json text size to parse the file.
         uint32_t DocSize = uint32_t (file.size ()) * 4;
         DynamicJsonDocument raw_doc (DocSize);
@@ -325,6 +336,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
             return false;
         }
+
         JsonObject doc = raw_doc.as <JsonObject>();
 
         ControllerMgr.restoreConfiguration (doc);
@@ -341,6 +353,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
         {
             usbVol = doc["USB_VOLUME"]; // Use Serial Control, "VOL=0" to "VOL=30".
         }
+
         Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
         Log.infoln ("-> Configuration Restore Complete.");
 

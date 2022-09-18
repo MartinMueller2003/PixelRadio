@@ -1,16 +1,16 @@
 /*
-   File: FrequencyAdjust.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: FrequencyAdjust.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -28,8 +28,8 @@ static const PROGMEM char   UNITS_MHZ_STR           []  = " MHz";
 const float FM_FREQ_DEF         = 88.7f;    // 88.7MHz FM.
 const float FM_FREQ_MAX         = 107.9f;   // 107.9MHz FM.
 const float FM_FREQ_MIN         = 88.1f;    // 88.1MHz FM.
-const float FM_FREQ_SKP_KHZ_10X = 1;        // 100Khz.
-const float FM_FREQ_SKP_MHZ_10X = 10;       // 1MHz.
+const float FM_FREQ_SKP_KHZ_10X = 1;    // 100Khz.
+const float FM_FREQ_SKP_MHZ_10X = 10;   // 1MHz.
 
 // *********************************************************************************************
 cFrequencyAdjust::cFrequencyAdjust ()  :
@@ -99,6 +99,7 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
             // DEBUG_V("Ignore button up event");
             break;
         }
+
         uint32_t NewData = uint32_t (DataValueStr.toFloat () * 10.0f);
         // DEBUG_V(String("NewData: ") + String(NewData));
 
@@ -122,6 +123,7 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
             // DEBUG_V("Inc 1Mhz");
             NewData += FM_FREQ_SKP_MHZ_10X;
         }
+
         String DataStr = String (float(NewData) / 10.0f, 1);
         // DEBUG_V(String("DataStr: ") + DataStr);
         String ResponseMessage;
@@ -156,6 +158,7 @@ bool cFrequencyAdjust::set (const String & value, String & ResponseMessage, bool
 
         UpdateStatus ();
     }
+
     // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("      DataValue: ") + String(DataValue));
     // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
@@ -205,6 +208,7 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
             NewData         = FM_FREQ_MIN;
             break;
         }
+
         // DEBUG_V(String("NewData: ") + String(NewData));
         DataValueStr    = String (NewData, 1);
         ResponseMessage = DataValueStr + UNITS_MHZ_STR;

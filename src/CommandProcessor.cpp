@@ -1,20 +1,20 @@
 /*
-   File: CommandProcessor.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech, dkulp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this
-   license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-   Note 1: The command functions are shared by the three remote controllers: Serial, MQTT, HTTP.
-
- */
+  *    File: CommandProcessor.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech, dkulp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this
+  *    license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *    Note 1: The command functions are shared by the three remote controllers: Serial, MQTT, HTTP.
+  *
+  */
 
 // *************************************************************************************************************************
 #include <Arduino.h>
@@ -37,7 +37,7 @@
 #include "Gpio23.hpp"
 #include "Gpio33.hpp"
 
-typedef bool (cCommandProcessor::*CmdHandler)(String & Parameter, String & ResponseMessage);
+typedef bool(cCommandProcessor::*CmdHandler)(String & Parameter, String & ResponseMessage);
 std::map <String, CmdHandler> ListOfCommands
 {
     {"aud",     & cCommandProcessor::audioMode},
@@ -66,9 +66,9 @@ cCommandProcessor::cCommandProcessor ()
 
 // *************************************************************************************************************************
 bool cCommandProcessor::ProcessCommand (
-    String  & Command,
-    String  & Parameter,
-    String  & ResponseMessage)
+                                        String  & Command,
+                                        String  & Parameter,
+                                        String  & ResponseMessage)
 {
     // DEBUG_START;
 
@@ -92,6 +92,7 @@ bool cCommandProcessor::ProcessCommand (
             response = false;
             break;
         }
+
         // DEBUG_V ();
         response = (this->*ListOfCommands[Command])(Parameter, ResponseMessage);
     } while (false);
@@ -196,7 +197,7 @@ bool cCommandProcessor::HelpCommand (String & payloadStr, String & ResponseMessa
 // *************************************************************************************************************************
 bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
         bool response = true;
 
@@ -211,15 +212,15 @@ bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
         }
         else
         {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid INFO Payload (") + payloadStr + F (
-"), Ignored.")).c_str ());
+            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid INFO Payload (") + payloadStr + F ("), Ignored.")).c_str ());
             response = false;
         }
+
         // DEBUG_END;
 
         return response;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return false;
 }
@@ -229,7 +230,7 @@ bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
 bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
 
         bool response = true;
@@ -257,8 +258,8 @@ bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
                 Log.begin (getLogLevel (), & Serial);
                 break;
             }
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid LOG Payload (") + payloadStr + F (
-"), Ignored.")).c_str ());
+
+            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid LOG Payload (") + payloadStr + F ("), Ignored.")).c_str ());
             response = false;
         } while (false);
 
@@ -269,7 +270,7 @@ bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
 
         return response;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return false;
 }
@@ -321,7 +322,7 @@ bool cCommandProcessor::programServiceName (String & payloadStr, String & Respon
 // *************************************************************************************************************************
 bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
 
         bool response = true;
@@ -332,6 +333,7 @@ bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage
             {
                 payloadStr = payloadStr.substring (0, CMD_RT_MAX_SZ);
             }
+
             // ControllerMgr.SetPayloadText(controller, payloadStr);
             // ControllerMgr.SetTextFlag(controller, true);
 
@@ -343,7 +345,7 @@ bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage
 
         return response;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return false;
 }
@@ -352,7 +354,7 @@ bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
 bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
         bool    response    = true;
         bool    capFlg      = false;
@@ -364,6 +366,7 @@ bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMes
             {
                 payloadStr = payloadStr.substring (0, CMD_RT_MAX_SZ);
             }
+
             rtTime = strtol (payloadStr.c_str (), NULL, 10);
 
             if ((payloadStr.length () > CMD_TIME_MAX_SZ) || (rtTime <= 0))
@@ -383,6 +386,7 @@ bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMes
                 capFlg  = true;
                 rtTime  = RDS_DSP_TM_MIN;
             }
+
             // ControllerMgr.SetPayloadText(controller, payloadStr);
             // ControllerMgr.SetTextFlag(controller, true);
             // ControllerMgr.SetRdsMsgTime(controller, rtTime * 1000);
@@ -404,7 +408,7 @@ bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMes
 
         return response;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return false;
 }
@@ -434,7 +438,7 @@ bool cCommandProcessor::rfCarrier (String & payloadStr, String & ResponseMessage
 // *************************************************************************************************************************
 bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
         bool response = true;
 
@@ -450,15 +454,15 @@ bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
         }
         else
         {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid START Payload (") + payloadStr + F (
-"), Ignored.")).c_str ());
+            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid START Payload (") + payloadStr + F ("), Ignored.")).c_str ());
             response = false;
         }
+
         // DEBUG_END;
 
         return response;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return false;
 }
@@ -466,7 +470,7 @@ bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
 // *************************************************************************************************************************
 bool cCommandProcessor::stop (String & payloadStr, String & ResponseMessage)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
         bool response = true;
 
@@ -482,14 +486,14 @@ bool cCommandProcessor::stop (String & payloadStr, String & ResponseMessage)
         }
         else
         {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid STOP Payload (") + payloadStr + F (
-"), Ignored.")).c_str ());
+            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid STOP Payload (") + payloadStr + F ("), Ignored.")).c_str ());
         }
+
         // DEBUG_END;
 
         return response;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return false;
 }

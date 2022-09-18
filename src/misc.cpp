@@ -1,16 +1,16 @@
 /*
-   File: misc.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: misc.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include "globals.h"
@@ -29,15 +29,15 @@
 // *********************************************************************************************
 uint8_t i2cScanner (void)
 {
-#ifdef OldWay
+    #ifdef OldWay
         byte count = 0;
         String devStr;
 
         Log.infoln (String (F ("Scanning i2c for Devices ...")).c_str ());
 
-        for (byte addr = 0x01; addr < 0x7f; addr++)
+        for (byte addr = 0x01;addr < 0x7f;addr++)
         {
-            Wire.beginTransmission (addr);          // Begin I2C transmission Address (i)
+            Wire.beginTransmission (addr);  // Begin I2C transmission Address (i)
 
             if (Wire.endTransmission (true) == 0)   // Receive 0 = success (ACK response)
             {
@@ -68,9 +68,10 @@ uint8_t i2cScanner (void)
         {
             Log.infoln (String (F ("-> Scanning Complete, Found %u i2c Devices.")).c_str (), count);
         }
+
         return count;
 
-#endif // def OldWay
+    #endif // def OldWay
 
     return 0;
 }
@@ -126,12 +127,12 @@ void rebootSystem (void)
 // more reliable Code Flashing if the SD Card remains installed.
 void spiSdCardShutDown (void)
 {
-    pinMode (SD_CS_PIN, OUTPUT);                // SD Card Chip Select.
-    digitalWrite (SD_CS_PIN, HIGH);             // CS Active Low. High = Disable SD Card.
+    pinMode (SD_CS_PIN, OUTPUT);    // SD Card Chip Select.
+    digitalWrite (SD_CS_PIN, HIGH); // CS Active Low. High = Disable SD Card.
 
     pinMode (   MISO_PIN,   INPUT_PULLDOWN);    // SD D0, Allow pin to Pulldown Low (for reliable Flashing).
-    pinMode (   MOSI_PIN,   INPUT_PULLUP);      // SD CMD, Allow pin to Pullup High (for reliable Flashing).
-    pinMode (   SD_CLK_PIN, INPUT_PULLUP);      // SD CLK.
+    pinMode (   MOSI_PIN,   INPUT_PULLUP);  // SD CMD, Allow pin to Pullup High (for reliable Flashing).
+    pinMode (   SD_CLK_PIN, INPUT_PULLUP);  // SD CLK.
 }
 
 // *********************************************************************************************
@@ -145,7 +146,7 @@ bool strIsUint (String intStr)
         return false;
     }
 
-    for (i = 0; i < intStr.length (); i++)  // Arg must be integer >= 0.
+    for (i = 0;i < intStr.length ();i++)    // Arg must be integer >= 0.
     {
         char c = intStr.charAt (i);
 

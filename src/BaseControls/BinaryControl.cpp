@@ -1,16 +1,16 @@
 /*
-   File: BinaryControl.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: BinaryControl.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -38,9 +38,9 @@ static std::map <String, bool> ValidInputValues =
 
 // *********************************************************************************************
 cBinaryControl::cBinaryControl (
-    const String    & ConfigName,
-    const String    & _Title,
-    bool            DefaultValue) :
+                                const String    & ConfigName,
+                                const String    & _Title,
+                                bool            DefaultValue) :
     cControlCommonMsg (ConfigName, ControlType::Switcher, _Title, String (DefaultValue), 10)
 {
     // _ DEBUG_START;
@@ -56,6 +56,7 @@ cBinaryControl::cBinaryControl (
     {
         OffString = DISABLED_STR;
     }
+
     // _ DEBUG_END;
 }
 
@@ -88,6 +89,7 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
         String  Response;
         cControlCommon::set (NewValueStr, Response, false);
     }
+
     // DEBUG_V (       String (" OnString: ") + OnString);
     // DEBUG_V (       String ("OffString: ") + OffString);
     // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
@@ -107,6 +109,7 @@ void cBinaryControl::saveConfiguration (JsonObject & config)
     {
         config[ConfigName] = DataValue;
     }
+
     // DEBUG_END;
 }
 
@@ -132,6 +135,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
     {
         OffString = DISABLED_STR;
     }
+
     // DEBUG_V (       String ("    OnString: ") + OnString);
     // DEBUG_V (       String ("   OffString: ") + OffString);
 
@@ -155,6 +159,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
             Log.infoln (LogMsg.c_str ());
         }
     }
+
     // DEBUG_V (       String ("       value: ") + value);
     // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
@@ -177,6 +182,7 @@ void cBinaryControl::setOffMessage (const String & value, eCssStyle style)
     {
         setMessage (OffString, OffStyle);
     }
+
     // DEBUG_END;
 }
 
@@ -192,6 +198,7 @@ void cBinaryControl::setOffMessageStyle (eCssStyle style)
     {
         setMessage (OffString, OffStyle);
     }
+
     // DEBUG_END;
 }
 
@@ -207,6 +214,7 @@ void cBinaryControl::setOnMessage (const String & value, eCssStyle style)
     {
         setMessage (OnString, OnStyle);
     }
+
     // DEBUG_END;
 }
 
@@ -222,6 +230,7 @@ void cBinaryControl::setOnMessageStyle (eCssStyle style)
     {
         setMessage (OnString, OnStyle);
     }
+
     // DEBUG_END;
 }
 
@@ -251,6 +260,7 @@ bool cBinaryControl::validate (const String & value, String & ResponseMessage, b
         DataValue       = ValidInputValues[Temp];
         DataValueStr    = String (DataValue);
     }
+
     // DEBUG_V (       String ("Response: ") + String (Response));
     // DEBUG_V (       String (" Message: ") + ResponseMessage);
 

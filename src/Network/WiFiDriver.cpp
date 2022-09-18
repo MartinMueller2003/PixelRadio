@@ -1,15 +1,15 @@
 /*
-    WiFiDriver.cpp - Output Management class
-    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-    Version: 1.1.0
-    Creation: Dec-16-2021
-    Revised:  Jun-13-2022
-    Revision History: See PixelRadio.cpp
-    Project Leader: T. Black (thomastech)
-    Contributors: thomastech, MartinMueller2003
-
-    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
- */
+  *     WiFiDriver.cpp - Output Management class
+  *     Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *     Version: 1.1.0
+  *     Creation: Dec-16-2021
+  *     Revised:  Jun-13-2022
+  *     Revision History: See PixelRadio.cpp
+  *     Project Leader: T. Black (thomastech)
+  *     Contributors: thomastech, MartinMueller2003
+  *
+  *     (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  */
 
 #include <ArduinoLog.h>
 #include <esp_wifi.h>
@@ -36,40 +36,40 @@
 
 // -----------------------------------------------------------------------------
 /*
-    There are four ways to define the default Network Name and PassPhrase
-
-    1) Create a secrets.h file and place it in the network directory with the WiFiDriver.cpp file
-    2) Use platformio_user.ini to define the WiFi Credentials for your platform
-    3) Edit the strings below directly
-    4) Place the credentials in a file on the SD card.
-
-       SD Card Emergency Credential Restoration Feature:
-   -------------------------------------------------
-   Credential Restoration allows the User to change WiFI credentials by SD Card. Reverts to DHCP WiFi.
-   (1) File Creation:
-    Create file named credentials.txt and add the following JSON formatted text to it (fill in your SSID and WPA_KEY):
-    {""WIFI_SSID_STR"":"SSID",
-    ""WIFI_WPA_KEY_STR"":"WPA_KEY"}
-   (2) Instructions:
-       Install your prepared SD Card in PixelRadio. Reboot. Wait 30 secs, Remove card.
-       Note: For Security the File is automatically deleted from card.
-
- */
+  *     There are four ways to define the default Network Name and PassPhrase
+  *
+  *     1) Create a secrets.h file and place it in the network directory with the WiFiDriver.cpp file
+  *     2) Use platformio_user.ini to define the WiFi Credentials for your platform
+  *     3) Edit the strings below directly
+  *     4) Place the credentials in a file on the SD card.
+  *
+  *        SD Card Emergency Credential Restoration Feature:
+  *    -------------------------------------------------
+  *    Credential Restoration allows the User to change WiFI credentials by SD Card. Reverts to DHCP WiFi.
+  *    (1) File Creation:
+  *     Create file named credentials.txt and add the following JSON formatted text to it (fill in your SSID and WPA_KEY):
+  *     {""WIFI_SSID_STR"":"SSID",
+  *     ""WIFI_WPA_KEY_STR"":"WPA_KEY"}
+  *    (2) Instructions:
+  *        Install your prepared SD Card in PixelRadio. Reboot. Wait 30 secs, Remove card.
+  *        Note: For Security the File is automatically deleted from card.
+  *
+  */
 
 #if __has_include ("credentials.h")
- # include "credentials.h"
+ #    include "credentials.h"
 #endif //  __has_include("credentials.h")
 
 #if !defined (SSID_NM_STR)
- # define SSID_NM_STR "DEFAULT_SSID_NOT_SET"
+    #    define SSID_NM_STR "DEFAULT_SSID_NOT_SET"
 #endif // SSID_NM_STR
 
 #if !defined (WPA_KEY_STR)
- # define WPA_KEY_STR "DEFAULT_PASSPHRASE_NOT_SET"
+    #    define WPA_KEY_STR "DEFAULT_PASSPHRASE_NOT_SET"
 #endif // WPA_KEY_STR
 
 #if !defined (AP_PSK_STR)
- # define AP_PSK_STR "DEFAULT_AP_PASSPHRASE_NOT_SET"
+    #    define AP_PSK_STR "DEFAULT_AP_PASSPHRASE_NOT_SET"
 #endif // AP_PSK_STR
 
 /* Fallback configuration if config is empty or fails */
@@ -141,7 +141,8 @@ void c_WiFiDriver::Begin ()
     {
         // saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
     }
-#ifdef OldWay
+
+    #ifdef OldWay
 
         if (FileMgr.SdCardIsInstalled ())
         {
@@ -166,7 +167,8 @@ void c_WiFiDriver::Begin ()
                 // DEBUG_V ("ERROR: Could not read SD card config");
             }
         }
-#endif // def OldWay
+
+    #endif // def OldWay
 
     // Disable persistant credential storage and configure SDK params
     WiFi.persistent (false);
@@ -176,24 +178,24 @@ void c_WiFiDriver::Begin ()
 
     // Setup WiFi Handlers
     WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-                         {
-                             this->onWiFiStaConn (event, info);
-                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+        {
+            this->onWiFiStaConn (event, info);
+        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
     WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-                         {
-                             this->onWiFiStaDisc (event, info);
-                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+        {
+            this->onWiFiStaDisc (event, info);
+        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-                         {
-                             this->onWiFiConnect    (event, info);
-                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+        {
+            this->onWiFiConnect    (event, info);
+        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
     WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
-                         {
-                             this->onWiFiDisconnect (event, info);
-                         }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+        {
+            this->onWiFiDisconnect (event, info);
+        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     // set up the poll interval
     NextPollTime = millis () + PollInterval;
@@ -217,6 +219,7 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
             // DEBUG_V ("WiFi Reset Requested");
             break;
         }
+
         SetUpIp ();
 
         // DEBUG_V(String("Hostname: ") + Hostname);
@@ -232,6 +235,7 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
             // DEBUG_V(String("Setting WiFi Hostname: ") + Hostname.getStr());
             WiFi.hostname (HostnameCtrl.get ());
         }
+
         // DEBUG_V("Setting WiFi Mode to STA");
         WiFi.enableAP (false);
         // DEBUG_V();
@@ -266,6 +270,7 @@ void c_WiFiDriver::Disable ()
         WiFi.enableAP (false);
         fsm_WiFi_state_Disabled_imp.Init ();
     }
+
     // DEBUG_END;
 }   // Disable
 
@@ -285,22 +290,23 @@ void c_WiFiDriver::Enable ()
     {
         // DEBUG_V (String ("WiFi is not disabled"));
     }
+
     // DEBUG_END;
 }   // Enable
 
 // -----------------------------------------------------------------------------
-String  c_WiFiDriver::GetDefaultWpaKey ()           {return default_passphrase;}
+String c_WiFiDriver::GetDefaultWpaKey () {return default_passphrase;}
 
 // -----------------------------------------------------------------------------
-String  c_WiFiDriver::GetDefaultSsid ()             {return default_ssid;}
+String c_WiFiDriver::GetDefaultSsid () {return default_ssid;}
 
 // -----------------------------------------------------------------------------
-void    c_WiFiDriver::GetHostname (String & name)   {name = WiFi.getHostname ();}   // GetWiFiHostName
+void c_WiFiDriver::GetHostname (String & name) {name = WiFi.getHostname ();}    // GetWiFiHostName
 
 // -----------------------------------------------------------------------------
-void    c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
+void c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
 
         jsonStatus[F ("WIFI_RSSI")]         = WiFiRssi.get ();
@@ -311,7 +317,7 @@ void    c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
         jsonStatus[F ("WIFI_CONNECTED")]    = IsWiFiConnected ();
 
         // DEBUG_END;
-#endif // def OldWay
+    #endif // def OldWay
 }
 
 // -----------------------------------------------------------------------------
@@ -365,6 +371,7 @@ void c_WiFiDriver::Poll ()
         ResetWiFi = false;
         reset ();
     }
+
     // _ DEBUG_END;
 }
 
@@ -460,11 +467,12 @@ void c_WiFiDriver::SetUpIp ()
             Log.verboseln (String (F ("Using DHCP")).c_str ());
             break;
         }
+
         Log.infoln (String (F ("Using Static IP")).c_str ());
         WiFi.config (StaticIpAddress.GetIpAddress (),
-                     StaticGatewayAddress.GetIpAddress (),
-                     StaticNetmask.GetIpAddress (),
-                     StaticDnsAddress.GetIpAddress ());
+            StaticGatewayAddress.GetIpAddress (),
+            StaticNetmask.GetIpAddress (),
+            StaticDnsAddress.GetIpAddress ());
     } while (false);
 
     // DEBUG_END;
@@ -490,6 +498,7 @@ int c_WiFiDriver::ValidateConfig ()
         // DEBUG_V ();
         response++;
     }
+
     // DEBUG_END;
 
     return response;
@@ -549,6 +558,7 @@ void fsm_WiFi_state_ConnectingUsingConfig::Poll ()
             fsm_WiFi_state_ConnectingUsingDefaults_imp.Init ();
         }
     }
+
     // _ DEBUG_END;
 }
 
@@ -575,6 +585,7 @@ void fsm_WiFi_state_ConnectingUsingConfig::Init ()
 
         pWiFiDriver->connectWifi (CurrentSsid, CurrentPassphrase);
     }
+
     // DEBUG_END;
 }
 
@@ -606,6 +617,7 @@ void fsm_WiFi_state_ConnectingUsingDefaults::Poll ()
             fsm_WiFi_state_ConnectingAsAP_imp.Init ();
         }
     }
+
     // _ DEBUG_END;
 }
 
@@ -653,6 +665,7 @@ void fsm_WiFi_state_ConnectingAsAP::Poll ()
             fsm_WiFi_state_ConnectionFailed_imp.Init ();
         }
     }
+
     // _ DEBUG_END;
 }
 
@@ -670,15 +683,15 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
         WiFi.enableAP (true);
         String FinalSsid = HotspotName.get ();
 
-#ifdef ADD_CHIP_ID
+        #ifdef ADD_CHIP_ID
             FinalSsid += int64String (ESP.getEfuseMac (), HEX);
-#endif // ifdef ADD_CHIP_ID
+        #endif // ifdef ADD_CHIP_ID
 
         String PSK;
-#ifdef REQUIRE_WIFI_AP_PSK
+        #ifdef REQUIRE_WIFI_AP_PSK
             Log.infoln (String (F ("-> HotSpot Requires PSK")).c_str ());
             PSK = F (AP_PSK_STR);   // Enable PSK.
-#endif // ifdef REQUIRE_WIFI_AP_PSK
+        #endif // ifdef REQUIRE_WIFI_AP_PSK
 
         WiFi.softAP (FinalSsid.c_str (), PSK.c_str ());
 
@@ -693,6 +706,7 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
         Log.verboseln (String (String (F ("WiFi SOFTAP: Not enabled"))).c_str ());
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
     }
+
     // DEBUG_END;
 }
 
@@ -722,12 +736,13 @@ void fsm_WiFi_state_ConnectedToAP::Poll ()
     {
         pWiFiDriver->dnsServer.processNextRequest ();
 
-#ifdef OTA_ENB
+        #ifdef OTA_ENB
             ArduinoOTA.handle ();   // OTA Service.
-#endif // ifdef OTA_ENB
+        #endif // ifdef OTA_ENB
 
         pWiFiDriver->UpdateStatusFields ();
     }
+
     // _ DEBUG_END;
 }
 
@@ -755,7 +770,7 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
     extern void StartESPUI ();
     StartESPUI ();
 
-#ifdef MDNS_ENB
+    #ifdef MDNS_ENB
 
         // The mDNS initialization is also handled by the ArduinoOTA.begin() function. This code block is a duplicate for MDNS only.
         if (!MDNS.begin (MdnsName.get ().c_str ()))
@@ -771,11 +786,12 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
             MDNS.addService ("http", "tcp", WEBSERVER_PORT);
             MDNS.addServiceTxt ("http", "tcp", "arduino", MdnsName.get ().c_str ());
         }
-#endif // ifdef MDNS_ENB
 
-#ifdef OTA_ENB
+    #endif // ifdef MDNS_ENB
+
+    #ifdef OTA_ENB
         otaInit (MdnsName.getStr ());   // Init OTA services.
-#endif // ifdef OTA_ENB
+    #endif // ifdef OTA_ENB
 
     // DEBUG_END;
 }
@@ -809,6 +825,7 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
     {
         pWiFiDriver->UpdateStatusFields ();
     }
+
     // _ DEBUG_END;
 }
 
@@ -835,6 +852,7 @@ void fsm_WiFi_state_ConnectedToSta::Init ()
     {
         Log.errorln (String (F ("WIFI: AP mode DNS Failed to start. No Web Sockets available.")).c_str ());
     }
+
     // DEBUG_END;
 }
 
@@ -883,6 +901,7 @@ void fsm_WiFi_state_ConnectionFailed::Init ()
             fsm_WiFi_state_Boot_imp.Init ();
         }
     }
+
     // DEBUG_END;
 }
 
@@ -899,6 +918,7 @@ void fsm_WiFi_state_Disabled::Init ()
     {
         pWiFiDriver->SetIsWiFiConnected (false);
     }
+
     // DEBUG_END;
 }
 

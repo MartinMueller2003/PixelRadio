@@ -1,20 +1,20 @@
 #pragma once
 /*
-   File: PixelRadio.h
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
- */
+  *    File: PixelRadio.h
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  */
 
 // *********************************************************************************************
 #include "config.h"
@@ -72,14 +72,14 @@ const bool  RDS_TEXTX_DEF_FLG   = true;
 const bool  RF_AUTO_OFF_DEF_FLG = false;
 
 // EEPROM: (Currently Not Used in PixelRadio)
-const uint16_t  EEPROM_SZ   = 32;               // E2Prom Size, must be large enough to hold all values below.
-const uint8_t   INIT_BYTE   = 0xA5;             // E2Prom Initialization Stamping value.
-const int   INIT_ADDR       = 0;                // E2Prom Address for Init value, 8-bits.
-const int   XXXX_SET_ADDR   = 10;               // E2Prom Address for (unused), 16-bit.
+const uint16_t  EEPROM_SZ   = 32;   // E2Prom Size, must be large enough to hold all values below.
+const uint8_t   INIT_BYTE   = 0xA5; // E2Prom Initialization Stamping value.
+const int   INIT_ADDR       = 0;    // E2Prom Address for Init value, 8-bits.
+const int   XXXX_SET_ADDR   = 10;   // E2Prom Address for (unused), 16-bit.
 
 // ESP32
 const uint32_t  ESP_BAUD_DEF        = 115200;   // Default ESP32 Baud Rate.
-const uint32_t  ELAPSED_TMR_TIME    = 1000;     // RDS Elapsed Time Update period, in mS. Do Not change.
+const uint32_t  ELAPSED_TMR_TIME    = 1000; // RDS Elapsed Time Update period, in mS. Do Not change.
 
 // ESPUI (Web UI):
 #define ANA_VOL_MIN_STR "0"
@@ -128,19 +128,19 @@ const int   SIGN_OFF    = 0;
 const int   SIGN_ON     = 1;
 
 // HTTP Controller
-#define  HTTP_CMD_STR         "/cmd?"               // Command preamble.
+#define  HTTP_CMD_STR         "/cmd?"   // Command preamble.
 #define  HTTP_EMPTY_RESP_STR  "get /favicon.ico"    // Empty Reply, ignore this payload.
-#define  HTTP_POST_STR        "content-length:"     // Post data length Keyword.
-#define  HTTP_CMD_END_STR     "http/"               // This string marks the End of HTTP Controller Command.
+#define  HTTP_POST_STR        "content-length:" // Post data length Keyword.
+#define  HTTP_CMD_END_STR     "http/"   // This string marks the End of HTTP Controller Command.
 
 
-const uint16_t HTTP_RESPONSE_MAX_SZ = 225;          // Maximum Chars Allowed in HTTP client response.
+const uint16_t HTTP_RESPONSE_MAX_SZ = 225;  // Maximum Chars Allowed in HTTP client response.
 
 // Measurement:
-const int32_t MEAS_TIME = 50;                       // Measurement Refresh Time, in mS.
+const int32_t MEAS_TIME = 50;   // Measurement Refresh Time, in mS.
 
 // Radio
-const uint8_t RADIO_CAL_RETRY = 3;                  // RF Port Calibration Retry Count (Maximum Retry Count).
+const uint8_t RADIO_CAL_RETRY = 3;  // RF Port Calibration Retry Count (Maximum Retry Count).
 
 
 // Serial Controller
@@ -153,13 +153,13 @@ const uint32_t  SECS_PER_DAY    = SECS_PER_HOUR * 24UL;
 const uint32_t  SECS_PER_MIN    = 60UL;
 
 // OTA:
-const uint16_t  OTA_PORT    = 3232;         // Port for OTA.
-const uint16_t  OTA_TIMEOUT = 3000;         // Max allowed time to receive OTA data.
+const uint16_t  OTA_PORT    = 3232; // Port for OTA.
+const uint16_t  OTA_TIMEOUT = 3000; // Max allowed time to receive OTA data.
 
 // Volts:
-const float MIN_VOLTS           = 4.5f;     // Minimum Power Supply volts.
+const float MIN_VOLTS           = 4.5f; // Minimum Power Supply volts.
 const float VOLTS_HYSTERESIS    = 0.15f;    // Voltage Hysterisis.
-const uint16_t VOLTS_UPD_TIME   = 3750;     // Power Supply Volts GUI Update time (on diagTab), in mS.
+const uint16_t VOLTS_UPD_TIME   = 3750; // Power Supply Volts GUI Update time (on diagTab), in mS.
 // const uint32_t CLIENT_TIMEOUT = 500;   // Webserver Client Timeout, in mS.
 
 // Web Server
@@ -173,13 +173,13 @@ const uint16_t  WEBSERVER_PORT  = 80;   // Port for Web Server. Do not change.
 // *********************************************************************************************
 
 // Controller Command Prototypes
-bool    audioModeCmd (
+bool audioModeCmd (
     String              payloadStr,
     ControllerTypeId    controller);
-bool    frequencyCmd (
+bool frequencyCmd (
     String              payloadStr,
     ControllerTypeId    controller);
-bool    infoCmd (
+bool infoCmd (
     String              payloadStr,
     ControllerTypeId    controller);
 int16_t getCommandArg (
@@ -187,22 +187,22 @@ int16_t getCommandArg (
     uint8_t maxSize);
 // uint8_t getControllerStatus(void);
 #ifdef OldWay
-    bool    gpioCmd (
-        String              payloadStr,
-        ControllerTypeId    controller,
-        uint8_t             pin);
-    bool    logCmd (
-        String              payloadStr,
-        ControllerTypeId    controller);
-    bool    rebootCmd (
-        String              payloadStr,
-        ControllerTypeId    controller);
-    bool    startCmd (
-        String              payloadStr,
-        ControllerTypeId    controller);
-    bool    stopCmd (
-        String              payloadStr,
-        ControllerTypeId    controller);
+    bool gpioCmd (
+    String              payloadStr,
+    ControllerTypeId    controller,
+    uint8_t             pin);
+    bool logCmd (
+    String              payloadStr,
+    ControllerTypeId    controller);
+    bool rebootCmd (
+    String              payloadStr,
+    ControllerTypeId    controller);
+    bool startCmd (
+    String              payloadStr,
+    ControllerTypeId    controller);
+    bool stopCmd (
+    String              payloadStr,
+    ControllerTypeId    controller);
 #endif // def OldWay
 
 // ESPUI (WebGUI) Prototypes
@@ -212,10 +212,10 @@ void    initCustomCss (void);
 void    startGUI (void);
 
 // ESPUI Callbacks
-void    backupCallback (
+void backupCallback (
     Control * sender,
     int     type);
-void    saveSettingsCallback (
+void saveSettingsCallback (
     Control * sender,
     int     type);
 
@@ -226,7 +226,7 @@ const String    makeWebGif (
     uint16_t    width,
     uint16_t    height,
     String      backGroundColorStr);
-void    littlefsInit (void);
+void littlefsInit (void);
 
 
 // JSON Prototypes
@@ -234,32 +234,32 @@ bool    checkEmergencyCredentials (const char * fileName);
 bool    restoreConfiguration (
     uint8_t     restoreMode,
     const char  * fileName);
-bool    saveConfiguration (
+bool saveConfiguration (
     uint8_t     saveMode,
     const char  * filename);
 
 // Misc Prototypes
-void            initEprom (void);
-uint8_t         i2cScanner (void);
-void            rebootSystem (void);
-void            spiSdCardShutDown (void);
-bool            strIsUint (String intStr);
+void    initEprom (void);
+uint8_t i2cScanner (void);
+void    rebootSystem (void);
+void    spiSdCardShutDown (void);
+bool    strIsUint (String intStr);
 
-const String    returnClientCode (int code);
+const String returnClientCode (int code);
 
 // OTA Prototypes
-void            otaInit (String & mdnsname);
+void otaInit (String & mdnsname);
 
 // webServer Prototypes
-void            processWebClient (void);
+void processWebClient (void);
 
 #ifdef OldWay
-    String      urlDecode (String urlStr);
-    uint8_t     urlDecodeHex (char c);
+    String  urlDecode (String urlStr);
+    uint8_t urlDecodeHex (char c);
 #endif // def OldWay
 
 template <typename J, typename N>
-bool            ReadFromJSON (float & OutValue, J & Json, N Name)
+bool ReadFromJSON (float & OutValue, J & Json, N Name)
 {
     bool HasBeenModified = false;
 
@@ -273,6 +273,7 @@ bool            ReadFromJSON (float & OutValue, J & Json, N Name)
             HasBeenModified = true;
         }
     }
+
     return HasBeenModified;
 }
 
@@ -291,6 +292,7 @@ bool ReadFromJSON (T & OutValue, J & Json, N Name)
             HasBeenModified = true;
         }
     }
+
     return HasBeenModified;
 }
 

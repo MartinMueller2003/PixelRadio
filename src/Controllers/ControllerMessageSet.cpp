@@ -1,27 +1,27 @@
 /*
-   File: ControllerMessageSet.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
- */
+  *    File: ControllerMessageSet.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  */
 
 // *********************************************************************************************
 #include "ControllerMessageSet.h"
 #include "Language.h"
 
 #if __has_include ("memdebug.h")
- # include "memdebug.h"
+ #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -66,6 +66,7 @@ void c_ControllerMessageSet::Activate (bool Activating)
             ShowMsgDetailsPane (true);
         }
     }
+
     // DEBUG_END;
 }
 
@@ -83,6 +84,7 @@ void c_ControllerMessageSet::ActivateMessage (String MsgName)
             // DEBUG_V("Desired message not found. Add it.");
             AddMessage (MsgName);
         }
+
         // DEBUG_V(String("Update the choice list and populate message details"));
         Messages[MsgName].SelectMessage ();
 
@@ -116,6 +118,7 @@ void c_ControllerMessageSet::AddControls (c_ControllerMessage::MessageElementIds
         {
             CurrentMessage.second.AddControls (MessageElementIds);
         }
+
         // DEBUG_V();
 
         if (Messages.empty ())
@@ -124,6 +127,7 @@ void c_ControllerMessageSet::AddControls (c_ControllerMessage::MessageElementIds
             ShowMsgDetailsPane (false);
             break;
         }
+
         // DEBUG_V("Select the default message set.");
         Messages.begin ()->second.Activate (true);
         // DEBUG_V("Turn on msg details control");
@@ -154,6 +158,7 @@ void c_ControllerMessageSet::AddMessage (String MsgText)
             // DEBUG_V("Cant add a duplicate message.");
             break;
         }
+
         // DEBUG_V("Create the message");
         xSemaphoreTake (MessagesSemaphore, portMAX_DELAY);
         Messages[MsgText].SetMessage (MsgText);
@@ -167,6 +172,7 @@ void c_ControllerMessageSet::AddMessage (String MsgText)
             // DEBUG_V("Defer setting up UI");
             break;
         }
+
         // DEBUG_V("Set up the UI connections");
         Messages[MsgText].AddControls (MessageElementIds);
         // DEBUG_V("Make the new message the selected message");
@@ -190,6 +196,7 @@ void c_ControllerMessageSet::EraseMsg (String MsgTxt)
             // DEBUG_V("Message not found");
             break;
         }
+
         xSemaphoreTake (MessagesSemaphore, portMAX_DELAY);
         Messages.erase (MsgTxt);
         MessagesIterator = nullMessagesIterator;
@@ -207,6 +214,7 @@ void c_ControllerMessageSet::EraseMsg (String MsgTxt)
             ShowMsgDetailsPane (false);
             break;
         }
+
         // DEBUG_V("Display the first message in the list");
         Messages.begin ()->second.Activate (true);
         CurrentMsgName = Messages.begin ()->first;
@@ -228,9 +236,10 @@ void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & 
             // DEBUG_V("No messages to send");
             break;
         }
+
         xSemaphoreTake (MessagesSemaphore, portMAX_DELAY);
 
-        for (uint32_t count = Messages.size (); 0 < count; --count)
+        for (uint32_t count = Messages.size ();0 < count;--count)
         {
             if (nullMessagesIterator == MessagesIterator)
             {
@@ -251,6 +260,7 @@ void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & 
             {
                 continue;
             }
+
             // DEBUG_V("Found a message");
             MessagesIterator->second.GetMessage (Response);
             // DEBUG_V();
@@ -275,6 +285,7 @@ void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject & config)
         // DEBUG_V("Create missing Message array");
         config.createNestedArray (N_list);
     }
+
     // DEBUG_V();
     JsonArray ListOfMessages = config[N_list];
 
@@ -288,6 +299,7 @@ void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject & config)
             // DEBUG_V("Cannot process message config entry without a name");
             continue;
         }
+
         MessageName = (const char *)CurrentMessageConfig[N_message];
 
         if (MessageName.isEmpty ())
@@ -301,6 +313,7 @@ void c_ControllerMessageSet::RestoreConfig (ArduinoJson::JsonObject & config)
             // DEBUG_V(String("Cannot add a duplicate entry: '") + MessageName + "'");
             continue;
         }
+
         // DEBUG_V(String("Add message to the message set: '") + MessageName + "'");
         AddMessage (MessageName);
         Messages[MessageName].RestoreConfig (CurrentMessageConfig);
@@ -347,6 +360,7 @@ void c_ControllerMessageSet::ShowMsgDetailsPane (bool value)
             // DEBUG_V("Controls not added yet");
             break;
         }
+
         // DEBUG_V(String("MessageDetailsElementId: 0x") + String(MessageElementIds->MessageDetailsElementId, HEX));
 
         Control * control = ESPUI.getControl (MessageElementIds->MessageDetailsElementId);
@@ -384,6 +398,7 @@ void c_ControllerMessageSet::UpdateMsgText (String & OriginalMessageText, String
             // DEBUG_V("Cant find old text in the map");
             break;
         }
+
         AddMessage (NewMessageText);
         // DEBUG_V("Copy settings");
         Messages[NewMessageText] = Messages[OriginalMessageText];

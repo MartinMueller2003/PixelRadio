@@ -1,16 +1,16 @@
 /*
-   File: GpioCommon.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: GpioCommon.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -39,10 +39,10 @@ static std::map <String, String> CommandTranslation =
 cGpioCommon::cGpioCommon (const String & ConfigName, gpio_num_t _pinId) :
     pinId (_pinId),
     cChoiceListControl (
-            ConfigName,
-            String (F ("GPIO PIN ")) + String (_pinId),
-            String ("DIGITAL INPUT = PULLDOWN"),
-            & ListOfOptions)
+        ConfigName,
+        String (F ("GPIO PIN ")) + String (_pinId),
+        String ("DIGITAL INPUT = PULLDOWN"),
+        & ListOfOptions)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -72,6 +72,7 @@ bool cGpioCommon::set (const String & value, String & ResponseMessage, bool Forc
             // DEBUG_V("Nothing to do");
             break;
         }
+
         String Action = ListOfOptions[getIndex ()].second;
         // DEBUG_V(String("  Action: ") + Action);
 
@@ -106,6 +107,7 @@ bool cGpioCommon::validate (const String & value, String & ResponseMessage, bool
     {
         Response = cChoiceListControl::validate (value, ResponseMessage, ForceUpdate);
     }
+
     // DEBUG_END;
     return Response;
 }

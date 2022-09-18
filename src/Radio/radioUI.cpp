@@ -1,16 +1,16 @@
 /*
-   File: radio.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: radio.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 // *********************************************************************************************
 #include "language.h"
 #include "memdebug.h"
@@ -94,22 +94,22 @@ void cRadio::AddRadioControls (uint16_t radioTab, ControlColor color)
 
     ESPUI.addControl (ControlType::Separator, RADIO_SEP_MOD_STR, emptyString, ControlColor::None, radioTab);
     AudioMode.AddControls (radioTab, color);
-#ifdef ADV_RADIO_FEATURES
+    #ifdef ADV_RADIO_FEATURES
         PreEmphasis.AddControls (radioTab, color);
-#endif // ifdef ADV_RADIO_FEATURES
+    #endif // ifdef ADV_RADIO_FEATURES
 
     ESPUI.addControl (ControlType::Separator, RADIO_SEP_AUDIO_STR, emptyString, ControlColor::None, radioTab);
     AnalogAudioGain.AddControls (radioTab, color);
     AudioInputImpedance.AddControls (radioTab, color);
-#ifdef ADV_RADIO_FEATURES
+    #ifdef ADV_RADIO_FEATURES
         DigitalAudioGain.AddControls (radioTab, color);
-#endif // ifdef ADV_RADIO_FEATURES
+    #endif // ifdef ADV_RADIO_FEATURES
 
     ESPUI.addControl (ControlType::Separator, RADIO_AMEAS_SEP_STR, emptyString, ControlColor::None, radioTab);
     PeakAudio.AddControls (radioTab, color);
-#ifdef ADV_RADIO_FEATURES
+    #ifdef ADV_RADIO_FEATURES
         AudioGain.AddControls (radioTab, color);
-#endif // ifdef ADV_RADIO_FEATURES
+    #endif // ifdef ADV_RADIO_FEATURES
 
     // DEBUG_END;
 }

@@ -1,22 +1,22 @@
 /*
-   File: config.h  (Special Configuration Options, User Defined)
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-05-2022
-   Public Release:
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022.
-   Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-   Additional Tricks and Treats:
-   The Serial log feature can be omitted by using the #define DISABLE_LOGGING" in Logging.h found
-   in the ArduinoLog library. Doing this will reduce binary size.
- */
+  *    File: config.h  (Special Configuration Options, User Defined)
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-05-2022
+  *    Public Release:
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022.
+  *    Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *    Additional Tricks and Treats:
+  *    The Serial log feature can be omitted by using the #define DISABLE_LOGGING" in Logging.h found
+  *    in the ArduinoLog library. Doing this will reduce binary size.
+  */
 
 #pragma once
 
@@ -32,8 +32,8 @@
 // #define ADD_CHIP_ID
 
 /* COMMAND LINE INTERFACE SECTION (SERIAL PORT RDS CONTROLLER)
-   Change CMD_EOL_TERM if your serial console doesn't send a Carriage Return <CR> when [ENTER] is pressed.
-   For example, change to  '\n' if your terminal only sends a NEWLINE <LF> when [ENTER] is pressed. */
+  *    Change CMD_EOL_TERM if your serial console doesn't send a Carriage Return <CR> when [ENTER] is pressed.
+  *    For example, change to  '\n' if your terminal only sends a NEWLINE <LF> when [ENTER] is pressed. */
 #define CMD_EOL_TERM    '\r'    // Serial Manager EOL termination character.
 
 /* Uncomment MQTT_ENB define statement to enable the MQTT Controller. Approx 17KB used. */
@@ -43,7 +43,7 @@
 #define HTTP_ENB
 
 /* Uncomment MDNS_ENB define statement to enable mDNS. Approx 1.2KB used.
-   Default mDNS name is PixelRadio.local */
+  *    Default mDNS name is PixelRadio.local */
 #define MDNS_ENB
 
 /* Uncomment OTA_ENB to enable Over-the-Air Firmware Updates. Approx 15KB used. */

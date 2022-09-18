@@ -1,16 +1,16 @@
 /*
-   File: RdsText.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: RdsText.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -77,6 +77,7 @@ void cRdsText::poll ()
             updateRdsMsgRemainingTime (now);
             break;
         }
+
         CurrentMsgLastUpdateTime = now;
         // _ DEBUG_V("One second later");
 
@@ -89,6 +90,7 @@ void cRdsText::poll ()
             updateRdsMsgRemainingTime (now);
             break;
         }
+
         // _ DEBUG_V("time for a new message");
         ControllerMgr.GetNextRdsMessage (RdsMsgInfo);
         CurrentMsgEndTime = now + RdsMsgInfo.DurationMilliSec;
@@ -101,6 +103,7 @@ void cRdsText::poll ()
             String dummy;
             set (RdsMsgInfo.Text, dummy);
         }
+
         // DEBUG_V();
         updateRdsMsgRemainingTime (now);
     } while (false);
@@ -142,6 +145,7 @@ void cRdsText::UpdateStatus ()
         TempMsg = RdsMsgInfo.DurationMilliSec ? String (F ("Controller: ")) + RdsMsgInfo.ControllerName : HOME_RDS_WAIT_STR;
         setMessage (TempMsg, eCssStyle::CssStyleWhite);
     }
+
     // DEBUG_END;
 }
 
@@ -181,6 +185,7 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
             RdsTextStatus.set (RDS_EXPIRED_STR);
             break;
         }
+
         unsigned long TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
         // DEBUG_V(String("Update Timer: ") + String(TimeRemaining));
         RdsTextStatus.set (String (TimeRemaining) + F (" Secs"));

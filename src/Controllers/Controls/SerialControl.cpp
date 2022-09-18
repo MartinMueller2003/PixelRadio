@@ -1,20 +1,20 @@
 /*
-   File: SerialControl.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
- */
+  *    File: SerialControl.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -55,18 +55,18 @@ void cSerialControl::initSerialControl (HardwareSerial * port)
 
     SerialPort = port;
 
-    SerialPort->flush ();                   // Purge pending serial chars.
+    SerialPort->flush ();   // Purge pending serial chars.
     SerialPort->end ();
 
-    serial_manager.start (*port);           // Start Command Line Processor.
+    serial_manager.start (*port);   // Start Command Line Processor.
     serial_manager.setFlag (CMD_EOL_TERM);  // EOL Termination character.
-    serial_manager.setDelimiter ('=');      // Parameter delimiter character.
+    serial_manager.setDelimiter ('=');  // Parameter delimiter character.
 
-    SerialPort->flush ();                   // Purge pending serial chars.
+    SerialPort->flush ();   // Purge pending serial chars.
     SerialPort->end ();
 
-    SerialPort->begin (get32 ());           // set the baudrate
-    SerialPort->flush ();                   // Repeat the flushing.
+    SerialPort->begin (get32 ());   // set the baudrate
+    SerialPort->flush ();   // Repeat the flushing.
 
     // DEBUG_END;
 }
@@ -129,11 +129,12 @@ bool cSerialControl::set (const String & value, String & ResponseMessage, bool F
             // DEBUG_V("Dont interrupt the port");
             break;
         }
+
         // DEBUG_V("Change Baudrate");
-        SerialPort->flush ();           // Flush all characters in queue.
-        SerialPort->end ();             // Flush all characters in queue.
+        SerialPort->flush ();   // Flush all characters in queue.
+        SerialPort->end (); // Flush all characters in queue.
         SerialPort->begin (get32 ());   // set the new baudrate
-        SerialPort->println ();         // Push out any corrupted data due to baud change.
+        SerialPort->println (); // Push out any corrupted data due to baud change.
         // DEBUG_V();
     } while (false);
 

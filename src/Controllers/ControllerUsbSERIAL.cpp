@@ -1,20 +1,20 @@
 /*
-   File: ControllerUsbSERIAL.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
- */
+  *    File: ControllerUsbSERIAL.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  */
 
 // *********************************************************************************************
 #include <ArduinoLog.h>
@@ -42,16 +42,16 @@ void cControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
     SerialControl.AddControls (ControlId, color);
 
     /*
-     #ifdef OldWay
-            extern String logLevelStr;
-            EspuiMsgId = ESPUI.addControl (ControlType::Label,
-                                           "SERIAL_MSG",
-                                           (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
-                                           ControlColor::Turquoise,
-                                           ControlLabelElementId);
-            ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-     #endif // def OldWay
-     */
+      #ifdef OldWay
+      *         extern String logLevelStr;
+      *         EspuiMsgId = ESPUI.addControl (ControlType::Label,
+      *                                        "SERIAL_MSG",
+      *                                        (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
+      *                                        ControlColor::Turquoise,
+      *                                        ControlLabelElementId);
+      *         ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
+      #endif // def OldWay
+      */
     // DEBUG_END;
 }   // AddControls
 
@@ -75,9 +75,9 @@ void cControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
     // DEBUG_V(String("Serial Controller: Received GPIO Pin-") + String(pin) + " Command");
     // Log.infoln(charBuff);
 
-#ifdef OldWay
+    #ifdef OldWay
         successFlg = gpioCmd (paramStr, TypeId, pin);
-#endif // def OldWay
+    #endif // def OldWay
 
     Response = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + F ("\": \"");
 
@@ -93,9 +93,10 @@ void cControllerUsbSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
     {
         Response += F ("ok\"}");
     }
-#ifdef OldWay
+
+    #ifdef OldWay
         serial_manager.println (Response.c_str ());
-#endif // def OldWay
+    #endif // def OldWay
     // DEBUG_END;
 }
 

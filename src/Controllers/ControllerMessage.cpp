@@ -1,20 +1,20 @@
 /*
-   File: ControllerMessage.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
- */
+  *    File: ControllerMessage.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  */
 
 // *********************************************************************************************
 #include "ControllerMessage.h"
@@ -23,7 +23,7 @@
 #include <map>
 
 #if __has_include ("memdebug.h")
- # include "memdebug.h"
+ #    include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -46,6 +46,7 @@ c_ControllerMessage::~c_ControllerMessage ()
         ESPUI.removeControl (MessageElementId);
         MessageElementId = Control::noParent;
     }
+
     // DEBUG_END;
 }   // c_ControllerMessage
 
@@ -65,6 +66,7 @@ void c_ControllerMessage::Activate (bool value)
             // DEBUG_V("No control structure defined yet");
             break;
         }
+
         Control * MsgSelectControl = ESPUI.getControl (MessageElementId);
 
         if (!MsgSelectControl)
@@ -83,6 +85,7 @@ void c_ControllerMessage::Activate (bool value)
             // DEBUG_V("Add message to the active choice list");
             MsgSelectControl->parentControl = MessageElementIds->ActiveChoiceListElementId;
         }
+
         ESPUI.updateControl (MsgSelectControl);
 
         // DEBUG_V(String("    MsgSelectControl ID: ") + String(MsgSelectControl->id));
@@ -123,11 +126,12 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         {
             // DEBUG_V(String("Create Choice List Entry on Active Choice list"));
             MessageElementId = ESPUI.addControl (ControlType::Option,
-                                                 MessageText.c_str (),
-                                                 MessageText,
-                                                 ControlColor::Turquoise,
-                                                 MessageElementIds->ActiveChoiceListElementId);
+                MessageText.c_str (),
+                MessageText,
+                ControlColor::Turquoise,
+                MessageElementIds->ActiveChoiceListElementId);
         }
+
         // DEBUG_V(String(" EspuiMessageElementId: '") + String(MessageElementId) + "'");
 
         // DEBUG_V("Attach callbacks to the Message Details Pane.");
@@ -147,6 +151,7 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
 
             ESPUI.updateControl (DurationControl);
         }
+
         Control * MsgEnabledControl = ESPUI.getControl (MessageElementIds->EnabledElementId);
 
         if (MsgEnabledControl)
@@ -227,6 +232,7 @@ void c_ControllerMessage::RestoreConfig (ArduinoJson::JsonObject config)
         Enabled = config[N_enabled];
         // DEBUG_V(String("    Enabled: ") + String(Enabled));
     }
+
     // DEBUG_END;
 }   // RestoreConfig
 
@@ -257,6 +263,7 @@ void c_ControllerMessage::SelectMessage ()
             // DEBUG_V("No control structure defined yet");
             break;
         }
+
         Activate (true);
 
         Control * control = ESPUI.getControl (MessageElementIds->ActiveChoiceListElementId);
@@ -267,6 +274,7 @@ void c_ControllerMessage::SelectMessage ()
             control->value = MessageText;
             ESPUI.updateControl (control);
         }
+
         // DEBUG_V(String("Active List: '") + control->value + "'");
 
         control = ESPUI.getControl (MessageElementIds->DisplayDurationElementId);
@@ -278,6 +286,7 @@ void c_ControllerMessage::SelectMessage ()
             control->user   = this;
             ESPUI.updateControl (MessageElementIds->DisplayDurationElementId);
         }
+
         control = ESPUI.getControl (MessageElementIds->EnabledElementId);
 
         if (control)

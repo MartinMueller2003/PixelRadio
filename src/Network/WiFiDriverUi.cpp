@@ -1,15 +1,15 @@
 /*
-    WiFiDriverUi.cpp - Output Management class
-    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-    Version: 1.1.0
-    Creation: Dec-16-2021
-    Revised:  Jun-13-2022
-    Revision History: See PixelRadio.cpp
-    Project Leader: T.Black (thomastech)
-    Contributors: thomastech, MartinMueller2003
-
-    (c) copyright T.Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
- */
+  *     WiFiDriverUi.cpp - Output Management class
+  *     Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *     Version: 1.1.0
+  *     Creation: Dec-16-2021
+  *     Revised:  Jun-13-2022
+  *     Revision History: See PixelRadio.cpp
+  *     Project Leader: T.Black (thomastech)
+  *     Contributors: thomastech, MartinMueller2003
+  *
+  *     (c) copyright T.Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  */
 
 #include "globals.h"
 #include "DHCP.hpp"
@@ -74,11 +74,11 @@ void c_WiFiDriverUi::addControls (uint16_t WiFiTabID, ControlColor color)
     HostnameCtrl.AddControls (WiFiTabID, color);
     HotspotName.AddControls (WiFiTabID, color);
 
-#ifdef MDNS_ENB
+    #ifdef MDNS_ENB
         // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
         MdnsName.AddControls (WiFiTabID, color);
         // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
-#endif // ifdef MDNS_ENB
+    #endif // ifdef MDNS_ENB
 
     // -----------------------------------------------------------------------------
     ESPUI.addControl (ControlType::Separator, WIFI_DEV_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);

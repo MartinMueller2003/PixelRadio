@@ -1,16 +1,16 @@
 /*
-   File: TestTone.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: TestTone.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -74,7 +74,7 @@ void cTestTone::Init ()
 {
     // DEBUG_START;
 
-    pinMode (MUX_PIN, OUTPUT);          // Audio MUX Control (Line-In:Tone-In), Output.
+    pinMode (MUX_PIN, OUTPUT);  // Audio MUX Control (Line-In:Tone-In), Output.
     digitalWrite (MUX_PIN, TONE_OFF);   // Init Audio Mux, Enable Audio Line-In Jack, Music LED On.
     ledcSetup (TEST_TONE_CHNL, 1000, 8);
 
@@ -101,6 +101,7 @@ void cTestTone::poll ()
             // keep waiting
             break;
         }
+
         // do not use 'now' here or you will slip time
         FsmTimerExpirationTime += 1000;
 
@@ -142,6 +143,7 @@ void cTestTone::toneOn (uint16_t freq)
         ledcAttachPin (TONE_PIN, TEST_TONE_CHNL);
         ledcWriteTone (TEST_TONE_CHNL, freq);
     }
+
     // DEBUG_END;
 }
 
@@ -183,11 +185,13 @@ void cTestTone::UpdateRdsTimeMsg ()
             hours++;
 
             if (hours >= 100)
-            {   // Clock wraps at 99:59:59.
+            {
+                // Clock wraps at 99:59:59.
                 hours = 0;
             }
         }
     }
+
     // DEBUG_END;
 }
 
@@ -217,6 +221,7 @@ void fsm_Tone_state_Idle::Poll (uint32_t)
     {
         fsm_Tone_state_SendingTone_imp.Init ();
     }
+
     // DEBUG_END;
 }
 
@@ -255,6 +260,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
             fsm_Tone_state_Idle_imp.Init ();
             break;
         }
+
         pTestTone->UpdateRdsTimeMsg ();
 
         if (now < ToneExpirationTime)
@@ -262,6 +268,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
             // DEBUG_V("Need to wait longer");
             break;
         }
+
         ToneExpirationTime += TEST_TONE_TIME;
 
         pTestTone->toneOff ();
@@ -270,6 +277,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
         {
             Log.verboseln (String (F ("New Test Tone Sequence, RadioText Sent.")).c_str ());
         }
+
         pTestTone->toneOn (*CurrentTone);
 
         // move to the next tone

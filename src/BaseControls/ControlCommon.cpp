@@ -1,16 +1,16 @@
 /*
-   File: ControlCommon.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: ControlCommon.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -99,24 +99,25 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_START;
 
     ControlId = ESPUI.addControl (uiControltype,
-                                  Title.c_str (),
-                                  Title,
-                                  color,
-                                  TabId,
-                                  [] (Control * sender, int type, void * UserInfo)
-                                  {
-                                      if (UserInfo)
-                                      {
-                                          static_cast <cControlCommon *> (UserInfo)->Callback (sender, type);
-                                      }
-                                  },
-                                  this);
+        Title.c_str (),
+        Title,
+        color,
+        TabId,
+        [] (Control * sender, int type, void * UserInfo)
+        {
+            if (UserInfo)
+            {
+                static_cast <cControlCommon *> (UserInfo)->Callback (sender, type);
+            }
+        },
+        this);
 
     if (MaxDataLength)
     {
         DataValueStr.reserve (MaxDataLength + 2);
         ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (MaxDataLength), color, ControlId);
     }
+
     setControlPanelStyle (ControlPanelStyle);
     // setControlStyle (ControlStyle);
 
@@ -143,6 +144,7 @@ void cControlCommon::Callback (Control * sender, int type)
             // DEBUG_V ("Ignore button up events");
             break;
         }
+
         String Dummy;
         set (sender->value, Dummy);
     } while (false);
@@ -151,10 +153,10 @@ void cControlCommon::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-String  &cControlCommon::get () {return DataValueStr;}
+String &cControlCommon::get () {return DataValueStr;}
 
 // *********************************************************************************************
-bool    cControlCommon::GetAndResetValueChangedFlag ()
+bool cControlCommon::GetAndResetValueChangedFlag ()
 {
     // DEBUG_START;
 
@@ -166,16 +168,10 @@ bool    cControlCommon::GetAndResetValueChangedFlag ()
 }
 
 // *********************************************************************************************
-String cControlCommon::GetCssStyle(eCssStyle Style)
-{
-    return CssStyles[int(Style)];
-}
+String cControlCommon::GetCssStyle (eCssStyle Style) {return CssStyles[int(Style)];}
 
 // *********************************************************************************************
-String cControlCommon::GetPanelStyle(ePanelStyle Style)
-{
-    return PanelStyles[int(Style)];
-}
+String cControlCommon::GetPanelStyle (ePanelStyle Style) {return PanelStyles[int(Style)];}
 
 // *********************************************************************************************
 void cControlCommon::ResetToDefaults ()
@@ -200,6 +196,7 @@ void cControlCommon::restoreConfiguration (JsonObject & config)
         String Response;
         set (NewValue, Response);
     }
+
     // DEBUG_END;
 }
 
@@ -212,6 +209,7 @@ void cControlCommon::saveConfiguration (JsonObject & config)
     {
         config[ConfigName] = DataValueStr;
     }
+
     // DEBUG_END;
 }
 
@@ -235,10 +233,12 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
             {
                 ResponseMessage = String (Title + F (": Set: BAD VALUE: '")) + value + F ("'");
             }
+
             Log.errorln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
+
         // DEBUG_V ("value is valid");
 
         ResponseMessage = Title + F (": Set To '") + DataValueStr + F ("'");
@@ -253,6 +253,7 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
             // DEBUG_V ("Dont set duplicate value");
             break;
         }
+
         // DEBUG_V ("Saving value");
 
         ValueChanged = true;
@@ -339,6 +340,7 @@ bool cControlCommon::validate (const String & value, String &, bool)
     {
         DataValueStr = value;
     }
+
     return Response;
 
     // DEBUG_END;

@@ -1,44 +1,44 @@
 /*
-   File: fileSys.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-   Notes:
-   SPIFFS is depreciated and has been replaced by LittleFS.
-
-   Data Files:
-   All littleFS data files must be in the PixelRadio/data folder.
-
-   Here's some advice on how to get all the ESPUI data files to fit in min_spiffs flash space.
-   ESPUI has 50KB of unneeded files; Delete the following temp files (if present) from the /project data folder:
-    data/index.min.htm
-    data/css/normalize.min.css
-    data/css/style.min.css
-    data/js/controls.min.js
-    data/js/graph.min.js
-    data/js/slider.min.js
-    data/js/tabbedcontent.min.js
-    NOTE: Do NOT delete /data/js/zepto.min.js
-
-   Base64 GIF Data Files:
-   GIF Files can be converted to base64 using this tool: https://codebeautify.org/gif-to-base64-converter
-
-   How to get data files (Filesystem Image) onto ESP32 during ESP32 Flash:
-    1. Use tne IDE's Platform->Upload_Filesystem_Image to upload the data directory files.
-    2. Or use powershell command To serial upload the LittleFS data directory: platformio run --target uploadfs
-    3. Or for OTA upload use: platformio run --target uploadfs --upload-port <IP_ADDR>
-       Note: Replace <IP_ADDR> with board's IP (example: 192.168.1.7).
-    4. Or to copy the Logo Image File to File System use SD Card method. See Github readme.
-
- */
+  *    File: fileSys.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *    Notes:
+  *    SPIFFS is depreciated and has been replaced by LittleFS.
+  *
+  *    Data Files:
+  *    All littleFS data files must be in the PixelRadio/data folder.
+  *
+  *    Here's some advice on how to get all the ESPUI data files to fit in min_spiffs flash space.
+  *    ESPUI has 50KB of unneeded files; Delete the following temp files (if present) from the /project data folder:
+  *     data/index.min.htm
+  *     data/css/normalize.min.css
+  *     data/css/style.min.css
+  *     data/js/controls.min.js
+  *     data/js/graph.min.js
+  *     data/js/slider.min.js
+  *     data/js/tabbedcontent.min.js
+  *     NOTE: Do NOT delete /data/js/zepto.min.js
+  *
+  *    Base64 GIF Data Files:
+  *    GIF Files can be converted to base64 using this tool: https://codebeautify.org/gif-to-base64-converter
+  *
+  *    How to get data files (Filesystem Image) onto ESP32 during ESP32 Flash:
+  *     1. Use tne IDE's Platform->Upload_Filesystem_Image to upload the data directory files.
+  *     2. Or use powershell command To serial upload the LittleFS data directory: platformio run --target uploadfs
+  *     3. Or for OTA upload use: platformio run --target uploadfs --upload-port <IP_ADDR>
+  *        Note: Replace <IP_ADDR> with board's IP (example: 192.168.1.7).
+  *     4. Or to copy the Logo Image File to File System use SD Card method. See Github readme.
+  *
+  */
 
 // *********************************************************************************************
 
@@ -73,12 +73,13 @@ void instalLogoImageFile (void)
 
         return;
     }
+
     sprintf (logBuff, "Logo Gif File (%s) is Missing. Will Load it From the SD Card.", LOGO_GIF_NAME);
     Log.errorln (logBuff);
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
     pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
-    SD.end ();                          // Reset interface (in case SD card had been swapped).
+    SD.end ();  // Reset interface (in case SD card had been swapped).
 
     if (!SD.begin (SD_CS_PIN, SPI2))
     {
@@ -88,8 +89,9 @@ void instalLogoImageFile (void)
         sprintf (logBuff, "-> SD Card Not Installed. Cannot Load Missing Logo Gif File.");
         Log.errorln (logBuff);
 
-        return;         // No SD Card, nothing to do, exit.
+        return; // No SD Card, nothing to do, exit.
     }
+
     File sdcImageFile;  // SD Card Image File.
 
     sdcImageFile    = SD.open (LOGO_GIF_NAME, FILE_READ);
@@ -112,6 +114,7 @@ void instalLogoImageFile (void)
 
         return;
     }
+
     sprintf (logBuff, "-> Copying Logo File From SD Card (%d bytes).", sdcFileSize);
     Log.infoln (logBuff);
 
@@ -125,17 +128,18 @@ void instalLogoImageFile (void)
         char data = sdcImageFile.read ();
         lfsImageFile.print (data);
     }
+
     lfsImageFile.close ();
     lfsImageFile    = PixelRadio_LittleFS.open (LOGO_GIF_NAME, FILE_READ);
     lfsFileSize     = lfsImageFile.size ();
 
     /*  // DEBUG ONLY
-        Serial.println("START==>");
-        while (lfsImageFile.available()) {
-            Serial.write(lfsImageFile.read()); // Send raw data to serial port.
-        }
-        Serial.println("<==END");
-     */
+      *     Serial.println("START==>");
+      *     while (lfsImageFile.available()) {
+      *         Serial.write(lfsImageFile.read()); // Send raw data to serial port.
+      *     }
+      *     Serial.println("<==END");
+      */
     sprintf (logBuff, "-> Success, Saved Logo Gif to File System (%d bytes).", lfsFileSize);
     Log.infoln (logBuff);
 
@@ -144,6 +148,7 @@ void instalLogoImageFile (void)
         sprintf (logBuff, "-> Copied File Does NOT match Source Size (diff= %d bytes).", sdcImageFile - lfsImageFile);
         Log.errorln (logBuff);
     }
+
     lfsImageFile.close ();
     sdcImageFile.close ();
     SD.end ();
@@ -216,6 +221,7 @@ void littlefsInit (void)
                 {
                     Log.errorln ("-> File write failed");
                 }
+
                 file1.close ();
             }
         }
@@ -224,6 +230,7 @@ void littlefsInit (void)
             Log.verboseln ("-> test.txt file successfully opened, now closed");
             file1.close ();
         }
+
         // Let's read the test.txt file from PixelRadio_LittleFS.
         // Data files like this one should be uploaded to the Filesystem Image, see comment section at top of file.
         File file2 = PixelRadio_LittleFS.open ("/test.txt", FILE_READ);
@@ -238,15 +245,16 @@ void littlefsInit (void)
             Log.verboseln (logBuff);
 
             /*
-                        Serial.println(" Contents of test.txt file = ");
-                        while (file2.available())
-                        {
-                            Serial.write(file2.read()); // Send raw data to serial port.
-                        }
-                        Serial.println();
-             */
+              *             Serial.println(" Contents of test.txt file = ");
+              *             while (file2.available())
+              *             {
+              *                 Serial.write(file2.read()); // Send raw data to serial port.
+              *             }
+              *             Serial.println();
+              */
             file2.close ();
         }
+
         Log.infoln ("-> File System Testing Complete.");
     }
 }
@@ -288,6 +296,7 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
 
             return imageStr;
         }
+
         imageStr.reserve (fileSz + 200);
         imageStr    = "<p style=";
         imageStr    += "\"background-color:";
@@ -309,6 +318,7 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
 
         // Serial.println("\r\n makeWebGif File Contents: BEGIN->[ " + imageStr + " ]<-END\r\n"); // DEBUG ONLY
     }
+
     return imageStr;
 }
 

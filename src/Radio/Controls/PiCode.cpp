@@ -1,16 +1,16 @@
 /*
-   File: PiCode.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: PiCode.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -68,6 +68,7 @@ bool cPiCode::set (const String & value, String & ResponseMessage, bool ForceUpd
     {
         QN8027RadioApi.setPiCode (uint16_t (StringToNumber (get ())), RfCarrier.get ());
     }
+
     // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);
     // DEBUG_V (       String ("       Response: ") + String (Response));
 
@@ -89,6 +90,7 @@ uint32_t cPiCode::StringToNumber (const String & value)
         char * p = nullptr;
         Response = uint32_t (strtol (value.substring (2).c_str (), & p, 16));
     }
+
     // DEBUG_V (String ("Response: ") + String (Response, HEX));
 
     // DEBUG_END;
@@ -128,6 +130,7 @@ bool cPiCode::validate (const String & value, String & ResponseMessage, bool For
             Response        = false;
             break;
         }
+
         // DEBUG_V ("Value has been accepted");
 
         DataValueStr = String (F ("0x")) + String (NewPiCodeValue, HEX);

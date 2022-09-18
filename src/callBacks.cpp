@@ -1,16 +1,16 @@
 /*
-   File: callBacks.cpp (ESPUI Web Page Callback Functions)
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech, dkulp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: callBacks.cpp (ESPUI Web Page Callback Functions)
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech, dkulp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 #include <ArduinoLog.h>
 #include <ESPUI.h>
@@ -24,7 +24,7 @@
 // ************************************************************************************************
 void backupCallback (Control * sender, int type)
 {
-#ifdef OldWay
+    #ifdef OldWay
         static bool saveSuccessFlg      = true;
         static bool restoreSuccessFlg   = true;
         char    logBuff[60];
@@ -100,7 +100,8 @@ void backupCallback (Control * sender, int type)
             sprintf (logBuff, "backupCallback: %s.", BAD_SENDER_STR);
             Log.errorln (logBuff);
         }
-#endif // def OldWay
+
+    #endif // def OldWay
 }
 
 #ifdef OldWay
@@ -150,12 +151,13 @@ void backupCallback (Control * sender, int type)
                         tempStr = "color: ";
                         tempStr += COLOR_BLK_STR;
                         tempStr += ";";
-                        ESPUI.setPanelStyle (diagBootID, tempStr);                      // White (default) Panel Name.
+                        ESPUI.setPanelStyle (diagBootID, tempStr);  // White (default) Panel Name.
                         ESPUI.getControl (diagBootID)->color = ControlColor::Sunflower; // Restore orig panel color
-                        ESPUI.updateControl (diagBootID);                               // Apply changes to control.
+                        ESPUI.updateControl (diagBootID);   // Apply changes to control.
                         ESPUI.print (diagBootMsgID, "");
                         Log.infoln ("diagBootCallback: Reboot Button Released (Canceled).");
                     }
+
                     break;
                 }
 
@@ -179,7 +181,7 @@ void backupCallback (Control * sender, int type)
 // ************************************************************************************************
 void saveSettingsCallback (Control * sender, int type)
 {
-#ifdef OldWay
+    #ifdef OldWay
         // DEBUG_START;
 
         bool    saveSuccessFlg = true;
@@ -237,6 +239,7 @@ void saveSettingsCallback (Control * sender, int type)
 
                         Log.errorln ("-> Configuration Save Failed.");
                     }
+
                     break;
                 }
 
@@ -258,6 +261,7 @@ void saveSettingsCallback (Control * sender, int type)
             sprintf (logBuff, "saveSettingsCallback: %s.", BAD_SENDER_STR);
             Log.errorln (logBuff);
         }
+
         // DEBUG_END;
-#endif // def OldWay
+    #endif // def OldWay
 }

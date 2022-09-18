@@ -1,16 +1,16 @@
 /*
-   File: ChoiceListControl.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: ChoiceListControl.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -73,6 +73,7 @@ uint32_t cChoiceListControl::get32 ()
             // DEBUG_V (String ("Option Key: ") + CurrentOption.first);
         }
     }
+
     // DEBUG_V (String ("Response: ") + String (Response));
     // DEBUG_END;
 
@@ -94,6 +95,7 @@ uint32_t cChoiceListControl::getIndex ()
     {
         Response = KeyToChoiceVectorMap[DataValueStr].VectorIndex;
     }
+
     // DEBUG_V (String ("Response: ") + String (Response));
     // DEBUG_END;
 
@@ -151,10 +153,10 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
             ChoiceListEntry NewEntry;
             NewEntry.VectorIndex    = Index++;
             NewEntry.UiId           = ESPUI.addControl (ControlType::Option,
-                                             emptyString.c_str (),
-                                             emptyString,
-                                             ControlColor::None,
-                                             ControlId);
+                emptyString.c_str (),
+                emptyString,
+                ControlColor::None,
+                ControlId);
             // DEBUG_V (String ("   NewEntry.UiId: ") + String (NewEntry.UiId));
 
             ESPUI.updateControlLabel (NewEntry.UiId, CurrentOption.first.c_str ());
@@ -162,6 +164,7 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
             KeyToChoiceVectorMap[CurrentOption.first] = NewEntry;
         }
+
         // DEBUG_V ( String ("KeyToChoiceVectorMap.size: ") + KeyToChoiceVectorMap.size ());
 
         String Dummy;
@@ -208,6 +211,7 @@ bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, boo
             Response = false;
             break;
         }
+
         String  Dummy;
         String  NewValue = (*ChoiceVector)[value].first;
         // DEBUG_V (String ("       NewValue: ") + NewValue);
@@ -242,6 +246,7 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
                 Response        = false;
                 break;
             }
+
             // DEBUG_V ("duplicate but not valid");
         }
 
@@ -251,6 +256,7 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
             DataValueStr = value;
             break;
         }
+
         // DEBUG_V ("No exact match for the value.");
 
         ResponseMessage = GetTitle () + F (": Set: BAD VALUE: '") + value + F ("'");

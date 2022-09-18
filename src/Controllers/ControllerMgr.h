@@ -1,21 +1,21 @@
 /*
-   File: ControllerMgr.h
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
-
- */
+  *    File: ControllerMgr.h
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  *
+  */
 
 // *********************************************************************************************
 #pragma once
@@ -50,7 +50,7 @@ public:
         LOCAL_CNTRL,
         NO_CNTRL,
         NumControllerTypes,
-        ControllerIdStart = 0,
+        ControllerIdStart = 0
     };
 
     struct RdsMsgInfo_t
@@ -70,16 +70,16 @@ protected:
         cControllerCommon   * pController   = nullptr;
     };
 
-    ControllerInfo_t ListOfControllers[ControllerTypeId_t::NumControllerTypes];
+    ControllerInfo_t    ListOfControllers[ControllerTypeId_t::NumControllerTypes];
 
 private:
 
-    ControllerTypeId_t CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
+    ControllerTypeId_t  CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
 
 public:
 
     c_ControllerMgr ();
-    virtual ~c_ControllerMgr ();
+    virtual~c_ControllerMgr ();
     void                poll ();
     void                begin ();
     void                AddControls (uint16_t TabId, ControlColor color);

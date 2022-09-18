@@ -1,21 +1,21 @@
 /*
-   File: ControllerMgr.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
-
- */
+  *    File: ControllerMgr.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  *
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -171,6 +171,7 @@ void c_ControllerMgr::AddControls (uint16_t TabId, ControlColor color)
         // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
         CurrentController.pController->AddControls (TabId, color);
     }
+
     // DEBUG_END;
 }   // AddControls
 
@@ -184,14 +185,15 @@ void c_ControllerMgr::begin ()
         // DEBUG_V(String("pController: 0x") + String(uint32_t(CurrentController.pController), HEX));
         CurrentController.pController->begin ();
     }
+
     // DEBUG_END;
 }   // begin
 
 // *********************************************************************************************
-cControllerCommon   * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
+cControllerCommon * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
 
 // *********************************************************************************************
-void                c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
+void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -205,6 +207,7 @@ void                c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
         {
             continue;
         }
+
         Response.Text = F ("No Messages Available");
         CurrentController.pController->GetNextRdsMessage (Response);
 
@@ -250,16 +253,17 @@ uint16_t c_ControllerMgr::getControllerStatusSummary ()
 }
 
 // *********************************************************************************************
-String  c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();}    // GetName
+String c_ControllerMgr::GetName (ControllerTypeId_t Id) {return ListOfControllers[Id].pController->GetName ();} // GetName
 
 // *********************************************************************************************
-void    c_ControllerMgr::poll ()
+void c_ControllerMgr::poll ()
 {
     // _ DEBUG_START;
     for (auto & CurrentController : ListOfControllers)
     {
         CurrentController.pController->poll ();
     }
+
     // _ DEBUG_END;
 }
 
@@ -277,6 +281,7 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
             // DEBUG_V("No Config Found");
             break;
         }
+
         // DEBUG_V();
 
         JsonArray ArrayOfControllerConfigs = config[N_controllers];
@@ -291,6 +296,7 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
                 // DEBUG_V("No controller type ID found");
                 continue;
             }
+
             uint32_t type = CurrentControllerConfig[N_type];
             // DEBUG_V(String("Type ID: ") + String(type));
             JsonObject Temp = CurrentControllerConfig;
@@ -313,6 +319,7 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
             // DEBUG_V();
             config.createNestedArray (N_controllers);
         }
+
         // DEBUG_V();
 
         JsonArray ControllerConfigs = config[N_controllers];

@@ -1,16 +1,16 @@
 /*
-   File: QN8027RadioApi.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: QN8027RadioApi.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include "language.h"
@@ -21,8 +21,8 @@
 #include <Wire.h>
 
 // I2C:
-static const uint8_t    I2C_QN8027_ADDR = 0x2c;     // I2C Address of QN8027 FM Radio Chip.
-static const uint8_t    I2C_DEV_CNT     = 1;        // Number of expected i2c devices on bus.
+static const uint8_t    I2C_QN8027_ADDR = 0x2c; // I2C Address of QN8027 FM Radio Chip.
+static const uint8_t    I2C_DEV_CNT     = 1;    // Number of expected i2c devices on bus.
 static const uint32_t I2C_FREQ_HZ       = 100000;   // I2C master clock frequency
 
 // *********************************************************************************************
@@ -32,7 +32,7 @@ void cQN8027RadioApi::begin ()
 
     // Initialize i2c.
     Wire.begin (SDA_PIN, SCL_PIN);
-    Wire.setClock (I2C_FREQ_HZ);        // 100KHz i2c speed.
+    Wire.setClock (I2C_FREQ_HZ);    // 100KHz i2c speed.
     pinMode (SCL_PIN, INPUT_PULLUP);    // I2C Clock Pin.
 
     if (!checkRadioIsPresent ())
@@ -57,6 +57,7 @@ void cQN8027RadioApi::begin ()
             Log.infoln (String (F ("FM Radio RDS/RBDS Started.")).c_str ());
         }
     }
+
     // DEBUG_END;
 }
 
@@ -116,14 +117,15 @@ bool cQN8027RadioApi::calibrateAntenna (void)
             Response = true;
             Log.infoln ("-> QN8027 RF Port Matching OK, Calibration Successful.");
         }
+
         /*
-           radio.setFrequency(103.0F); // Recalibrate at middle FM range.
-           waitForIdle(50);
-           radio.Switch(OFF);
-           waitForIdle(15);
-           radio.Switch(ON);
-           waitForIdle(50);
-         */
+          *    radio.setFrequency(103.0F); // Recalibrate at middle FM range.
+          *    waitForIdle(50);
+          *    radio.Switch(OFF);
+          *    waitForIdle(15);
+          *    radio.Switch(ON);
+          *    waitForIdle(50);
+          */
 
         FmRadio.reCalibrate ();
         waitForIdle (120);
@@ -133,6 +135,7 @@ bool cQN8027RadioApi::calibrateAntenna (void)
 
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
     return Response;
 }
@@ -149,9 +152,11 @@ bool cQN8027RadioApi::checkRadioIsPresent (void)
     Wire.beginTransmission (QN8027_I2C_ADDR);
 
     if (Wire.endTransmission (true) == 0)
-    {   // Receive 0 = success (ACK response)
+    {
+        // Receive 0 = success (ACK response)
         response = true;
     }
+
     // DEBUG_END;
     return response;
 }
@@ -176,6 +181,7 @@ void cQN8027RadioApi::initRadioChip (void)
             TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_MISSING;
             break;
         }
+
         Log.verboseln (String (F ("-> CID1 Chip Family ID: 0x%02X")).c_str (), regVal);
 
         regVal = FmRadio.read1Byte (CID2_REG);
@@ -186,30 +192,33 @@ void cQN8027RadioApi::initRadioChip (void)
             TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_MISSING;
             break;
         }
+
         Log.verboseln (String (F ("-> CID2 Chip Version: 0x%02X")).c_str (), regVal);
 
         FmRadio.reset ();
         delay (30);
 
-        FmRadio.setClockSource (0x00);          // XTAL on pins 1 & 2.
+        FmRadio.setClockSource (0x00);  // XTAL on pins 1 & 2.
         FmRadio.setCrystalFreq (12);
-        FmRadio.setCrystalCurrent (30);         // 30% of 400uA Max = 120uA.
-        FmRadio.setTxFreqDeviation (0x81);      // 75Khz, Total Broadcast channel Bandwidth
+        FmRadio.setCrystalCurrent (30); // 30% of 400uA Max = 120uA.
+        FmRadio.setTxFreqDeviation (0x81);  // 75Khz, Total Broadcast channel Bandwidth
         FmRadio.setTxPilotFreqDeviation (9);    // Use default 9% (6.75KHz) Pilot Tone Deviation.
 
-#ifdef OldWay
+        #ifdef OldWay
             setRfPower ();
             waitForIdle (25);
-#endif // def OldWay
+        #endif // def OldWay
 
-        for (uint8_t i = 0; i < RADIO_CAL_RETRY; i++)
-        {   // Allow several attempts to get good port matching results.
+        for (uint8_t i = 0;i < RADIO_CAL_RETRY;i++)
+        {
+            // Allow several attempts to get good port matching results.
             if (calibrateAntenna ())
             {
                 // QN8027 RF Port Matching OK, exit.
                 TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_OK;
                 break;
             }
+
             TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_VSWR;
 
             if (i < RADIO_CAL_RETRY - 1)
@@ -217,6 +226,7 @@ void cQN8027RadioApi::initRadioChip (void)
                 Log.infoln (String (F ("-> Retesting QN8027 RF Port Matching, Retry #%d")).c_str (), i + 1);
             }
         }
+
         waitForIdle (50);
 
         FmRadio.scrambleAudio (OFF);
@@ -249,12 +259,13 @@ void cQN8027RadioApi::initRadioChip (void)
     {
         Log.errorln (String (F ("-> QN8027 Failed Initialization.")).c_str ());
     }
+
     /*
-        // DEBUG ONLY.
-        for (int i = 0; i <= 0x1F; i++) {
-            Log.infoln(String(F( "Radio Register %02X is: %02X")).c_str(), i, radio.read1Byte(i));
-        }
-     */
+      *     // DEBUG ONLY.
+      *     for (int i = 0; i <= 0x1F; i++) {
+      *         Log.infoln(String(F( "Radio Register %02X is: %02X")).c_str(), i, radio.read1Byte(i));
+      *     }
+      */
 
     // DEBUG_END;
 }
@@ -274,6 +285,7 @@ uint16_t cQN8027RadioApi::GetPeakAudioLevel (void)
         FmRadio.clearAudioPeak ();
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
     return mV * 45; // Audio Peak is 45mV per count.
 }
@@ -292,6 +304,7 @@ void cQN8027RadioApi::setAudioImpedance (uint8_t value)
         delay (5);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -309,6 +322,7 @@ void cQN8027RadioApi::setAudioMute (bool value)
         delay (5);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -326,6 +340,7 @@ void cQN8027RadioApi::setDigitalGain (uint8_t value)
         delay (5);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -343,6 +358,7 @@ void cQN8027RadioApi::setFrequency (float frequency, bool Carrier)
         setRfCarrier (Carrier);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -360,6 +376,7 @@ void cQN8027RadioApi::setMonoAudio (bool value)
         delay (5);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -376,6 +393,7 @@ void cQN8027RadioApi::setPiCode (uint16_t value, bool Carrier)
         setRfCarrier (Carrier);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -394,6 +412,7 @@ void cQN8027RadioApi::setPreEmphasis (uint8_t value, bool Carrier)
         setRfCarrier (Carrier);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -410,6 +429,7 @@ void cQN8027RadioApi::setProgramServiceName (String & value, bool Carrier)
         setRfCarrier (Carrier);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -426,6 +446,7 @@ void cQN8027RadioApi::setPtyCode (uint8_t value, bool Carrier)
         setRfCarrier (Carrier);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -441,6 +462,7 @@ void cQN8027RadioApi::setRdsMessage (String & value)
         FmRadio.sendRadioText (value);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -461,6 +483,7 @@ void cQN8027RadioApi::setRfAutoOff (bool value, bool Carrier)
         setRfCarrier (Carrier);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -490,6 +513,7 @@ void cQN8027RadioApi::setRfCarrier (bool value)
         waitForIdle (25);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -512,8 +536,10 @@ void cQN8027RadioApi::setRfPower (uint8_t value, bool Carrier)
             setRfCarrierOFF ();
             setRfCarrier (Carrier);
         }
+
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -531,6 +557,7 @@ void cQN8027RadioApi::setVgaGain (uint8_t value)
         delay (5);
         xSemaphoreGiveRecursive (RadioSemaphore);
     }
+
     // DEBUG_END;
 }
 
@@ -539,7 +566,7 @@ void cQN8027RadioApi::setVgaGain (uint8_t value)
 void cQN8027RadioApi::waitForIdle (uint16_t waitMs)
 {
     // DEBUG_START;
-#ifdef OldWay
+    #ifdef OldWay
         uint8_t stateCode1;
         uint8_t stateCode2;
 
@@ -576,7 +603,7 @@ void cQN8027RadioApi::waitForIdle (uint16_t waitMs)
         } while (false);
 
         // DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
-#endif // def OldWay
+    #endif // def OldWay
     // DEBUG_END;
 }
 
@@ -595,6 +622,7 @@ void cQN8027RadioApi::waitForIdle (uint16_t waitMs)
             newAutoRfFlg = false;
             setRfAutoOff ();
         }
+
         // DEBUG_END;
     }
 

@@ -1,16 +1,16 @@
 /*
-   File: DHCP.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
- */
+  *    File: DHCP.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -84,6 +84,7 @@ bool cDHCP::getBool ()
             // DEBUG_V ("IP Settings wont support static settings");
             break;
         }
+
         response = cBinaryControl::getBool ();
     } while (false);
 
@@ -121,6 +122,7 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
             // DEBUG_V ("No change in value");
             break;
         }
+
         SetStaticFieldsVisibility ();
         SetControlMessage (ResponseMessage);
 
@@ -128,6 +130,7 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
         {
             WiFiDriver.WiFiReset ();
         }
+
         // For some reason the initial load of the UI does not work properly
         ESPUI.jsonDom (0);
     } while (false);
@@ -189,6 +192,7 @@ void cDHCP::SetControlMessage (String & ResponseMessage)
             // setMessage (emptyString, eCssStyle::CssStyleTransparent);
             break;
         }
+
         // DEBUG_V ("Static mode");
 
         if (!ValidateStaticSettings (ResponseMessage))
@@ -198,6 +202,7 @@ void cDHCP::SetControlMessage (String & ResponseMessage)
 
             break;
         }
+
         // DEBUG_V ("Static mode and values are valid");
         setMessage (F ("Using Static Settings"), eCssStyle::CssStyleTransparent);
     } while (false);
@@ -256,6 +261,7 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
             Log.warningln (String (F ("WiFi: Static DNS IP Address is empty. Using DHCP.")).c_str ());
             break;
         }
+
         // DEBUG_V ("All settings are valid. We can use Static settings");
         response = true;
     } while (false);
@@ -264,6 +270,7 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
     {
         ResponseMessage = DHCP_LOCKED_STR;
     }
+
     // DEBUG_END;
 
     return response;

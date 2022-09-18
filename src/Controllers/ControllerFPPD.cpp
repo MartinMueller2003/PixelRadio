@@ -1,20 +1,20 @@
 /*
-   File: ControllerFPPD.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.0
-   Creation: Dec-16-2021
-   Revised:  Apr-06-2022
-   Public Release:
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-   Revision History: See PixelRadio.cpp
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
-   absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-    Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
- */
+  *    File: ControllerFPPD.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Apr-06-2022
+  *    Public Release:
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *    Revision History: See PixelRadio.cpp
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license
+  *    absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *     Note 1: All Text uses defines instead of const String. This saves ~30K Ram and ~50K Flash Memory.
+  */
 
 // *********************************************************************************************
 #include <Arduino.h>
@@ -57,13 +57,13 @@ void c_ControllerFPPD::begin ()
     Sequences.begin ();
 
     FPPDiscovery.begin ([] (String & FppdFileName, void * param)
-                        {
-                            if (param)
-                            {
-                                reinterpret_cast <c_ControllerFPPD *> (param)->ProcessFppdFile (FppdFileName);
-                            }
-                        },
-                        this);
+        {
+            if (param)
+            {
+                reinterpret_cast <c_ControllerFPPD *> (param)->ProcessFppdFile (FppdFileName);
+            }
+        },
+        this);
 
     // DEBUG_END;
 }   // begin
@@ -77,6 +77,7 @@ void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Respon
     {
         Sequences.GetNextRdsMessage (Response);
     }
+
     // DEBUG_END;
 }
 
@@ -106,6 +107,7 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
             }
         }
     }
+
     // DEBUG_END;
 }   // ProcessFppdFile
 

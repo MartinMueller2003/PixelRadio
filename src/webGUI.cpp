@@ -1,84 +1,84 @@
 /*
-   File: webGUI.cpp
-   Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
-   Version: 1.1.0
-   Creation: Dec-16-2021
-   Revised:  Jun-13-2022
-   Revision History: See PixelRadio.cpp
-   Project Leader: T. Black (thomastech)
-   Contributors: thomastech
-
-   (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this
-   license absolutely no warranty is given.
-   This Code was formatted with the uncrustify extension.
-
-   IMPORTANT:
-   =========
-   PixelRadio was originally developed to use LITTLEFS to serve the web pages. But
-   there's an unresolved ESPUI library bug that causes random ESP32 crashes during
-   browser page refreshes or page re-vists. Using EPUI's Embedded mode avoids this
-   problem. So for now, do NOT switch to the LITTLEFS option to serve the web pages.
-
-   ESPUI NOTES:
-   ============
-   NOTE 1. This project uses iangray001's patched release of ESPUI Library created
-   on Feb-16-2022.
-   I've found that the PR releases often introduce undesireable bugs. So I suggest
-   staying with this release until there is a strong reason to try a newer version.
-
-   NOTE 2.
-   Custom Updates to the ESPUI Library:
-   Any edits to the ESPUI library must be done in the Project's library folder. After
-   editing, the ESPUI minified and .h files must be prepared (rebuilt) using the
-   following command in platformio terminal: python .scripts/prepare_static_ui_sources.py -a
-     Comment 1: It may be necessary to install the support programs (watch the error
-      messages). Typically you may need to install the following (use Platformio Terminal):
-      pip install csscompressor
-      pip install jsmin
-      pip install htmlmin
-     Comment 2: The python file has been modified (src = "\PixelRadio\lib\ESPUI\data" and
-     target = "\PixelRadio\lib\ESPUI\src").
-     The prepared data files must be copied to this project's data folder. See below for
-     more details.
-
-   NOTE 3.
-   Data Files: (Useful advice when using ESPUI's LITTLEFS)
-   If LITTLEFS is used then ALL .html, .js, and .css data files must be in
-   the PixelRadio/data folder.
-   Here's some advice on how to get all the ESPUI data files to fit in a min_spiffs build:
-   ESPUI has 50KB of unneeded files. Delete the following files (if present) from
-   the /project data folder:
-    data/index.min.htm
-    data/css/normalize.min.css
-    data/css/style.min.css
-    data/js/controls.min.js
-    data/js/graph.min.js
-    data/js/slider.min.js
-    data/js/tabbedcontent.min.js
-    NOTE: Do NOT delete /data/js/zepto.min.js
-
-    After the deletions the following files MUST remain in your data folder:
-    /index.htm"
-    /css/style.css
-    /css/normalize.css
-    /js/zepto.min.js
-    /js/controls.js
-    /js/slider.js
-    /js/graph.js
-    /js/tabbedcontent.js
-    RadioLogo225x75_base64.gif
-
-    NOTE 4.
-    The browser's ESPUI interface can be redrawn by using ESPUI.jsonReload().
-    However, it only redraws the currently displayed settings and ignores any programmable
-    changes to system variables.
-
-    NOTE 5.
-    When new versions of ESPUI are installed please edit the dataIndexHTML.h and
-    change <title>Control<title> section to <title>PixelRadio</title>
-    This will report the device as "PixelRadio" on network scans.
-    Note: If login is enabled then the device will report "Espressif, Inc."
- */
+  *    File: webGUI.cpp
+  *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
+  *    Version: 1.1.0
+  *    Creation: Dec-16-2021
+  *    Revised:  Jun-13-2022
+  *    Revision History: See PixelRadio.cpp
+  *    Project Leader: T. Black (thomastech)
+  *    Contributors: thomastech
+  *
+  *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this
+  *    license absolutely no warranty is given.
+  *    This Code was formatted with the uncrustify extension.
+  *
+  *    IMPORTANT:
+  *    =========
+  *    PixelRadio was originally developed to use LITTLEFS to serve the web pages. But
+  *    there's an unresolved ESPUI library bug that causes random ESP32 crashes during
+  *    browser page refreshes or page re-vists. Using EPUI's Embedded mode avoids this
+  *    problem. So for now, do NOT switch to the LITTLEFS option to serve the web pages.
+  *
+  *    ESPUI NOTES:
+  *    ============
+  *    NOTE 1. This project uses iangray001's patched release of ESPUI Library created
+  *    on Feb-16-2022.
+  *    I've found that the PR releases often introduce undesireable bugs. So I suggest
+  *    staying with this release until there is a strong reason to try a newer version.
+  *
+  *    NOTE 2.
+  *    Custom Updates to the ESPUI Library:
+  *    Any edits to the ESPUI library must be done in the Project's library folder. After
+  *    editing, the ESPUI minified and .h files must be prepared (rebuilt) using the
+  *    following command in platformio terminal: python .scripts/prepare_static_ui_sources.py -a
+  *      Comment 1: It may be necessary to install the support programs (watch the error
+  *       messages). Typically you may need to install the following (use Platformio Terminal):
+  *       pip install csscompressor
+  *       pip install jsmin
+  *       pip install htmlmin
+  *      Comment 2: The python file has been modified (src = "\PixelRadio\lib\ESPUI\data" and
+  *      target = "\PixelRadio\lib\ESPUI\src").
+  *      The prepared data files must be copied to this project's data folder. See below for
+  *      more details.
+  *
+  *    NOTE 3.
+  *    Data Files: (Useful advice when using ESPUI's LITTLEFS)
+  *    If LITTLEFS is used then ALL .html, .js, and .css data files must be in
+  *    the PixelRadio/data folder.
+  *    Here's some advice on how to get all the ESPUI data files to fit in a min_spiffs build:
+  *    ESPUI has 50KB of unneeded files. Delete the following files (if present) from
+  *    the /project data folder:
+  *     data/index.min.htm
+  *     data/css/normalize.min.css
+  *     data/css/style.min.css
+  *     data/js/controls.min.js
+  *     data/js/graph.min.js
+  *     data/js/slider.min.js
+  *     data/js/tabbedcontent.min.js
+  *     NOTE: Do NOT delete /data/js/zepto.min.js
+  *
+  *     After the deletions the following files MUST remain in your data folder:
+  *     /index.htm"
+  *     /css/style.css
+  *     /css/normalize.css
+  *     /js/zepto.min.js
+  *     /js/controls.js
+  *     /js/slider.js
+  *     /js/graph.js
+  *     /js/tabbedcontent.js
+  *     RadioLogo225x75_base64.gif
+  *
+  *     NOTE 4.
+  *     The browser's ESPUI interface can be redrawn by using ESPUI.jsonReload().
+  *     However, it only redraws the currently displayed settings and ignores any programmable
+  *     changes to system variables.
+  *
+  *     NOTE 5.
+  *     When new versions of ESPUI are installed please edit the dataIndexHTML.h and
+  *     change <title>Control<title> section to <title>PixelRadio</title>
+  *     This will report the device as "PixelRadio" on network scans.
+  *     Note: If login is enabled then the device will report "Espressif, Inc."
+  */
 
 // ************************************************************************************************
 #include <Arduino.h>
@@ -137,9 +137,9 @@ void initCustomCss (void)
     // START OF PANEL INLINE STYLES
     ESPUI.      setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
-#ifdef OldWay
+    #ifdef OldWay
         ESPUI.  setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
-#endif // def OldWay
+    #endif // def OldWay
 
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
@@ -155,9 +155,9 @@ void initCustomCss (void)
     ESPUI.      setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
     ESPUI.      setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
 
-#ifdef OldWay
+    #ifdef OldWay
         ESPUI.  setElementStyle (   homeOnAirID,        "max-width: 80%;");
-#endif // def OldWay
+    #endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
 
@@ -167,11 +167,11 @@ void initCustomCss (void)
 
 // ************************************************************************************************
 // displaySaveWarning(): Show the "Save Required" Message on all configuration pages.
-void    displaySaveWarning (void) {ConfigSave.SetSaveNeeded ();}
+void displaySaveWarning (void) {ConfigSave.SetSaveNeeded ();}
 
 // ************************************************************************************************
 // startGUI(): Must be called once in startup, AFTER wifiConnect()
-void    startGUI (void)
+void startGUI (void)
 {
     // DEBUG_START;
 
@@ -195,7 +195,8 @@ void StartESPUI ()
 {
     // DEBUG_START;
     if ((LoginUser.get ().isEmpty ()) || (LoginPassword.get ().isEmpty ()))
-    {   // Missing credentials, use automatic login.
+    {
+        // Missing credentials, use automatic login.
         // DEBUG_V();
         ESPUI.begin ("PixelRadio");
         // DEBUG_V();
@@ -212,6 +213,7 @@ void StartESPUI ()
         // Don't use LITLEFS, browser refreshes will crash.
         // ESPUI.beginLITTLEFS ( APP_NAME_STR, LoginUser.getStr().c_str (), LoginPassword.getStr().c_str ());
     }
+
     // DEBUG_END;
 }
 
@@ -305,20 +307,20 @@ void buildGUI (void)
     ESPUI.addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     backupSaveID =
         ESPUI.addControl (ControlType::Button,
-                          BACKUP_SAV_CFG_STR,
-                          BACKUP_SAVE_STR,
-                          ControlColor::Wetasphalt,
-                          backupTab,
-                          & backupCallback);
+            BACKUP_SAV_CFG_STR,
+            BACKUP_SAVE_STR,
+            ControlColor::Wetasphalt,
+            backupTab,
+            & backupCallback);
     backupSaveMsgID = ESPUI.addControl (ControlType::Label, "SAVE_MSG", emptyString, ControlColor::Wetasphalt, backupSaveID);
 
     backupRestoreID =
         ESPUI.addControl (ControlType::Button,
-                          BACKUP_RES_CFG_STR,
-                          BACKUP_RESTORE_STR,
-                          ControlColor::Wetasphalt,
-                          backupTab,
-                          & backupCallback);
+            BACKUP_RES_CFG_STR,
+            BACKUP_RESTORE_STR,
+            ControlColor::Wetasphalt,
+            backupTab,
+            & backupCallback);
     backupRestoreMsgID = ESPUI.addControl (ControlType::Label, "RESTORE_MSG", emptyString, ControlColor::Wetasphalt, backupRestoreID);
     // DEBUG_V();
 
@@ -327,10 +329,10 @@ void buildGUI (void)
     // Diagnostics Tab
     Diagnostics.AddControls (diagTab, ControlColor::Sunflower);
 
-#ifdef OldWay
+    #ifdef OldWay
         tempStr         = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
         diagLogMsgID    = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
-#endif // def OldWay
+    #endif // def OldWay
 
     //
     // ******************
@@ -350,16 +352,16 @@ void buildGUI (void)
     static String WebGif = (makeWebGif ("/RadioLogo225x75_base64.gif", 200, 66, "white"));
     // DEBUG_V(String("WebGif.Length: ") + String(WebGif.length()));
     aboutLogoID = ESPUI.addControl (ControlType::Label,
-                                    N_About,
-                                    WebGif,
-                                    ControlColor::None,
-                                    aboutTab);
+        N_About,
+        WebGif,
+        ControlColor::None,
+        aboutTab);
 
     aboutVersionID = ESPUI.addControl (ControlType::Label,
-                                       N_About_PixelRadio,
-                                       tempStr,
-                                       ControlColor::None,
-                                       aboutLogoID);
+        N_About_PixelRadio,
+        tempStr,
+        ControlColor::None,
+        aboutLogoID);
 
     // this gets set as a side effect of the control setup.
     ConfigSave.ClearSaveNeeded ();
