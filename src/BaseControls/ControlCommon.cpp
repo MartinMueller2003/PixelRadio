@@ -56,10 +56,10 @@ static const PROGMEM char * CssStyles [] =
 
 static const String PanelStyles [] =
 {
-    {"font-size: 1.15em;"},
-    {"font-size: 1.25em;"},
-    {"font-size: 1.35em;"},
-    {"font-size: 3.0em;" },
+    {"font-size: 1.15em;"              },
+    {"font-size: 1.25em;"              },
+    {"font-size: 1.35em;"              },
+    {"font-size: 3.0em;"               },
     {"font-size: 1.15em; color: black;"},
     {"font-size: 1.25em; color: black;"},
     {"font-size: 1.35em; color: black;"},
@@ -120,14 +120,6 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
     setControlPanelStyle (ControlPanelStyle);
     // setControlStyle (ControlStyle);
 
-    MessageId = ESPUI.addControl (ControlType::Label,
-                                  emptyString.c_str (),
-                                  emptyString,
-                                  ControlColor::None,
-                                  ControlId);
-    setMessagePanelStyle (MessagePanelStyle);
-    setMessageStyle (MessageStyle);
-
     // force a UI Update
     String Response;
     set (DataValueStr, Response, true);
@@ -171,6 +163,18 @@ bool    cControlCommon::GetAndResetValueChangedFlag ()
 
     // DEBUG_END;
     return Response;
+}
+
+// *********************************************************************************************
+String cControlCommon::GetCssStyle(eCssStyle Style)
+{
+    return CssStyles[int(Style)];
+}
+
+// *********************************************************************************************
+String cControlCommon::GetPanelStyle(ePanelStyle Style)
+{
+    return PanelStyles[int(Style)];
 }
 
 // *********************************************************************************************
@@ -309,61 +313,6 @@ void cControlCommon::setControlPanelStyle (ePanelStyle style)
 
     ControlPanelStyle = style;
     ESPUI.setPanelStyle (ControlId, PanelStyles[int(style)]);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cControlCommon::setMessage (const String & value)
-{
-    // DEBUG_START;
-    // DEBUG_V (String ("value: ") + value);
-
-    setMessage (value, MessageStyle);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cControlCommon::setMessage (const String & value, eCssStyle style)
-{
-    // DEBUG_START;
-
-    // DEBUG_V (String ("value: ") + value);
-    // DEBUG_V (String ("style: ") + String (style));
-    if (value.isEmpty ())
-    {
-        ESPUI.print (MessageId, emptyString);
-        setMessageStyle (eCssStyle::CssStyleTransparent);
-    }
-    else
-    {
-        ESPUI.print (MessageId, value);
-        setMessageStyle (style);
-    }
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cControlCommon::setMessageStyle (eCssStyle style)
-{
-    // DEBUG_START;
-    // DEBUG_V (String ("style: ") + String (style));
-
-    MessageStyle = style;
-    ESPUI.setElementStyle (MessageId, CssStyles[int(style)]);
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
-void cControlCommon::setMessagePanelStyle (ePanelStyle style)
-{
-    // DEBUG_START;
-    // DEBUG_V (String ("style: ") + String (style));
-
-    MessagePanelStyle = style;
-    ESPUI.setPanelStyle (MessageId, PanelStyles[int(style)]);
 
     // DEBUG_END;
 }

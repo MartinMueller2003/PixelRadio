@@ -31,7 +31,7 @@ cChoiceListControl::cChoiceListControl (const String                & ConfigName
     setControlStyle (CssStyleBlack_bw);
 
     String Dummy;
-    KeyToChoiceVectorMap.clear();
+    KeyToChoiceVectorMap.clear ();
     RefreshOptionList (ChoiceVector);
     set (DefaultValue, Dummy, true);
 
@@ -139,8 +139,8 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
             }
         }
 
-            // DEBUG_V ("Delete all of the entries");
-            KeyToChoiceVectorMap.clear ();
+        // DEBUG_V ("Delete all of the entries");
+        KeyToChoiceVectorMap.clear ();
 
         // DEBUG_V ("Rebuild the map");
         uint32_t Index = 0;
@@ -171,7 +171,6 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
 
         ESPUI.updateControlValue (ControlId, DataValueStr);
-
     } while (false);
 
     // DEBUG_END;

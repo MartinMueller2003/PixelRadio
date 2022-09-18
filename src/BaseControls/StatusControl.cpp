@@ -20,7 +20,7 @@
 
 // *********************************************************************************************
 cStatusControl::cStatusControl (const String & _Title) :
-    cControlCommon (emptyString, ControlType::Label, _Title, emptyString, 0)
+    cControlCommonMsg (emptyString, ControlType::Label, _Title, emptyString, 0)
 {
     // _ DEBUG_START;
     setSaveUpdates (false);
@@ -31,7 +31,7 @@ cStatusControl::cStatusControl (const String & _Title) :
 
 // *********************************************************************************************
 cStatusControl::cStatusControl () :
-    cControlCommon (emptyString, ControlType::Label, emptyString, emptyString, 0)
+    cControlCommonMsg (emptyString, ControlType::Label, emptyString, emptyString, 0)
 {
     // _ DEBUG_START;
 
@@ -45,7 +45,7 @@ void cStatusControl::set (const String & value, eCssStyle style)
 {
     // DEBUG_START;
 
-    cControlCommon::setControlStyle (style);
+    cControlCommonMsg::setControlStyle (style);
 
     set (value);
 

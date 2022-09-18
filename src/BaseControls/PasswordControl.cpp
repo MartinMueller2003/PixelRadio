@@ -22,7 +22,7 @@ const PROGMEM char PasswordString [] = "PASSWORD HIDDEN";
 
 // *********************************************************************************************
 cPasswordControl::cPasswordControl (const String & ConfigName, const String & Title, const String & DefaultValue, uint32_t MaxDataLength) :
-    cControlCommon (ConfigName, ControlType::Text, Title, DefaultValue, MaxDataLength)
+    cControlCommonMsg (ConfigName, ControlType::Text, Title, DefaultValue, MaxDataLength)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -44,7 +44,7 @@ bool cPasswordControl::set (const String & value, String & ResponseMessage, bool
     // DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("PasswordString: ") + PasswordString);
 
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::set (value, ResponseMessage, ForceUpdate);
     setControl (PasswordString, eCssStyle::CssStyleBlack_bw);
 
     // DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);

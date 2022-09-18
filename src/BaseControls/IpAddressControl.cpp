@@ -22,7 +22,7 @@ static const PROGMEM uint32_t IpAddress_MAX_SZ = 16;
 
 // *********************************************************************************************
 cIpAddressControl::cIpAddressControl (const String & ConfigName, const String & Title, const IPAddress DefaultValue) :
-    cControlCommon (ConfigName, ControlType::Text, Title, DefaultValue.toString (), IpAddress_MAX_SZ)
+    cControlCommonMsg (ConfigName, ControlType::Text, Title, DefaultValue.toString (), IpAddress_MAX_SZ)
 {
     // _ DEBUG_START;
 

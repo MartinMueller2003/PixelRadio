@@ -16,10 +16,10 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <map>
-#include "ControlCommon.hpp"
+#include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cBinaryControl : public cControlCommon
+class cBinaryControl : public cControlCommonMsg
 {
 public:
 

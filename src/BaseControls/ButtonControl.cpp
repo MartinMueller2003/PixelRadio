@@ -23,7 +23,7 @@
 
 // *********************************************************************************************
 cButtonControl::cButtonControl (const String & Title) :
-    cControlCommon (emptyString, ControlType::Button, Title, emptyString, 10)
+    cControlCommonMsg (emptyString, ControlType::Button, Title, emptyString, 10)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

@@ -21,27 +21,27 @@
 
 static ChoiceListVector_t ListOfOptions
 {
-    {"DIGITAL INPUT = FLOAT",       String("0, ") + String(INPUT)},
-    {"DIGITAL INPUT = PULLUP",      String("0, ") + String(INPUT_PULLUP)},
-    {"DIGITAL INPUT = PULLDOWN",    String("0, ") + String(INPUT_PULLDOWN)},
-    {"DIGITAL OUTPUT = LOW",        String("0, ") + String(OUTPUT)},
-    {"DIGITAL OUTPUT = HIGH",       String("1, ") + String(OUTPUT)},
+    {"DIGITAL INPUT = FLOAT",       String ("0, ") + String (INPUT)},
+    {"DIGITAL INPUT = PULLUP",      String ("0, ") + String (INPUT_PULLUP)},
+    {"DIGITAL INPUT = PULLDOWN",    String ("0, ") + String (INPUT_PULLDOWN)},
+    {"DIGITAL OUTPUT = LOW",        String ("0, ") + String (OUTPUT)},
+    {"DIGITAL OUTPUT = HIGH",       String ("1, ") + String (OUTPUT)},
 };
 
-static std::map<String, String> CommandTranslation =
+static std::map <String, String> CommandTranslation =
 {
-    {"read", "read"},
+    {"read",    "read"                 },
     {"outhigh", "DIGITAL OUTPUT = HIGH"},
-    {"outlow", "DIGITAL OUTPUT = LOW"},
+    {"outlow",  "DIGITAL OUTPUT = LOW" },
 };
 
 // *********************************************************************************************
 cGpioCommon::cGpioCommon (const String & ConfigName, gpio_num_t _pinId) :
-    pinId(_pinId),
+    pinId (_pinId),
     cChoiceListControl (
             ConfigName,
-            String(F("GPIO PIN ")) + String(_pinId),
-            String("DIGITAL INPUT = PULLDOWN"),
+            String (F ("GPIO PIN ")) + String (_pinId),
+            String ("DIGITAL INPUT = PULLDOWN"),
             & ListOfOptions)
 {
     // _ DEBUG_START;
@@ -55,15 +55,15 @@ bool cGpioCommon::set (const String & value, String & ResponseMessage, bool Forc
 
     bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
 
-    do // once
+    do  // once
     {
         // read : outhigh : outlow
 
-        if(String(F("read")).equals(get()))
+        if (String (F ("read")).equals (get ()))
         {
             // DEBUG_V("Read pin");
-            ResponseMessage = String(digitalRead(pinId));
-            Response = true;
+            ResponseMessage = String (digitalRead (pinId));
+            Response        = true;
             break;
         }
 
@@ -72,19 +72,17 @@ bool cGpioCommon::set (const String & value, String & ResponseMessage, bool Forc
             // DEBUG_V("Nothing to do");
             break;
         }
-
-        String Action = ListOfOptions[getIndex()].second;
+        String Action = ListOfOptions[getIndex ()].second;
         // DEBUG_V(String("  Action: ") + Action);
 
-        uint32_t position = Action.indexOf(",");
-        pinMode (pinId, Action.substring(position+2).toInt());
-        digitalWrite (pinId, Action.substring(0,position).toInt());
+        uint32_t position = Action.indexOf (",");
+        pinMode (pinId, Action.substring (position + 2).toInt ());
+        digitalWrite (pinId, Action.substring (0, position).toInt ());
 
         // DEBUG_V(String("position: ") + String(position));
         // DEBUG_V(String("PinValue: ") + Action.substring(0,position));
         // DEBUG_V(String(" PinMode: ") + Action.substring(position+2));
-
-    } while(false);
+    } while (false);
 
     // DEBUG_END;
     return Response;
@@ -95,20 +93,19 @@ bool cGpioCommon::validate (const String & value, String & ResponseMessage, bool
 {
     // DEBUG_START;
 
-    bool Response = true;
-    String temp = value;
-    temp.toLowerCase();
+    bool Response   = true;
+    String temp     = value;
+    temp.toLowerCase ();
 
-    if(CommandTranslation.end() != CommandTranslation.find(temp))
+    if (CommandTranslation.end () != CommandTranslation.find (temp))
     {
         // DEBUG_V ("Found a match for the value");
         DataValueStr = CommandTranslation[value];
     }
     else
     {
-        Response = cChoiceListControl::validate(value, ResponseMessage, ForceUpdate);
+        Response = cChoiceListControl::validate (value, ResponseMessage, ForceUpdate);
     }
-
     // DEBUG_END;
     return Response;
 }

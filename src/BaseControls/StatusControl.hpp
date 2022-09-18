@@ -15,10 +15,10 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ControlCommon.hpp"
+#include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cStatusControl : public cControlCommon
+class cStatusControl : public cControlCommonMsg
 {
 public:
 

@@ -15,10 +15,10 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ControlCommon.hpp"
+#include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cIpAddressControl : public cControlCommon
+class cIpAddressControl : public cControlCommonMsg
 {
 public:
 

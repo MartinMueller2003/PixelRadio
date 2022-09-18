@@ -41,7 +41,7 @@ cBinaryControl::cBinaryControl (
     const String    & ConfigName,
     const String    & _Title,
     bool            DefaultValue) :
-    cControlCommon (ConfigName, ControlType::Switcher, _Title, String (DefaultValue), 10)
+    cControlCommonMsg (ConfigName, ControlType::Switcher, _Title, String (DefaultValue), 10)
 {
     // _ DEBUG_START;
 

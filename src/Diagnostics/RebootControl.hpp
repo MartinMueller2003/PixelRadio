@@ -1,6 +1,6 @@
 #pragma once
 /*
-   File: GpioCommon.hpp
+   File: RebootControl.cpp
    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
    Version: 1.1.0
    Creation: Dec-16-2021
@@ -15,21 +15,23 @@
 
 // *********************************************************************************************
 #include <Arduino.h>
-#include "ChoiceListControl.hpp"
+#include "ButtonControl.hpp"
 
 // *********************************************************************************************
-class cGpioCommon : public cChoiceListControl
+class cRebootControl : public cButtonControl
 {
 public:
 
-    cGpioCommon (const String & ConfigName, gpio_num_t _pinId);
-    virtual ~cGpioCommon ()    {}
-    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    cRebootControl ();
+    virtual ~cRebootControl ()    {}
 
-private:
-    gpio_num_t pinId;
-};  // class cGpioCommon
+    void    Callback (Control * sender, int type);
+    void    AddControls (uint16_t TabId, ControlColor color);
+    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+};  // class cRebootControl
+
+// *********************************************************************************************
+extern cRebootControl RebootControl;
 
 // *********************************************************************************************
 // OEF

@@ -62,17 +62,13 @@ public:
         CssStyleWhite_grey,
     };
 
+    String GetCssStyle(eCssStyle Style);
     virtual void    setControl (const String & value, eCssStyle style);
-    virtual void    setMessage (const String & value, eCssStyle style);
-    virtual void    setMessage (const String & value);
     virtual void    setControlStyle (eCssStyle style);
-    virtual void    setMessageStyle (eCssStyle style);
     virtual void    setControlLabel (const String & value);
 
     uint16_t ControlId      = Control::noParent;
-    uint16_t MessageId      = Control::noParent;
     eCssStyle ControlStyle  = eCssStyle::CssStyleBlack;
-    eCssStyle MessageStyle  = eCssStyle::CssStyleBlack;
 
     enum ePanelStyle
     {
@@ -89,13 +85,11 @@ public:
         PanelStyle135_white,
         PanelStyle300_white,
     };
+    String GetPanelStyle(ePanelStyle Style);
     virtual void    setControlPanelStyle (ePanelStyle style);
-    virtual void    setMessagePanelStyle (ePanelStyle style);
 protected:
 
     ePanelStyle ControlPanelStyle   = PanelStyle125;
-    ePanelStyle MessagePanelStyle   = PanelStyle125;
-
     String DataValueStr;
 
     bool SaveUpdate = true;

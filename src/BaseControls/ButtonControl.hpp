@@ -17,10 +17,10 @@
 #include <Arduino.h>
 #include <ESPUI.h>
 #include "language.h"
-#include "ControlCommon.hpp"
+#include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cButtonControl : public cControlCommon
+class cButtonControl : public cControlCommonMsg
 {
 public:
     cButtonControl (const String & Title);
