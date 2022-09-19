@@ -38,9 +38,6 @@ public:
     void    restoreConfiguration (JsonObject & json);
     void    saveConfiguration (JsonObject & json);
 
-private:
-
-    void updateOnAirSign (void);
 };  // class cRadio
 
 extern cRadio Radio;

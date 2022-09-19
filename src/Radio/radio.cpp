@@ -103,29 +103,6 @@ void cRadio::saveConfiguration (JsonObject & config)
 }
 
 // *********************************************************************************************
-// updateOnAirSign(): Turn on the "On Air" LED Sign if RF Carrier is present.
-void cRadio::updateOnAirSign (void)
-{
-    // DEBUG_START;
-    #ifdef OldWay
-        new way:
-        call GPIO and tell it to update the output and the UI.
-
-        if (rfCarrierFlg)
-        {
-            digitalWrite (ON_AIR_PIN, SIGN_ON);
-        }
-        else
-        {
-            digitalWrite (ON_AIR_PIN, SIGN_OFF);
-        }
-
-    #endif // def OldWay
-
-    // DEBUG_END;
-}
-
-// *********************************************************************************************
 cRadio Radio;
 
 // *********************************************************************************************

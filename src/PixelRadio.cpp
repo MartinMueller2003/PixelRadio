@@ -181,8 +181,6 @@ void loop ()
     Diagnostics.Poll ();
 
     #ifdef OldWay
-        updateOnAirSign (); // Update the Optional "On Air" 12V LED Sign.
-
         rebootSystem ();    // Check to see if Reboot has been requested.
 
         #    ifdef HTTP_ENB
