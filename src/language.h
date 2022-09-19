@@ -28,16 +28,6 @@
 
 #define APP_NAME_STR N_PixelRadio
 
-#define BACKUP_TAB_STR      "Backup"
-#define BACKUP_SAVE_STR     "SAVE"
-#define BACKUP_SAV_CFG_STR  "SAVE TO SD CARD"
-#define BACKUP_SAV_FAIL_STR "SAVE FAILED: CHECK SD CARD"
-#define BACKUP_SAV_PASS_STR "Configuration Saved"
-#define BACKUP_RESTORE_STR  "RESTORE"
-#define BACKUP_RES_CFG_STR  "RESTORE FROM SD CARD"
-#define BACKUP_RES_FAIL_STR "RESTORE FAILED: CHECK SD CARD"
-#define BACKUP_RES_PASS_STR "Restore Complete: Reboot Required"
-
 #define CTRL_TAB_STR "Controllers"
 
 // #define CTLR_SERIAL_MSG_STR  "WARNING: DIAGNOSTIC SERIAL LOG IS ON"
