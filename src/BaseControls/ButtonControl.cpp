@@ -40,13 +40,12 @@ void cButtonControl::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V (String ("TabId: ") + String (TabId))
     // DEBUG_V (String ("color: ") + String (color))
 
+    Booting = true;
     cControlCommonMsg::AddControls (TabId, color);
     setControlPanelStyle (ePanelStyle::PanelStyle135);
     setControlStyle (eCssStyle::CssStyleWhite);
-    /*
-      *     ESPUI.      setElementStyle (       ControlId,
-      *                                         String (F ("background-color: grey; color: white; margin-top: .1rem; margin-bottom: .1rem;")));
-      */
+
+    Booting = false;
 
     // DEBUG_END;
 }
