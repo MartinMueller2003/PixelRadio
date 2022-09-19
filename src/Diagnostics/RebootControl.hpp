@@ -25,8 +25,8 @@ public:
     cRebootControl ();
     virtual~cRebootControl ()    {}
 
-    void    Callback (Control * sender, int type);
     void    AddControls (uint16_t TabId, ControlColor color);
+    void    Callback (Control * sender, int type);
     void    Poll ();
 
 private:
