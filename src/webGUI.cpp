@@ -106,17 +106,6 @@
 // Local Strings.
 String tempStr;
 
-uint16_t    aboutTab    = Control::noParent;
-uint16_t    adjTab      = Control::noParent;
-uint16_t    backupTab   = Control::noParent;
-uint16_t    ctrlTab     = Control::noParent;
-uint16_t    diagTab     = Control::noParent;
-uint16_t    gpioTab     = Control::noParent;
-uint16_t    homeTab     = Control::noParent;
-uint16_t    radioTab    = Control::noParent;
-uint16_t    rdsTab      = Control::noParent;
-uint16_t    wifiTab     = Control::noParent;
-
 uint16_t    aboutLogoID     = Control::noParent;
 uint16_t    aboutVersionID  = Control::noParent;
 
@@ -131,30 +120,10 @@ static const PROGMEM char   BACKUP_TAB_STR      [] = "Backup";
 void initCustomCss (void)
 {
     // DEBUG_START;
-    // START OF PANEL INLINE STYLES
-    ESPUI.setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
-
-    #ifdef OldWay
-        ESPUI.setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
-    #endif // def OldWay
-
-    // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
-    //  https://github.com/s00500/ESPUI/pull/147#issuecomment-1009821269.
-
-    // END OF PANEL INLINE STYLES.
-
-    // START OF ELEMENT INLINE STYLES
-
-    ESPUI.setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
-
-    #ifdef OldWay
-        ESPUI.setElementStyle (   homeOnAirID,        "max-width: 80%;");
-    #endif // def OldWay
-
-    // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
+    ESPUI.setPanelStyle   (aboutLogoID,     "background-color: white; color: black;");
+    ESPUI.setElementStyle (aboutVersionID,  "background-color: white; color: black; margin-top: 0px;");
 
     // DEBUG_END;
-    // END OF STYLES
 }
 
 // ************************************************************************************************
@@ -173,8 +142,8 @@ void startGUI (void)
     // These have been moved to Heap and no longer impact stack
     // ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity (Verbosity::Quiet);  // Production mode.
-    ESPUI.jsonInitialDocumentSize   = 5000;
-    ESPUI.jsonUpdateDocumentSize    = 5000;
+    ESPUI.jsonInitialDocumentSize   = 4000;
+    ESPUI.jsonUpdateDocumentSize    = 4000;
     // DEBUG_V();
 
     // DEBUG_V();
@@ -225,16 +194,16 @@ void buildGUI (void)
 
     // ************
     // Menu Tabs
-    homeTab     = ESPUI.addControl (ControlType::Tab, "HOME", HOME_TAB_STR);
-    adjTab      = ESPUI.addControl (ControlType::Tab, "ADJ", ADJUST_TAB_STR);
-    radioTab    = ESPUI.addControl (ControlType::Tab, "RADIO", RADIO_TAB_STR);
-    rdsTab      = ESPUI.addControl (ControlType::Tab, "RDS", RDS_TAB_STR);
-    wifiTab     = ESPUI.addControl (ControlType::Tab, "WIFI", WIFI_TAB_STR);
-    ctrlTab     = ESPUI.addControl (ControlType::Tab, "CNTRL", CTRL_TAB_STR);
-    gpioTab     = ESPUI.addControl (ControlType::Tab, "GPIO", GPIO_TAB_STR);
-    backupTab   = ESPUI.addControl (ControlType::Tab, "BACKUP", BACKUP_TAB_STR);
-    diagTab     = ESPUI.addControl (ControlType::Tab, "DIAG", DIAG_TAB_STR);
-    aboutTab    = ESPUI.addControl (ControlType::Tab, "ABOUT", N_About);
+    uint16_t homeTab     = ESPUI.addControl (ControlType::Tab, "HOME", HOME_TAB_STR);
+    uint16_t adjTab      = ESPUI.addControl (ControlType::Tab, "ADJ", ADJUST_TAB_STR);
+    uint16_t radioTab    = ESPUI.addControl (ControlType::Tab, "RADIO", RADIO_TAB_STR);
+    uint16_t rdsTab      = ESPUI.addControl (ControlType::Tab, "RDS", RDS_TAB_STR);
+    uint16_t wifiTab     = ESPUI.addControl (ControlType::Tab, "WIFI", WIFI_TAB_STR);
+    uint16_t ctrlTab     = ESPUI.addControl (ControlType::Tab, "CNTRL", CTRL_TAB_STR);
+    uint16_t gpioTab     = ESPUI.addControl (ControlType::Tab, "GPIO", GPIO_TAB_STR);
+    uint16_t backupTab   = ESPUI.addControl (ControlType::Tab, "BACKUP", BACKUP_TAB_STR);
+    uint16_t diagTab     = ESPUI.addControl (ControlType::Tab, "DIAG", DIAG_TAB_STR);
+    uint16_t aboutTab    = ESPUI.addControl (ControlType::Tab, "ABOUT", N_About);
 
     // ************
     // Home Tab
