@@ -99,6 +99,8 @@
 #include "Gpio23.hpp"
 #include "Gpio33.hpp"
 #include "Diagnostics.hpp"
+#include "BackupSave.hpp"
+#include "BackupRestore.hpp"
 
 // ************************************************************************************************
 // Local Strings.
@@ -120,27 +122,21 @@ uint16_t    aboutVersionID  = Control::noParent;
 
 uint16_t adjUvolID = Control::noParent;
 
-uint16_t    backupRestoreID     = Control::noParent;
-uint16_t    backupRestoreMsgID  = Control::noParent;
-uint16_t    backupSaveID        = Control::noParent;
-uint16_t    backupSaveMsgID     = Control::noParent;
-uint16_t    backupSaveSetID     = Control::noParent;
-uint16_t    backupSaveSetMsgID  = Control::noParent;
+static const PROGMEM char   BACKUP_TAB_STR      [] = "Backup";
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
 //                   It is called AFTER ESPUI.begin(), see bottom of startGUI().
-//                   Note: width and max-width appear to do the same thing. But try both. Avoid widths <30% or expect text wrap.
+//                   Note: width and max-width appear to do the same thing.But try both.Avoid widths <30% or expect text wrap.
 void initCustomCss (void)
 {
     // DEBUG_START;
     // START OF PANEL INLINE STYLES
-    ESPUI.      setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
+    ESPUI.setPanelStyle ( aboutLogoID,    "background-color: white; color: black;");
 
     #ifdef OldWay
-        ESPUI.  setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
+        ESPUI.setPanelStyle ( homeOnAirID,    "font-size: 3.0em;");
     #endif // def OldWay
-
 
     // ESPUI.setPanelStyle(rdsDspTmID,     "font-size: 1.15em;");
     //  https://github.com/s00500/ESPUI/pull/147#issuecomment-1009821269.
@@ -149,14 +145,10 @@ void initCustomCss (void)
 
     // START OF ELEMENT INLINE STYLES
 
-    ESPUI.      setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
-
-    ESPUI.      setElementStyle (   backupRestoreMsgID, CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   backupSaveMsgID,    CSS_LABEL_STYLE_WHITE);
-    ESPUI.      setElementStyle (   backupSaveSetMsgID, CSS_LABEL_STYLE_RED);
+    ESPUI.setElementStyle (   aboutVersionID,     "background-color: white; color: black; margin-top: 0px;");
 
     #ifdef OldWay
-        ESPUI.  setElementStyle (   homeOnAirID,        "max-width: 80%;");
+        ESPUI.setElementStyle (   homeOnAirID,        "max-width: 80%;");
     #endif // def OldWay
 
     // ESPUI.setElementStyle(homeLogoID,       "max-width: 45%; background-color: white; color: black;"); // DOES NOT WORK.
@@ -287,32 +279,16 @@ void buildGUI (void)
     Gpio19.AddControls (gpioTab, ControlColor::Dark);
     Gpio23.AddControls (gpioTab, ControlColor::Dark);
     Gpio33.AddControls (gpioTab, ControlColor::Dark);
-    ConfigSave. AddControls (gpioTab, ControlColor::Dark);
+    ConfigSave.AddControls (gpioTab, ControlColor::Dark);
 
     //
     // *****************
     // Backup Tab
-    ConfigSave. AddControls (backupTab, ControlColor::Wetasphalt);
+    ConfigSave.AddControls (backupTab, ControlColor::Wetasphalt);
 
     ESPUI.addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
-    backupSaveID =
-        ESPUI.addControl (ControlType::Button,
-            BACKUP_SAV_CFG_STR,
-            BACKUP_SAVE_STR,
-            ControlColor::Wetasphalt,
-            backupTab,
-            & backupCallback);
-    backupSaveMsgID = ESPUI.addControl (ControlType::Label, "SAVE_MSG", emptyString, ControlColor::Wetasphalt, backupSaveID);
-
-    backupRestoreID =
-        ESPUI.addControl (ControlType::Button,
-            BACKUP_RES_CFG_STR,
-            BACKUP_RESTORE_STR,
-            ControlColor::Wetasphalt,
-            backupTab,
-            & backupCallback);
-    backupRestoreMsgID = ESPUI.addControl (ControlType::Label, "RESTORE_MSG", emptyString, ControlColor::Wetasphalt, backupRestoreID);
-    // DEBUG_V();
+    BackupSave.AddControls (backupTab, ControlColor::Wetasphalt);
+    BackupRestore.AddControls (backupTab, ControlColor::Wetasphalt);
 
     //
     // ******************
