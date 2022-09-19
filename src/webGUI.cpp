@@ -231,12 +231,6 @@ void buildGUI (void)
 {
     // DEBUG_START;
 
-    extern uint32_t paVolts;
-
-    tempStr.reserve (125);  // Avoid memory re-allocation fragments on the Global String.
-    char charBuff[25];
-    float tempFloat;
-
     // ************
     // Menu Tabs
     homeTab     = ESPUI.addControl (ControlType::Tab, "HOME", HOME_TAB_STR);
@@ -265,10 +259,6 @@ void buildGUI (void)
     // Radio Tab
     Radio.AddRadioControls (radioTab, ControlColor::Emerald);
     ConfigSave.AddControls (radioTab, ControlColor::Emerald);
-
-    // RF Power Control is not compatible with the RF Amp Circutry.
-    // Low Power levels do not correctly excite the PA Transistor.
-    // RfPower.AddControl(radioTab);
 
     //
     // *****************
@@ -329,15 +319,11 @@ void buildGUI (void)
     // Diagnostics Tab
     Diagnostics.AddControls (diagTab, ControlColor::Sunflower);
 
-    #ifdef OldWay
-        tempStr         = ControllerMgr.GetControllerEnabledFlag (SerialControllerId) ? "" : DIAG_LOG_MSG_STR;
-        diagLogMsgID    = ESPUI.addControl (ControlType::Label, "LOG_MSG", tempStr, ControlColor::Sunflower, diagLogID);
-    #endif // def OldWay
-
     //
     // ******************
     // About Tab
 
+    tempStr.reserve (125);  // Avoid memory re-allocation fragments on the Global String.
     tempStr = N_Version;
     tempStr += VERSION_STR;
     tempStr += N_br;
