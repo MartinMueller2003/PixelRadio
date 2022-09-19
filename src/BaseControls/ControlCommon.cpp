@@ -107,6 +107,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
 void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipSet)
 {
     // DEBUG_START;
+    // DEBUG_V(String(": ") + Title);
 
     ControlId = ESPUI.addControl (uiControltype,
         Title.c_str (),
@@ -136,8 +137,8 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
         // force a UI Update
         String Response;
         set (DataValueStr, Response, true);
-        Booting = false;
     }
+    Booting = false;
 
     // DEBUG_END;
 }
