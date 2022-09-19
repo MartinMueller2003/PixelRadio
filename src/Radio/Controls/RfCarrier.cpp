@@ -50,6 +50,9 @@ void cRfCarrier::AddHomeControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
+    pinMode(ON_AIR_PIN, OUTPUT);
+    digitalWrite (ON_AIR_PIN, SIGN_OFF);
+
     RfCarrierStatus.AddControls (TabId, color);
     ESPUI.setPanelStyle (HomeStatusMessageId, F ("font-size: 3.0em;"));
 
@@ -89,6 +92,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
         {
             // DEBUG_V (RADIO_OFF_AIR_STR);
             ResponseMessage = RADIO_OFF_AIR_STR;
+            digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (RADIO_OFF_AIR_STR, eCssStyle::CssStyleBlack);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleWhite);
             Log.infoln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
@@ -102,6 +106,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
         {
             // DEBUG_V (RADIO_FAIL_STR);
             ResponseMessage = RADIO_FAIL_STR;
+            digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
             Log.errorln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
@@ -112,6 +117,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
         {
             // DEBUG_V (RADIO_VSWR_STR);
             ResponseMessage = RADIO_VSWR_STR;
+            digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
             Log.warningln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
@@ -122,6 +128,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
         {
             // DEBUG_V (RADIO_VOLT_STR);
             ResponseMessage = RADIO_VOLT_STR;
+            digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
             Log.warningln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
@@ -130,6 +137,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
 
         // DEBUG_V (RADIO_ON_AIR_STR);
         ResponseMessage = RADIO_ON_AIR_STR;
+        digitalWrite (ON_AIR_PIN, SIGN_ON);
         setMessage (ResponseMessage, eCssStyle::CssStyleWhite);
         RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleGreen);
         Log.infoln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
