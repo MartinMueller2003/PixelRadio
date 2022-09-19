@@ -10,6 +10,10 @@
   *
   *    (c) copyright T. Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
   *    This Code was formatted with the uncrustify extension.
+  *
+  *    RF Power Control is not compatible with the RF Amp Circutry.
+  *    Low Power levels do not correctly excite the PA Transistor.
+  *    RfPower.AddControl(radioTab);
   */
 
 // *********************************************************************************************

@@ -131,7 +131,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     setControlPanelStyle (ControlPanelStyle);
     // setControlStyle (ControlStyle);
 
-    if(!skipSet)
+    if (!skipSet)
     {
         // force a UI Update
         String Response;

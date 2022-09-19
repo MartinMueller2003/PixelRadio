@@ -61,30 +61,30 @@ void cRebootControl::Callback (Control *, int type)
     {
         // DEBUG_V("Button Pressed");
 
-        ButtonEndTime = millis() + FiveSecondsInMs;
-        WarningSent = false;
+        ButtonEndTime   = millis () + FiveSecondsInMs;
+        WarningSent     = false;
         // Set message and color to tell user to hold for 5 seconds
-        setMessage(DIAG_BOOT_MSG1_STR);
-        setMessageStyle(cControlCommon::eCssStyle::CssStyleRed);
+        setMessage (DIAG_BOOT_MSG1_STR);
+        setMessageStyle (cControlCommon::eCssStyle::CssStyleRed);
     }
     else
     {
         // DEBUG_V("Button Released");
-        if(WarningSent)
+        if (WarningSent)
         {
             // DEBUG_V("Schedule a reboot");
-            setMessage(DIAG_BOOT_MSG3_STR);
-            setMessageStyle(cControlCommon::eCssStyle::CssStyleRed_bw);
+            setMessage (DIAG_BOOT_MSG3_STR);
+            setMessageStyle (cControlCommon::eCssStyle::CssStyleRed_bw);
             ButtonEndTime = 0;
             // give time to update the UI
-            RebootTime = millis() + 1000;
+            RebootTime = millis () + 1000;
         }
         else
         {
             // DEBUG_V("restore button");
             ButtonEndTime = 0;
-            setMessage(emptyString);
-            setMessageStyle(cControlCommon::eCssStyle::CssStyleTransparent);
+            setMessage (emptyString);
+            setMessageStyle (cControlCommon::eCssStyle::CssStyleTransparent);
         }
     }
 
@@ -96,29 +96,29 @@ void cRebootControl::Callback (Control *, int type)
 }
 
 // *********************************************************************************************
-void cRebootControl::Poll()
+void cRebootControl::Poll ()
 {
     // _ DEBUG_START;
 
-    if(ButtonEndTime)
+    if (ButtonEndTime)
     {
         // DEBUG_V(String("ButtonEndTime: ") + String(ButtonEndTime));
-        if(millis() >= ButtonEndTime)
+        if (millis () >= ButtonEndTime)
         {
-            if(!WarningSent)
+            if (!WarningSent)
             {
                 // DEBUG_V("Reboot on release");
-                setMessage(DIAG_BOOT_MSG2_STR);
-                setMessageStyle(cControlCommon::eCssStyle::CssStyleRed_bw);
+                setMessage (DIAG_BOOT_MSG2_STR);
+                setMessageStyle (cControlCommon::eCssStyle::CssStyleRed_bw);
                 WarningSent = true;
             }
         }
     }
 
-    if(RebootTime && (millis() > RebootTime))
+    if (RebootTime && (millis () > RebootTime))
     {
         // DEBUG_V("reboot");
-        ESP.restart();
+        ESP.restart ();
     }
 
     // _ DEBUG_END;

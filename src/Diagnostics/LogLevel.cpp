@@ -28,17 +28,17 @@
 #define DIAG_LOG_TRACE_STR  "TRACE"
 #define DIAG_LOG_VERB_STR   "VERBOSE"
 // #define DIAG_LOG_DEF_STR    DIAG_LOG_SILENT_STR
-#define DIAG_LOG_DEF_STR    DIAG_LOG_INFO_STR
+#define DIAG_LOG_DEF_STR DIAG_LOG_INFO_STR
 
 static const ChoiceListVector_t MapOfLogLevels
 {
-    {String("SILENT"),   String (LOG_LEVEL_SILENT)},
-    {String("FATAL"),    String (LOG_LEVEL_FATAL)},
-    {String("ERROR"),    String (LOG_LEVEL_ERROR)},
-    {String("WARNING"),  String (LOG_LEVEL_WARNING)},
-    {String("INFO"),     String (LOG_LEVEL_INFO)},
-    {String("TRACE"),    String (LOG_LEVEL_TRACE)},
-    {String("VERBOSE"),  String (LOG_LEVEL_VERBOSE)},
+    {String ("SILENT"),   String (LOG_LEVEL_SILENT)},
+    {String ("FATAL"),    String (LOG_LEVEL_FATAL)},
+    {String ("ERROR"),    String (LOG_LEVEL_ERROR)},
+    {String ("WARNING"),  String (LOG_LEVEL_WARNING)},
+    {String ("INFO"),     String (LOG_LEVEL_INFO)},
+    {String ("TRACE"),    String (LOG_LEVEL_TRACE)},
+    {String ("VERBOSE"),  String (LOG_LEVEL_VERBOSE)},
 };
 
 std::vector <String> LogLevelPrefixes =

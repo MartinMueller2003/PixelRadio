@@ -41,13 +41,13 @@ void cControlCommonMsg::AddControls (uint16_t TabId, ControlColor color)
 
     cControlCommon::AddControls (TabId, color, false);
     MessageId = ESPUI.addControl (
-        ControlType::Label,
+		ControlType::Label,
         emptyString.c_str (),
         emptyString,
         ControlColor::None,
         ControlId);
-    DEBUG_V (String ("   ControlId: ") + String(ControlId));
-    DEBUG_V (String ("   MessageId: ") + String(MessageId));
+    // DEBUG_V (   String ("   ControlId: ") + String (ControlId));
+    // DEBUG_V (   String ("   MessageId: ") + String (MessageId));
 
     setMessagePanelStyle (MessagePanelStyle);
     setMessageStyle (MessageStyle);

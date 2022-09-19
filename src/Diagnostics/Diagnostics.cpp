@@ -73,7 +73,7 @@ void cDiagnostics::Poll ()
     RfPaVoltage.Poll ();
     FreeMemory.Poll ();
     SystemRunTime.Poll ();
-    RebootControl.Poll();
+    RebootControl.Poll ();
 
     // _ DEBUG_END;
 }

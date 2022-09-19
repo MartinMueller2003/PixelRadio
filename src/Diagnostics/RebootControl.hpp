@@ -27,13 +27,13 @@ public:
 
     void    Callback (Control * sender, int type);
     void    AddControls (uint16_t TabId, ControlColor color);
-    void    Poll();
+    void    Poll ();
 
 private:
     #define FiveSecondsInMs (5 * 1000)
     volatile uint32_t ButtonEndTime = 0;
-    volatile bool    WarningSent = false;
-    volatile uint32_t    RebootTime = 0;
+    volatile bool       WarningSent = false;
+    volatile uint32_t   RebootTime  = 0;
 };  // class cRebootControl
 
 // *********************************************************************************************
