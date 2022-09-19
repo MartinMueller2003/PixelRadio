@@ -76,7 +76,7 @@ void cRadio::restoreConfiguration (JsonObject & config)
     FrequencyAdjust.restoreConfiguration (config);
     PiCode.restoreConfiguration (config);
     PreEmphasis.restoreConfiguration (config);
-    PtyCode.saveConfiguration (config);
+    PtyCode.restoreConfiguration (config);
     RfCarrier.restoreConfiguration (config);
     RfPower.restoreConfiguration (config);
     // DEBUG_END;
