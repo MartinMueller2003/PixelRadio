@@ -37,16 +37,25 @@ cControlCommonMsg::~cControlCommonMsg () {}
 void cControlCommonMsg::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
+    // DEBUG_V (String ("       Title: ") + GetTitle());
 
-    cControlCommon::AddControls (TabId, color);
+    cControlCommon::AddControls (TabId, color, false);
     MessageId = ESPUI.addControl (
         ControlType::Label,
         emptyString.c_str (),
         emptyString,
         ControlColor::None,
         ControlId);
+    DEBUG_V (String ("   ControlId: ") + String(ControlId));
+    DEBUG_V (String ("   MessageId: ") + String(MessageId));
+
     setMessagePanelStyle (MessagePanelStyle);
     setMessageStyle (MessageStyle);
+
+    // force a UI Update
+    String Response;
+    set (DataValueStr, Response, true);
+    Booting = false;
 
     // DEBUG_END;
 }
@@ -55,6 +64,7 @@ void cControlCommonMsg::AddControls (uint16_t TabId, ControlColor color)
 void cControlCommonMsg::setMessage (const String & value)
 {
     // DEBUG_START;
+    // DEBUG_V (String ("       Title: ") + GetTitle());
     // DEBUG_V (String ("value: ") + value);
 
     setMessage (value, MessageStyle);
@@ -66,17 +76,20 @@ void cControlCommonMsg::setMessage (const String & value)
 void cControlCommonMsg::setMessage (const String & value, eCssStyle style)
 {
     // DEBUG_START;
+    // DEBUG_V (String ("       Title: ") + GetTitle());
+    // DEBUG_V (String ("   MessageId: ") + String (MessageId));
 
-    // DEBUG_V (String ("value: ") + value);
-    // DEBUG_V (String ("style: ") + String (style));
     if (value.isEmpty ())
     {
+        // DEBUG_V("Empty Value");
         ESPUI.print (MessageId, emptyString);
         setMessageStyle (eCssStyle::CssStyleTransparent);
     }
     else
     {
+        // DEBUG_V (String ("       value: ") + value);
         ESPUI.print (MessageId, value);
+        // DEBUG_V (String ("       style: ") + String (style));
         setMessageStyle (style);
     }
 

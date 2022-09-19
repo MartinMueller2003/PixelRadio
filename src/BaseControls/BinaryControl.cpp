@@ -77,12 +77,12 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
 {
     // DEBUG_START;
 
-    // DEBUG_V (       String (" OnString: ") + OnString);
-    // DEBUG_V (       String ("OffString: ") + OffString);
-    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
+    // DEBUG_V (String (" OnString: ") + OnString);
+    // DEBUG_V (String ("OffString: ") + OffString);
 
     if (!ConfigName.isEmpty ())
     {
+        // DEBUG_V("Process Config");
         bool NewValue = DataValue;
         ReadFromJSON (NewValue, config, ConfigName);
         String  NewValueStr = String (DataValue);
@@ -90,9 +90,8 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
         set (NewValueStr, Response, false);
     }
 
-    // DEBUG_V (       String (" OnString: ") + OnString);
-    // DEBUG_V (       String ("OffString: ") + OffString);
-    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
+    // DEBUG_V (String (" OnString: ") + OnString);
+    // DEBUG_V (String ("OffString: ") + OffString);
 
     // DEBUG_END;
 }
@@ -101,9 +100,9 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
 void cBinaryControl::saveConfiguration (JsonObject & config)
 {
     // DEBUG_START;
-    // DEBUG_V (       String (" OnString: ") + OnString);
-    // DEBUG_V (       String ("OffString: ") + OffString);
-    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
+    // DEBUG_V (String (" OnString: ") + OnString);
+    // DEBUG_V (String ("OffString: ") + OffString);
+    // DEBUG_V (String ("    Guard: ") + String (Guard, HEX));
 
     if (!ConfigName.isEmpty ())
     {
@@ -117,14 +116,13 @@ void cBinaryControl::saveConfiguration (JsonObject & config)
 bool cBinaryControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
-    // DEBUG_V (       String ("       Title: ") + Title);
-    // DEBUG_V (       String ("       value: ") + value);
-    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
-    // DEBUG_V (       String ("    OnString: ") + OnString);
-    // DEBUG_V (       String ("   OffString: ") + OffString);
-    // DEBUG_V (       String ("       Guard: ") + String (Guard, HEX));
-    // DEBUG_V (       String ("  SkipSetLog: ") + String (SkipSetLog));
+    // DEBUG_V (String ("       Title: ") + GetTitle());
+    // DEBUG_V (String ("       value: ") + value);
+    // DEBUG_V (String ("DataValueStr: ") + DataValueStr);
+    // DEBUG_V (String ("   DataValue: ") + String (DataValue));
+    // DEBUG_V (String ("    OnString: ") + OnString);
+    // DEBUG_V (String ("   OffString: ") + OffString);
+    // DEBUG_V (String ("  SkipSetLog: ") + String (SkipSetLog));
 
     if (OnString.isEmpty ())
     {
@@ -136,8 +134,8 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         OffString = DISABLED_STR;
     }
 
-    // DEBUG_V (       String ("    OnString: ") + OnString);
-    // DEBUG_V (       String ("   OffString: ") + OffString);
+    // DEBUG_V (String ("    OnString: ") + OnString);
+    // DEBUG_V (String ("   OffString: ") + OffString);
 
     bool OldSkipSetLog = SkipSetLog;
     SkipSetLog = true;
@@ -160,10 +158,10 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         }
     }
 
-    // DEBUG_V (       String ("       value: ") + value);
-    // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (       String ("   DataValue: ") + String (DataValue));
-    // DEBUG_V (       String ("    Response: ") + ResponseMessage);
+    // DEBUG_V (String ("       value: ") + value);
+    // DEBUG_V (String ("DataValueStr: ") + DataValueStr);
+    // DEBUG_V (String ("   DataValue: ") + String (DataValue));
+    // DEBUG_V (String ("    Response: ") + ResponseMessage);
 
     // DEBUG_END;
 
@@ -239,9 +237,9 @@ bool cBinaryControl::validate (const String & value, String & ResponseMessage, b
 {
     // DEBUG_START;
     // DEBUG_V (String ("    value: ") + value);
-    // DEBUG_V (       String (" OnString: ") + OnString);
-    // DEBUG_V (       String ("OffString: ") + OffString);
-    // DEBUG_V (       String ("    Guard: ") + String (Guard, HEX));
+    // DEBUG_V (String (" OnString: ") + OnString);
+    // DEBUG_V (String ("OffString: ") + OffString);
+    // DEBUG_V (String ("    Guard: ") + String (Guard, HEX));
 
     bool Response = true;
 
@@ -261,8 +259,8 @@ bool cBinaryControl::validate (const String & value, String & ResponseMessage, b
         DataValueStr    = String (DataValue);
     }
 
-    // DEBUG_V (       String ("Response: ") + String (Response));
-    // DEBUG_V (       String (" Message: ") + ResponseMessage);
+    // DEBUG_V (String ("Response: ") + String (Response));
+    // DEBUG_V (String (" Message: ") + ResponseMessage);
 
     // DEBUG_END;
 

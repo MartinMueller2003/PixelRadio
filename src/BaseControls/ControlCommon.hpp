@@ -32,6 +32,7 @@ public:
     virtual~cControlCommon ();
 
     virtual void    AddControls (uint16_t TabId, ControlColor color);
+    virtual void    AddControls (uint16_t TabId, ControlColor color, bool skipSet);
     virtual void    Callback (Control * sender, int type);
     virtual String  &get ();
     virtual String  getDefault ()   {return DefaultValue;}
