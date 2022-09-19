@@ -23,10 +23,10 @@
 
 // *********************************************************************************************
 
-static const PROGMEM char   BACKUP_SAVE_STR     [] = "SAVE";
-static const PROGMEM char   BACKUP_SAV_CFG_STR  [] = "SAVE TO SD CARD";
-static const PROGMEM char   BACKUP_SAV_FAIL_STR [] = "SAVE FAILED: CHECK SD CARD";
-static const PROGMEM char   BACKUP_SAV_PASS_STR [] = "Configuration Saved";
+static const PROGMEM char   BACKUP_SAVE_STR     []  = "SAVE";
+static const PROGMEM char   BACKUP_SAV_CFG_STR  []  = "SAVE TO SD CARD";
+static const PROGMEM char   BACKUP_SAV_FAIL_STR []  = "SAVE FAILED: CHECK SD CARD";
+static const PROGMEM char   BACKUP_SAV_PASS_STR []  = "Configuration Saved";
 
 // *********************************************************************************************
 cBackupSave::cBackupSave () :   cButtonControl (BACKUP_SAV_CFG_STR)
@@ -43,7 +43,7 @@ void cBackupSave::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V(String("color: ") + String(color));
 
     cButtonControl::AddControls (TabId, color);
-    setControl(BACKUP_SAVE_STR, eCssStyle::CssStyleWhite_grey);
+    setControl (BACKUP_SAVE_STR, eCssStyle::CssStyleWhite_grey);
     setMessageStyle (eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
@@ -61,16 +61,16 @@ bool cBackupSave::set (const String &, String & ResponseMessage, bool)
     bool Response = true;
     ResponseMessage.clear ();
 
-    if(!Booting)
+    if (!Booting)
     {
-        if (saveConfiguration (SD_CARD_MODE, String(F(BACKUP_FILE_NAME)).c_str()))
+        if (saveConfiguration (SD_CARD_MODE, String (F (BACKUP_FILE_NAME)).c_str ()))
         {
-            setMessage(BACKUP_SAV_PASS_STR);
+            setMessage (BACKUP_SAV_PASS_STR);
             Log.infoln (BACKUP_SAV_PASS_STR);
         }
         else
         {
-            setMessage(BACKUP_SAV_FAIL_STR);
+            setMessage (BACKUP_SAV_FAIL_STR);
             Log.errorln (BACKUP_SAV_FAIL_STR);
         }
     }

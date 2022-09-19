@@ -23,10 +23,10 @@
 
 // *********************************************************************************************
 
-static const PROGMEM char   BACKUP_RESTORE_STR  [] = "RESTORE";
-static const PROGMEM char   BACKUP_RES_CFG_STR  [] = "RESTORE FROM SD CARD";
-static const PROGMEM char   BACKUP_RES_FAIL_STR [] = "RESTORE FAILED: CHECK SD CARD";
-static const PROGMEM char   BACKUP_RES_PASS_STR [] = "Restore Complete: Reboot Required";
+static const PROGMEM char   BACKUP_RESTORE_STR  []  = "RESTORE";
+static const PROGMEM char   BACKUP_RES_CFG_STR  []  = "RESTORE FROM SD CARD";
+static const PROGMEM char   BACKUP_RES_FAIL_STR []  = "RESTORE FAILED: CHECK SD CARD";
+static const PROGMEM char   BACKUP_RES_PASS_STR []  = "Restore Complete: Reboot Required";
 
 // *********************************************************************************************
 cBackupRestore::cBackupRestore () :   cButtonControl (BACKUP_RES_CFG_STR)
@@ -43,7 +43,7 @@ void cBackupRestore::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V(String("color: ") + String(color));
 
     cButtonControl::AddControls (TabId, color);
-    setControl(BACKUP_RESTORE_STR, eCssStyle::CssStyleWhite_grey);
+    setControl (BACKUP_RESTORE_STR, eCssStyle::CssStyleWhite_grey);
     setMessageStyle (eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
@@ -61,16 +61,16 @@ bool cBackupRestore::set (const String &, String & ResponseMessage, bool)
     bool Response = true;
     ResponseMessage.clear ();
 
-    if(!Booting)
+    if (!Booting)
     {
-        if (restoreConfiguration (SD_CARD_MODE, String(F(BACKUP_FILE_NAME)).c_str()))
+        if (restoreConfiguration (SD_CARD_MODE, String (F (BACKUP_FILE_NAME)).c_str ()))
         {
-            setMessage(BACKUP_RES_PASS_STR);
+            setMessage (BACKUP_RES_PASS_STR);
             Log.infoln (BACKUP_RES_PASS_STR);
         }
         else
         {
-            setMessage(BACKUP_RES_FAIL_STR);
+            setMessage (BACKUP_RES_FAIL_STR);
             Log.errorln (BACKUP_RES_FAIL_STR);
         }
     }

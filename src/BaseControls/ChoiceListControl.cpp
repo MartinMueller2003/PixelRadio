@@ -56,7 +56,7 @@ uint32_t cChoiceListControl::get32 ()
 {
     // DEBUG_START;
 
-    uint32_t Response = uint32_t(-1);
+    uint32_t Response = uint32_t (-1);
     // DEBUG_V (String ("get: '") + DataValueStr + "'");
 
     if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (DataValueStr))
