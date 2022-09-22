@@ -31,7 +31,6 @@
 #include <SD.h>
 #include <SPI.h>
 
-#include "globals.h"
 #include "PixelRadio.h"
 #include "radio.hpp"
 #include "WiFiDriver.hpp"
@@ -49,7 +48,7 @@
 const uint16_t  JSON_CFG_SZ     = 10000;
 const uint16_t  JSON_CRED_SIZE  = 300;
 
-const char * sdTypeStr[] =
+static const PROGMEM char * sdTypeStr [] =
 {
     "Not Installed", "V1", "V2", "SDHC", "Unknown"
 };
@@ -217,8 +216,6 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     Gpio33.saveConfiguration (root);
     Diagnostics.saveConfiguration (root);
 
-    doc["USB_VOLUME"] = usbVol;  // Use Serial Control, "VOL=0" to "VOL=30".
-
     // Serialize JSON to file
     if (serializeJson (doc, file) == 0)
     {
@@ -333,8 +330,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
     if (error)
     {
-        Log.errorln ("restoreConfiguration: Configure Deserialization Failed, Error:%s.", error.c_str ());
-
+        Log.errorln ((String(F("restoreConfiguration: Configure Deserialization Failed, Error: ")) + error.c_str()).c_str());
         return false;
     }
 
@@ -350,13 +346,8 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     Gpio33.restoreConfiguration (doc);
     Diagnostics.saveConfiguration (doc);
 
-    if (doc.containsKey ("USB_VOLUME"))
-    {
-        usbVol = doc["USB_VOLUME"];  // Use Serial Control, "VOL=0" to "VOL=30".
-    }
-
     Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
-    Log.infoln ("-> Configuration Restore Complete.");
+    Log.infoln (F("-> Configuration Restore Complete."));
 
     // serializeJsonPretty(doc, Serial); // Debug Output
     // Serial.println();

@@ -21,7 +21,6 @@
 // *********************************************************************************************
 
 #include "config.h"
-#include "globals.h"
 #include "PixelRadio.h"
 #include <Arduino.h>
 #include <ArduinoLog.h>

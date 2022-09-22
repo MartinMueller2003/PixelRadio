@@ -11,7 +11,6 @@
   *     (c) copyright T.Black 2021-2022, Licensed under GNU GPL 3.0 and later, under this license absolutely no warranty is given.
   */
 
-#include "globals.h"
 #include "DHCP.hpp"
 #include "HostnameCtrl.hpp"
 #include "HotspotName.hpp"

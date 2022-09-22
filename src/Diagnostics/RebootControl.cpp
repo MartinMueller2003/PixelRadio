@@ -28,6 +28,12 @@ static const PROGMEM char   DIAG_BOOT_MSG3_STR    []    = "** SYSTEM REBOOTING *
 static const PROGMEM char   DIAG_LONG_PRESS_STR   []    = "Long Press (5secs)";
 static const PROGMEM char   DIAG_REBOOT_STR       []    = "REBOOT SYSTEM";
 
+static const PROGMEM char   RebootWarning       []    =
+        "USER REBOOT!\r\n\r\n" \
+        "          ******************\r\n" \
+        "          * SYSTEM REBOOT! *\r\n" \
+        "          ******************\r\n\r\n";
+
 // *********************************************************************************************
 cRebootControl::cRebootControl () :   cButtonControl (DIAG_REBOOT_STR)
 {}
@@ -117,7 +123,10 @@ void cRebootControl::Poll ()
 
     if (RebootTime && (millis () > RebootTime))
     {
-        // DEBUG_V("reboot");
+        // MUST use default serial print, not serial Log.
+        Serial.println (RebootWarning);
+        Serial.flush ();
+        delay (1000);
         ESP.restart ();
     }
 

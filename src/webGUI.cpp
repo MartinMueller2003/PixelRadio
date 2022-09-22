@@ -88,7 +88,6 @@
 #include "config.h"
 #include "ConfigSave.hpp"
 #include "ControllerMgr.h"
-#include "globals.h"
 #include "language.h"
 #include "memdebug.h"
 #include "PixelRadio.h"

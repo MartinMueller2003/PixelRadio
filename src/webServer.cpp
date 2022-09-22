@@ -27,7 +27,6 @@
 #include "config.h"
 #include "credentials.h"
 #include "ESPUI.h"
-#include "globals.h"
 #include "language.h"
 #include "PixelRadio.h"
 #include <ArduinoLog.h>

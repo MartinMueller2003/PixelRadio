@@ -109,12 +109,12 @@ float cVoltageStatus::measureVoltage (void)
     // advance to the next entry in the array
     CurrentReadingIndex = (++CurrentReadingIndex) >= NumberOfReadingsToSave ? 0 : CurrentReadingIndex;
 
-    float response = float(SumOfVoltages) / float(NumberOfReadingsToSave);
-    response    = (response * SCALE) / 1000.0f; // Apply Attenuator Scaling, covert from mV to VDC.
-    response    = constrain (response, 0.0f, 99.0f);
+    CurrentAvgVoltage   = float(SumOfVoltages) / float(NumberOfReadingsToSave);
+    CurrentAvgVoltage   = (CurrentAvgVoltage * SCALE) / 1000.0f; // Apply Attenuator Scaling, covert from mV to VDC.
+    CurrentAvgVoltage   = constrain (CurrentAvgVoltage, 0.0f, 99.0f);
 
     // DEBUG_END;
-    return response;
+    return CurrentAvgVoltage;
 }
 
 // *********************************************************************************************

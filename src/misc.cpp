@@ -13,7 +13,6 @@
   */
 
 // *********************************************************************************************
-#include "globals.h"
 #include "language.h"
 #include "PixelRadio.h"
 #include "radio.hpp"
@@ -95,29 +94,6 @@ void initEprom (void)
     {
         // spkrVolSwitch = EEPROM.read(VOL_SET_ADDR);
         Log.verboseln (String (F ("Restored settings from EEPROM.")).c_str ());
-    }
-}
-
-// *********************************************************************************************
-// rebootSystem(): Reboot the System if global rebootFlg = true.
-//                 Function must be in main loop. But can also be used in a function.
-//                 Do not directly call this function in a ESPUI callback. Use main loop instead.
-void rebootSystem (void)
-{
-    String tmpStr;
-
-    if (rebootFlg)
-    {
-        tmpStr  = "USER REBOOT!";
-        tmpStr  += "\r\n\r\n";
-        tmpStr  += "          ******************\r\n";
-        tmpStr  += "          * SYSTEM REBOOT! *\r\n";
-        tmpStr  += "          ******************\r\n\r\n";
-        Serial.println (tmpStr.c_str ());   // MUST use default serial print, not serial Log.
-
-        Serial.flush ();
-        delay (1000);
-        ESP.restart ();
     }
 }
 

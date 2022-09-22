@@ -211,14 +211,6 @@ void    displaySaveWarning (void);
 void    initCustomCss (void);
 void    startGUI (void);
 
-// ESPUI Callbacks
-void backupCallback (
-    Control * sender,
-    int     type);
-void saveSettingsCallback (
-    Control * sender,
-    int     type);
-
 // File System (LITTLEFS) prototypes
 void            instalLogoImageFile (void);
 const String    makeWebGif (

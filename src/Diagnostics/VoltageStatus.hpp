@@ -28,6 +28,7 @@ public:
     virtual~cVoltageStatus () {}
 
     void    AddControls (uint16_t TabId, ControlColor color);
+    float   GetVoltage() { return CurrentAvgVoltage; }
     void    Poll ();
 
 private:
@@ -39,6 +40,7 @@ private:
     const uint32_t                  DEFAULT_VREF            = 1100;
     float                           SCALE                   = 1.0;
     adc1_channel_t                  ADC_PORT                = ADC1_CHANNEL_7;   // GPIO-35, Onboard ESP32 "VBAT" Voltage.
+    float                           CurrentAvgVoltage       = 0.0;
 
     #define NumberOfReadingsToSave 16
     int32_t                         ArrayOfVoltageReadings[NumberOfReadingsToSave];

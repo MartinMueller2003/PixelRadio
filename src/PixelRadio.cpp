@@ -78,15 +78,6 @@
 
 // Global System Vars
 
-bool rebootFlg = false;     // Reboot System if true;
-
-float   vbatVolts   = 0.0f; // ESP32's Onboard "VBAT" Voltage. Typically 5V.
-float   paVolts     = 0.0f; // RF Power Amp's Power Supply Voltage. Typically 9V.
-
-// ************************************************************************************************
-// Configuration Vars (Can be saved to LittleFS and SD Card)
-uint8_t usbVol = (atoi (USB_VOL_DEF_STR));  // Control. Unused, for future expansion.
-
 // *********************************************************************************************
 
 void setup ()

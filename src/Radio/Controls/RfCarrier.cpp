@@ -20,6 +20,7 @@
 #include "QN8027RadioApi.hpp"
 #include "RfCarrier.hpp"
 #include "RfCarrierStatus.hpp"
+#include "RfPaVoltage.hpp"
 
 static const PROGMEM char   RADIO_RF_CARRIER_STR    []  = "RF CARRIER ENABLE";
 static const PROGMEM char   RADIO_RF_CARR_FLAG      []  = "RADIO_RF_CARR_FLAG";
@@ -75,8 +76,6 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
     // DEBUG_V (       String ("getBool()Str: ") + getBool()Str);
     // DEBUG_V (       String ("   getBool(): ") + String (getBool()));
 
-    extern uint32_t paVolts;
-
     do  // once
     {
         if (!Response)
@@ -124,6 +123,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             break;
         }
 
+        float paVolts = RfPaVoltage.GetVoltage();
         if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX))
         {
             // DEBUG_V (RADIO_VOLT_STR);

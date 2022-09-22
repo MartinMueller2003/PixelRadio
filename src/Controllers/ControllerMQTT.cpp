@@ -30,7 +30,8 @@
 #include "MqttPassword.hpp"
 #include "MqttUser.hpp"
 #include "MqttPort.hpp"
-
+#include "SystemVoltage.hpp"
+#include "RfPaVoltage.hpp"
 #include "memdebug.h"
 
 // *********************************************************************************************
@@ -199,17 +200,15 @@ void c_ControllerMQTT::SendStatusMessage (void)
     String  Payload;
     String  topicStr;
 
-    extern float    paVolts;
-    extern float    vbatVolts;
 
     // DEBUG_V();
-    oldVbatVolts    = vbatVolts;
-    oldPaVolts      = paVolts;
+    oldVbatVolts    = SystemVoltage.GetVoltage();
+    oldPaVolts      = RfPaVoltage.GetVoltage();
     topicStr        = MqttName.get () + MQTT_VOLTS_STR;
 
     StaticJsonDocument <256> doc;
-    doc[F ("vbat")] = String (vbatVolts);
-    doc[F ("pa")]   = String (paVolts);
+    doc[F ("vbat")] = String (SystemVoltage.GetVoltage());
+    doc[F ("pa")]   = String (RfPaVoltage.GetVoltage());
     serializeJson (doc, Payload);
 
     // JSON Formatted Payload.
@@ -229,8 +228,8 @@ bool c_ControllerMQTT::VoltagesHaveChanged ()
     // DEBUG_START;
     bool Response = false;
 
-    extern float    paVolts;
-    extern float    vbatVolts;
+    float    paVolts = RfPaVoltage.GetVoltage();
+    float    vbatVolts = SystemVoltage.GetVoltage();
 
     if (((vbatVolts > oldVbatVolts + VOLTS_HYSTERESIS) ||
          (vbatVolts < oldVbatVolts - VOLTS_HYSTERESIS)) ||
