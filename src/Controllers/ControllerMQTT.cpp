@@ -186,44 +186,6 @@ void c_ControllerMQTT::saveConfiguration (ArduinoJson::JsonObject & config)
     // DEBUG_END;
 }   // saveConfiguration
 
-// *************************************************************************************************************************
-// gpioMqttControl (): MQTT handler for GPIO Commands. This is a companion to mqttCallback ().
-void c_ControllerMQTT::gpioMqttControl (String payloadStr, gpio_num_t pin)
-{
-    // DEBUG_START;
-    bool successFlg = true;
-    String  topicStr;
-    String  CmdString;
-
-    topicStr = GetTitle () + MQTT_GPIO_STR;
-
-    Log.infoln ((String (F ("-> MQTT Controller: Received GPIO Pin-")) + String (pin) + " Command").c_str ());
-
-    #ifdef OldWay
-        successFlg = gpioCmd (payloadStr, MqttControllerId, pin);
-    #endif // def OldWay
-    // DEBUG_V();
-
-    if (!successFlg)
-    {
-        // DEBUG_V();
-        CmdString = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + F ("\": \"fail\"}");
-    }
-    else if (payloadStr == CMD_GPIO_READ_STR)
-    {
-        // DEBUG_V();
-        CmdString = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + F ("\": \"") + String (digitalRead (pin)) + F ("\"}");
-    }
-    else
-    {
-        // DEBUG_V();
-        CmdString = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + String (F ("\": \"ok\"}"));
-    }
-
-    mqttClient.publish (topicStr.c_str (), CmdString.c_str ());
-    // DEBUG_END;
-}
-
 // ************************************************************************************************
 // makeMqttCmdStr (): Return the MQTT command string. On entry cmdStr has command keyword.
 //                   This is a companion to mqttCallback ().
@@ -623,7 +585,8 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
         CommandProcessor.ProcessCommand (Command, payloadStr, Response);
         // DEBUG_V(String("Response: ") + Response);
         Response += F ("\n");
-        pParent->mqttClient.publish (String (MqttName.get () + MQTT_INFORM_STR).c_str (),
+        pParent->mqttClient.publish (
+            String (MqttName.get () + MQTT_INFORM_STR).c_str (),
             String (String (F ("Response: ")) + Response).c_str ());
 
         #ifdef OldWay
@@ -641,6 +604,7 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
 
     mqttClient.publish (topicStr.c_str (), mqttBuff);
         #endif // def OldWay
+
     } while (false);
 
     // DEBUG_END;

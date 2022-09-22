@@ -49,7 +49,6 @@ private:
 
     void    SendStatusMessage (void);
     String  makeMqttCmdStr (String cmdStr);
-    void    gpioMqttControl (String payloadStr, gpio_num_t pin);
     bool    ValidateConfiguration ();
     bool    VoltagesHaveChanged ();
     bool    ConfigHasChanged ();
