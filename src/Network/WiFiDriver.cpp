@@ -82,14 +82,14 @@ const PROGMEM char  default_AP_passphrase    [] = AP_PSK_STR;
 /*****************************************************************************/
 /* FSM                                                                       */
 /*****************************************************************************/
-fsm_WiFi_state_Boot fsm_WiFi_state_Boot_imp;
-fsm_WiFi_state_ConnectingUsingConfig fsm_WiFi_state_ConnectingUsingConfig_imp;
-fsm_WiFi_state_ConnectingUsingDefaults fsm_WiFi_state_ConnectingUsingDefaults_imp;
-fsm_WiFi_state_ConnectedToAP fsm_WiFi_state_ConnectedToAP_imp;
-fsm_WiFi_state_ConnectingAsAP   fsm_WiFi_state_ConnectingAsAP_imp;
-fsm_WiFi_state_ConnectedToSta   fsm_WiFi_state_ConnectedToSta_imp;
-fsm_WiFi_state_ConnectionFailed fsm_WiFi_state_ConnectionFailed_imp;
-fsm_WiFi_state_Disabled fsm_WiFi_state_Disabled_imp;
+fsm_WiFi_state_Boot                     fsm_WiFi_state_Boot_imp;
+fsm_WiFi_state_ConnectingUsingConfig    fsm_WiFi_state_ConnectingUsingConfig_imp;
+fsm_WiFi_state_ConnectingUsingDefaults  fsm_WiFi_state_ConnectingUsingDefaults_imp;
+fsm_WiFi_state_ConnectedToAP            fsm_WiFi_state_ConnectedToAP_imp;
+fsm_WiFi_state_ConnectingAsAP           fsm_WiFi_state_ConnectingAsAP_imp;
+fsm_WiFi_state_ConnectedToSta           fsm_WiFi_state_ConnectedToSta_imp;
+fsm_WiFi_state_ConnectionFailed         fsm_WiFi_state_ConnectionFailed_imp;
+fsm_WiFi_state_Disabled                 fsm_WiFi_state_Disabled_imp;
 
 // -----------------------------------------------------------------------------
 ///< Start up the driver and put it into a safe mode
@@ -141,34 +141,6 @@ void c_WiFiDriver::Begin ()
     {
         // saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME); // Save restored credentials to file system.
     }
-
-    #ifdef OldWay
-
-        if (FileMgr.SdCardIsInstalled ())
-        {
-            DynamicJsonDocument jsonConfigDoc (1024);
-
-            // DEBUG_V ("read the sdcard config");
-            if (FileMgr.ReadSdFile (F ("wificonfig.json"), jsonConfigDoc))
-            {
-                // DEBUG_V ("Process the sdcard config");
-                JsonObject jsonConfig = jsonConfigDoc.as <JsonObject>();
-
-                // copy the fields of interest into the local structure
-                setFromJSON (   ssid,       jsonConfig, "WIFI_SSID_STR");
-                setFromJSON (   passphrase, jsonConfig, "WIFI_WPA_KEY_STR");
-
-                ConfigSaveNeeded = true;
-
-                FileMgr.DeleteSdFile (F ("wificonfig.json"));
-            }
-            else
-            {
-                // DEBUG_V ("ERROR: Could not read SD card config");
-            }
-        }
-
-    #endif // def OldWay
 
     // Disable persistant credential storage and configure SDK params
     WiFi.persistent (false);
@@ -306,18 +278,16 @@ void c_WiFiDriver::GetHostname (String & name) {name = WiFi.getHostname ();}    
 // -----------------------------------------------------------------------------
 void c_WiFiDriver::GetStatus (JsonObject & jsonStatus)
 {
-    #ifdef OldWay
-        // DEBUG_START;
+    // DEBUG_START;
 
-        jsonStatus[F ("WIFI_RSSI")]         = WiFiRssi.get ();
-        jsonStatus[F ("WIFI_IP_ADDR_STR")]  = getIpAddress ().toString ();
-        jsonStatus[F ("WIFI_SUBNET_STR")]   = getIpSubNetMask ().toString ();
-        jsonStatus[F ("WIFI_MAC_STR")]      = WiFi.macAddress ();
-        jsonStatus[F ("WIFI_SSID_STR")]     = WiFi.SSID ();
-        jsonStatus[F ("WIFI_CONNECTED")]    = IsWiFiConnected ();
+    jsonStatus[F ("WIFI_RSSI")]         = WiFi.RSSI ();
+    jsonStatus[F ("WIFI_IP_ADDR_STR")]  = getIpAddress ().toString ();
+    jsonStatus[F ("WIFI_SUBNET_STR")]   = getIpSubNetMask ().toString ();
+    jsonStatus[F ("WIFI_MAC_STR")]      = WiFi.macAddress ();
+    jsonStatus[F ("WIFI_SSID_STR")]     = WiFi.SSID ();
+    jsonStatus[F ("WIFI_CONNECTED")]    = IsWiFiConnected ();
 
-        // DEBUG_END;
-    #endif // def OldWay
+    // DEBUG_END;
 }
 
 // -----------------------------------------------------------------------------
