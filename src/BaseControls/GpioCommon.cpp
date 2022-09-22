@@ -36,17 +36,14 @@ static std::map <String, String> CommandTranslation =
 };
 
 // *********************************************************************************************
-cGpioCommon::cGpioCommon (const String & ConfigName, gpio_num_t _pinId) :
+cGpioCommon::cGpioCommon (const String & ConfigName, const String & _Title, gpio_num_t _pinId) :
     pinId (_pinId),
     cChoiceListControl (
         ConfigName,
-        String (F ("GPIO PIN ")) + String (_pinId),
+        _Title,
         String ("DIGITAL INPUT = PULLDOWN"),
         & ListOfOptions)
-{
-    // _ DEBUG_START;
-    // _ DEBUG_END;
-}
+{}
 
 // *********************************************************************************************
 bool cGpioCommon::set (const String & value, String & ResponseMessage, bool ForceUpdate)

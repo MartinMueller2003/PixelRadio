@@ -20,9 +20,10 @@
 #include "memdebug.h"
 
 static const PROGMEM char ConfigName [] = "GPIO23_STR";
+static const PROGMEM char _Title [] = "GPIO PIN 23";
 
 // *********************************************************************************************
-cGpio23::cGpio23 () :   cGpioCommon (ConfigName, gpio_num_t (23))
+cGpio23::cGpio23 () :   cGpioCommon (ConfigName, _Title, gpio_num_t (23))
 {
     // _ DEBUG_START;
 
