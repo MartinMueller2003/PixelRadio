@@ -120,8 +120,8 @@ static const PROGMEM char   BACKUP_TAB_STR      [] = "Backup";
 void initCustomCss (void)
 {
     // DEBUG_START;
-    ESPUI.setPanelStyle   (aboutLogoID,     "background-color: white; color: black;");
-    ESPUI.setElementStyle (aboutVersionID,  "background-color: white; color: black; margin-top: 0px;");
+    ESPUI.setPanelStyle   (aboutLogoID,     String(F("background-color: white; color: black;")));
+    ESPUI.setElementStyle (aboutVersionID,  String(F("background-color: white; color: black; margin-top: 0px;")));
 
     // DEBUG_END;
 }
@@ -142,8 +142,8 @@ void startGUI (void)
     // These have been moved to Heap and no longer impact stack
     // ESPUI.setVerbosity(Verbosity::VerboseJSON);                        // Debug mode.
     ESPUI.setVerbosity (Verbosity::Quiet);  // Production mode.
-    ESPUI.jsonInitialDocumentSize   = 4000;
-    ESPUI.jsonUpdateDocumentSize    = 4000;
+    ESPUI.jsonInitialDocumentSize   = 5000;
+    ESPUI.jsonUpdateDocumentSize    = 5000;
     // DEBUG_V();
 
     // DEBUG_V();
