@@ -25,7 +25,7 @@
 static const PROGMEM char Name [] = "GPIO SERIAL";
 
 // *********************************************************************************************
-cControllerGpioSERIAL::cControllerGpioSERIAL () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::USB_SERIAL_CNTRL)
+cControllerGpioSERIAL::cControllerGpioSERIAL () :   cControllerCommon (Name, c_ControllerMgr::ControllerTypeId_t::GPIO_SERIAL_CNTRL)
 {
     SerialControl.initSerialControl (& Serial1);
     SetTitle (Name);
@@ -51,17 +51,6 @@ void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
     cControllerCommon::AddControls (TabId, color);
     SerialControl.AddControls (ControlId, color);
 
-    /*
-      #ifdef OldWay
-      *         extern String logLevelStr;
-      *         EspuiMsgId = ESPUI.addControl (ControlType::Label,
-      *                                        "SERIAL_MSG",
-      *                                        (logLevelStr.equals (F (DIAG_LOG_SILENT_STR))) ? F (CTLR_SERIAL_MSG_STR) : emptyString,
-      *                                        ControlColor::Turquoise,
-      *                                        ControlLabelElementId);
-      *         ESPUI.setElementStyle (EspuiMsgId, CSS_LABEL_STYLE_BLACK);
-      #endif // def OldWay
-      */
     // DEBUG_END;
 }
 
@@ -72,42 +61,6 @@ void cControllerGpioSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & R
     {
         Messages.GetNextRdsMessage (Response);
     }
-}
-
-// ************************************************************************************************
-void cControllerGpioSERIAL::gpioSerialControl (String paramStr, uint8_t pin)
-{
-    // DEBUG_START;
-
-    bool successFlg = false;
-    String Response;
-
-    // DEBUG_V(String("Serial Controller: Received GPIO Pin-") + String(pin) + " Command");
-    // Log.infoln(charBuff);
-
-    #ifdef OldWay
-        successFlg = gpioCmd (paramStr, TypeId, pin);
-    #endif // def OldWay
-
-    Response = String (F ("{\"")) + CMD_GPIO_STR + String (pin) + F ("\": \"");
-
-    if (!successFlg)
-    {
-        Response += F ("fail\"}");
-    }
-    else if (paramStr == CMD_GPIO_READ_STR)
-    {
-        Response += String (digitalRead (pin)) + F ("\"}");
-    }
-    else
-    {
-        Response += F ("ok\"}");
-    }
-
-    #ifdef OldWay
-        serial_manager.println (Response.c_str ());
-    #endif // def OldWay
-    // DEBUG_END;
 }
 
 // *********************************************************************************************

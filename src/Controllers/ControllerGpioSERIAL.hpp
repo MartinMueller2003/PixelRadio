@@ -36,7 +36,6 @@ public:
 
     void    AddControls (uint16_t TabId, ControlColor color);
     void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
-    void    gpioSerialControl (String paramStr, uint8_t pin);
     void    poll () {SerialControl.poll ();}
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
     void    saveConfiguration (ArduinoJson::JsonObject & config);
