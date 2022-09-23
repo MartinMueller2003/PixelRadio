@@ -20,6 +20,7 @@
 #pragma once
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
+#include "CommandProcessor.hpp"
 
 class c_ControllerHTTP : public cControllerCommon
 {
@@ -27,10 +28,13 @@ public:
 
     c_ControllerHTTP ();
     virtual~c_ControllerHTTP ();
+    void poll ();
     void GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
-
+    void init ();
+    cCommandProcessor   CommandProcessor;
+    bool HasBeenInitialized = false;
     uint16_t                EspuiControlID = 0;
     c_ControllerMessages    Messages;
 };  // c_ControllerHTTP

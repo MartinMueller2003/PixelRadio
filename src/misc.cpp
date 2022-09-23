@@ -23,58 +23,6 @@
 #include <Wire.h>
 
 // *********************************************************************************************
-
-// *********************************************************************************************
-// *********************************************************************************************
-uint8_t i2cScanner (void)
-{
-    #ifdef OldWay
-        byte count = 0;
-        String devStr;
-
-        Log.infoln (String (F ("Scanning i2c for Devices ...")).c_str ());
-
-        for (byte addr = 0x01;addr < 0x7f;addr++)
-        {
-            Wire.beginTransmission (addr);          // Begin I2C transmission Address (i)
-
-            if (Wire.endTransmission (true) == 0)   // Receive 0 = success (ACK response)
-            {
-                switch (addr)
-                {
-                    case QN8027_I2C_ADDR:
-                    {
-                        devStr = "FM Tx QN8027";
-                        break;
-                    }
-
-                    default:
-                    {
-                        devStr = "Unknown";
-                    }
-                }   // switch
-
-                Log.infoln (String (F ("-> Found i2c address: 0x%02X (%s)")).c_str (), addr, devStr.c_str ());
-                count++;
-            }
-        }
-
-        if (count == 0)
-        {
-            Log.errorln (String (F ("-> No i2c Devices Found.")).c_str ());
-        }
-        else
-        {
-            Log.infoln (String (F ("-> Scanning Complete, Found %u i2c Devices.")).c_str (), count);
-        }
-
-        return count;
-
-    #endif // def OldWay
-
-    return 0;
-}
-
 // *********************************************************************************************
 // initEprom():  Initialize EEPROM emulation.
 // Note: EEPROM is Currently not used in PixelRadio; Available for future use.

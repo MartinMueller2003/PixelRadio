@@ -27,10 +27,10 @@
 // *********************************************************************************************
 // VERSION STRING: Must be updated with each public release.
 // The version is shown during boot on Serial Log and on the "About" UI web Tab page.
-#define VERSION_STR     "1.1.0"
-#define AUTHOR_STR      "by Thomas Black"
+#define VERSION_STR     "2.1.0"
+#define AUTHOR_STR      "by Thomas Black / Martin Mueller"
 #define BLD_DATE_STR    "Jun-13-2022"
-#define GITHUB_REPO_STR "<a href=\"https://github.com/thomastech/PixelRadio/\" target=\"_blank\">Click Here for Information</a>"
+#define GITHUB_REPO_STR "<a href=\"https://github.com/MartinMueller2003/PixelRadio/\" target=\"_blank\">Click Here for Information</a>"
 
 // *********************************************************************************************
 
@@ -127,14 +127,6 @@ const gpio_num_t    TONE_PIN    = gpio_num_t::GPIO_NUM_25;  // PWM Test Tone Pin
 const int   SIGN_OFF    = 0;
 const int   SIGN_ON     = 1;
 
-// HTTP Controller
-#define  HTTP_CMD_STR           "/cmd?"             // Command preamble.
-#define  HTTP_EMPTY_RESP_STR    "get /favicon.ico"  // Empty Reply, ignore this payload.
-#define  HTTP_POST_STR          "content-length:"   // Post data length Keyword.
-#define  HTTP_CMD_END_STR       "http/"             // This string marks the End of HTTP Controller Command.
-
-
-const uint16_t HTTP_RESPONSE_MAX_SZ = 225;  // Maximum Chars Allowed in HTTP client response.
 
 // Measurement:
 const int32_t MEAS_TIME = 50;   // Measurement Refresh Time, in mS.
@@ -144,7 +136,7 @@ const uint8_t RADIO_CAL_RETRY = 3;  // RF Port Calibration Retry Count (Maximum 
 
 
 // Serial Controller
-#define SERIAL_LOG_STR "log"    // Serial Log Command Keyword.
+// OldWay #define SERIAL_LOG_STR "log"    // Serial Log Command Keyword.
 
 // Time Conversion
 const uint32_t  MSECS_PER_SEC   = 1000UL;
@@ -167,7 +159,6 @@ const uint16_t VOLTS_UPD_TIME   = 3750;     // Power Supply Volts GUI Update tim
 #define HTML_DOCTYPE_STR    "<!DOCTYPE HTML>\r\n<html>"
 #define HTML_CLOSE_STR      "</html>\r\n\r\n"
 
-const uint16_t  HTTP_PORT       = 8080; // Port for HTTP commands
 const uint16_t  WEBSERVER_PORT  = 80;   // Port for Web Server. Do not change.
 
 // *********************************************************************************************
@@ -182,28 +173,6 @@ bool frequencyCmd (
 bool infoCmd (
     String              payloadStr,
     ControllerTypeId    controller);
-int16_t getCommandArg (
-    String  & requestStr,
-    uint8_t maxSize);
-// uint8_t getControllerStatus(void);
-#ifdef OldWay
-    bool gpioCmd (
-    String              payloadStr,
-    ControllerTypeId    controller,
-    uint8_t             pin);
-    bool logCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-    bool rebootCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-    bool startCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-    bool stopCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-#endif // def OldWay
 
 // ESPUI (WebGUI) Prototypes
 void    buildGUI (void);
@@ -232,23 +201,13 @@ bool saveConfiguration (
 
 // Misc Prototypes
 void    initEprom (void);
-uint8_t i2cScanner (void);
-void    rebootSystem (void);
 void    spiSdCardShutDown (void);
-bool    strIsUint (String intStr);
+// OldWay bool    strIsUint (String intStr);
 
 const String returnClientCode (int code);
 
 // OTA Prototypes
 void otaInit (String & mdnsname);
-
-// webServer Prototypes
-void processWebClient (void);
-
-#ifdef OldWay
-    String  urlDecode (String urlStr);
-    uint8_t urlDecodeHex (char c);
-#endif // def OldWay
 
 template <typename J, typename N>
 bool ReadFromJSON (float & OutValue, J & Json, N Name)

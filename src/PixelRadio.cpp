@@ -138,16 +138,7 @@ void setup ()
     // Restore System Settings from File System.
     restoreConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);
 
-    #ifdef OldWay
-        resetControllerRdsValues ();            // Must be called after restoreConfiguration().
-
-        digitalWrite (  MUX_PIN,    TONE_ON);   // Turn off Music (Mux) LED.
-
-        digitalWrite (  MUX_PIN,    TONE_OFF);  // Turn on Music (Mux) LED, restore Line-In to external audio.
-    #endif // def OldWay
-
     // Startup the I2C Devices).
-    i2cScanner ();  // Scan the i2c bus and report all devices.
     Radio.begin ();
 
     // Startup the Web GUI. DO THIS LAST!
@@ -171,27 +162,8 @@ void loop ()
     PeakAudio.poll ();
     Diagnostics.Poll ();
 
-    #ifdef OldWay
-        rebootSystem ();    // Check to see if Reboot has been requested.
-
-        #    ifdef HTTP_ENB
-            processWebClient ();    // Process Any Available HTTP RDS commands.
-        #    endif // ifdef HTTP_ENB
-
-    #endif // def OldWay
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-
-/*
-  *    // Hardware interrupts are not used in this project. This isr is a placeholder for future use.
-  *    //  Warning: It is not possible to execute delay() or yield() from an ISR, or do blocking operations,
-  *    // or operations that disable the interrupts. Code MUST be short & sweet, such as set a flag then exit.
-  *    // Function protype must use ICACHE_RAM_ATTR type.
-  *    IRAM_ATTR void isr() // interrupt service routine
-  *    {
-  *    }
-  */
-
 // EOF
