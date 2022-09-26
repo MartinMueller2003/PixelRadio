@@ -21,21 +21,22 @@
 #include <map>
 
 #include "CommandProcessor.hpp"
-// #include "language.h"
 #include "memdebug.h"
-// #include "radio.hpp"
 
 #include "AudioMode.hpp"
 #include "AudioMute.hpp"
+#include "ControllerMgr.h"
+#include "ControllerLocal.h"
 #include "FrequencyAdjust.hpp"
+#include "Gpio19.hpp"
+#include "Gpio23.hpp"
+#include "Gpio33.hpp"
+#include "LogLevel.hpp"
 #include "PiCode.hpp"
 #include "ProgramServiceName.hpp"
 #include "PtyCode.hpp"
 #include "RdsReset.hpp"
 #include "RfCarrier.hpp"
-#include "Gpio19.hpp"
-#include "Gpio23.hpp"
-#include "Gpio33.hpp"
 
 typedef bool(cCommandProcessor::*CmdHandler)(String & Parameter, String & ResponseMessage);
 std::map <String, CmdHandler> ListOfCommands
@@ -59,6 +60,9 @@ std::map <String, CmdHandler> ListOfCommands
     {"h",       & cCommandProcessor::HelpCommand},
     {"help",    & cCommandProcessor::HelpCommand},
 };
+
+#define CMD_LOG_RST_STR F("restore")
+#define CMD_LOG_SIL_STR F("silent")
 
 // *************************************************************************************************************************
 cCommandProcessor::cCommandProcessor ()
@@ -197,32 +201,13 @@ bool cCommandProcessor::HelpCommand (String & payloadStr, String & ResponseMessa
 // *************************************************************************************************************************
 bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
 {
-    #ifdef OldWay
-        // DEBUG_START;
-        bool response = true;
+    // DEBUG_START;
 
-        if (payloadStr.length () > CMD_SYS_MAX_SZ)
-        {
-            payloadStr = payloadStr.substring (0, CMD_SYS_MAX_SZ);
-        }
+    bool Response = HelpCommand (payloadStr, ResponseMessage);
 
-        if (!payloadStr.equals (F (CMD_SYS_CODE_STR)))
-        {
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Info Command")).c_str ());
-        }
-        else
-        {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid INFO Payload (") + payloadStr + F ("), Ignored.")).c_str ());
-            response = false;
-        }
+    // DEBUG_END;
 
-        // DEBUG_END;
-
-        return response;
-
-    #endif // def OldWay
-
-    return false;
+    return Response;
 }
 
 // *************************************************************************************************************************
@@ -230,49 +215,12 @@ bool cCommandProcessor::info (String & payloadStr, String & ResponseMessage)
 // This command is only used by the Serial Controller; The MQTT and HTTP controllers do not observe this command.
 bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
 {
-    #ifdef OldWay
-        // DEBUG_START;
+    // DEBUG_START;
 
-        bool response = true;
+    bool response = LogLevel.set (payloadStr, ResponseMessage);
 
-        do  // once
-        {
-            if (payloadStr.length () > CMD_LOG_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_LOG_MAX_SZ);
-            }
-
-            if (payloadStr == CMD_LOG_SIL_STR)
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Log Level Set to LOG_LEVEL_SILENT.")).c_str ());
-                Serial.flush ();
-                Log.begin (LOG_LEVEL_SILENT, & Serial);
-                break;
-            }
-
-            if (payloadStr == CMD_LOG_RST_STR)
-            {
-                String logLevelStr;  // TBD
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Log Level Restored to ") + logLevelStr).c_str ());
-                Serial.flush ();
-                Log.begin (getLogLevel (), & Serial);
-                break;
-            }
-
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid LOG Payload (") + payloadStr + F ("), Ignored.")).c_str ());
-            response = false;
-        } while (false);
-
-        Log.setShowLevel (false);   // Do not show loglevel, we will do this in the prefix
-        Serial.flush ();
-
-        // DEBUG_END;
-
-        return response;
-
-    #endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
@@ -322,95 +270,29 @@ bool cCommandProcessor::programServiceName (String & payloadStr, String & Respon
 // *************************************************************************************************************************
 bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage)
 {
-    #ifdef OldWay
-        // DEBUG_START;
+    // DEBUG_START;
 
-        bool response = true;
+    c_ControllerLOCAL * control = (c_ControllerLOCAL *)(ControllerMgr.GetControllerById(LocalControllerId));
 
-        do  // once
-        {
-            if (payloadStr.length () > CMD_RT_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_RT_MAX_SZ);
-            }
+    bool response = control->SetRdsText(payloadStr, ResponseMessage);
 
-            // ControllerMgr.SetPayloadText(controller, payloadStr);
-            // ControllerMgr.SetTextFlag(controller, true);
-
-            // displaySaveWarning();
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RadioText Changed to ") + payloadStr).c_str ());
-        } while (false);
-
-        // DEBUG_END;
-
-        return response;
-
-    #endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
 // rdsTimePeriodCmd(): Set the RadioText Message Display Time. Input value is in seconds.
 bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMessage)
 {
-    #ifdef OldWay
-        // DEBUG_START;
-        bool    response    = true;
-        bool    capFlg      = false;
-        int32_t rtTime      = 0;
+    // DEBUG_START;
 
-        do  // once
-        {
-            if (payloadStr.length () > CMD_RT_MAX_SZ)
-            {
-                payloadStr = payloadStr.substring (0, CMD_RT_MAX_SZ);
-            }
+    c_ControllerLOCAL * control = (c_ControllerLOCAL *)(ControllerMgr.GetControllerById(LocalControllerId));
 
-            rtTime = strtol (payloadStr.c_str (), NULL, 10);
+    bool response = control->SetRdsTime(payloadStr, ResponseMessage);
 
-            if ((payloadStr.length () > CMD_TIME_MAX_SZ) || (rtTime <= 0))
-            {
-                Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: RDS Time Period Value is Invalid, Ignored.")).c_str ());
-                response = false;
-                break;
-            }
+    // DEBUG_END;
 
-            if (rtTime > RDS_DSP_TM_MAX)
-            {
-                capFlg  = true;
-                rtTime  = RDS_DSP_TM_MAX;
-            }
-            else if (rtTime < RDS_DSP_TM_MIN)
-            {
-                capFlg  = true;
-                rtTime  = RDS_DSP_TM_MIN;
-            }
-
-            // ControllerMgr.SetPayloadText(controller, payloadStr);
-            // ControllerMgr.SetTextFlag(controller, true);
-            // ControllerMgr.SetRdsMsgTime(controller, rtTime * 1000);
-            String Msg;
-
-            if (capFlg)
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RDS Time Period Value out-of-range, set to ") +
-                                String (rtTime) + " secs.").c_str ());
-            }
-            else
-            {
-                Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: RDS Time Period Value set to ") + String (rtTime) +
-                                " secs.").c_str ());
-            }
-        } while (false);
-
-        // DEBUG_END;
-
-        return response;
-
-    #endif // def OldWay
-
-    return false;
+    return response;
 }
 
 // *************************************************************************************************************************
