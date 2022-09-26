@@ -13,12 +13,14 @@
   */
 
 // *********************************************************************************************
-#include "language.h"
-#include "memdebug.h"
-#include "QN8027RadioApi.hpp"
 #include <Arduino.h>
 #include <ArduinoLog.h>
 #include <Wire.h>
+
+#include "language.h"
+#include "QN8027RadioApi.hpp"
+#include "RfPower.hpp"
+#include "memdebug.h"
 
 // I2C:
 static const uint8_t    I2C_QN8027_ADDR = 0x2c;     // I2C Address of QN8027 FM Radio Chip.
@@ -203,11 +205,8 @@ void cQN8027RadioApi::initRadioChip (void)
         FmRadio.setCrystalCurrent (30);         // 30% of 400uA Max = 120uA.
         FmRadio.setTxFreqDeviation (0x81);      // 75Khz, Total Broadcast channel Bandwidth
         FmRadio.setTxPilotFreqDeviation (9);    // Use default 9% (6.75KHz) Pilot Tone Deviation.
-
-        #ifdef OldWay
-            setRfPower ();
-            waitForIdle (25);
-        #endif // def OldWay
+        FmRadio.setTxPower(RfPower.get32());
+        waitForIdle (25);
 
         for (uint8_t i = 0;i < RADIO_CAL_RETRY;i++)
         {
