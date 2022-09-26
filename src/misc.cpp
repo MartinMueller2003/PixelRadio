@@ -58,27 +58,3 @@ void spiSdCardShutDown (void)
     pinMode (   MOSI_PIN,   INPUT_PULLUP);      // SD CMD, Allow pin to Pullup High (for reliable Flashing).
     pinMode (   SD_CLK_PIN, INPUT_PULLUP);      // SD CLK.
 }
-
-// *********************************************************************************************
-// strIsUint(): Check if string is unsigned integer. Return true if uint.
-bool strIsUint (String intStr)
-{
-    uint8_t i;
-
-    if (intStr.length () == 0)
-    {
-        return false;
-    }
-
-    for (i = 0;i < intStr.length ();i++)    // Arg must be integer >= 0.
-    {
-        char c = intStr.charAt (i);
-
-        if ((c == '-') || (c < '0') || (c > '9'))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}

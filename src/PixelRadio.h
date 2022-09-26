@@ -46,30 +46,8 @@ const uint8_t   CMD_LOG_MAX_SZ  = 7;    // Serial Log Level Arg max length is 7 
 const uint8_t   CMD_SYS_MAX_SZ  = 6;    // System Cmd Code length is 6 ("system").
 const uint8_t   CMD_TIME_MAX_SZ = 4;    // Time Command Arg length is 3 (5-900). Add +1 to trap typos.
 
-// Controller Command Parameters
-#define CMD_GPIO_OUT_HIGH_STR   "outhigh"
-#define CMD_GPIO_OUT_LOW_STR    "outlow"
-#define CMD_GPIO_READ_STR       "read"
-
-#define CMD_LOG_RST_STR "restore"
-#define CMD_LOG_SIL_STR "silent"
-
-#define CMD_MODE_MONO_STR   "mono"
-#define CMD_MODE_STER_STR   "stereo"
-
-#define CMD_MUTE_OFF_STR    "off"
-#define CMD_MUTE_ON_STR     "on"
-
 #define CMD_RDS_CODE_STR "rds"
-
-#define CMD_RF_OFF_STR  "off"
-#define CMD_RF_ON_STR   "on"
-
 #define CMD_SYS_CODE_STR "system"
-
-// const bool CTRL_SERIAL_DEF_FLG = true;
-const bool  RDS_TEXTX_DEF_FLG   = true;
-const bool  RF_AUTO_OFF_DEF_FLG = false;
 
 // EEPROM: (Currently Not Used in PixelRadio)
 const uint16_t  EEPROM_SZ   = 32;   // E2Prom Size, must be large enough to hold all values below.
@@ -77,25 +55,11 @@ const uint8_t   INIT_BYTE   = 0xA5; // E2Prom Initialization Stamping value.
 const int   INIT_ADDR       = 0;    // E2Prom Address for Init value, 8-bits.
 const int   XXXX_SET_ADDR   = 10;   // E2Prom Address for (unused), 16-bit.
 
-// ESP32
-const uint32_t  ESP_BAUD_DEF        = 115200;   // Default ESP32 Baud Rate.
-const uint32_t  ELAPSED_TMR_TIME    = 1000;     // RDS Elapsed Time Update period, in mS. Do Not change.
-
-// ESPUI (Web UI):
-#define ANA_VOL_MIN_STR "0"
-#define ANA_VOL_MAX_STR "100"
-#define ANA_VOL_DEF_STR "50"
-#define BAD_SENDER_STR  "BAD_SENDER_ID"
-#define BAD_VALUE_STR   "BAD_VALUE"
 #define COLOR_GRN_STR   "#66ff33"
 #define COLOR_RED_STR   "#FF3500"
 #define COLOR_BLK_STR   "#000000"
 #define COLOR_WHT_STR   "#FFFFFF"
 #define COLOR_GRY_STR   "#bfbfbf"
-
-#define USB_VOL_MIN_STR "0"
-#define USB_VOL_MAX_STR "30"
-#define USB_VOL_DEF_STR USB_VOL_MAX_STR
 
 // File System
 #define  BACKUP_FILE_NAME   "/backup.cfg"
@@ -127,16 +91,12 @@ const gpio_num_t    TONE_PIN    = gpio_num_t::GPIO_NUM_25;  // PWM Test Tone Pin
 const int   SIGN_OFF    = 0;
 const int   SIGN_ON     = 1;
 
-
 // Measurement:
 const int32_t MEAS_TIME = 50;   // Measurement Refresh Time, in mS.
 
 // Radio
 const uint8_t RADIO_CAL_RETRY = 3;  // RF Port Calibration Retry Count (Maximum Retry Count).
 
-
-// Serial Controller
-// OldWay #define SERIAL_LOG_STR "log"    // Serial Log Command Keyword.
 
 // Time Conversion
 const uint32_t  MSECS_PER_SEC   = 1000UL;
@@ -154,25 +114,9 @@ const float VOLTS_HYSTERESIS    = 0.15f;    // Voltage Hysterisis.
 const uint16_t VOLTS_UPD_TIME   = 3750;     // Power Supply Volts GUI Update time (on diagTab), in mS.
 // const uint32_t CLIENT_TIMEOUT = 500;   // Webserver Client Timeout, in mS.
 
-// Web Server
-#define HTML_HEADER_STR     "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n"
-#define HTML_DOCTYPE_STR    "<!DOCTYPE HTML>\r\n<html>"
-#define HTML_CLOSE_STR      "</html>\r\n\r\n"
-
 const uint16_t  WEBSERVER_PORT  = 80;   // Port for Web Server. Do not change.
 
 // *********************************************************************************************
-
-// Controller Command Prototypes
-bool audioModeCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-bool frequencyCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
-bool infoCmd (
-    String              payloadStr,
-    ControllerTypeId    controller);
 
 // ESPUI (WebGUI) Prototypes
 void    buildGUI (void);
@@ -202,7 +146,6 @@ bool saveConfiguration (
 // Misc Prototypes
 void    initEprom (void);
 void    spiSdCardShutDown (void);
-// OldWay bool    strIsUint (String intStr);
 
 const String returnClientCode (int code);
 
