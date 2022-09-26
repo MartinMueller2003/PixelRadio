@@ -36,6 +36,7 @@
 #include "ProgramServiceName.hpp"
 #include "PtyCode.hpp"
 #include "RdsReset.hpp"
+#include "RebootControl.hpp"
 #include "RfCarrier.hpp"
 
 typedef bool(cCommandProcessor::*CmdHandler)(String & Parameter, String & ResponseMessage);
@@ -300,7 +301,7 @@ bool cCommandProcessor::reboot (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = false;  // RebootControl.set(payloadStr, ResponseMessage);
+    bool response = RebootControl.set(payloadStr, ResponseMessage);
 
     // DEBUG_END;
     return response;
@@ -320,63 +321,22 @@ bool cCommandProcessor::rfCarrier (String & payloadStr, String & ResponseMessage
 // *************************************************************************************************************************
 bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
 {
-    #ifdef OldWay
-        // DEBUG_START;
-        bool response = true;
+    // DEBUG_START;
 
-        if (payloadStr.length () > CMD_RDS_MAX_SZ)
-        {
-            payloadStr = payloadStr.substring (0, CMD_RDS_MAX_SZ);
-        }
+    ControllerMgr.SetRdsOutputEnabled(true);
 
-        if (payloadStr.equals (F (CMD_RDS_CODE_STR)))
-        {
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Start RDS.")).c_str ());
-            // ControllerMgr.SetTextFlag(controller, true);
-        }
-        else
-        {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid START Payload (") + payloadStr + F ("), Ignored.")).c_str ());
-            response = false;
-        }
-
-        // DEBUG_END;
-
-        return response;
-
-    #endif // def OldWay
-
-    return false;
+    // DEBUG_END;
+    return true;
 }
 
 // *************************************************************************************************************************
 bool cCommandProcessor::stop (String & payloadStr, String & ResponseMessage)
 {
-    #ifdef OldWay
-        // DEBUG_START;
-        bool response = true;
+    // DEBUG_START;
 
-        if (payloadStr.length () > CMD_RDS_MAX_SZ)
-        {
-            payloadStr = payloadStr.substring (0, CMD_RDS_MAX_SZ);
-        }
+    ControllerMgr.SetRdsOutputEnabled(false);
 
-        if (payloadStr.equals (F (CMD_RDS_CODE_STR)))
-        {
-            Log.verboseln ((String (F ("-> ")) + ControllerName + F (" Controller: Stop RDS.")).c_str ());
-            // ControllerMgr.SetStopFlag(controller, true);
-        }
-        else
-        {
-            Log.errorln ((String (F ("-> ")) + ControllerName + F (" Controller: Invalid STOP Payload (") + payloadStr + F ("), Ignored.")).c_str ());
-        }
-
-        // DEBUG_END;
-
-        return response;
-
-    #endif // def OldWay
-
+    // DEBUG_END;
     return false;
 }
 

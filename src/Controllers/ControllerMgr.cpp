@@ -201,29 +201,39 @@ void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
     Response.Text               = F ("No Controllers Available");
     CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
 
-    for (auto & CurrentController : ListOfControllers)
+    do // once
     {
-        if (!CurrentController.pController->ControllerIsEnabled ())
+        if(!RdsOutputEnabled)
         {
-            continue;
-        }
-
-        Response.Text = F ("No Messages Available");
-        CurrentController.pController->GetNextRdsMessage (Response);
-
-        if (Response.DurationMilliSec)
-        {
-            // DEBUG_V("Found a message to send");
-
-            Response.ControllerName     = CurrentController.pController->GetName ();
-            CurrentSendingControllerId  = CurrentController.ControllerId;
-
-            // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
-            // DEBUG_V(String("           Text: ") + String(Response.Text));
-            // DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
+            // Rds Output is disabled
             break;
         }
-    }
+
+        for (auto & CurrentController : ListOfControllers)
+        {
+            if (!CurrentController.pController->ControllerIsEnabled ())
+            {
+                continue;
+            }
+
+            Response.Text = F ("No Messages Available");
+            CurrentController.pController->GetNextRdsMessage (Response);
+
+            if (Response.DurationMilliSec)
+            {
+                // DEBUG_V("Found a message to send");
+
+                Response.ControllerName     = CurrentController.pController->GetName ();
+                CurrentSendingControllerId  = CurrentController.ControllerId;
+
+                // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
+                // DEBUG_V(String("           Text: ") + String(Response.Text));
+                // DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
+                break;
+            }
+        }
+    } while (false);
+
 
     // DEBUG_END;
 }
@@ -272,10 +282,12 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
-    serializeJsonPretty (config, Serial);
+    // serializeJsonPretty (config, Serial);
 
     do  // once
     {
+        ReadFromJSON(RdsOutputEnabled, config, F("RdsOutputEnabled"));
+
         if (false == config.containsKey (N_controllers))
         {
             // DEBUG_V("No Config Found");
@@ -314,6 +326,8 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
 
     do  // once
     {
+        config[F("RdsOutputEnabled")] = RdsOutputEnabled;
+
         if (!config.containsKey (N_controllers))
         {
             // DEBUG_V();
