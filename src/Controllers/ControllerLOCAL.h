@@ -34,6 +34,8 @@ public:
     void    saveConfiguration (ArduinoJson::JsonObject & config);
     void    CreateDefaultMsgSet ();
     void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    bool    SetRdsText(String & payloadStr, String & ResponseMessage);
+    bool    SetRdsTime(String & payloadStr, String & ResponseMessage);
 
 private:
 
