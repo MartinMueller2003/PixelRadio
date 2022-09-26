@@ -419,4 +419,17 @@ void c_ControllerMessageSet::UpdateMsgText (String & OriginalMessageText, String
 }
 
 // *********************************************************************************************
+void c_ControllerMessageSet::SetDurration (uint32_t value)
+{
+    // DEBUG_START;
+
+    for(auto & currentMessage : Messages)
+    {
+        currentMessage.second.SetDurration(value);
+    }
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 // EOF

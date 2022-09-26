@@ -51,13 +51,14 @@ public:
     void        GetMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
     uint32_t    GetDuration () {return DurationSec;}
 
-    bool IsEnabled () {return Enabled;}
+    bool    IsEnabled () {return Enabled;}
 
     void    RestoreConfig (ArduinoJson::JsonObject config);
     void    SaveConfig (ArduinoJson::JsonObject config);
     void    SelectMessage ();
     void    SetMessage (String & value);
     void    SetFppdMode ();
+    void    SetDurration (uint32_t value) { DurationSec = value; }
 
 private:
 

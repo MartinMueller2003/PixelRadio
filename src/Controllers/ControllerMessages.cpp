@@ -746,4 +746,21 @@ void c_ControllerMessages::SetShowFseqNameSelection (bool value)
 }
 
 // *********************************************************************************************
+void c_ControllerMessages::SetDurration (String MsgSetName, uint32_t value)
+{
+    // DEBUG_START;
+
+    if(MessageSets.end() == MessageSets.find(MsgSetName))
+    {
+        // DEBUG_V("No such message set");
+    }
+    else
+    {
+        MessageSets[MsgSetName].SetDurration(value);
+    }
+
+    // DEBUG_END;
+}
+
+// *********************************************************************************************
 // EOF
