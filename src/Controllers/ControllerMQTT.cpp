@@ -200,7 +200,6 @@ void c_ControllerMQTT::SendStatusMessage (void)
     String  Payload;
     String  topicStr;
 
-
     // DEBUG_V();
     oldVbatVolts    = SystemVoltage.GetVoltage();
     oldPaVolts      = RfPaVoltage.GetVoltage();
@@ -588,21 +587,18 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
             String (MqttName.get () + MQTT_INFORM_STR).c_str (),
             String (String (F ("Response: ")) + Response).c_str ());
 
-        #ifdef OldWay
-            sprintf (mqttBuff,
-            "{\"%s\": \"ok\", \"version\": \"%s\", \"hostName\": \"%s\", \"ip\": \"%s\", \"rssi\": %d, \"status\": \"0x%02X\"}",
-            CMD_INFO_STR,
-            VERSION_STR,
-            staNameStr.c_str (),
-            WiFi.localIP ().toString ().c_str (),
-            WiFi.RSSI (),
-            getControllerStatus ());
-    }
-
-    topicStr = mqttNameStr + MQTT_INFORM_STR;
-
-    mqttClient.publish (topicStr.c_str (), mqttBuff);
-        #endif // def OldWay
+        DynamicJsonDocument mqttMsg(1024);
+        mqttMsg[CMD_INFO_STR] = F("ok");
+        mqttMsg[F("version")] = VERSION_STR;
+        mqttMsg[F("hostName")] = WiFi.getHostname ();
+        mqttMsg[F("ip")] = WiFi.localIP ().toString ();
+        mqttMsg[F("rssi")] = WiFi.RSSI ();
+        mqttMsg[F("status")] = ControllerMgr.getControllerStatusSummary ();
+        String mqttStr;
+        mqttStr.reserve(1024);
+        serializeJson(mqttMsg, mqttStr);
+        topicStr = MqttName.get () + MQTT_INFORM_STR;
+        pParent->mqttClient.publish (topicStr.c_str (), mqttStr.c_str());
 
     } while (false);
 
