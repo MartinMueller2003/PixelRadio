@@ -131,7 +131,7 @@ void c_ControllerHTTP::init ()
 
     webServer.begin();
 
-  	DEBUG_V (String (F ("Web server listening on port ")) + HTTP_PORT);
+    Log.infoln ((String (F ("Web server listening on port ")) + HTTP_PORT).c_str ());
 
     // DEBUG_END;
 }
