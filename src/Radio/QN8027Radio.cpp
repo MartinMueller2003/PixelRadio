@@ -693,26 +693,24 @@ void QN8027Radio::sendStationName (String SN)
 const uint8_t RDS_SEND_DELAY = 5;
 void QN8027Radio::waitForRDSSend ()
 {
-    #ifdef OldWay
-        uint8_t status  = rdsSentStatus;
-        uint8_t timeout = 0;
+    uint8_t status  = rdsSentStatus;
+    uint8_t timeout = 0;
 
-        do
+    do
+    {
+        status  = read1Byte (STATUS_REG);
+        status  = status & 8;
+
+        if (timeout++ > (100 / RDS_SEND_DELAY))  // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
         {
-            status  = read1Byte (STATUS_REG);
-            status  = status & 8;
+            Log.errorln ("-> Abort: waitForRDSSend() function time-out!");
+            break;
+        }
 
-            if (timeout++ > (100 / RDS_SEND_DELAY))  // Allow up to 100mS RDS Send time. Mod by TEB, Dec-27-2021
-            {
-                Log.errorln ("-> Abort: waitForRDSSend() function time-out!");
-                break;
-            }
+        delay (RDS_SEND_DELAY);         // This wait time allows the RDS buffer contents to be sent.
+    } while (status == rdsSentStatus);  // Wait for rdsSentStatus to toggle.
 
-            delay (RDS_SEND_DELAY);         // This wait time allows the RDS buffer contents to be sent.
-        } while (status == rdsSentStatus);  // Wait for rdsSentStatus to toggle.
-
-        rdsSentStatus = status;
-    #endif // def OldWay
+    rdsSentStatus = status;
 }
 
 /*Sends Song Artist Album Name. RT must be maximum 64 Byte long*/
