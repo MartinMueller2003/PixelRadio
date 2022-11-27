@@ -100,7 +100,7 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
             break;
         }
 
-        uint32_t NewData = uint32_t (DataValueStr.toFloat () * 10.0f);
+        uint32_t NewData = uint32_t (GetDataValueStr ().toFloat () * 10.0f);
         // DEBUG_V(String("NewData: ") + String(NewData));
 
         if (type == P_LEFT_DOWN)
@@ -153,7 +153,7 @@ bool cFrequencyAdjust::set (const String & value, String & ResponseMessage, bool
 
     if (Response)
     {
-        float tempFloat = DataValueStr.toFloat ();
+        float tempFloat = GetDataValueStr ().toFloat ();
         QN8027RadioApi.setFrequency (tempFloat, RfCarrier.get ());
 
         UpdateStatus ();
@@ -184,7 +184,7 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
 
     do  // once
     {
-        uint32_t PointPosition = DataValueStr.indexOf ('.');
+        uint32_t PointPosition = GetDataValueStr ().indexOf ('.');
 
         if (PointPosition < 0)
         {
@@ -210,8 +210,8 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
         }
 
         // DEBUG_V(String("NewData: ") + String(NewData));
-        DataValueStr    = String (NewData, 1);
-        ResponseMessage = DataValueStr + UNITS_MHZ_STR;
+        SetDataValueStr (String (NewData, 1));
+        ResponseMessage = GetDataValueStr () + UNITS_MHZ_STR;
     } while (false);
 
     // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
@@ -227,7 +227,7 @@ void cFrequencyAdjust::UpdateStatus ()
 {
     // DEBUG_START;
 
-    String Status = DataValueStr + UNITS_MHZ_STR;
+    String Status = GetDataValueStr () + UNITS_MHZ_STR;
     HomeFreqStatus.set (Status);
     AdjustFreqStatus.set (Status);
     RadioFreqStatus.set (Status);

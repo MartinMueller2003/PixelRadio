@@ -55,10 +55,10 @@ public:
 
 private:
 
-    bool    calibrateAntenna (bool SkipSemaphore = false);
-    bool    checkRadioIsPresent (bool SkipSemaphore = false);
-    void    initRadioChip (bool SkipSemaphore = false);
-    void    waitForIdle (uint16_t waitMs, bool SkipSemaphore = false);
+    bool    calibrateAntenna (bool SkipSemaphore                = false);
+    bool    checkRadioIsPresent (bool SkipSemaphore             = false);
+    void    initRadioChip (bool SkipSemaphore                   = false);
+    void    waitForIdle (uint16_t waitMs, bool SkipSemaphore    = false);
 
     bool                        DeviceIsPresent = false;
     QN8027Radio                 FmRadio;

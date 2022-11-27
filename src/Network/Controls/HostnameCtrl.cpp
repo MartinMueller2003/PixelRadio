@@ -69,7 +69,7 @@ bool cHostnameCtrl::set (const String & value, String & ResponseMessage, bool Fo
             break;
         }
 
-        if (value.equals (DataValueStr))
+        if (value.equals (GetDataValueStr ()))
         {
             // DEBUG_V ("Name did not change");
             break;

@@ -58,7 +58,7 @@ bool cProgramServiceName::set (const String & value, String & ResponseMessage, b
 
     if (Response)
     {
-        QN8027RadioApi.setProgramServiceName (DataValueStr, RfCarrier.get ());
+        QN8027RadioApi.setProgramServiceName (GetDataValueStr (), RfCarrier.get ());
     }
 
     // DEBUG_END;
@@ -74,12 +74,6 @@ bool cProgramServiceName::validate (const String & value, String & ResponseMessa
 
     do  // once
     {
-        if (DataValueStr.equals (value))
-        {
-            // DEBUG_V ("Skip duplicate name");
-            break;
-        }
-
         ResponseMessage = GetTitle () + F (": '") + value;
 
         if (value.length () < 4)
@@ -99,7 +93,7 @@ bool cProgramServiceName::validate (const String & value, String & ResponseMessa
         }
 
         // DEBUG_V ("Accepted");
-        DataValueStr    = value;
+        SetDataValueStr (value);
         ResponseMessage += F ("' Accepted");
     } while (false);
 

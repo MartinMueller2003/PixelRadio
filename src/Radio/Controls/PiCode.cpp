@@ -37,7 +37,7 @@ cPiCode::cPiCode () :   cControlCommon (
 {
     // _ DEBUG_START;
 
-    DataValueStr = String (F ("0x")) + String (RDS_PI_CODE_DEF, HEX);
+    SetDataValueStr (String (F ("0x")) + String (RDS_PI_CODE_DEF, HEX));
 
     // _ DEBUG_END;
 }
@@ -108,19 +108,13 @@ bool cPiCode::validate (const String & value, String & ResponseMessage, bool For
     // DEBUG_V (       String ("         value: ") + value);
     // DEBUG_V (       String ("           get: ") + get ());
 
-    uint32_t OldPiCodeValue = StringToNumber (get ());
+
     // DEBUG_V (       String ("OldPiCodeValue: ") + String (OldPiCodeValue));
 
     do  // once
     {
         uint32_t NewPiCodeValue = StringToNumber (value);
         // DEBUG_V (String ("NewPiCodeValue: ") + String (NewPiCodeValue));
-
-        if (NewPiCodeValue == OldPiCodeValue)
-        {
-            // DEBUG_V ("No Change. Value is OK");
-            break;
-        }
 
         if ((NewPiCodeValue < RDS_PI_CODE_MIN) ||
             (NewPiCodeValue > RDS_PI_CODE_MAX))
@@ -133,7 +127,7 @@ bool cPiCode::validate (const String & value, String & ResponseMessage, bool For
 
         // DEBUG_V ("Value has been accepted");
 
-        DataValueStr = String (F ("0x")) + String (NewPiCodeValue, HEX);
+        SetDataValueStr (String (F ("0x")) + String (NewPiCodeValue, HEX));
     } while (false);
 
     // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);

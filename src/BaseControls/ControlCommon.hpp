@@ -31,20 +31,23 @@ public:
                     uint32_t        MaxStrLen);
     virtual~cControlCommon ();
 
-    virtual void    AddControls (uint16_t TabId, ControlColor color);
-    virtual void    AddControls (uint16_t TabId, ControlColor color, bool skipSet);
-    virtual void    Callback (Control * sender, int type);
-    virtual String  &get ();
-    virtual String  getDefault ()   {return DefaultValue;}
-    virtual String  GetTitle ()     {return Title;}
-    virtual bool    GetAndResetValueChangedFlag ();
-    virtual void    ResetToDefaults ();
-    virtual void    restoreConfiguration (JsonObject & json);
-    virtual void    saveConfiguration (JsonObject & json);
-    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
-    virtual void    setSaveUpdates (bool value)     {SaveUpdate = value;}
-    virtual void    SetTitle (const String & value) {Title = value;}
-    virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+    virtual void            AddControls (uint16_t TabId, ControlColor color);
+    virtual void            AddControls (uint16_t TabId, ControlColor color, bool skipSet);
+    virtual void            Callback (Control * sender, int type);
+    virtual const String    &get ();
+    virtual String          getDefault ()   {return DefaultValue;}
+    virtual String          GetTitle ()     {return Title;}
+    virtual bool            GetAndResetValueChangedFlag ();
+    virtual void            ResetToDefaults ();
+    virtual void            restoreConfiguration (JsonObject & json);
+    virtual void            saveConfiguration (JsonObject & json);
+    virtual bool            set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual void            setSaveUpdates (bool value)     {SaveUpdate = value;}
+    virtual void            SetTitle (const String & value) {Title = value;}
+    virtual bool            validate (const String & value, String & ResponseMessage, bool ForceUpdate);
+
+    const String    &GetDataValueStr ();
+    void            SetDataValueStr (const String & value);
 
     enum eCssStyle
     {
@@ -91,7 +94,6 @@ public:
 protected:
 
     ePanelStyle     ControlPanelStyle = PanelStyle125;
-    String          DataValueStr;
 
     bool            SaveUpdate  = true;
     bool            SkipSetLog  = false;

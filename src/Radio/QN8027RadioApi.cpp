@@ -27,8 +27,8 @@ static const uint8_t    I2C_QN8027_ADDR = 0x2c;     // I2C Address of QN8027 FM 
 static const uint8_t    I2C_DEV_CNT     = 1;        // Number of expected i2c devices on bus.
 static const uint32_t I2C_FREQ_HZ       = 100000;   // I2C master clock frequency
 
-#define TAKE_SEMAPHORE(Sem, Skip) if(!Skip) {xSemaphoreTakeRecursive (Sem, portMAX_DELAY);}
-#define GIVE_SEMAPHORE(Sem, Skip) if(!Skip) {xSemaphoreGiveRecursive (Sem);}
+#define TAKE_SEMAPHORE(Sem, Skip)   if (!Skip) {xSemaphoreTakeRecursive (Sem, portMAX_DELAY);}
+#define GIVE_SEMAPHORE(Sem, Skip)   if (!Skip) {xSemaphoreGiveRecursive (Sem);}
 
 // *********************************************************************************************
 void cQN8027RadioApi::begin ()
@@ -80,12 +80,12 @@ bool cQN8027RadioApi::calibrateAntenna (bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setFrequency (108.0F, true);  // High end of FM tuning range.
         waitForIdle (50, true);
-        setRfCarrier(OFF, true);
+        setRfCarrier (OFF, true);
         waitForIdle (15, true);
-        setRfCarrier(ON, true);
+        setRfCarrier (ON, true);
         waitForIdle (50, true);
         FmRadio.reCalibrate ();
         waitForIdle (120, true);
@@ -93,9 +93,9 @@ bool cQN8027RadioApi::calibrateAntenna (bool SkipSemaphore)
 
         setFrequency (85.0F, true);  // High end of FM tuning range.
         waitForIdle (50, true);
-        setRfCarrier(OFF, true);
+        setRfCarrier (OFF, true);
         waitForIdle (15, true);
-        setRfCarrier(ON, true);
+        setRfCarrier (ON, true);
         waitForIdle (50, true);
         FmRadio.reCalibrate ();
         waitForIdle (120, true);
@@ -134,7 +134,7 @@ bool cQN8027RadioApi::calibrateAntenna (bool SkipSemaphore)
         setRfCarrierOFF (true);
         waitForIdle (50, true);
 
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -152,7 +152,7 @@ bool cQN8027RadioApi::checkRadioIsPresent (bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
 
         Wire.beginTransmission (QN8027_I2C_ADDR);
 
@@ -162,7 +162,7 @@ bool cQN8027RadioApi::checkRadioIsPresent (bool SkipSemaphore)
             response = true;
         }
 
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -211,7 +211,7 @@ void cQN8027RadioApi::initRadioChip (bool SkipSemaphore)
         FmRadio.setCrystalCurrent (30);         // 30% of 400uA Max = 120uA.
         FmRadio.setTxFreqDeviation (0x81);      // 75Khz, Total Broadcast channel Bandwidth
         FmRadio.setTxPilotFreqDeviation (9);    // Use default 9% (6.75KHz) Pilot Tone Deviation.
-        FmRadio.setTxPower(RfPower.get32());
+        FmRadio.setTxPower (RfPower.get32 ());
         waitForIdle (25, true);
 
         for (uint8_t i = 0;i < RADIO_CAL_RETRY;i++)
@@ -286,13 +286,13 @@ uint16_t cQN8027RadioApi::GetPeakAudioLevel (bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
 
         waitForIdle (100, true);
         mV = FmRadio.getStatus () >> 4;
         FmRadio.clearAudioPeak ();
 
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -307,11 +307,11 @@ void cQN8027RadioApi::setAudioImpedance (uint8_t value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.setAudioInpImp (value);
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -325,11 +325,11 @@ void cQN8027RadioApi::setAudioMute (bool value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.mute (value ? ON : OFF);
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -343,11 +343,11 @@ void cQN8027RadioApi::setDigitalGain (uint8_t value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.setTxDigitalGain (value);
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -361,11 +361,11 @@ void cQN8027RadioApi::setFrequency (float frequency, bool Carrier, bool SkipSema
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setRfCarrierOFF (true);
         FmRadio.setFrequency (frequency);
         setRfCarrier (Carrier, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -379,11 +379,11 @@ void cQN8027RadioApi::setMonoAudio (bool value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.MonoAudio (value ? OFF : ON);
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -396,11 +396,11 @@ void cQN8027RadioApi::setPiCode (uint16_t value, bool Carrier, bool SkipSemaphor
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setRfCarrierOFF (true);
         FmRadio.setPiCode (value);
         setRfCarrier (Carrier, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -415,28 +415,28 @@ void cQN8027RadioApi::setPreEmphasis (uint8_t value, bool Carrier, bool SkipSema
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setRfCarrierOFF (true);
         FmRadio.setPreEmphTime50 (value);
         setRfCarrier (Carrier, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-void cQN8027RadioApi::setProgramServiceName (String & value, bool Carrier, bool SkipSemaphore)
+void cQN8027RadioApi::setProgramServiceName (const String & value, bool Carrier, bool SkipSemaphore)
 {
     // DEBUG_START;
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setRfCarrierOFF (true);
         FmRadio.sendStationName (value);
         setRfCarrier (Carrier, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -449,11 +449,11 @@ void cQN8027RadioApi::setPtyCode (uint8_t value, bool Carrier, bool SkipSemaphor
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setRfCarrierOFF (true);
         FmRadio.setPtyCode (value);
         setRfCarrier (Carrier, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -466,11 +466,11 @@ void cQN8027RadioApi::setRdsMessage (String & value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.sendRadioText (value);
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -487,11 +487,11 @@ void cQN8027RadioApi::setRfAutoOff (bool value, bool Carrier, bool SkipSemaphore
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         setRfCarrierOFF (true);
         FmRadio.radioNoAudioAutoOFF (value ? ON : OFF);
         setRfCarrier (Carrier, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -517,11 +517,11 @@ void cQN8027RadioApi::setRfCarrier (bool value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.Switch (value ? ON : OFF);  // Update QN8027 Carrier.
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -536,7 +536,7 @@ void cQN8027RadioApi::setRfPower (uint8_t value, bool Carrier, bool SkipSemaphor
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.setTxPower (value);
         waitForIdle (100, true);
@@ -546,7 +546,8 @@ void cQN8027RadioApi::setRfPower (uint8_t value, bool Carrier, bool SkipSemaphor
             setRfCarrierOFF (true);
             setRfCarrier (Carrier, true);
         }
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -560,11 +561,11 @@ void cQN8027RadioApi::setVgaGain (uint8_t value, bool SkipSemaphore)
 
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
         waitForIdle (100, true);
         FmRadio.setTxInputBufferGain (value);
         waitForIdle (100, true);
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;
@@ -577,7 +578,7 @@ void cQN8027RadioApi::waitForIdle (uint16_t waitMs, bool SkipSemaphore)
     // DEBUG_START;
     if (RadioSemaphore)
     {
-        TAKE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        TAKE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
 
         uint8_t stateCode1;
         uint8_t stateCode2;
@@ -617,7 +618,7 @@ void cQN8027RadioApi::waitForIdle (uint16_t waitMs, bool SkipSemaphore)
 
         // DEBUG_V(String("waitForIdle End Status is: 0x") + String(FmRadio.getStatus() & 0x07, HEX));
 
-        GIVE_SEMAPHORE(RadioSemaphore, SkipSemaphore);
+        GIVE_SEMAPHORE (RadioSemaphore, SkipSemaphore);
     }
 
     // DEBUG_END;

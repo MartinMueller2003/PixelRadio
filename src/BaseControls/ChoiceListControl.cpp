@@ -59,7 +59,7 @@ uint32_t cChoiceListControl::get32 ()
     uint32_t Response = uint32_t (-1);
     // DEBUG_V (String ("get: '") + DataValueStr + "'");
 
-    if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (DataValueStr))
+    if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (GetDataValueStr ()))
     {
         Response = (uint32_t)((*ChoiceVector)[getIndex ()].second.toInt ());
     }
@@ -77,13 +77,13 @@ uint32_t cChoiceListControl::getIndex ()
 
     uint32_t Response = uint32_t (-1);
 
-    if (KeyToChoiceVectorMap.end () == KeyToChoiceVectorMap.find (DataValueStr))
+    if (KeyToChoiceVectorMap.end () == KeyToChoiceVectorMap.find (GetDataValueStr ()))
     {
         // DEBUG_V (String ("Could not find '") + DataValueStr + "' in the map");
     }
     else
     {
-        Response = KeyToChoiceVectorMap[DataValueStr].VectorIndex;
+        Response = KeyToChoiceVectorMap[GetDataValueStr ()].VectorIndex;
     }
 
     // DEBUG_V (String ("Response: ") + String (Response));
@@ -104,7 +104,7 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
     do  // once
     {
-        // DEBUG_V ( String ("   OldDataValueStr: '") + DataValueStr + "'");
+
         uint32_t CurrentIndex = getIndex ();
         // DEBUG_V ( String ("      CurrentIndex: ") + String (CurrentIndex));
         ChoiceVector = OptionList;
@@ -153,7 +153,7 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
 
-        ESPUI.updateControlValue (ControlId, DataValueStr);
+        ESPUI.updateControlValue (ControlId, GetDataValueStr ());
     } while (false);
 
     // DEBUG_END;
@@ -215,25 +215,11 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
 
     do  // once
     {
-        if (!ForceUpdate && DataValueStr.equals (value))
-        {
-            // DEBUG_V ("duplicate setting");
-
-            if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (value))
-            {
-                // DEBUG_V ("Ignore duplicate setting");
-                ResponseMessage = GetTitle () + F (": Ignoring duplicate setting for '") + value + "'";
-                Response        = false;
-                break;
-            }
-
-            // DEBUG_V ("duplicate but not valid");
-        }
 
         if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (value))
         {
             // DEBUG_V ("Found a match for the value");
-            DataValueStr = value;
+            SetDataValueStr (value);
             break;
         }
 

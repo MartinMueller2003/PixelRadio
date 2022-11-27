@@ -98,7 +98,7 @@ bool cGpioCommon::validate (const String & value, String & ResponseMessage, bool
     if (CommandTranslation.end () != CommandTranslation.find (temp))
     {
         // DEBUG_V ("Found a match for the value");
-        DataValueStr = CommandTranslation[value];
+        SetDataValueStr (CommandTranslation[value]);
     }
     else
     {

@@ -64,7 +64,7 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
         if (!cControlCommon::set (value, ResponseMessage, ForceUpdate))
         {
             // DEBUG_V ("Failed validation");
-            ESPUI.updateControlValue (ControlId, DataValueStr);
+            ESPUI.updateControlValue (ControlId, GetDataValueStr ());
             setControlStyle (eCssStyle::CssStyleRed_bw);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed_bw);
             break;
@@ -80,8 +80,8 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
             break;
         }
 
-        IpAddress       = TempIp;
-        DataValueStr    = IpAddress.toString ();
+        IpAddress = TempIp;
+        SetDataValueStr (IpAddress.toString ());
     } while (false);
 
     // DEBUG_V (       String (" ResponseMsg: ") + ResponseMessage);
@@ -121,7 +121,7 @@ bool cIpAddressControl::validate (const String & value, String & ResponseMessage
             break;
         }
 
-        DataValueStr = TempIp.toString ();
+        SetDataValueStr (TempIp.toString ());
     } while (false);
 
     // DEBUG_V (       String (" ResponseMsg: ") + ResponseMessage);

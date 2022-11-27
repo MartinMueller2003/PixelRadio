@@ -70,19 +70,11 @@ bool cNumberControl::validate (const String & value, String & ResponseMessage, b
     // DEBUG_V (       String ("         value: ") + value);
     // DEBUG_V (       String ("           get: ") + get ());
 
-    uint32_t OldNumberControlValue = StringToNumber (get ());
-    // DEBUG_V (       String ("OldNumberControlValue: ") + String (OldNumberControlValue));
 
     do  // once
     {
         uint32_t NewNumberControlValue = StringToNumber (value);
         // DEBUG_V (String ("NewNumberControlValue: ") + String (NewNumberControlValue));
-
-        if (NewNumberControlValue == OldNumberControlValue)
-        {
-            // DEBUG_V ("No Change. Value is OK");
-            break;
-        }
 
         if ((NewNumberControlValue < MinValue) ||
             (NewNumberControlValue > MaxValue))
@@ -95,7 +87,7 @@ bool cNumberControl::validate (const String & value, String & ResponseMessage, b
 
         // DEBUG_V ("Value has been accepted");
 
-        DataValueStr = String (NewNumberControlValue);
+        SetDataValueStr (String (NewNumberControlValue));
     } while (false);
 
     // DEBUG_V (       String ("ResponseMessage: ") + ResponseMessage);

@@ -84,8 +84,8 @@ cControlCommon::cControlCommon (const String    & _ConfigName,
 {
     // _ DEBUG_START;
 
-    Title           = _Title;
-    DataValueStr    = DefaultValue;
+    Title = _Title;
+    SetDataValueStr (DefaultValue);
 
     // _ DEBUG_END;
 }
@@ -107,11 +107,12 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color)
 void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipSet)
 {
     // DEBUG_START;
-    // DEBUG_V(String(": ") + Title);
+    // DEBUG_V (   String ("       Title: ") + Title);
+    // DEBUG_V (   String ("DefaultValue: ") + DefaultValue);
 
     ControlId = ESPUI.addControl (uiControltype,
         Title.c_str (),
-        Title,
+        DefaultValue,
         color,
         TabId,
         [] (Control * sender, int type, void * UserInfo)
@@ -125,7 +126,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
 
     if (MaxDataLength)
     {
-        DataValueStr.reserve (MaxDataLength + 2);
+        // DataValueStr.reserve (MaxDataLength + 2);
         ESPUI.addControl (ControlType::Max, emptyString.c_str (), String (MaxDataLength), color, ControlId);
     }
 
@@ -136,7 +137,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     {
         // force a UI Update
         String Response;
-        set (DataValueStr, Response, true);
+        set (DefaultValue, Response, true);
     }
 
     Booting = false;
@@ -168,7 +169,7 @@ void cControlCommon::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-String &cControlCommon::get () {return DataValueStr;}
+const String &cControlCommon::get () {return GetDataValueStr ();}
 
 // *********************************************************************************************
 bool cControlCommon::GetAndResetValueChangedFlag ()
@@ -184,6 +185,26 @@ bool cControlCommon::GetAndResetValueChangedFlag ()
 
 // *********************************************************************************************
 String cControlCommon::GetCssStyle (eCssStyle Style) {return CssStyles[int(Style)];}
+
+// *********************************************************************************************
+const String &cControlCommon::GetDataValueStr ()
+{
+    // DEBUG_START;
+    Control * MyControl = ESPUI.getControl (ControlId);
+    /*
+      *     if (MyControl)
+      *     {
+      *         // DEBUG_V (String ("value: ") + MyControl->value);
+      *     }
+      *     else
+      *     {
+      *         // DEBUG_V ("Control not valid");
+      *     }
+      */
+    // DEBUG_END;
+
+    return (MyControl) ? MyControl->value : emptyString;
+}  // GetDataValueString
 
 // *********************************************************************************************
 String cControlCommon::GetPanelStyle (ePanelStyle Style) {return PanelStyles[int(Style)];}
@@ -206,7 +227,7 @@ void cControlCommon::restoreConfiguration (JsonObject & config)
 
     if (!ConfigName.isEmpty ())
     {
-        String NewValue = DataValueStr;
+        String NewValue = GetDataValueStr ();
         ReadFromJSON (NewValue, config, ConfigName);
         String Response;
         set (NewValue, Response);
@@ -222,7 +243,7 @@ void cControlCommon::saveConfiguration (JsonObject & config)
 
     if (!ConfigName.isEmpty ())
     {
-        config[ConfigName] = DataValueStr;
+        config[ConfigName] = GetDataValueStr ();
     }
 
     // DEBUG_END;
@@ -232,16 +253,14 @@ void cControlCommon::saveConfiguration (JsonObject & config)
 bool cControlCommon::set (const String & value, String & ResponseMessage, bool ForceUpdate)
 {
     // DEBUG_START;
-    // DEBUG_V (String ("      value: ") + value);
-    // DEBUG_V (String ("ForceUpdate: ") + String (ForceUpdate));
+    // DEBUG_V (   String ("      value: ") + value);
+    // DEBUG_V (   String ("ForceUpdate: ") + String (ForceUpdate));
 
     bool Response = true;
     ResponseMessage.reserve (128);
 
     do  // once
     {
-        String OriginaleDataValueStr = DataValueStr;
-
         if (!validate (value, ResponseMessage, ForceUpdate))
         {
             if (ResponseMessage.isEmpty ())
@@ -256,23 +275,17 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
 
         // DEBUG_V ("value is valid");
 
-        ResponseMessage = Title + F (": Set To '") + DataValueStr + F ("'");
+        ResponseMessage = Title + F (": Set To '") + value + F ("'");
 
         if (!SkipSetLog)
         {
             Log.infoln (ResponseMessage.c_str ());
         }
 
-        if (OriginaleDataValueStr.equals (DataValueStr) && !ForceUpdate)
-        {
-            // DEBUG_V ("Dont set duplicate value");
-            break;
-        }
-
         // DEBUG_V ("Saving value");
 
         ValueChanged = true;
-        ESPUI.print (ControlId, DataValueStr);
+        ESPUI.print (ControlId, value);
 
         if (!Booting && SaveUpdate)
         {
@@ -334,6 +347,26 @@ void cControlCommon::setControlPanelStyle (ePanelStyle style)
 }
 
 // *********************************************************************************************
+void cControlCommon::SetDataValueStr (const String & value)
+{
+    // DEBUG_START;
+    // DEBUG_V (String ("value: ") + value);
+
+    Control * MyControl = ESPUI.getControl (ControlId);
+
+    if (MyControl)
+    {
+        MyControl->value = value;
+    }
+    else
+    {
+        // DEBUG_V ("Control not valid");
+    }
+
+    // DEBUG_END;
+}  // GetDataValueString
+
+// *********************************************************************************************
 bool cControlCommon::validate (const String & value, String &, bool)
 {
     // DEBUG_START;
@@ -348,12 +381,12 @@ bool cControlCommon::validate (const String & value, String &, bool)
         }
         else
         {
-            DataValueStr = value;
+            SetDataValueStr (value);
         }
     }
     else
     {
-        DataValueStr = value;
+        SetDataValueStr (value);
     }
 
     return Response;

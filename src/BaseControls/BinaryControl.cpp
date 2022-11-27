@@ -255,8 +255,8 @@ bool cBinaryControl::validate (const String & value, String & ResponseMessage, b
     else
     {
         // DEBUG_V ("Accept the input value");
-        DataValue       = ValidInputValues[Temp];
-        DataValueStr    = String (DataValue);
+        DataValue = ValidInputValues[Temp];
+        SetDataValueStr (String (DataValue));
     }
 
     // DEBUG_V (String ("Response: ") + String (Response));
