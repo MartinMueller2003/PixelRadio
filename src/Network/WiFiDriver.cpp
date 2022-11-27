@@ -213,14 +213,14 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
         // DEBUG_V();
         WiFi.enableSTA (true);
 
-        // DEBUG_V (String ("      ssid: ") + current_ssid);
-        // DEBUG_V (String ("passphrase: ") + current_passphrase);
-        // DEBUG_V (String ("  hostname: ") + Hostname);
+        // DEBUG_V (   String ("      ssid: ") + current_ssid);
+        // DEBUG_V (   String ("passphrase: ") + current_passphrase);
+        // DEBUG_V (   String ("  hostname: ") + HostnameCtrl.get ());
 
         Log.infoln ((String (F ("Connecting to '")) +
                      current_ssid +
-                     String (F ("' as ")) +
-                     HostnameCtrl.get ()).c_str ());
+                     String (F ("' as '")) +
+                     HostnameCtrl.get () + F ("'")).c_str ());
 
         WiFi.setSleep (false);
         // DEBUG_V("");
