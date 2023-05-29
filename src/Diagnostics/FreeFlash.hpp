@@ -1,6 +1,6 @@
 #pragma once
 /*
-  *    File: FreeMemory.cpp
+  *    File: FreeFlash.cpp
   *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
   *    Version: 1.1.0
   *    Creation: Dec-16-2021
@@ -20,24 +20,24 @@
 #include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cFreeMemory : public cStatusControl
+class cFreeFlash : public cStatusControl
 {
 public:
 
-    cFreeMemory ();
-    virtual~cFreeMemory () {}
+    cFreeFlash ();
+    virtual~cFreeFlash () {}
 
     void    AddControls (uint16_t TabId, ControlColor color);
     void    Poll ();
 
 private:
 
-    const int32_t   MeasurementIntervalMs   = 1750; // Measurement Refresh Time, in mS.
+    const int32_t   MeasurementIntervalMs   = 3000; // Measurement Refresh Time, in mS.
     uint32_t        NextReadingTimeMs       = MeasurementIntervalMs;
     uint32_t        PreviousReading         = 0;
-};  // class cFreeMemory
+};  // class cFreeFlash
 
-extern cFreeMemory FreeMemory;
+extern cFreeFlash FreeFlash;
 
 // *********************************************************************************************
 // OEF

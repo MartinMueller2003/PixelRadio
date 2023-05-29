@@ -1,5 +1,5 @@
 /*
-  *    File: FreeMemory.cpp
+  *    File: FreeFlash.cpp
   *    Project: PixelRadio, an RBDS/RDS FM Transmitter (QN8027 Digital FM IC)
   *    Version: 1.1.0
   *    Creation: Dec-16-2021
@@ -16,20 +16,20 @@
 #include <Arduino.h>
 #include <ArduinoLog.h>
 
-#include "FreeMemory.hpp"
+#include "FreeFlash.hpp"
 #include "memdebug.h"
 
-const char PROGMEM DIAG_FREE_MEM_STR    [] = "FREE MEMORY";
+const char PROGMEM DIAG_FREE_FLASH_STR    [] = "FREE FLASH";
 
 // *********************************************************************************************
-cFreeMemory::cFreeMemory () :   cStatusControl (DIAG_FREE_MEM_STR)
+cFreeFlash::cFreeFlash () :   cStatusControl (DIAG_FREE_FLASH_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cFreeMemory::AddControls (uint16_t TabId, ControlColor color)
+void cFreeFlash::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
@@ -40,10 +40,11 @@ void cFreeMemory::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-void cFreeMemory::Poll ()
+void cFreeFlash::Poll ()
 {
     // _ DEBUG_START;
-
+    extern uint32_t GetFreeFsSpace();
+    
     uint32_t Now = millis ();
 
     if (Now >= NextReadingTimeMs)
@@ -51,7 +52,7 @@ void cFreeMemory::Poll ()
         // forward one second
         NextReadingTimeMs += MeasurementIntervalMs;
 
-        uint32_t NewReading = ESP.getFreeHeap () / 1024;
+        uint32_t NewReading = GetFreeFsSpace ();
 
         if (NewReading != PreviousReading)
         {
@@ -59,14 +60,14 @@ void cFreeMemory::Poll ()
             PreviousReading = NewReading;
             String TempStr = String (NewReading) + F (" KB");
             set (TempStr);
-            Log.verboseln ((String (F ("Free Heap Memory: ")) + TempStr).c_str ());
+            Log.verboseln ((String (F ("Free Flash Memory: ")) + TempStr).c_str ());
         }
     }
 
     // _ DEBUG_END;
 }
 
-cFreeMemory FreeMemory;
+cFreeFlash FreeFlash;
 
 // *********************************************************************************************
 // OEF

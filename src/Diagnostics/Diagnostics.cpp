@@ -22,6 +22,7 @@
 #include "RfPaVoltage.hpp"
 #include "LogLevel.hpp"
 #include "FreeMemory.hpp"
+#include "FreeFlash.hpp"
 #include "SystemRunTime.hpp"
 #include "RebootControl.hpp"
 
@@ -48,6 +49,7 @@ void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
     ESPUI.addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, TabId);
 
     FreeMemory.AddControls (TabId, color);
+    FreeFlash.AddControls (TabId, color);
     SystemRunTime.AddControls (TabId, color);
     RebootControl.AddControls (TabId, color);
 
@@ -72,6 +74,7 @@ void cDiagnostics::Poll ()
     SystemVoltage.Poll ();
     RfPaVoltage.Poll ();
     FreeMemory.Poll ();
+    FreeFlash.Poll ();
     SystemRunTime.Poll ();
     RebootControl.Poll ();
 
