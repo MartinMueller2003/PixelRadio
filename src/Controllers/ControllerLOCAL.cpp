@@ -21,7 +21,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
- #    include "memdebug.h"
+ #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -110,19 +110,18 @@ bool c_ControllerLOCAL::SetRdsText (String & payloadStr, String & ResponseMessag
 
     bool response = false;
 
-    do // once
+    do  // once
     {
-        if(payloadStr.length () > 63)
+        if (payloadStr.length () > 63)
         {
-            ResponseMessage = F("Controller LOCAL: BAD VALUE: Text is too long");
+            ResponseMessage = F ("Controller LOCAL: BAD VALUE: Text is too long");
             break;
         }
 
         response = true;
-        Messages.AddMessage(F ("LOCAL"), payloadStr);
-        ResponseMessage = F("OK");
-
-    } while(false);
+        Messages.AddMessage (F ("LOCAL"), payloadStr);
+        ResponseMessage = F ("OK");
+    } while (false);
 
     // DEBUG_END;
     return response;
@@ -135,20 +134,19 @@ bool c_ControllerLOCAL::SetRdsTime (String & payloadStr, String & ResponseMessag
 
     bool response = false;
 
-    do // once
+    do  // once
     {
-        uint32_t NewTime = payloadStr.toInt();
-        if(NewTime < 5)
+        uint32_t NewTime = payloadStr.toInt ();
+        if (NewTime < 5)
         {
-            ResponseMessage = F("Controller LOCAL: BAD VALUE: Too Small");
+            ResponseMessage = F ("Controller LOCAL: BAD VALUE: Too Small");
             break;
         }
 
         response = true;
-        Messages.SetDurration(F ("LOCAL"), NewTime);
-        ResponseMessage = F("OK");
-
-    } while(false);
+        Messages.SetDurration (F ("LOCAL"), NewTime);
+        ResponseMessage = F ("OK");
+    } while (false);
 
     // DEBUG_END;
     return response;

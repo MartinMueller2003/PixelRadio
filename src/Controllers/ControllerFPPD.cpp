@@ -56,7 +56,8 @@ void c_ControllerFPPD::begin ()
 
     Sequences.begin ();
 
-    FPPDiscovery.begin ([] (String & FppdFileName, void * param)
+    FPPDiscovery.begin (
+        [] (String & FppdFileName, void * param)
         {
             if (param)
             {

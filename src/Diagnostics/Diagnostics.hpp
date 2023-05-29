@@ -33,7 +33,6 @@ public:
     void    Poll ();
     void    restoreConfiguration (JsonObject & json);
     void    saveConfiguration (JsonObject & json);
-
 };  // class cRadio
 
 extern cDiagnostics Diagnostics;

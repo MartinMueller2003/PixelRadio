@@ -74,8 +74,8 @@ protected:
 
 private:
 
-    ControllerTypeId_t  CurrentSendingControllerId = ControllerTypeId_t::NO_CNTRL;
-    bool RdsOutputEnabled = true;
+    ControllerTypeId_t  CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
+    bool                RdsOutputEnabled            = true;
 
 public:
 
@@ -92,8 +92,7 @@ public:
     void                GetNextRdsMessage (RdsMsgInfo_t & Response);
     void                restoreConfiguration (ArduinoJson::JsonObject & config);
     void                saveConfiguration (ArduinoJson::JsonObject & config);
-    void                SetRdsOutputEnabled(bool value) {RdsOutputEnabled = value; }
-
+    void                SetRdsOutputEnabled (bool value) {RdsOutputEnabled = value;}
 };  // c_ControllerMgr
 
 #define CtypeId                 c_ControllerMgr::ControllerTypeId_t

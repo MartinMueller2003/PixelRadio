@@ -46,8 +46,8 @@ const uint8_t   CMD_LOG_MAX_SZ  = 7;    // Serial Log Level Arg max length is 7 
 const uint8_t   CMD_SYS_MAX_SZ  = 6;    // System Cmd Code length is 6 ("system").
 const uint8_t   CMD_TIME_MAX_SZ = 4;    // Time Command Arg length is 3 (5-900). Add +1 to trap typos.
 
-#define CMD_RDS_CODE_STR "rds"
-#define CMD_SYS_CODE_STR "system"
+#define CMD_RDS_CODE_STR    "rds"
+#define CMD_SYS_CODE_STR    "system"
 
 // EEPROM: (Currently Not Used in PixelRadio)
 const uint16_t  EEPROM_SZ   = 32;   // E2Prom Size, must be large enough to hold all values below.
@@ -65,8 +65,8 @@ const int   XXXX_SET_ADDR   = 10;   // E2Prom Address for (unused), 16-bit.
 #define  BACKUP_FILE_NAME   "/backup.cfg"
 #define  CRED_FILE_NAME     "/credentials.txt"
 #define  LOGO_GIF_NAME      "/RadioLogo225x75_base64.gif"   // Base64 gif file, 225 pixel W x 75 pixel H.
-const uint8_t LITTLEFS_MODE = 1;
-const uint8_t SD_CARD_MODE = 2;
+const uint8_t   LITTLEFS_MODE   = 1;
+const uint8_t   SD_CARD_MODE    = 2;
 
 // FM Radio RF
 const float PA_VOLT_MIN = 8.1f;     // Minimum allowed voltage for Power Amp, 9V -10%.
@@ -114,7 +114,7 @@ const float VOLTS_HYSTERESIS    = 0.15f;    // Voltage Hysterisis.
 const uint16_t VOLTS_UPD_TIME   = 3750;     // Power Supply Volts GUI Update time (on diagTab), in mS.
 // const uint32_t CLIENT_TIMEOUT = 500;   // Webserver Client Timeout, in mS.
 
-const uint16_t  WEBSERVER_PORT  = 80;   // Port for Web Server. Do not change.
+const uint16_t WEBSERVER_PORT = 80;   // Port for Web Server. Do not change.
 
 // *********************************************************************************************
 

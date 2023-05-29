@@ -57,19 +57,19 @@
   */
 
 #if __has_include ("credentials.h")
- #    include "credentials.h"
+ #include "credentials.h"
 #endif //  __has_include("credentials.h")
 
 #if !defined (SSID_NM_STR)
-    #    define SSID_NM_STR "DEFAULT_SSID_NOT_SET"
+    #define SSID_NM_STR "DEFAULT_SSID_NOT_SET"
 #endif // SSID_NM_STR
 
 #if !defined (WPA_KEY_STR)
-    #    define WPA_KEY_STR "DEFAULT_PASSPHRASE_NOT_SET"
+    #define WPA_KEY_STR "DEFAULT_PASSPHRASE_NOT_SET"
 #endif // WPA_KEY_STR
 
 #if !defined (AP_PSK_STR)
-    #    define AP_PSK_STR "DEFAULT_AP_PASSPHRASE_NOT_SET"
+    #define AP_PSK_STR "DEFAULT_AP_PASSPHRASE_NOT_SET"
 #endif // AP_PSK_STR
 
 /* Fallback configuration if config is empty or fails */
@@ -82,14 +82,14 @@ const PROGMEM char  default_AP_passphrase    [] = AP_PSK_STR;
 /*****************************************************************************/
 /* FSM                                                                       */
 /*****************************************************************************/
-fsm_WiFi_state_Boot                     fsm_WiFi_state_Boot_imp;
-fsm_WiFi_state_ConnectingUsingConfig    fsm_WiFi_state_ConnectingUsingConfig_imp;
-fsm_WiFi_state_ConnectingUsingDefaults  fsm_WiFi_state_ConnectingUsingDefaults_imp;
-fsm_WiFi_state_ConnectedToAP            fsm_WiFi_state_ConnectedToAP_imp;
-fsm_WiFi_state_ConnectingAsAP           fsm_WiFi_state_ConnectingAsAP_imp;
-fsm_WiFi_state_ConnectedToSta           fsm_WiFi_state_ConnectedToSta_imp;
-fsm_WiFi_state_ConnectionFailed         fsm_WiFi_state_ConnectionFailed_imp;
-fsm_WiFi_state_Disabled                 fsm_WiFi_state_Disabled_imp;
+fsm_WiFi_state_Boot fsm_WiFi_state_Boot_imp;
+fsm_WiFi_state_ConnectingUsingConfig fsm_WiFi_state_ConnectingUsingConfig_imp;
+fsm_WiFi_state_ConnectingUsingDefaults fsm_WiFi_state_ConnectingUsingDefaults_imp;
+fsm_WiFi_state_ConnectedToAP fsm_WiFi_state_ConnectedToAP_imp;
+fsm_WiFi_state_ConnectingAsAP   fsm_WiFi_state_ConnectingAsAP_imp;
+fsm_WiFi_state_ConnectedToSta   fsm_WiFi_state_ConnectedToSta_imp;
+fsm_WiFi_state_ConnectionFailed fsm_WiFi_state_ConnectionFailed_imp;
+fsm_WiFi_state_Disabled fsm_WiFi_state_Disabled_imp;
 
 // -----------------------------------------------------------------------------
 ///< Start up the driver and put it into a safe mode
@@ -149,25 +149,33 @@ void c_WiFiDriver::Begin ()
     // DEBUG_V ("");
 
     // Setup WiFi Handlers
-    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent (
+        [this] (WiFiEvent_t event, arduino_event_info_t info)
         {
             this->onWiFiStaConn (event, info);
-        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
-    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent (
+        [this] (WiFiEvent_t event, arduino_event_info_t info)
         {
             this->onWiFiStaDisc (event, info);
-        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
-    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent (
+        [this] (WiFiEvent_t event, arduino_event_info_t info)
         {
             this->onWiFiConnect    (event, info);
-        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
-    WiFi.   onEvent ([this] (WiFiEvent_t event, arduino_event_info_t info)
+    WiFi.   onEvent (
+        [this] (WiFiEvent_t event, arduino_event_info_t info)
         {
             this->onWiFiDisconnect (event, info);
-        }, WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
+        },
+        WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
     // set up the poll interval
     NextPollTime = millis () + PollInterval;
@@ -217,10 +225,11 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
         // DEBUG_V (   String ("passphrase: ") + current_passphrase);
         // DEBUG_V (   String ("  hostname: ") + HostnameCtrl.get ());
 
-        Log.infoln ((String (F ("Connecting to '")) +
-                     current_ssid +
-                     F ("' as '") +
-                     HostnameCtrl.get () + F ("'")).c_str ());
+        Log.infoln (
+            (String (F ("Connecting to '")) +
+             current_ssid +
+             F ("' as '") +
+             HostnameCtrl.get () + F ("'")).c_str ());
 
         WiFi.setSleep (false);
         // DEBUG_V("");
@@ -439,7 +448,8 @@ void c_WiFiDriver::SetUpIp ()
         }
 
         Log.infoln (F ("Using Static IP"));
-        WiFi.config (StaticIpAddress.GetIpAddress (),
+        WiFi.config (
+            StaticIpAddress.GetIpAddress (),
             StaticGatewayAddress.GetIpAddress (),
             StaticNetmask.GetIpAddress (),
             StaticDnsAddress.GetIpAddress ());
@@ -788,7 +798,7 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
     {
         Log.verboseln (F ("WiFi Lost the connection to the STA"));
         pWiFiDriver->dnsServer.stop ();
-        Log.warningln (F("-> DNS Server Terminated."));
+        Log.warningln (F ("-> DNS Server Terminated."));
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
     }
     else
@@ -833,7 +843,7 @@ void fsm_WiFi_state_ConnectedToSta::OnDisconnect ()
 
     Log.verboseln (F ("WiFi STA Disconnected"));
     pWiFiDriver->dnsServer.stop ();
-    Log.warningln (F("-> DNS Server Terminated."));
+    Log.warningln (F ("-> DNS Server Terminated."));
     fsm_WiFi_state_ConnectionFailed_imp.Init ();
 
     // DEBUG_END;

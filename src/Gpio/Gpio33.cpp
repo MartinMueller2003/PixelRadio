@@ -19,8 +19,8 @@
 #include "Gpio33.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char ConfigName [] = "GPIO33_STR";
-static const PROGMEM char _Title [] = "GPIO PIN 33";
+static const PROGMEM char   ConfigName []   = "GPIO33_STR";
+static const PROGMEM char   _Title []       = "GPIO PIN 33";
 
 // *********************************************************************************************
 cGpio33::cGpio33 () :   cGpioCommon (ConfigName, _Title, gpio_num_t (33))

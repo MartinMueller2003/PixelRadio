@@ -19,8 +19,8 @@
 #include "Gpio23.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char ConfigName [] = "GPIO23_STR";
-static const PROGMEM char _Title [] = "GPIO PIN 23";
+static const PROGMEM char   ConfigName []   = "GPIO23_STR";
+static const PROGMEM char   _Title []       = "GPIO PIN 23";
 
 // *********************************************************************************************
 cGpio23::cGpio23 () :   cGpioCommon (ConfigName, _Title, gpio_num_t (23))

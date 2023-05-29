@@ -116,7 +116,7 @@ bool cQN8027RadioApi::calibrateAntenna (bool SkipSemaphore)
         else
         {
             Response = true;
-            Log.infoln (F("-> QN8027 RF Port Matching OK, Calibration Successful."));
+            Log.infoln (F ("-> QN8027 RF Port Matching OK, Calibration Successful."));
         }
 
         /*

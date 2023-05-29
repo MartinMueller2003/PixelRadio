@@ -40,9 +40,11 @@ void cIpAddressControlStacked::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    uint16_t TempId = ESPUI.addControl (ControlType::Label,
+    uint16_t TempId = ESPUI.addControl (
+        ControlType::Label,
         emptyString.c_str (),
-        GetTitle (), color,
+        GetTitle (),
+        color,
         TabId);
     ESPUI.setElementStyle (TempId, CSS_LABEL_STYLE_BLACK);
     ESPUI.setPanelStyle (TempId, F ("font-size: 1.35em;"));

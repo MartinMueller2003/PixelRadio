@@ -201,9 +201,9 @@ void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
     Response.Text               = F ("No Controllers Available");
     CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
 
-    do // once
+    do  // once
     {
-        if(!RdsOutputEnabled)
+        if (!RdsOutputEnabled)
         {
             // Rds Output is disabled
             break;
@@ -233,7 +233,6 @@ void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
             }
         }
     } while (false);
-
 
     // DEBUG_END;
 }
@@ -286,7 +285,7 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 
     do  // once
     {
-        ReadFromJSON(RdsOutputEnabled, config, F("RdsOutputEnabled"));
+        ReadFromJSON (RdsOutputEnabled, config, F ("RdsOutputEnabled"));
 
         if (false == config.containsKey (N_controllers))
         {
@@ -326,7 +325,7 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
 
     do  // once
     {
-        config[F("RdsOutputEnabled")] = RdsOutputEnabled;
+        config[F ("RdsOutputEnabled")] = RdsOutputEnabled;
 
         if (!config.containsKey (N_controllers))
         {

@@ -743,7 +743,8 @@ void QN8027Radio::sendRadioText (String RT)
                                                 // Jun-13-2022
         uint8_t ptyLo = (ptyCode << 5) & 0xE0;  // bottom 3 bits of PTY are in top 3 bits of byte 4, Mod By dkulp,
                                                 // Jun-13-2022
-        sendRDS (highByte (piCode),
+        sendRDS (
+            highByte (piCode),
             lowByte (piCode),
             0x20 | ptyHi,
             ptyLo | (i / 4),

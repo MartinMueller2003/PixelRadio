@@ -51,7 +51,7 @@ public:
     void    CbTextChange (Control * sender, int type);
     void    clear () {MessageSets.clear ();}
 
-    bool    empty () {return MessageSets.empty ();}
+    bool empty () {return MessageSets.empty ();}
 
     void    SetShowFseqNameSelection (bool value);
     void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);

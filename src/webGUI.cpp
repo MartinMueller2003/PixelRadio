@@ -110,7 +110,7 @@ uint16_t    aboutVersionID  = Control::noParent;
 
 uint16_t adjUvolID = Control::noParent;
 
-static const PROGMEM char   BACKUP_TAB_STR      [] = "Backup";
+static const PROGMEM char BACKUP_TAB_STR      [] = "Backup";
 
 // ************************************************************************************************
 // applyCustomCss(): Apply custom CSS to Web GUI controls at the start of runtime.
@@ -119,8 +119,8 @@ static const PROGMEM char   BACKUP_TAB_STR      [] = "Backup";
 void initCustomCss (void)
 {
     // DEBUG_START;
-    ESPUI.setPanelStyle   (aboutLogoID,     String(F("background-color: white; color: black;")));
-    ESPUI.setElementStyle (aboutVersionID,  String(F("background-color: white; color: black; margin-top: 0px;")));
+    ESPUI.setPanelStyle   (aboutLogoID, String (F ("background-color: white; color: black;")));
+    ESPUI.setElementStyle (aboutVersionID, String (F ("background-color: white; color: black; margin-top: 0px;")));
 
     // DEBUG_END;
 }
@@ -193,16 +193,16 @@ void buildGUI (void)
 
     // ************
     // Menu Tabs
-    uint16_t homeTab     = ESPUI.addControl (ControlType::Tab, "HOME", HOME_TAB_STR);
-    uint16_t adjTab      = ESPUI.addControl (ControlType::Tab, "ADJ", ADJUST_TAB_STR);
-    uint16_t radioTab    = ESPUI.addControl (ControlType::Tab, "RADIO", RADIO_TAB_STR);
-    uint16_t rdsTab      = ESPUI.addControl (ControlType::Tab, "RDS", RDS_TAB_STR);
-    uint16_t wifiTab     = ESPUI.addControl (ControlType::Tab, "WIFI", WIFI_TAB_STR);
-    uint16_t ctrlTab     = ESPUI.addControl (ControlType::Tab, "CNTRL", CTRL_TAB_STR);
-    uint16_t gpioTab     = ESPUI.addControl (ControlType::Tab, "GPIO", GPIO_TAB_STR);
-    uint16_t backupTab   = ESPUI.addControl (ControlType::Tab, "BACKUP", BACKUP_TAB_STR);
-    uint16_t diagTab     = ESPUI.addControl (ControlType::Tab, "DIAG", DIAG_TAB_STR);
-    uint16_t aboutTab    = ESPUI.addControl (ControlType::Tab, "ABOUT", N_About);
+    uint16_t    homeTab     = ESPUI.addControl (ControlType::Tab, "HOME", HOME_TAB_STR);
+    uint16_t    adjTab      = ESPUI.addControl (ControlType::Tab, "ADJ", ADJUST_TAB_STR);
+    uint16_t    radioTab    = ESPUI.addControl (ControlType::Tab, "RADIO", RADIO_TAB_STR);
+    uint16_t    rdsTab      = ESPUI.addControl (ControlType::Tab, "RDS", RDS_TAB_STR);
+    uint16_t    wifiTab     = ESPUI.addControl (ControlType::Tab, "WIFI", WIFI_TAB_STR);
+    uint16_t    ctrlTab     = ESPUI.addControl (ControlType::Tab, "CNTRL", CTRL_TAB_STR);
+    uint16_t    gpioTab     = ESPUI.addControl (ControlType::Tab, "GPIO", GPIO_TAB_STR);
+    uint16_t    backupTab   = ESPUI.addControl (ControlType::Tab, "BACKUP", BACKUP_TAB_STR);
+    uint16_t    diagTab     = ESPUI.addControl (ControlType::Tab, "DIAG", DIAG_TAB_STR);
+    uint16_t    aboutTab    = ESPUI.addControl (ControlType::Tab, "ABOUT", N_About);
 
     // ************
     // Home Tab
@@ -247,12 +247,12 @@ void buildGUI (void)
     Gpio19.AddControls (gpioTab, ControlColor::Dark);
     Gpio23.AddControls (gpioTab, ControlColor::Dark);
     Gpio33.AddControls (gpioTab, ControlColor::Dark);
-    ConfigSave.AddControls (gpioTab, ControlColor::Dark);
+    ConfigSave. AddControls (gpioTab, ControlColor::Dark);
 
     //
     // *****************
     // Backup Tab
-    ConfigSave.AddControls (backupTab, ControlColor::Wetasphalt);
+    ConfigSave. AddControls (backupTab, ControlColor::Wetasphalt);
 
     ESPUI.addControl (ControlType::Separator, SAVE_BACKUP_STR, emptyString, ControlColor::None, backupTab);
     BackupSave.AddControls (backupTab, ControlColor::Wetasphalt);
@@ -281,13 +281,15 @@ void buildGUI (void)
     /*(makeWebGif("/RadioLogo225x75_base64.gif", 225, 75, "white")),*/
     static String WebGif = (makeWebGif ("/RadioLogo225x75_base64.gif", 200, 66, "white"));
     // DEBUG_V(String("WebGif.Length: ") + String(WebGif.length()));
-    aboutLogoID = ESPUI.addControl (ControlType::Label,
+    aboutLogoID = ESPUI.addControl (
+        ControlType::Label,
         N_About,
         WebGif,
         ControlColor::None,
         aboutTab);
 
-    aboutVersionID = ESPUI.addControl (ControlType::Label,
+    aboutVersionID = ESPUI.addControl (
+        ControlType::Label,
         N_About_PixelRadio,
         tempStr,
         ControlColor::None,

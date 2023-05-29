@@ -21,7 +21,7 @@
 #include "language.h"
 
 #if __has_include ("memdebug.h")
- #    include "memdebug.h"
+ #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 #define FPP_TYPE_ID         0xC3
@@ -51,25 +51,29 @@ void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
     NetworkStateChanged (WiFi.isConnected ());
 
     // register for changes in the WiFi State
-    WiFi.onEvent ([] (WiFiEvent_t)
+    WiFi.onEvent (
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
         WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_CONNECTED);
 
-    WiFi.onEvent ([] (WiFiEvent_t)
+    WiFi.onEvent (
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
         WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_DISCONNECTED);
 
-    WiFi.onEvent ([] (WiFiEvent_t)
+    WiFi.onEvent (
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
         WiFiEvent_t::ARDUINO_EVENT_WIFI_STA_GOT_IP);
 
-    WiFi.onEvent ([] (WiFiEvent_t)
+    WiFi.onEvent (
+        [] (WiFiEvent_t)
         {
             FPPDiscovery.NetworkStateChanged (WiFi.isConnected ());
         },
@@ -421,7 +425,7 @@ void c_FPPDiscovery::sendPingPacket (IPAddress destination)
     }   // printReq
 
 #else // ifdef PRINT_DEBUG
-    #    define printReq(a, b)
+    #define printReq(a, b)
 #endif // !def PRINT_DEBUG
 
 // -----------------------------------------------------------------------------
@@ -443,10 +447,16 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     char timeStr[TIME_STR_CHAR_COUNT];
     struct tm tm = *gmtime(& MultiSyncStats.lastReceiveTime);
     // BUGBUG -- trusting the provided `tm` structure values contain valid data ... use `snprintf` to mitigate.
-    int actuallyWritten = snprintf (timeStr, TIME_STR_CHAR_COUNT,
+    int actuallyWritten = snprintf (
+        timeStr,
+        TIME_STR_CHAR_COUNT,
         "%4d-%.2d-%.2d %.2d:%.2d:%.2d",
-        1900 + tm.tm_year, tm.tm_mon + 1, tm.tm_mday,
-        tm.tm_hour, tm.tm_min, tm.tm_sec);
+        1900 + tm.tm_year,
+        tm.tm_mon + 1,
+        tm.tm_mday,
+        tm.tm_hour,
+        tm.tm_min,
+        tm.tm_sec);
 
     // TODO: assert ((actuallyWritten > 0) && (actuallyWritten < TIME_STR_CHAR_COUNT))
     if ((actuallyWritten > 0) && (actuallyWritten < TIME_STR_CHAR_COUNT))
@@ -487,7 +497,8 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
 
             while (FileOffsetToCurrentHeaderRecord < FileOffsetToStartOfSequenceData)
             {
-                FileMgr.ReadSdFile (fseq,
+                FileMgr.ReadSdFile (
+                    fseq,
                     (byte *)FSEQVariableDataHeaderBuffer,
                     sizeof (FSEQRawVariableDataHeader),
                     FileOffsetToCurrentHeaderRecord);
@@ -502,7 +513,10 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
                     char * VariableDataHeaderDataBuffer = (char *)malloc (VariableDataHeaderDataLength + 1);
                     memset (VariableDataHeaderDataBuffer, 0x00, VariableDataHeaderDataLength + 1);
 
-                    FileMgr.ReadSdFile (fseq, (byte *)VariableDataHeaderDataBuffer, VariableDataHeaderDataLength,
+                    FileMgr.ReadSdFile (
+                        fseq,
+                        (byte *)VariableDataHeaderDataBuffer,
+                        VariableDataHeaderDataLength,
                         FileOffsetToCurrentHeaderRecord);
 
                     JsonObject JsonDataHeader = JsonDataHeaders.createNestedObject ();

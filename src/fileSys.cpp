@@ -68,13 +68,13 @@ void instalLogoImageFile (void)
 
     if (PixelRadio_LittleFS.exists (LOGO_GIF_NAME))
     {
-        sprintf (logBuff, String ( F ("Found \"%s\" Logo Image in File System.")).c_str(), LOGO_GIF_NAME);
+        sprintf (logBuff, String (F ("Found \"%s\" Logo Image in File System.")).c_str (), LOGO_GIF_NAME);
         Log.verboseln (logBuff);
 
         return;
     }
 
-    sprintf (logBuff, String ( F ("Logo Gif File (%s) is Missing. Will Load it From the SD Card.")).c_str(), LOGO_GIF_NAME);
+    sprintf (logBuff, String (F ("Logo Gif File (%s) is Missing. Will Load it From the SD Card.")).c_str (), LOGO_GIF_NAME);
     Log.errorln (logBuff);
 
     SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
@@ -86,7 +86,7 @@ void instalLogoImageFile (void)
         SD.end ();
         spiSdCardShutDown ();
 
-        sprintf (logBuff, String ( F ("-> SD Card Not Installed. Cannot Load Missing Logo Gif File.")).c_str());
+        sprintf (logBuff, String (F ("-> SD Card Not Installed. Cannot Load Missing Logo Gif File.")).c_str ());
         Log.errorln (logBuff);
 
         return;  // No SD Card, nothing to do, exit.
@@ -99,9 +99,9 @@ void instalLogoImageFile (void)
 
     if (sdcImageFile && (sdcFileSize > 0))
     {
-        sprintf (logBuff, String ( F ("-> Installing \"%s\" Logo Gif File From SD Card ...")).c_str(), LOGO_GIF_NAME);
+        sprintf (logBuff, String (F ("-> Installing \"%s\" Logo Gif File From SD Card ...")).c_str (), LOGO_GIF_NAME);
         Log.infoln (logBuff);
-        sprintf (logBuff, String ( F ("-> Copying Gif File, Size: %d")).c_str(), sdcImageFile.size ());
+        sprintf (logBuff, String (F ("-> Copying Gif File, Size: %d")).c_str (), sdcImageFile.size ());
     }
     else
     {
@@ -109,13 +109,13 @@ void instalLogoImageFile (void)
         sdcImageFile.close ();
         SD.end ();
         spiSdCardShutDown ();
-        sprintf (logBuff, String ( F ("-> Bad/Missing SD Card Logo File.")).c_str());
+        sprintf (logBuff, String (F ("-> Bad/Missing SD Card Logo File.")).c_str ());
         Log.errorln (logBuff);
 
         return;
     }
 
-    sprintf (logBuff, String ( F ("-> Copying Logo File From SD Card (%d bytes).")).c_str(), sdcFileSize);
+    sprintf (logBuff, String (F ("-> Copying Logo File From SD Card (%d bytes).")).c_str (), sdcFileSize);
     Log.infoln (logBuff);
 
     // lfsImageFile.close();
@@ -140,12 +140,12 @@ void instalLogoImageFile (void)
       *     }
       *     Serial.println("<==END");
       */
-    sprintf (logBuff, String ( F ("-> Success, Saved Logo Gif to File System (%d bytes).")).c_str(), lfsFileSize);
+    sprintf (logBuff, String (F ("-> Success, Saved Logo Gif to File System (%d bytes).")).c_str (), lfsFileSize);
     Log.infoln (logBuff);
 
     if (sdcImageFile != lfsImageFile)
     {
-        sprintf (logBuff, String ( F ("-> Copied File Does NOT match Source Size (diff= %d bytes).")).c_str(), sdcImageFile - lfsImageFile);
+        sprintf (logBuff, String (F ("-> Copied File Does NOT match Source Size (diff= %d bytes).")).c_str (), sdcImageFile - lfsImageFile);
         Log.errorln (logBuff);
     }
 
@@ -169,44 +169,44 @@ void littlefsInit (void)
 
     if (!PixelRadio_LittleFS.begin (true))  // true=Format on fail.
     {
-        Log.errorln (String ( F ("LittleFS: An Error has occurred while mounting File System")).c_str());
+        Log.errorln (String (F ("LittleFS: An Error has occurred while mounting File System")).c_str ());
     }
     else
     {
-        Log.infoln (String ( F ("LittleFS: Mounted File System, testing ...")).c_str());
+        Log.infoln (String (F ("LittleFS: Mounted File System, testing ...")).c_str ());
 
-        sprintf (logBuff, String ( F ("-> Total Size: %u bytes")).c_str(), PixelRadio_LittleFS.totalBytes ());
+        sprintf (logBuff, String (F ("-> Total Size: %u bytes")).c_str (), PixelRadio_LittleFS.totalBytes ());
         Log.verboseln (logBuff);
-        sprintf (logBuff, String ( F ("-> Total Used: %u bytes")).c_str(), PixelRadio_LittleFS.usedBytes ());
+        sprintf (logBuff, String (F ("-> Total Used: %u bytes")).c_str (), PixelRadio_LittleFS.usedBytes ());
         Log.verboseln (logBuff);
-        sprintf (logBuff, String ( F ("-> Total Free: %u bytes")).c_str(), PixelRadio_LittleFS.totalBytes () - PixelRadio_LittleFS.usedBytes ());
+        sprintf (logBuff, String (F ("-> Total Free: %u bytes")).c_str (), PixelRadio_LittleFS.totalBytes () - PixelRadio_LittleFS.usedBytes ());
         Log.verboseln (logBuff);
 
-        File file1 = PixelRadio_LittleFS.open (F("/test.txt"), FILE_READ);
+        File file1 = PixelRadio_LittleFS.open (F ("/test.txt"), FILE_READ);
 
         if (!file1)
         {
             filesz = 0;
-            Log.errorln (String ( F ("-> Error opening test.txt file for reading")).c_str());
+            Log.errorln (String (F ("-> Error opening test.txt file for reading")).c_str ());
         }
         else
         {
             filesz = file1.size ();
-            Log.verboseln (String ( F ("-> Successfully Opened test.txt file for reading, Size: %u")).c_str(), filesz);
+            Log.verboseln (String (F ("-> Successfully Opened test.txt file for reading, Size: %u")).c_str (), filesz);
             file1.close ();
         }
 
         if (filesz == 0)
         {
-            file1 = PixelRadio_LittleFS.open (F("/test.txt"), FILE_WRITE);
+            file1 = PixelRadio_LittleFS.open (F ("/test.txt"), FILE_WRITE);
 
             if (!file1)
             {
-                Log.errorln (String ( F ("-> There was an error opening the test.txt file for writing")).c_str());
+                Log.errorln (String (F ("-> There was an error opening the test.txt file for writing")).c_str ());
             }
             else
             {
-                Log.warningln (String ( F ("-> The test.txt file is missing, will create it")).c_str());
+                Log.warningln (String (F ("-> The test.txt file is missing, will create it")).c_str ());
 
                 // Serial.println("  Content to write =");
                 // Serial.print(content1);
@@ -215,11 +215,11 @@ void littlefsInit (void)
                 if (file1.print (content1))
                 {
                     file1.print (content2);
-                    Log.infoln (String ( F ("-> File was successfully created, written, and closed")).c_str());
+                    Log.infoln (String (F ("-> File was successfully created, written, and closed")).c_str ());
                 }
                 else
                 {
-                    Log.errorln (String ( F ("-> File write failed")).c_str());
+                    Log.errorln (String (F ("-> File write failed")).c_str ());
                 }
 
                 file1.close ();
@@ -241,7 +241,7 @@ void littlefsInit (void)
         }
         else
         {
-            sprintf (logBuff, String (F ("-> Reopened test.txt, File size = %u bytes")).c_str(), file2.size ());
+            sprintf (logBuff, String (F ("-> Reopened test.txt, File size = %u bytes")).c_str (), file2.size ());
             Log.verboseln (logBuff);
 
             /*
@@ -272,13 +272,13 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
 
     if (!imageFile)
     {
-        sprintf (logBuff, String ( F ("-> makeWebGif: Error opening Image file (%s)")).c_str(), fileName.c_str ());
-        Log.warningln ( logBuff);
+        sprintf (logBuff, String (F ("-> makeWebGif: Error opening Image file (%s)")).c_str (), fileName.c_str ());
+        Log.warningln (logBuff);
 
         imageFile = PixelRadio_LittleFS.open ("/", FILE_READ);
         if (!imageFile)
         {
-            Log.warningln ( F ("-> LittleFS Filesystem is Missing, YOU Need to Upload it."));
+            Log.warningln (F ("-> LittleFS Filesystem is Missing, YOU Need to Upload it."));
         }
 
         imageStr.clear ();
@@ -293,7 +293,7 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
 
         if (fileSz > 4095)
         {
-            sprintf (logBuff, String ( F ("-> makeWebGif: File %s is too large (%u bytes).")).c_str(), fileName.c_str (), fileSz);
+            sprintf (logBuff, String (F ("-> makeWebGif: File %s is too large (%u bytes).")).c_str (), fileName.c_str (), fileSz);
             Log.infoln (logBuff);
             imageStr.clear ();
             imageStr.reserve (15);
@@ -319,7 +319,7 @@ const String makeWebGif (String fileName, uint16_t width, uint16_t height, Strin
         imageStr    += F ("\"/></p>");
 
         imageFile.close ();
-        sprintf (logBuff, String ( F ("-> Image File %s Successfully Loaded (%u bytes).")).c_str(), fileName.c_str (), fileSz);
+        sprintf (logBuff, String (F ("-> Image File %s Successfully Loaded (%u bytes).")).c_str (), fileName.c_str (), fileSz);
         Log.infoln (logBuff);
 
         // Serial.println("\r\n makeWebGif File Contents: BEGIN->[ " + imageStr + " ]<-END\r\n"); // DEBUG ONLY

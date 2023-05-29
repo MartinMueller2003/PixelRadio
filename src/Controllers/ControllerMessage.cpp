@@ -23,7 +23,7 @@
 #include <map>
 
 #if __has_include ("memdebug.h")
- #    include "memdebug.h"
+ #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -125,7 +125,8 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
         if (Control::noParent == MessageElementId)
         {
             // DEBUG_V(String("Create Choice List Entry on Active Choice list"));
-            MessageElementId = ESPUI.addControl (ControlType::Option,
+            MessageElementId = ESPUI.addControl (
+                ControlType::Option,
                 MessageText.c_str (),
                 MessageText,
                 ControlColor::Turquoise,

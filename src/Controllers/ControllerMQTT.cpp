@@ -93,7 +93,8 @@ void c_ControllerMQTT::AddControls (uint16_t TabId, ControlColor color)
 
     for (auto CurrentControl : ListOfControls)
     {
-        CurrentControl->AddControls (TabId,
+        CurrentControl->AddControls (
+            TabId,
             color);
     }
 
@@ -115,7 +116,8 @@ void c_ControllerMQTT::begin ()
     fsm_Connection_state_disabled_imp.Init ();
 
     mqttClient.setClient (wifiClient);
-    mqttClient.setCallback ([] (const char * topic, byte * payload, unsigned int length)
+    mqttClient.setCallback (
+        [] (const char * topic, byte * payload, unsigned int length)
         {
             // Serial.println("Got a callback");
             c_ControllerMQTT * pMe = static_cast <c_ControllerMQTT *> (ControllerMgr.GetControllerById (MqttControllerId));
@@ -201,13 +203,13 @@ void c_ControllerMQTT::SendStatusMessage (void)
     String  topicStr;
 
     // DEBUG_V();
-    oldVbatVolts    = SystemVoltage.GetVoltage();
-    oldPaVolts      = RfPaVoltage.GetVoltage();
+    oldVbatVolts    = SystemVoltage.GetVoltage ();
+    oldPaVolts      = RfPaVoltage.GetVoltage ();
     topicStr        = MqttName.get () + MQTT_VOLTS_STR;
 
     StaticJsonDocument <256> doc;
-    doc[F ("vbat")] = String (SystemVoltage.GetVoltage());
-    doc[F ("pa")]   = String (RfPaVoltage.GetVoltage());
+    doc[F ("vbat")] = String (SystemVoltage.GetVoltage ());
+    doc[F ("pa")]   = String (RfPaVoltage.GetVoltage ());
     serializeJson (doc, Payload);
 
     // JSON Formatted Payload.
@@ -227,8 +229,8 @@ bool c_ControllerMQTT::VoltagesHaveChanged ()
     // DEBUG_START;
     bool Response = false;
 
-    float    paVolts = RfPaVoltage.GetVoltage();
-    float    vbatVolts = SystemVoltage.GetVoltage();
+    float   paVolts     = RfPaVoltage.GetVoltage ();
+    float   vbatVolts   = SystemVoltage.GetVoltage ();
 
     if (((vbatVolts > oldVbatVolts + VOLTS_HYSTERESIS) ||
          (vbatVolts < oldVbatVolts - VOLTS_HYSTERESIS)) ||
@@ -587,19 +589,18 @@ void fsm_Connection_state_connected::mqttClientCallback (const char * topic, byt
             String (MqttName.get () + MQTT_INFORM_STR).c_str (),
             String (String (F ("Response: ")) + Response).c_str ());
 
-        DynamicJsonDocument mqttMsg(1024);
-        mqttMsg[CMD_INFO_STR] = F("ok");
-        mqttMsg[F("version")] = VERSION_STR;
-        mqttMsg[F("hostName")] = WiFi.getHostname ();
-        mqttMsg[F("ip")] = WiFi.localIP ().toString ();
-        mqttMsg[F("rssi")] = WiFi.RSSI ();
-        mqttMsg[F("status")] = ControllerMgr.getControllerStatusSummary ();
+        DynamicJsonDocument mqttMsg (1024);
+        mqttMsg[CMD_INFO_STR]   = F ("ok");
+        mqttMsg[F ("version")]  = VERSION_STR;
+        mqttMsg[F ("hostName")] = WiFi.getHostname ();
+        mqttMsg[F ("ip")]       = WiFi.localIP ().toString ();
+        mqttMsg[F ("rssi")]     = WiFi.RSSI ();
+        mqttMsg[F ("status")]   = ControllerMgr.getControllerStatusSummary ();
         String mqttStr;
-        mqttStr.reserve(1024);
-        serializeJson(mqttMsg, mqttStr);
+        mqttStr.reserve (1024);
+        serializeJson (mqttMsg, mqttStr);
         topicStr = MqttName.get () + MQTT_INFORM_STR;
-        pParent->mqttClient.publish (topicStr.c_str (), mqttStr.c_str());
-
+        pParent->mqttClient.publish (topicStr.c_str (), mqttStr.c_str ());
     } while (false);
 
     // DEBUG_END;

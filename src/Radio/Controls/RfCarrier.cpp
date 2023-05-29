@@ -51,7 +51,7 @@ void cRfCarrier::AddHomeControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    pinMode(ON_AIR_PIN, OUTPUT);
+    pinMode (ON_AIR_PIN, OUTPUT);
     digitalWrite (ON_AIR_PIN, SIGN_OFF);
 
     RfCarrierStatus.AddControls (TabId, color);
@@ -123,7 +123,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             break;
         }
 
-        float paVolts = RfPaVoltage.GetVoltage();
+        float paVolts = RfPaVoltage.GetVoltage ();
         if ((paVolts < PA_VOLT_MIN) || (paVolts > PA_VOLT_MAX))
         {
             // DEBUG_V (RADIO_VOLT_STR);

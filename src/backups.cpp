@@ -112,8 +112,8 @@ bool checkEmergencyCredentials (const char * fileName)
     {
         JsonObject root = doc.as <JsonObject>();
         WiFiDriver.restoreConfiguration (root);
-        Log.warningln (F ("-> User Provided New WiFi Credentials."));
-        Log.warningln (F ("-> Will Use DHCP Mode on this Session."));
+        Log.warningln ( F ("-> User Provided New WiFi Credentials."));
+        Log.warningln ( F ("-> Will Use DHCP Mode on this Session."));
         Log.verboseln (F ("-> Credentials JSON used %u Bytes."), doc.memoryUsage ());
         Log.infoln    (F ("-> Credentials Restore Complete."));
         Log.warningln (F ("-> For Your Security the Credential File Has Been Deleted."));
@@ -271,7 +271,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
             if (SD.cardType () == 0)
             {
-                Log.warningln(F ("-> SD Card Missing."));
+                Log.warningln (F ("-> SD Card Missing."));
             }
             else
             {
@@ -309,7 +309,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     }
     else
     {
-        Log.verboseln (F("-> Located Configuration File (%s)"), fileName);
+        Log.verboseln (F ("-> Located Configuration File (%s)"), fileName);
     }
 
     // empirically Arduino Json needs 3.5 x the json text size to parse the file.
@@ -330,7 +330,8 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
     if (error)
     {
-        Log.errorln ((String(F("restoreConfiguration: Configure Deserialization Failed, Error: ")) + error.c_str()).c_str());
+        Log.errorln ((String (F ("restoreConfiguration: Configure Deserialization Failed, Error: ")) + error.c_str ()).c_str ());
+
         return false;
     }
 
@@ -346,8 +347,8 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     Gpio33.restoreConfiguration (doc);
     Diagnostics.saveConfiguration (doc);
 
-    Log.verboseln (F("-> Configuration JSON used %u Bytes."), doc.memoryUsage ());
-    Log.infoln (F("-> Configuration Restore Complete."));
+    Log.verboseln (F ("-> Configuration JSON used %u Bytes."), doc.memoryUsage ());
+    Log.infoln (F ("-> Configuration Restore Complete."));
 
     // serializeJsonPretty(doc, Serial); // Debug Output
     // Serial.println();

@@ -104,7 +104,6 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
     do  // once
     {
-
         uint32_t CurrentIndex = getIndex ();
         // DEBUG_V ( String ("      CurrentIndex: ") + String (CurrentIndex));
         ChoiceVector = OptionList;
@@ -132,7 +131,8 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
             // DEBUG_V (String ("         first: ") + CurrentOption.first);
             ChoiceListEntry NewEntry;
             NewEntry.VectorIndex    = Index++;
-            NewEntry.UiId           = ESPUI.addControl (ControlType::Option,
+            NewEntry.UiId           = ESPUI.addControl (
+                ControlType::Option,
                 emptyString.c_str (),
                 emptyString,
                 ControlColor::None,
@@ -215,7 +215,6 @@ bool cChoiceListControl::validate (const String & value, String & ResponseMessag
 
     do  // once
     {
-
         if (KeyToChoiceVectorMap.end () != KeyToChoiceVectorMap.find (value))
         {
             // DEBUG_V ("Found a match for the value");

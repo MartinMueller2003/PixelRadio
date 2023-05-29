@@ -19,8 +19,8 @@
 #include "Gpio19.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char ConfigName [] = "GPIO19_STR";
-static const PROGMEM char _Title [] = "GPIO PIN 19";
+static const PROGMEM char   ConfigName []   = "GPIO19_STR";
+static const PROGMEM char   _Title []       = "GPIO PIN 19";
 
 // *********************************************************************************************
 cGpio19::cGpio19 () :   cGpioCommon (ConfigName, _Title, gpio_num_t (19))

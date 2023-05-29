@@ -28,14 +28,14 @@ public:
 
     c_ControllerHTTP ();
     virtual~c_ControllerHTTP ();
-    void poll ();
-    void GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void    poll ();
+    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
     void init ();
-    cCommandProcessor   CommandProcessor;
-    bool HasBeenInitialized = false;
-    uint16_t                EspuiControlID = 0;
+    cCommandProcessor       CommandProcessor;
+    bool                    HasBeenInitialized  = false;
+    uint16_t                EspuiControlID      = 0;
     c_ControllerMessages    Messages;
 };  // c_ControllerHTTP
 

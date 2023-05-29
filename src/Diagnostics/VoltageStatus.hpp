@@ -28,7 +28,7 @@ public:
     virtual~cVoltageStatus () {}
 
     void    AddControls (uint16_t TabId, ControlColor color);
-    float   GetVoltage() { return CurrentAvgVoltage; }
+    float   GetVoltage () {return CurrentAvgVoltage;}
     void    Poll ();
 
 private:

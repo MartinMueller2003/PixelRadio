@@ -22,7 +22,7 @@
 #include <map>
 
 #if __has_include ("memdebug.h")
- #    include "memdebug.h"
+ #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 static const String DefaultTextFieldValue   = F ("Type New RDS Message Text Here. 64 Char Max");
@@ -105,7 +105,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
     if (Control::noParent == MessageElementIds.ActiveChoiceListElementId)
     {
         // DEBUG_V(String("Add Select Hidden"));
-        MessageElementIds.HiddenChoiceListElementId = ESPUI.addControl (ControlType::Select,
+        MessageElementIds.HiddenChoiceListElementId = ESPUI.addControl (
+            ControlType::Select,
             emptyString.c_str (),
             emptyString,
             ControlColor::Turquoise,
@@ -113,7 +114,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
         ESPUI.updateVisibility (MessageElementIds.HiddenChoiceListElementId, false);
 
         // DEBUG_V(String("Add Select Active messages choice list"));
-        MessageElementIds.ActiveChoiceListElementId = ESPUI.addControl (ControlType::Select,
+        MessageElementIds.ActiveChoiceListElementId = ESPUI.addControl (
+            ControlType::Select,
             Title.c_str (),
             emptyString,
             ControlColor::Turquoise,
@@ -124,14 +126,16 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 // String(uint32_t(parm), HEX));
                 if (parm)
                 {
-                    reinterpret_cast <c_ControllerMessages *> (parm)->CbChoiceList (sender,
+                    reinterpret_cast <c_ControllerMessages *> (parm)->CbChoiceList (
+                        sender,
                         type);
                 }
             },
             this);
 
         // DEBUG_V(String("Add Delete Button"));
-        ButtonDeleteElementId = ESPUI.addControl (ControlType::Button,
+        ButtonDeleteElementId = ESPUI.addControl (
+            ControlType::Button,
             emptyString.c_str (),
             " Delete ",
             ControlColor::None,
@@ -147,7 +151,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             this);
 
         // DEBUG_V(String("Add Update Button"));
-        ButtonUpdateElementId = ESPUI.addControl (ControlType::Button,
+        ButtonUpdateElementId = ESPUI.addControl (
+            ControlType::Button,
             emptyString.c_str (),
             " Update ",
             ControlColor::None,
@@ -163,7 +168,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             this);
 
         // DEBUG_V(String("Add Instruction lable"));
-        InstructionElementId = ESPUI.addControl (ControlType::Label,
+        InstructionElementId = ESPUI.addControl (
+            ControlType::Label,
             DefaultTextFieldValue.c_str (),
             DefaultTextFieldValue,
             ControlColor::Turquoise,
@@ -171,7 +177,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
         ESPUI.setElementStyle (InstructionElementId, CSS_LABEL_STYLE_BLACK);
 
         // DEBUG_V(String("Add Text Entry"));
-        TextEntryElementId = ESPUI.addControl (ControlType::Text,
+        TextEntryElementId = ESPUI.addControl (
+            ControlType::Text,
             emptyString.c_str (),
             DefaultTextFieldValue,
             ControlColor::None,
@@ -187,14 +194,16 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             this);
 
         // DEBUG_V(String("Add Text Size limit"));
-        ESPUI.addControl (ControlType::Max,
+        ESPUI.addControl (
+            ControlType::Max,
             emptyString.c_str (),
             "64",
             ControlColor::None,
             TextEntryElementId);
 
         // DEBUG_V(String("Add Create Button"));
-        ButtonCreateElementId = ESPUI.addControl (ControlType::Button,
+        ButtonCreateElementId = ESPUI.addControl (
+            ControlType::Button,
             emptyString.c_str (),
             " Create ",
             ControlColor::None,
@@ -210,7 +219,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             this);
 
         // DEBUG_V(String("Add Label for Status"));
-        StatusMsgElementId = ESPUI.addControl (ControlType::Label,
+        StatusMsgElementId = ESPUI.addControl (
+            ControlType::Label,
             emptyString.c_str (),
             emptyString,
             ControlColor::Turquoise,
@@ -220,17 +230,20 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
         if (ShowFseqNameSelection)
         {
             // DEBUG_V(String("Add Label 2"));
-            DisplayFseqNameLabelElementId = ESPUI.addControl (ControlType::Label,
+            DisplayFseqNameLabelElementId = ESPUI.addControl (
+                ControlType::Label,
                 emptyString.c_str (),
                 "Display FSEQ File Name",
                 ControlColor::Turquoise,
                 MessageElementIds.ActiveChoiceListElementId);
-            ESPUI.setElementStyle (DisplayFseqNameLabelElementId,
+            ESPUI.setElementStyle (
+                DisplayFseqNameLabelElementId,
                 CSS_LABEL_STYLE_BLACK);
 
             // DEBUG_V(String("Add Display fseq name Switcher"));
             // DEBUG_V(String("DisplayFseqName: ") + String(DisplayFseqName));
-            DisplayFseqNameElementId = ESPUI.addControl (ControlType::Switcher,
+            DisplayFseqNameElementId = ESPUI.addControl (
+                ControlType::Switcher,
                 emptyString.c_str (),
                 DisplayFseqName ? "1" : "0",
                 ControlColor::None,
@@ -247,7 +260,8 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
 
         // DEBUG_V("Add msg details configuration pane");
         // DEBUG_V(String("Add Title"));
-        MessageElementIds.MessageDetailsElementId = ESPUI.addControl (ControlType::Label,
+        MessageElementIds.MessageDetailsElementId = ESPUI.addControl (
+            ControlType::Label,
             emptyString.c_str (),
             N_Enable,
             ControlColor::Turquoise,
@@ -257,14 +271,16 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
         // DEBUG_V(String("MessageDetailsElementId: 0x") + String(MessageElementIds.MessageDetailsElementId, HEX));
 
         // DEBUG_V(String("Add Enabled field"));
-        MessageElementIds.EnabledElementId = ESPUI.addControl (ControlType::Switcher,
+        MessageElementIds.EnabledElementId = ESPUI.addControl (
+            ControlType::Switcher,
             emptyString.c_str (),
             "0",
             ControlColor::Turquoise,
             MessageElementIds.MessageDetailsElementId);
 
         // DEBUG_V(String("Add Seprator"));
-        SeperatorMsgElementId = ESPUI.addControl (ControlType::Label,
+        SeperatorMsgElementId = ESPUI.addControl (
+            ControlType::Label,
             emptyString.c_str (),
             F ("RDS Display Duration (SECS)"),
             ControlColor::Turquoise,
@@ -272,17 +288,20 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
         ESPUI.setElementStyle (SeperatorMsgElementId, CSS_LABEL_STYLE_BLACK);
 
         // DEBUG_V(String("Add Number field"));
-        MessageElementIds.DisplayDurationElementId = ESPUI.addControl (ControlType::Number,
+        MessageElementIds.DisplayDurationElementId = ESPUI.addControl (
+            ControlType::Number,
             emptyString.c_str (),
             "0",
             ControlColor::Turquoise,
             MessageElementIds.MessageDetailsElementId);
-        ESPUI.addControl (ControlType::Min,
+        ESPUI.addControl (
+            ControlType::Min,
             "Min",
             String (5),
             ControlColor::None,
             MessageElementIds.DisplayDurationElementId);
-        ESPUI.addControl (ControlType::Max,
+        ESPUI.addControl (
+            ControlType::Max,
             "Max",
             String (900),
             ControlColor::None,
@@ -750,13 +769,13 @@ void c_ControllerMessages::SetDurration (String MsgSetName, uint32_t value)
 {
     // DEBUG_START;
 
-    if(MessageSets.end() == MessageSets.find(MsgSetName))
+    if (MessageSets.end () == MessageSets.find (MsgSetName))
     {
         // DEBUG_V("No such message set");
     }
     else
     {
-        MessageSets[MsgSetName].SetDurration(value);
+        MessageSets[MsgSetName].SetDurration (value);
     }
 
     // DEBUG_END;

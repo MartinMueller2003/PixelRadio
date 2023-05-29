@@ -110,7 +110,8 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     // DEBUG_V (   String ("       Title: ") + Title);
     // DEBUG_V (   String ("DefaultValue: ") + DefaultValue);
 
-    ControlId = ESPUI.addControl (uiControltype,
+    ControlId = ESPUI.addControl (
+        uiControltype,
         Title.c_str (),
         DefaultValue,
         color,

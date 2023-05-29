@@ -40,7 +40,8 @@ void cControlCommonMsg::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_V (String ("       Title: ") + GetTitle());
 
     cControlCommon::AddControls (TabId, color, true);
-    MessageId = ESPUI.addControl (ControlType::Label,
+    MessageId = ESPUI.addControl (
+        ControlType::Label,
         emptyString.c_str (),
         emptyString,
         ControlColor::None,

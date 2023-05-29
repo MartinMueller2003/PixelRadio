@@ -41,7 +41,8 @@ void cControllerCommon::AddControls (uint16_t tabId, ControlColor color)
     // DEBUG_START;
 
     SeperatorName = GetTitle () + F (" SETTINGS");
-    ESPUI.addControl (ControlType::Separator,
+    ESPUI.addControl (
+        ControlType::Separator,
         SeperatorName.c_str (),
         emptyString,
         ControlColor::None,

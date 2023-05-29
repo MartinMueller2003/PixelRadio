@@ -8,7 +8,7 @@
 #define DEBUG_HW_START  pinMode (DEBUG_HW_PIN, OUTPUT);DEBUG_HW_CLEAR;
 #define DEBUG_HW_END    DEBUG_HW_CLEAR;pinMode (DEBUG_HW_PIN, INPUT);
 #ifndef LOG_PORT
-    #    define LOG_PORT Serial
+    #define LOG_PORT Serial
 #endif // ndef LOG_PORT
 
 #define MYFILE String (__FILE__).substring (String (__FILE__).lastIndexOf ("\\") + 1)

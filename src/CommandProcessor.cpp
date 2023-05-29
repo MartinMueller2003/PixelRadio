@@ -62,8 +62,8 @@ std::map <String, CmdHandler> ListOfCommands
     {"help",    & cCommandProcessor::HelpCommand},
 };
 
-#define CMD_LOG_RST_STR F("restore")
-#define CMD_LOG_SIL_STR F("silent")
+#define CMD_LOG_RST_STR F ("restore")
+#define CMD_LOG_SIL_STR F ("silent")
 
 // *************************************************************************************************************************
 cCommandProcessor::cCommandProcessor ()
@@ -273,9 +273,9 @@ bool cCommandProcessor::radioText (String & payloadStr, String & ResponseMessage
 {
     // DEBUG_START;
 
-    c_ControllerLOCAL * control = (c_ControllerLOCAL *)(ControllerMgr.GetControllerById(LocalControllerId));
+    c_ControllerLOCAL * control = (c_ControllerLOCAL *)(ControllerMgr.GetControllerById (LocalControllerId));
 
-    bool response = control->SetRdsText(payloadStr, ResponseMessage);
+    bool response = control->SetRdsText (payloadStr, ResponseMessage);
 
     // DEBUG_END;
     return response;
@@ -287,9 +287,9 @@ bool cCommandProcessor::rdsTimePeriod (String & payloadStr, String & ResponseMes
 {
     // DEBUG_START;
 
-    c_ControllerLOCAL * control = (c_ControllerLOCAL *)(ControllerMgr.GetControllerById(LocalControllerId));
+    c_ControllerLOCAL * control = (c_ControllerLOCAL *)(ControllerMgr.GetControllerById (LocalControllerId));
 
-    bool response = control->SetRdsTime(payloadStr, ResponseMessage);
+    bool response = control->SetRdsTime (payloadStr, ResponseMessage);
 
     // DEBUG_END;
 
@@ -301,7 +301,7 @@ bool cCommandProcessor::reboot (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = RebootControl.set(payloadStr, ResponseMessage);
+    bool response = RebootControl.set (payloadStr, ResponseMessage);
 
     // DEBUG_END;
     return response;
@@ -323,7 +323,7 @@ bool cCommandProcessor::start (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    ControllerMgr.SetRdsOutputEnabled(true);
+    ControllerMgr.SetRdsOutputEnabled (true);
 
     // DEBUG_END;
     return true;
@@ -334,7 +334,7 @@ bool cCommandProcessor::stop (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    ControllerMgr.SetRdsOutputEnabled(false);
+    ControllerMgr.SetRdsOutputEnabled (false);
 
     // DEBUG_END;
     return false;

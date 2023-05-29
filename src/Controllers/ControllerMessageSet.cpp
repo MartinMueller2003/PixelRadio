@@ -21,7 +21,7 @@
 #include "Language.h"
 
 #if __has_include ("memdebug.h")
- #    include "memdebug.h"
+ #include "memdebug.h"
 #endif //  __has_include("memdebug.h")
 
 // *********************************************************************************************
@@ -423,9 +423,9 @@ void c_ControllerMessageSet::SetDurration (uint32_t value)
 {
     // DEBUG_START;
 
-    for(auto & currentMessage : Messages)
+    for (auto & currentMessage : Messages)
     {
-        currentMessage.second.SetDurration(value);
+        currentMessage.second.SetDurration (value);
     }
 
     // DEBUG_END;

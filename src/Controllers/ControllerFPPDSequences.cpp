@@ -61,7 +61,8 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
     if (Control::noParent == EspuiChoiceListElementId)
     {
         // DEBUG_V("Adding Select");
-        EspuiChoiceListElementId = ESPUI.addControl (ControlType::Select,
+        EspuiChoiceListElementId = ESPUI.addControl (
+            ControlType::Select,
             "FPPD Sequences",
             emptyString,
             color,
@@ -70,14 +71,16 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
             {
                 if (param)
                 {
-                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbChoiceList (sender,
+                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbChoiceList (
+                        sender,
                         type);
                 }
             },
             this);
 
         // DEBUG_V("Adding Delete button");
-        EspuiButtonDeleteElementId = ESPUI.addControl (ControlType::Button,
+        EspuiButtonDeleteElementId = ESPUI.addControl (
+            ControlType::Button,
             emptyString.c_str (),
             " Delete ",
             ControlColor::None,
@@ -86,14 +89,16 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
             {
                 if (param)
                 {
-                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonDelete (sender,
+                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonDelete (
+                        sender,
                         type);
                 }
             },
             this);
 
         // DEBUG_V("Adding Update button");
-        EspuiButtonUpdateElementId = ESPUI.addControl (ControlType::Button,
+        EspuiButtonUpdateElementId = ESPUI.addControl (
+            ControlType::Button,
             emptyString.c_str (),
             " Update ",
             ControlColor::None,
@@ -102,14 +107,16 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
             {
                 if (param)
                 {
-                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonUpdate (sender,
+                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonUpdate (
+                        sender,
                         type);
                 }
             },
             this);
 
         // DEBUG_V("Adding Instruction Msg");
-        EspuiInstructionMsgElementId = ESPUI.addControl (ControlType::Label,
+        EspuiInstructionMsgElementId = ESPUI.addControl (
+            ControlType::Label,
             DefaultTextFieldValue,
             DefaultTextFieldValue,
             color,
@@ -117,7 +124,8 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
         ESPUI.setElementStyle (EspuiInstructionMsgElementId, CSS_LABEL_STYLE_BLACK);
 
         // DEBUG_V("Adding Text Entry");
-        EspuiTextEntryElementId = ESPUI.addControl (ControlType::Text,
+        EspuiTextEntryElementId = ESPUI.addControl (
+            ControlType::Text,
             emptyString.c_str (),
             DefaultTextFieldValue,
             ControlColor::None,
@@ -126,7 +134,8 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
             {
                 if (param)
                 {
-                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbTextChange (sender,
+                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbTextChange (
+                        sender,
                         type);
                 }
             },
@@ -136,7 +145,8 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
         ESPUI.addControl (ControlType::Max, emptyString.c_str (), "64", ControlColor::None, EspuiTextEntryElementId);
 
         // DEBUG_V("Adding Create");
-        EspuiButtonCreateElementId = ESPUI.addControl (ControlType::Button,
+        EspuiButtonCreateElementId = ESPUI.addControl (
+            ControlType::Button,
             emptyString.c_str (),
             " Create ",
             ControlColor::None,
@@ -145,14 +155,16 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
             {
                 if (param)
                 {
-                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonCreate (sender,
+                    reinterpret_cast <c_ControllerFPPDSequences *> (param)->CbButtonCreate (
+                        sender,
                         type);
                 }
             },
             this);
 
         // DEBUG_V("Adding Status Msg");
-        EspuiStatusMsgElementId = ESPUI.addControl (ControlType::Label,
+        EspuiStatusMsgElementId = ESPUI.addControl (
+            ControlType::Label,
             emptyString.c_str (),
             emptyString,
             color,
