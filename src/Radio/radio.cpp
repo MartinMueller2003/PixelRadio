@@ -46,7 +46,7 @@ void cRadio::begin ()
     // DEBUG_START;
 
     QN8027RadioApi.begin ();    // If QN8027 fails we will warn user on UI homeTab.
-    Log.infoln (String (F ("FM Radio RDS/RBDS Started.")).c_str ());
+    Log.infoln (F ("FM Radio RDS/RBDS Started."));
 
     // DEBUG_END;
 }

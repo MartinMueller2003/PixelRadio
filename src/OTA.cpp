@@ -66,7 +66,7 @@
                 if (updateLittleFS == true)
                 {
                     LittleFS.end ();    // Important, Must Unmount LITTLEFS!
-                    Log.infoln (" -> Unmounted LITTLEFS.");
+                    Log.infoln (F (" -> Unmounted LITTLEFS."));
                 }
             })
 
@@ -74,16 +74,16 @@
             {
                 delay (10);
                 // WiFi.setTxPower(RUN_WIFI_PWR);
-                // Log.infoln(" -> Restored Normal WiFi RF Power.\r\n");
+                // Log.infoln(F (" -> Restored Normal WiFi RF Power.\r\n"));
                 #    ifdef OTA_REBOOT_ENB
-                    Log.fatalln ("OTA COMPLETE, SYSTEM REBOOTING ...\r\n");
+                    Log.fatalln (F("OTA COMPLETE, SYSTEM REBOOTING ...\r\n"));
                 #    else // ifdef OTA_REBOOT_ENB
-                    Log.warningln ("OTA COMPLETE, PLEASE REBOOT NOW.\r\n");
+                    Log.warningln (F("OTA COMPLETE, PLEASE REBOOT NOW.\r\n"));
 
                     if (updateLittleFS == true)
                     {
                         littlefsInit ();
-                        // Log.infoln(" -> Remounted LITTLEFS.");
+                        // Log.infoln(F(" -> Remounted LITTLEFS."));
                         Serial.flush ();
                     }
 
@@ -97,7 +97,7 @@
 
                 if ((prog == 0) && (prog != oldProg))
                 {
-                    Log.infoln (" -> Progress: %u", (progress / (total / 100)));    // Print progress to console.
+                    Log.infoln (F (" -> Progress: %u")), (progress / (total / 100)));    // Print progress to console.
                 }
 
                 oldProg = prog;
@@ -105,31 +105,31 @@
 
         .onError ([] (ota_error_t error)
             {
-                Log.warningln (" -> OTA Error[%u]: ", error);
+                Log.warningln (F (" -> OTA Error[%u]: ")), error);
 
                 if (error == OTA_AUTH_ERROR)
                 {
-                    Log.errorln ("Auth Failed.");
+                    Log.errorln (F ("Auth Failed."));
                 }
                 else if (error == OTA_BEGIN_ERROR)
                 {
-                    Log.errorln ("Begin Failed.");
+                    Log.errorln (F ("Begin Failed."));
                 }
                 else if (error == OTA_CONNECT_ERROR)
                 {
-                    Log.errorln ("Connect Failed.");
+                    Log.errorln (F ("Connect Failed."));
                 }
                 else if (error == OTA_RECEIVE_ERROR)
                 {
-                    Log.errorln ("Receive Failed.");
+                    Log.errorln (F ("Receive Failed."));
                 }
                 else if (error == OTA_END_ERROR)
                 {
-                    Log.errorln ("End Failed.");
+                    Log.errorln (F ("End Failed."));
                 }
                 else
                 {
-                    Log.errorln ("Unknown Error.");
+                    Log.errorln (F ("Unknown Error."));
                 }
 
                 //    Log.warningln("OTA Exit, Rebooting Now!");
@@ -138,8 +138,8 @@
                 //    ESP.restart();  // Reboot if OTA fails.
 
                 // WiFi.setTxPower(RUN_WIFI_PWR);
-                Log.infoln (" -> Restored Normal WiFi RF Power.");
-                Log.errorln ("OTA Exit, Aborted. Please try again.");
+                Log.infoln (F (" -> Restored Normal WiFi RF Power."));
+                Log.errorln (F ("OTA Exit, Aborted. Please try again."));
                 Serial.flush ();
 
                 if (updateLittleFS == true)
@@ -155,7 +155,7 @@
             ArduinoOTA. setRebootOnSuccess (false); // Disable reboot after OTA.
         #    endif // ifndef OTA_REBOOT_ENB
         ArduinoOTA.begin ();
-        Log.infoln ("OTA Server Initialized.");
+        Log.infoln (F ("OTA Server Initialized."));
     }
 
     // *********************************************************************************************

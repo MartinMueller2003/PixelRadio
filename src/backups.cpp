@@ -78,7 +78,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
     if (SD.exists (fileName))   // Found Special Credential File.
     {
-        Log.infoln ("Restoring WiFi Credentials From SD Card ...");
+        Log.infoln (F ("Restoring WiFi Credentials From SD Card ..."));
     }
     else
     {
@@ -88,7 +88,7 @@ bool checkEmergencyCredentials (const char * fileName)
         return false;
     }
 
-    Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
+    Log.infoln (F ("-> SD Card Type: %s"), SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
     file = SD.open (fileName, FILE_READ);
 
     DynamicJsonDocument doc (JSON_CRED_SIZE);
@@ -102,7 +102,7 @@ bool checkEmergencyCredentials (const char * fileName)
 
     if (error)
     {
-        Log.errorln ("checkEmergencyCredentials: Deserialization Failed, Error:%s.", error.c_str ());
+        Log.errorln (F ("checkEmergencyCredentials: Deserialization Failed, Error:%s."), error.c_str ());
         spiSdCardShutDown ();
 
         return false;
@@ -112,16 +112,16 @@ bool checkEmergencyCredentials (const char * fileName)
     {
         JsonObject root = doc.as <JsonObject>();
         WiFiDriver.restoreConfiguration (root);
-        Log.warningln ( "-> User Provided New WiFi Credentials.");
-        Log.warningln ( "-> Will Use DHCP Mode on this Session.");
-        Log.verboseln ("-> Credentials JSON used %u Bytes.", doc.memoryUsage ());
-        Log.infoln ("-> Credentials Restore Complete.");
-        Log.warningln ("-> For Your Security the Credential File Has Been Deleted.");
+        Log.warningln (F ("-> User Provided New WiFi Credentials."));
+        Log.warningln (F ("-> Will Use DHCP Mode on this Session."));
+        Log.verboseln (F ("-> Credentials JSON used %u Bytes."), doc.memoryUsage ());
+        Log.infoln    (F ("-> Credentials Restore Complete."));
+        Log.warningln (F ("-> For Your Security the Credential File Has Been Deleted."));
     }
     else
     {
-        Log.errorln ("-> Credential Restore Failed, Invalid / Incomplete File Contents.");
-        Log.warningln ("-> The Credential File Has NOT Been Deleted.Please Secure Your Data.");
+        Log.errorln   (F ("-> Credential Restore Failed, Invalid / Incomplete File Contents."));
+        Log.warningln (F ("-> The Credential File Has NOT Been Deleted.Please Secure Your Data."));
         successFlg = false;
     }
 
@@ -144,20 +144,20 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 
     if (saveMode == LITTLEFS_MODE)
     {
-        Log.infoln ("Backup Configuration to LittleFS ...");
+        Log.infoln (F ("Backup Configuration to LittleFS ..."));
         PixelRadio_LittleFS.remove (fileName);
         file = PixelRadio_LittleFS.open (fileName, FILE_WRITE);
     }
     else if (saveMode == SD_CARD_MODE)
     {
-        Log.infoln ("Backup Configuration to SD Card ...");
+        Log.infoln (F ("Backup Configuration to SD Card ..."));
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
         SD.end ();                          // Re-init Interface in case SD card had been swapped).
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
-            Log.errorln ("-> SD Card failed Initialization, Aborted.");
+            Log.errorln (F ("-> SD Card failed Initialization, Aborted."));
             SD.end ();
             spiSdCardShutDown ();
 
@@ -165,36 +165,36 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         }
 
         // SD.remove(fileName);
-        Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
+        Log.infoln (F ("-> SD Card Type: %s"), SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
         file = SD.open (fileName, FILE_WRITE);
     }
     else
     {
-        Log.infoln ("saveConfiguration: Undefined Backup Mode, Aborted.");
+        Log.infoln (F ("saveConfiguration: Undefined Backup Mode, Aborted."));
 
         return false;
     }
 
     if (!file)
     {
-        Log.errorln ("-> Failed to create file");
+        Log.errorln (F ("-> Failed to create file"));
 
         if (saveMode == SD_CARD_MODE)
         {
-            Log.errorln ("-> Failed to create SD Card file.");
+            Log.errorln (F ("-> Failed to create SD Card file."));
             SD.end ();
             spiSdCardShutDown ();
         }
         else
         {
-            Log.errorln ("-> Failed to create LittleFS File.");
+            Log.errorln (F ("-> Failed to create LittleFS File."));
         }
 
         return false;
     }
     else
     {
-        Log.verboseln ("-> Created file: %s", fileName);
+        Log.verboseln (F ("-> Created file: %s"), fileName);
     }
 
     // *****************************************************************
@@ -219,13 +219,13 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     // Serialize JSON to file
     if (serializeJson (doc, file) == 0)
     {
-        Log.errorln ("-> Failed to Save Configuration.");
+        Log.errorln (F ("-> Failed to Save Configuration."));
     }
     else
     {
         successFlg = true;
-        Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
-        Log.infoln ("-> Configuration Save Complete.");
+        Log.verboseln (F ("-> Configuration JSON used %u Bytes."), doc.memoryUsage ());
+        Log.infoln (F ("-> Configuration Save Complete."));
 
         // serializeJsonPretty(doc, Serial); // Debug Output
         // Serial.println();
@@ -254,12 +254,12 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
     if (restoreMode == LITTLEFS_MODE)
     {
-        Log.infoln ("Restore Configuration From LittleFS ...");
+        Log.infoln (F ("Restore Configuration From LittleFS ..."));
         file = PixelRadio_LittleFS.open (fileName, FILE_READ);
     }
     else if (restoreMode == SD_CARD_MODE)
     {
-        Log.infoln ("Restore Configuration From SD Card ...");
+        Log.infoln (F ("Restore Configuration From SD Card ..."));
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
 
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
@@ -267,15 +267,15 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
         if (!SD.begin (SD_CS_PIN, SPI2))
         {
-            Log.errorln ("-> SD Card failed Initialization, Aborted.");
+            Log.errorln (F ("-> SD Card failed Initialization, Aborted."));
 
             if (SD.cardType () == 0)
             {
-                Log.warningln ("-> SD Card Missing.");
+                Log.warningln(F ("-> SD Card Missing."));
             }
             else
             {
-                Log.errorln ("-> SD Card Unknown Error.");
+                Log.errorln (F ("-> SD Card Unknown Error."));
             }
 
             SD.end ();
@@ -284,12 +284,12 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
             return false;
         }
 
-        Log.infoln ("-> SD Card Type: %s", SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
+        Log.infoln (F ("-> SD Card Type: %s"), SD.cardType () < SD_TYPE_CNT ? sdTypeStr[SD.cardType ()] : "Error");
         file = SD.open (fileName, FILE_READ);
     }
     else
     {
-        Log.infoln ("restoreConfiguration: Undefined Backup Mode, Abort.");
+        Log.infoln (F ("restoreConfiguration: Undefined Backup Mode, Abort."));
 
         return false;
     }
@@ -309,7 +309,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     }
     else
     {
-        Log.verboseln ("-> Located Configuration File (%s)", fileName);
+        Log.verboseln (F("-> Located Configuration File (%s)"), fileName);
     }
 
     // empirically Arduino Json needs 3.5 x the json text size to parse the file.
@@ -346,7 +346,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     Gpio33.restoreConfiguration (doc);
     Diagnostics.saveConfiguration (doc);
 
-    Log.verboseln ("-> Configuration JSON used %u Bytes.", doc.memoryUsage ());
+    Log.verboseln (F("-> Configuration JSON used %u Bytes."), doc.memoryUsage ());
     Log.infoln (F("-> Configuration Restore Complete."));
 
     // serializeJsonPretty(doc, Serial); // Debug Output

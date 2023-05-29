@@ -106,16 +106,16 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
         // Try to listen to the broadcast port
         if (!udp.listen (FPP_DISCOVERY_PORT))
         {
-            Log.infoln (String (F ("FPP Discovery: FAILED to subscribed to broadcast messages")).c_str ());
+            Log.infoln (F ("FPP Discovery: FAILED to subscribed to broadcast messages"));
             fail = true;
             break;
         }
 
-        // Log.infoln (String (F ("FPPDiscovery subscribed to broadcast")));
+        // Log.infoln (F ("FPPDiscovery subscribed to broadcast"));
 
         if (!udp.listenMulticast (address, FPP_DISCOVERY_PORT))
         {
-            Log.infoln (String (F ("FPP Discovery: FAILED to subscribed to multicast messages")).c_str ());
+            Log.infoln (F ("FPP Discovery: FAILED to subscribed to multicast messages"));
             fail = true;
             break;
         }

@@ -43,23 +43,23 @@ void cQN8027RadioApi::begin ()
     if (!checkRadioIsPresent ())
     {
         TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_FAIL;
-        Log.errorln (String (F ("-> QN8027 is Missing")).c_str ());
+        Log.errorln (F ("-> QN8027 is Missing"));
     }
     else
     {
-        Log.verboseln (String (F ("-> QN8027 is Present")).c_str ());
+        Log.verboseln (F ("-> QN8027 is Present"));
         RadioSemaphore = xSemaphoreCreateRecursiveMutex ();
 
         // DEBUG_V(String("RadioSemaphore: 0x") + String(uint32_t(RadioSemaphore), HEX));
         if (NULL == RadioSemaphore)
         {
-            Log.errorln (String (F ("Could not allocate a semaphore for access to the radio hardware")).c_str ());
+            Log.errorln (F ("Could not allocate a semaphore for access to the radio hardware"));
         }
         else
         {
             // DEBUG_V(String("fmRadioTestCode: 0x") + String(fmRadioTestCode, HEX))
             initRadioChip ();   // If QN8027 fails we will warn user on UI homeTab.
-            Log.infoln (String (F ("FM Radio RDS/RBDS Started.")).c_str ());
+            Log.infoln (F ("FM Radio RDS/RBDS Started."));
         }
     }
 
@@ -106,17 +106,17 @@ bool cQN8027RadioApi::calibrateAntenna (bool SkipSemaphore)
         if ((regVal1 == 0x00) && (regVal2 == 0x00))
         {
             Response = false;
-            Log.errorln ("-> QN8027 RF Port Calibration Failed, Possible Oscillator Failure.");
+            Log.errorln (F ("-> QN8027 RF Port Calibration Failed, Possible Oscillator Failure."));
         }
         else if ((regVal1 <= 0x01) || (regVal1 >= 0x1f) || (regVal2 <= 0x01) || (regVal2 >= 0x1f))
         {
             Response = false;
-            Log.errorln ("-> QN8027 RF Port has Poor Calibration, RF Tuning Range Impaired.");
+            Log.errorln (F ("-> QN8027 RF Port has Poor Calibration, RF Tuning Range Impaired."));
         }
         else
         {
             Response = true;
-            Log.infoln ("-> QN8027 RF Port Matching OK, Calibration Successful.");
+            Log.infoln (F("-> QN8027 RF Port Matching OK, Calibration Successful."));
         }
 
         /*
@@ -185,7 +185,7 @@ void cQN8027RadioApi::initRadioChip (bool SkipSemaphore)
 
         if ((regVal == 0x00) || ((regVal & 0x0C) != 0x00))
         {
-            Log.errorln (String (F ("-> Incorrect CID1 Chip Family ID: 0x%02X")).c_str (), regVal);
+            Log.errorln (F ("-> Incorrect CID1 Chip Family ID: 0x%02X"), regVal);
             TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_MISSING;
             break;
         }
@@ -196,12 +196,12 @@ void cQN8027RadioApi::initRadioChip (bool SkipSemaphore)
 
         if ((regVal & 0xF0) != 0x40)
         {
-            Log.errorln (String (F ("-> Incorrect CID2 Version: 0x%02X")).c_str (), regVal);
+            Log.errorln (F ("-> Incorrect CID2 Version: 0x%02X"), regVal);
             TestStatus = QN8027RadioFmTestStatus_e::FM_TEST_MISSING;
             break;
         }
 
-        Log.verboseln (String (F ("-> CID2 Chip Version: 0x%02X")).c_str (), regVal);
+        Log.verboseln (F ("-> CID2 Chip Version: 0x%02X"), regVal);
 
         FmRadio.reset ();
         delay (30);
@@ -228,7 +228,7 @@ void cQN8027RadioApi::initRadioChip (bool SkipSemaphore)
 
             if (i < RADIO_CAL_RETRY - 1)
             {
-                Log.infoln (String (F ("-> Retesting QN8027 RF Port Matching, Retry #%d")).c_str (), i + 1);
+                Log.infoln (F ("-> Retesting QN8027 RF Port Matching, Retry #%d"), i + 1);
             }
         }
 
@@ -253,22 +253,22 @@ void cQN8027RadioApi::initRadioChip (bool SkipSemaphore)
         FmRadio.clearAudioPeak ();
         delay (1);
 
-        Log.infoln (String (F ("-> Radio Status: %02X")).c_str (), (FmRadio.getStatus () & 0x07));
+        Log.infoln (F ("-> Radio Status: %02X"), (FmRadio.getStatus () & 0x07));
     } while (false);
 
     if (QN8027RadioFmTestStatus_e::FM_TEST_OK == TestStatus)
     {
-        Log.infoln (String (F ("-> QN8027 Initialization Complete.")).c_str ());
+        Log.infoln (F ("-> QN8027 Initialization Complete."));
     }
     else
     {
-        Log.errorln (String (F ("-> QN8027 Failed Initialization.")).c_str ());
+        Log.errorln (F ("-> QN8027 Failed Initialization."));
     }
 
     /*
       *     // DEBUG ONLY.
       *     for (int i = 0; i <= 0x1F; i++) {
-      *         Log.infoln(String(F( "Radio Register %02X is: %02X")).c_str(), i, radio.read1Byte(i));
+      *         Log.infoln(F( "Radio Register %02X is: %02X"), i, radio.read1Byte(i));
       *     }
       */
 

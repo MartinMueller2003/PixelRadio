@@ -132,7 +132,7 @@ void cTestTone::toneOn (uint16_t freq)
 
     if (ledcRead (TEST_TONE_CHNL))
     {
-        Log.warningln (String (F ("Ignored Tone Request: Channel %u is already in-use")).c_str (), TEST_TONE_CHNL);
+        Log.warningln (F ("Ignored Tone Request: Channel %u is already in-use"), TEST_TONE_CHNL);
     }
     else if (0 == freq)
     {
@@ -275,7 +275,7 @@ void fsm_Tone_state_SendingTone::Poll (uint32_t now)
 
         if (toneList.begin () == CurrentTone)
         {
-            Log.verboseln (String (F ("New Test Tone Sequence, RadioText Sent.")).c_str ());
+            Log.verboseln (F ("New Test Tone Sequence, RadioText Sent."));
         }
 
         pTestTone->toneOn (*CurrentTone);

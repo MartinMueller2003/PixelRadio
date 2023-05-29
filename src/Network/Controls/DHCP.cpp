@@ -240,25 +240,25 @@ bool cDHCP::ValidateStaticSettings (String & ResponseMessage)
 
         if (StaticIpAddress.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln (String (F ("WiFi: Static IP Address is empty. Using DHCP.")).c_str ());
+            Log.warningln (F ("WiFi: Static IP Address is empty. Using DHCP."));
             break;
         }
 
         if (StaticNetmask.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln (String (F ("WiFi: Static Netmask is empty. Using DHCP.")).c_str ());
+            Log.warningln (F ("WiFi: Static Netmask is empty. Using DHCP."));
             break;
         }
 
         if (StaticGatewayAddress.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln (String (F ("WiFi: Static Gateway Address is empty. Using DHCP.")).c_str ());
+            Log.warningln (F ("WiFi: Static Gateway Address is empty. Using DHCP."));
             break;
         }
 
         if (StaticDnsAddress.GetIpAddress () == IPAddress ((uint32_t)0))
         {
-            Log.warningln (String (F ("WiFi: Static DNS IP Address is empty. Using DHCP.")).c_str ());
+            Log.warningln (F ("WiFi: Static DNS IP Address is empty. Using DHCP."));
             break;
         }
 

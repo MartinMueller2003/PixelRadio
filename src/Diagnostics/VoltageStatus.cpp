@@ -60,15 +60,15 @@ void cVoltageStatus::initVdcAdc (void)
 
     if (val_type == ESP_ADC_CAL_VAL_EFUSE_VREF)
     {
-        Log.infoln ("ADC eFuse provided Factory Stored Vref Calibration.");  // Best Accuracy.
+        Log.infoln (F ("ADC eFuse provided Factory Stored Vref Calibration."));  // Best Accuracy.
     }
     else if (val_type == ESP_ADC_CAL_VAL_EFUSE_TP)
     {
-        Log.infoln ("ADC eFuse provided Factory Stored Two Point Calibration.");    // Good Accuracy.
+        Log.infoln (F ("ADC eFuse provided Factory Stored Two Point Calibration."));    // Good Accuracy.
     }
     else
     {
-        Log.infoln ("ADC eFuse not supported, using Default VRef (1100mV).");   // Low Quality Accuracy.
+        Log.infoln (F ("ADC eFuse not supported, using Default VRef (1100mV)."));   // Low Quality Accuracy.
     }
 
     // make sure the poll routine fires right away

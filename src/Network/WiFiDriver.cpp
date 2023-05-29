@@ -219,7 +219,7 @@ void c_WiFiDriver::connectWifi (const String & current_ssid, const String & curr
 
         Log.infoln ((String (F ("Connecting to '")) +
                      current_ssid +
-                     String (F ("' as '")) +
+                     F ("' as '") +
                      HostnameCtrl.get () + F ("'")).c_str ());
 
         WiFi.setSleep (false);
@@ -438,7 +438,7 @@ void c_WiFiDriver::SetUpIp ()
             break;
         }
 
-        Log.infoln (String (F ("Using Static IP")).c_str ());
+        Log.infoln (F ("Using Static IP"));
         WiFi.config (StaticIpAddress.GetIpAddress (),
             StaticGatewayAddress.GetIpAddress (),
             StaticNetmask.GetIpAddress (),
@@ -631,7 +631,7 @@ void fsm_WiFi_state_ConnectingAsAP::Poll ()
     {
         if (millis () - pWiFiDriver->GetFsmStartTime () > (1000 * pWiFiDriver->Get_ap_timeout ()))
         {
-            Log.errorln (String (F ("WiFi STA Failed to connect")).c_str ());
+            Log.errorln (F ("WiFi STA Failed to connect"));
             fsm_WiFi_state_ConnectionFailed_imp.Init ();
         }
     }
@@ -659,7 +659,7 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
 
         String PSK;
         #ifdef REQUIRE_WIFI_AP_PSK
-            Log.infoln (String (F ("-> HotSpot Requires PSK")).c_str ());
+            Log.infoln (F ("-> HotSpot Requires PSK"));
             PSK = F (AP_PSK_STR);   // Enable PSK.
         #endif // ifdef REQUIRE_WIFI_AP_PSK
 
@@ -668,12 +668,12 @@ void fsm_WiFi_state_ConnectingAsAP::Init ()
         pWiFiDriver->setIpAddress (WiFi.localIP ());
         pWiFiDriver->setIpSubNetMask (WiFi.subnetMask ());
 
-        Log.infoln (String (String (F ("WiFi SOFTAP:       ssid: '")) + FinalSsid).c_str ());
-        Log.infoln (String (String (F ("WiFi SOFTAP: IP Address: '")) + pWiFiDriver->getIpAddress ().toString ()).c_str ());
+        Log.infoln ((String (F ("WiFi SOFTAP:       ssid: '")) + FinalSsid).c_str ());
+        Log.infoln ((String (F ("WiFi SOFTAP: IP Address: '")) + pWiFiDriver->getIpAddress ().toString ()).c_str ());
     }
     else
     {
-        Log.verboseln (String (String (F ("WiFi SOFTAP: Not enabled"))).c_str ());
+        Log.verboseln (F ("WiFi SOFTAP: Not enabled"));
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
     }
 
@@ -746,12 +746,12 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
         if (!MDNS.begin (MdnsName.get ().c_str ()))
         {
             // ArduinoOTA.setHostname() MUST use the same name!
-            Log.errorln (String (F ("-> Error starting mDNS; Service is disabled.")).c_str ());
+            Log.errorln (F ("-> Error starting mDNS; Service is disabled."));
         }
         else
         {
-            Log.infoln (String (F ("-> Server mDNS has started")).c_str ());
-            Log.infoln (String (F ("-> Open http://%s.local in your browser")).c_str (), MdnsName.get ().c_str ());
+            Log.infoln (F ("-> Server mDNS has started"));
+            Log.infoln (F ("-> Open http://%s.local in your browser"), MdnsName.get ().c_str ());
 
             MDNS.addService ("http", "tcp", WEBSERVER_PORT);
             MDNS.addServiceTxt ("http", "tcp", "arduino", MdnsName.get ().c_str ());
@@ -771,7 +771,7 @@ void fsm_WiFi_state_ConnectedToAP::OnDisconnect ()
 {
     // DEBUG_START;
 
-    Log.verboseln (String (F ("WiFi Lost the connection to the AP")).c_str ());
+    Log.verboseln (F ("WiFi Lost the connection to the AP"));
     fsm_WiFi_state_ConnectionFailed_imp.Init ();
 
     // DEBUG_END;
@@ -786,9 +786,9 @@ void fsm_WiFi_state_ConnectedToSta::Poll ()
     // did we get silently disconnected?
     if (0 == WiFi.softAPgetStationNum ())
     {
-        Log.verboseln (String (F ("WiFi Lost the connection to the STA")).c_str ());
+        Log.verboseln (F ("WiFi Lost the connection to the STA"));
         pWiFiDriver->dnsServer.stop ();
-        Log.warningln ("-> DNS Server Terminated.");
+        Log.warningln (F("-> DNS Server Terminated."));
         fsm_WiFi_state_ConnectionFailed_imp.Init ();
     }
     else
@@ -820,7 +820,7 @@ void fsm_WiFi_state_ConnectedToSta::Init ()
 
     if (!pWiFiDriver->dnsServer.start (uint16_t (DNS_PORT), String ("*"), ApIpAddress.GetIpAddress ()))
     {
-        Log.errorln (String (F ("WIFI: AP mode DNS Failed to start. No Web Sockets available.")).c_str ());
+        Log.errorln (F ("WIFI: AP mode DNS Failed to start. No Web Sockets available."));
     }
 
     // DEBUG_END;
@@ -831,9 +831,9 @@ void fsm_WiFi_state_ConnectedToSta::OnDisconnect ()
 {
     // DEBUG_START;
 
-    Log.verboseln (String (F ("WiFi STA Disconnected")).c_str ());
+    Log.verboseln (F ("WiFi STA Disconnected"));
     pWiFiDriver->dnsServer.stop ();
-    Log.warningln ("-> DNS Server Terminated.");
+    Log.warningln (F("-> DNS Server Terminated."));
     fsm_WiFi_state_ConnectionFailed_imp.Init ();
 
     // DEBUG_END;
@@ -859,7 +859,7 @@ void fsm_WiFi_state_ConnectionFailed::Init ()
         if (0 != ApReboot.get ())
         {
             // extern bool reboot;
-            Log.infoln (String (F ("WiFi Requesting Reboot")).c_str ());
+            Log.infoln (F ("WiFi Requesting Reboot"));
 
             // reboot = true;
         }

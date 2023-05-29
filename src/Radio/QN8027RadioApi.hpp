@@ -26,22 +26,22 @@ public:
     virtual~cQN8027RadioApi ()    {}
 
     void        begin ();
-    uint16_t    GetPeakAudioLevel (bool SkipSemaphore = false);
-    void        setAudioImpedance (uint8_t value, bool SkipSemaphore = false);
-    void        setAudioMute (bool value, bool SkipSemaphore = false);
-    void        setDigitalGain (uint8_t value, bool SkipSemaphore = false);
-    void        setFrequency (float frequency, bool Carrier, bool SkipSemaphore = false);
-    void        setMonoAudio (bool value, bool SkipSemaphore = false);
-    void        setPreEmphasis (uint8_t value, bool carrier, bool SkipSemaphore = false);
-    void        setProgramServiceName (String & value, bool carrier, bool SkipSemaphore = false);
-    void        setPiCode (uint16_t value, bool carrier, bool SkipSemaphore = false);
-    void        setPtyCode (uint8_t value, bool carrier, bool SkipSemaphore = false);
-    void        setRdsMessage (String & value, bool SkipSemaphore = false);
-    void        setRfAutoOff (bool value, bool carrier, bool SkipSemaphore = false);
-    void        setRfCarrierOFF (bool SkipSemaphore = false);
-    void        setRfCarrier (bool value, bool SkipSemaphore = false);
-    void        setRfPower (uint8_t value, bool carrier, bool SkipSemaphore = false);
-    void        setVgaGain (uint8_t value, bool SkipSemaphore = false);
+    uint16_t    GetPeakAudioLevel (bool SkipSemaphore                                           = false);
+    void        setAudioImpedance (uint8_t value, bool SkipSemaphore                            = false);
+    void        setAudioMute (bool value, bool SkipSemaphore                                    = false);
+    void        setDigitalGain (uint8_t value, bool SkipSemaphore                               = false);
+    void        setFrequency (float frequency, bool Carrier, bool SkipSemaphore                 = false);
+    void        setMonoAudio (bool value, bool SkipSemaphore                                    = false);
+    void        setPreEmphasis (uint8_t value, bool carrier, bool SkipSemaphore                 = false);
+    void        setProgramServiceName (const String & value, bool carrier, bool SkipSemaphore   = false);
+    void        setPiCode (uint16_t value, bool carrier, bool SkipSemaphore                     = false);
+    void        setPtyCode (uint8_t value, bool carrier, bool SkipSemaphore                     = false);
+    void        setRdsMessage (String & value, bool SkipSemaphore                               = false);
+    void        setRfAutoOff (bool value, bool carrier, bool SkipSemaphore                      = false);
+    void        setRfCarrierOFF (bool SkipSemaphore                                             = false);
+    void        setRfCarrier (bool value, bool SkipSemaphore                                    = false);
+    void        setRfPower (uint8_t value, bool carrier, bool SkipSemaphore                     = false);
+    void        setVgaGain (uint8_t value, bool SkipSemaphore                                   = false);
 
     // FM Radio: QN8027 Test response Codes
     typedef enum

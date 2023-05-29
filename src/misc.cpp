@@ -36,12 +36,12 @@ void initEprom (void)
 
         // EEPROM.write(VOL_SET_ADDR, spkrVolSwitch);
         EEPROM.commit ();
-        Log.warningln (String (F ("Initialized Virgin EEPROM (detected first use).")).c_str ());
+        Log.warningln (F ("Initialized Virgin EEPROM (detected first use)."));
     }
     else
     {
         // spkrVolSwitch = EEPROM.read(VOL_SET_ADDR);
-        Log.verboseln (String (F ("Restored settings from EEPROM.")).c_str ());
+        Log.verboseln (F ("Restored settings from EEPROM."));
     }
 }
 

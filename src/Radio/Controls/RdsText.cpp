@@ -99,7 +99,7 @@ void cRdsText::poll ()
         {
             // _ DEBUG_V("Display the new message");
             LastMessageSent = RdsMsgInfo.Text;
-            Log.traceln (String (F ("Refreshing RDS RadioText Message: %s")).c_str (), RdsMsgInfo.Text.c_str ());
+            Log.traceln (F ("Refreshing RDS RadioText Message: %s"), RdsMsgInfo.Text.c_str ());
             String dummy;
             set (RdsMsgInfo.Text, dummy);
         }
