@@ -46,7 +46,7 @@ private:
     uint16_t                    CurrentSequenceElementId    = Control::noParent;
 
     bool                        ControlsHaveBeenAdded = false;
-    String                      CurrentPlayingSequence;
+    String                      CurrentPlayingSequenceName;
 
     c_ControllerFPPDSequences   Sequences;
 };  // c_ControllerFPPD

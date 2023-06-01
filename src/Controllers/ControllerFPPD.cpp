@@ -74,8 +74,9 @@ void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Respon
 {
     // DEBUG_START;
 
-    if (!CurrentPlayingSequence.isEmpty ())
+    if (!CurrentPlayingSequenceName.isEmpty ())
     {
+        // DEBUG_V("Get next message");
         Sequences.GetNextRdsMessage (Response);
     }
 
@@ -87,26 +88,42 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("FppdFileName: '") + FppdFileName + "'");
-    if (!FppdFileName.equals (CurrentPlayingSequence))
-    {
-        // DEBUG_V(String("New File: '") + FppdFileName + "'");
-        CurrentPlayingSequence = FppdFileName;
+    // normalize the name
+    String TempName = FppdFileName;
+    TempName.toLowerCase();
+    String FinalName = FppdFileName.substring(0, TempName.lastIndexOf(".fseq"));
 
-        if (CurrentPlayingSequence.isEmpty ())
+    // DEBUG_V(String("FppdFileName: '") + FppdFileName + "'");
+    // DEBUG_V(String("   FinalName: '") + FinalName + "'");
+    if (!FinalName.equals (CurrentPlayingSequenceName))
+    {
+        // DEBUG_V(String("New File: '") + FinalName + "'");
+        CurrentPlayingSequenceName = FinalName;
+
+        if (CurrentPlayingSequenceName.isEmpty ())
         {
+            // DEBUG_V("No sequence playing");
             CurrentSequence.setMessage (F ("No Sequence Playing"), eCssStyle::CssStyleTransparent);
         }
         else
         {
-            CurrentSequence.setMessage (CurrentPlayingSequence, eCssStyle::CssStyleWhite);
+            CurrentSequence.setMessage (CurrentPlayingSequenceName, eCssStyle::CssStyleWhite);
 
-            // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearningEnabled));
+            // DEBUG_V(String("SequenceLearningEnabled: ") + String(SequenceLearning.getBool ()));
             if (SequenceLearning.getBool ())
             {
-                Sequences.AddSequence (CurrentPlayingSequence);
+                // DEBUG_V("Learn Message");
+                Sequences.LearnSequenceName (CurrentPlayingSequenceName);
+            }
+            else
+            {
+                // DEBUG_V("Not allowed to Learn Message");
             }
         }
+    }
+    else
+    {
+        // DEBUG_V("Ignore message");
     }
 
     // DEBUG_END;

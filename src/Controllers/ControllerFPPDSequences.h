@@ -36,7 +36,6 @@ public:
     void    SaveConfig (ArduinoJson::JsonObject & config);
 
     void    AddControls (uint16_t ctrlTab, ControlColor color);
-    void    AddSequence (String & SequenceName);
     void    begin ();
     void    CbButtonCreate (Control * sender, int type);
     void    CbButtonDelete (Control * sender, int type);
@@ -44,10 +43,12 @@ public:
     void    CbChoiceList (Control * sender, int type);
     void    CbTextChange (Control * sender, int type);
     void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) {ControllerMessages.GetNextRdsMessage (Response);}
-
+    void    LearnSequenceName (String & value);
+    
 private:
 
     void Activate ();
+    void AddSequence (String & SequenceName);
 
     String                                      SelectedSequenceName = N_default;
 

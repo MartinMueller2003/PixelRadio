@@ -113,6 +113,38 @@ void c_ControllerFPPDSequence::AddControls (uint16_t ctrlTab, uint16_t ParentEle
     // DEBUG_END;
 }   // AddControls
 
+// ************************************************************************************************
+void c_ControllerFPPDSequence::AddMessage(String & NewMessage)
+{
+    // DEBUG_START;
+
+    do // once
+    {
+        // does the messageset exist?
+        if(!Messages->HasMsgSet(NewMessage))
+        {
+            // DEBUG_V("Messageset does not exist, Create it");
+            Messages->AddMessageSet(NewMessage);
+        }
+        else
+        {
+            // DEBUG_V("Message set exists");
+        }
+
+        if(!Messages->empty(NewMessage))
+        {
+            // DEBUG_V("Messageset is not empty. Do not add the default message");
+            break;
+        }
+        
+        // DEBUG_V("Messageset is empty. Add the default message");
+        Messages->AddMessage(NewMessage, NewMessage);
+
+    } while(false);
+
+    // DEBUG_END;
+} // AddMessage
+
 // *********************************************************************************************
 void c_ControllerFPPDSequence::RestoreConfig (ArduinoJson::JsonObject & config)
 {
