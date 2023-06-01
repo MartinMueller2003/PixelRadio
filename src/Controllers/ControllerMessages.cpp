@@ -641,6 +641,29 @@ void c_ControllerMessages::CbTextChange (Control *, int)
 }   // TextChangeCb
 
 // ************************************************************************************************
+bool c_ControllerMessages::empty (String & value)
+{
+    // DEBUG_START;
+    bool Response = true;
+
+    do // once
+    {
+        if(0 == MessageSets.count(value))
+        {
+            // DEBUG_V("No such message set");
+            break;
+        }
+
+        Response = MessageSets[value].empty();
+
+    } while(false);
+
+    // DEBUG_END;
+    return Response;
+
+} // empty
+
+// ************************************************************************************************
 void c_ControllerMessages::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
@@ -665,6 +688,13 @@ void c_ControllerMessages::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Re
     } while (false);
 
     // DEBUG_END;
+}
+
+// ************************************************************************************************
+bool c_ControllerMessages::HasMsgSet(String & value)
+{
+    // DEBUG_V(String("MessageSets.count: ") + String(MessageSets.count(value)));
+    return (0 != MessageSets.count(value));
 }
 
 // *********************************************************************************************
