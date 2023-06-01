@@ -82,12 +82,22 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
 
     if (!ConfigName.isEmpty ())
     {
-        // DEBUG_V("Process Config");
+        // Serial.println("cBinaryControl::restoreConfiguration");
+        // serializeJsonPretty(config, Serial);
+        // Serial.println("\ncBinaryControl::restoreConfiguration");
         bool NewValue = DataValue;
         ReadFromJSON (NewValue, config, ConfigName);
-        String  NewValueStr = String (DataValue);
+        String  NewValueStr = String (NewValue);
         String  Response;
+        // DEBUG_V(String ("Process Config ConfigName: ") + ConfigName + " Value " + String(NewValueStr));
         set (NewValueStr, Response, false);
+    }
+    else
+    {
+        // DEBUG_V("Config Name is empty");
+        // Serial.println("cBinaryControl::restoreConfiguration");
+        // serializeJsonPretty(config, Serial);
+        // Serial.println("\ncBinaryControl::restoreConfiguration");
     }
 
     // DEBUG_V (String (" OnString: ") + OnString);
