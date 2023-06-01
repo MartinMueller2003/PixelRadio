@@ -83,7 +83,6 @@ void c_FPPDiscovery::begin (FileChangeCb _FppdCb, void * _UserParam)
 }   // begin
 
 // -----------------------------------------------------------------------------
-// Configure and start the web server
 void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
 {
     // DEBUG_START;
@@ -92,6 +91,7 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
     {
         if (OldNetworkState == NewNetworkState)
         {
+            // DEBUG_V("No change in network state");
             break;
         }
 
@@ -99,10 +99,11 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
 
         if (false == NewNetworkState)
         {
+            // DEBUG_V("Network state = OFF");
             break;
         }
 
-        // DEBUG_V ();
+        // DEBUG_V("Network state = ON");
 
         IPAddress address   = IPAddress (239, 70, 80, 80);
         bool fail           = false;
@@ -115,7 +116,7 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
             break;
         }
 
-        // Log.infoln (F ("FPPDiscovery subscribed to broadcast"));
+        Log.infoln ((String (F ("FPP Discovery: Listening on UDP port ")) + String (FPP_DISCOVERY_PORT)).c_str ());
 
         if (!udp.listenMulticast (address, FPP_DISCOVERY_PORT))
         {
@@ -124,12 +125,7 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
             break;
         }
 
-        // Log.infoln (String (F ("FPPDiscovery subscribed to multicast: ")) + address.toString ());
-
-        if (!fail)
-        {
-            Log.infoln ((String (F ("FPP Discovery: Listening on port ")) + String (FPP_DISCOVERY_PORT)).c_str ());
-        }
+        Log.infoln ((String (F ("FPPDiscovery subscribed to multicast: ")) + address.toString ()).c_str());
 
         udp.onPacket (std::bind (& c_FPPDiscovery::ProcessReceivedUdpPacket, this, std::placeholders::_1));
 
@@ -480,56 +476,6 @@ void c_FPPDiscovery::BuildFseqResponse (String fname, String & resp)
     JsonData[F ("pktError")]        = MultiSyncStats.pktError;
     JsonData[F ("MaxChannel")]      = String (0);
     JsonData[F ("ChannelCount")]    = String (0);
-    #ifdef DOWENEEDTHIS
-        uint32_t    FileOffsetToCurrentHeaderRecord = 0;
-        uint32_t    FileOffsetToStartOfSequenceData = 0;    // DataOffset
-
-        // DEBUG_V (String ("FileOffsetToCurrentHeaderRecord: ") + String (FileOffsetToCurrentHeaderRecord));
-        // DEBUG_V (String ("FileOffsetToStartOfSequenceData: ") + String (FileOffsetToStartOfSequenceData));
-
-        if (FileOffsetToCurrentHeaderRecord < FileOffsetToStartOfSequenceData)
-        {
-            JsonArray JsonDataHeaders = JsonData.createNestedArray (F ("variableHeaders"));
-
-            char FSEQVariableDataHeaderBuffer[sizeof (FSEQRawVariableDataHeader) + 1];
-            memset ((uint8_t *)FSEQVariableDataHeaderBuffer, 0x00, sizeof (FSEQVariableDataHeaderBuffer));
-            FSEQRawVariableDataHeader * pCurrentVariableHeader = (FSEQRawVariableDataHeader *)FSEQVariableDataHeaderBuffer;
-
-            while (FileOffsetToCurrentHeaderRecord < FileOffsetToStartOfSequenceData)
-            {
-                FileMgr.ReadSdFile (
-                    fseq,
-                    (byte *)FSEQVariableDataHeaderBuffer,
-                    sizeof (FSEQRawVariableDataHeader),
-                    FileOffsetToCurrentHeaderRecord);
-
-                int VariableDataHeaderTotalLength   = read16 ((uint8_t *)& (pCurrentVariableHeader->length));
-                int VariableDataHeaderDataLength    = VariableDataHeaderTotalLength - sizeof (FSEQRawVariableDataHeader);
-
-                String HeaderTypeCode (pCurrentVariableHeader->type);
-
-                if ((HeaderTypeCode == "mf") || (HeaderTypeCode == "sp"))
-                {
-                    char * VariableDataHeaderDataBuffer = (char *)malloc (VariableDataHeaderDataLength + 1);
-                    memset (VariableDataHeaderDataBuffer, 0x00, VariableDataHeaderDataLength + 1);
-
-                    FileMgr.ReadSdFile (
-                        fseq,
-                        (byte *)VariableDataHeaderDataBuffer,
-                        VariableDataHeaderDataLength,
-                        FileOffsetToCurrentHeaderRecord);
-
-                    JsonObject JsonDataHeader = JsonDataHeaders.createNestedObject ();
-                    JsonDataHeader[HeaderTypeCode] = String (VariableDataHeaderDataBuffer);
-
-                    free (VariableDataHeaderDataBuffer);
-                }
-
-                FileOffsetToCurrentHeaderRecord += VariableDataHeaderTotalLength + sizeof (FSEQRawVariableDataHeader);
-            }   // while there are headers to process
-        }       // there are headers to process
-
-    #endif    // def DOWENEEDTHIS
 
     serializeJson (JsonData, resp);
     // DEBUG_V (String ("resp: ") + resp);
