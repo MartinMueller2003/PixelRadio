@@ -75,7 +75,7 @@ void c_ControllerMessageSet::ActivateMessage (String MsgName)
 {
     // DEBUG_START;
     // DEBUG_V(String("  MsgSetName: '") + MsgSetName + "'");
-    // DEBUG_V(String("     MsgName: '") + MsgName + "'");
+    // DEBUG_V(String(" New MsgName: '") + MsgName + "'");
 
     do  // once
     {

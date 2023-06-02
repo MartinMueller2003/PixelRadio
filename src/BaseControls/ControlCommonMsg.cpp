@@ -39,9 +39,8 @@ void cControlCommonMsg::AddControls (uint16_t TabId, ControlColor color)
     // DEBUG_START;
     // DEBUG_V (String ("       Title: ") + GetTitle());
 
-    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
     cControlCommon::AddControls (TabId, color, false);
-    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
+
     MessageId = ESPUI.addControl (
         ControlType::Label,
         emptyString.c_str (),
@@ -57,7 +56,6 @@ void cControlCommonMsg::AddControls (uint16_t TabId, ControlColor color)
 
     // force a UI Update
     String Response;
-    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
     set (GetDataValueStr (), Response, true, true);
 
     // DEBUG_END;

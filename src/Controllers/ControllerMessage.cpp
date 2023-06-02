@@ -55,7 +55,7 @@ void c_ControllerMessage::Activate (bool value)
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("            MessageText: ") + MessageText);
+    // DEBUG_V(String("            MessageText: '") + MessageText + "'");
     // DEBUG_V(String("  ActiveParentElementId: ") + String(MessageElementIds->ActiveChoiceListElementId));
     // DEBUG_V(String("  HiddenParentElementId: ") + String(MessageElementIds->HiddenChoiceListElementId));
 
@@ -67,6 +67,7 @@ void c_ControllerMessage::Activate (bool value)
             break;
         }
 
+        // DEBUG_V();
         Control * MsgSelectControl = ESPUI.getControl (MessageElementId);
 
         if (!MsgSelectControl)
@@ -75,6 +76,7 @@ void c_ControllerMessage::Activate (bool value)
             break;
         }
 
+        // DEBUG_V();
         if (!value)
         {
             // DEBUG_V("Add message to the hidden choice list");
@@ -86,6 +88,7 @@ void c_ControllerMessage::Activate (bool value)
             MsgSelectControl->parentControl = MessageElementIds->ActiveChoiceListElementId;
         }
 
+        // DEBUG_V();
         ESPUI.updateControl (MsgSelectControl);
 
         // DEBUG_V(String("    MsgSelectControl ID: ") + String(MsgSelectControl->id));
@@ -265,6 +268,7 @@ void c_ControllerMessage::SelectMessage ()
             break;
         }
 
+        // DEBUG_V("Activate");
         Activate (true);
 
         Control * control = ESPUI.getControl (MessageElementIds->ActiveChoiceListElementId);
@@ -288,6 +292,7 @@ void c_ControllerMessage::SelectMessage ()
             ESPUI.updateControl (MessageElementIds->DisplayDurationElementId);
         }
 
+        // DEBUG_V();
         control = ESPUI.getControl (MessageElementIds->EnabledElementId);
 
         if (control)
