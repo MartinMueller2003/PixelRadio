@@ -70,14 +70,16 @@ void c_ControllerFPPD::begin ()
 }   // begin
 
 // *********************************************************************************************
-void c_ControllerFPPD::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+void c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
+
+    // DEBUG_V(String("CurrentPlayingSequenceName: '") + CurrentPlayingSequenceName + "'");
 
     if (!CurrentPlayingSequenceName.isEmpty ())
     {
         // DEBUG_V("Get next message");
-        Sequences.GetNextRdsMessage (Response);
+        Sequences.GetNextRdsMessage (CurrentPlayingSequenceName, Response);
     }
 
     // DEBUG_END;
@@ -123,7 +125,7 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
     }
     else
     {
-        // DEBUG_V("Ignore message");
+        // DEBUG_V("Message Already in progress");
     }
 
     // DEBUG_END;

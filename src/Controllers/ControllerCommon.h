@@ -45,7 +45,7 @@ public:
     String          GetName () {return GetTitle ();}
     virtual void    saveConfiguration (ArduinoJson::JsonObject & config);
 
-    virtual void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
+    virtual void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
     bool            ControllerIsEnabled () {return getBool ();}
 };  // class cControllerCommon
 

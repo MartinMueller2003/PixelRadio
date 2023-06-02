@@ -48,11 +48,11 @@ void cControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
 }   // AddControls
 
 // ************************************************************************************************
-void cControllerUsbSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+void cControllerUsbSERIAL::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     if (ControllerIsEnabled ())
     {
-        Messages.GetNextRdsMessage (Response);
+        Messages.GetNextRdsMessage (value, Response);
     }
 }
 

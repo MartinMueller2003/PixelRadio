@@ -228,9 +228,13 @@ void c_ControllerMessageSet::EraseMsg (String MsgTxt)
 void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
+    // DEBUG_V(String("    MsgSetName: '") + MsgSetName + "'"); 
+    // DEBUG_V(String("CurrentMsgName: '") + CurrentMsgName + "'"); 
+    // DEBUG_V(String(" Messages.size: '") + String(Messages.size ()) + "'");
 
     do  // once
     {
+
         if (0 == Messages.size ())
         {
             // DEBUG_V("No messages to send");

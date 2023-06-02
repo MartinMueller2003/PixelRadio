@@ -219,7 +219,8 @@ void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
             }
 
             Response.Text = F ("No Messages Available");
-            CurrentController.pController->GetNextRdsMessage (Response);
+            String Temp;
+            CurrentController.pController->GetNextRdsMessage (Temp, Response);
 
             if (Response.DurationMilliSec)
             {

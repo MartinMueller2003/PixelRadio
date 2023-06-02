@@ -35,7 +35,7 @@ public:
     virtual~cControllerGpioSERIAL ();
 
     void    AddControls (uint16_t TabId, ControlColor color);
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
     void    poll () {SerialControl.poll ();}
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
     void    saveConfiguration (ArduinoJson::JsonObject & config);

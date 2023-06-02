@@ -29,7 +29,7 @@ public:
     c_ControllerHTTP ();
     virtual~c_ControllerHTTP ();
     void    poll ();
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
     void init ();

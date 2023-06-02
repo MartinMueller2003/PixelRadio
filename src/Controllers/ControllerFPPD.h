@@ -36,7 +36,7 @@ public:
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
     void    saveConfiguration (ArduinoJson::JsonObject & config);
     void    CbSequenceLearningEnabled (Control * sender, int type);
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
 

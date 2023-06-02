@@ -42,14 +42,14 @@ cHostnameCtrl::~cHostnameCtrl ()
 // *********************************************************************************************
 void cHostnameCtrl::ResetToDefaults ()
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     String  value = STA_NAME_DEF_STR;
     String  dummy;
 
     set (value, dummy, SystemBooting, false);
 
-    DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************

@@ -665,7 +665,7 @@ bool c_ControllerMessages::empty (String & value)
 } // empty
 
 // ************************************************************************************************
-void c_ControllerMessages::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+void c_ControllerMessages::GetNextRdsMessage (const String & MsgSetName, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -677,14 +677,15 @@ void c_ControllerMessages::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Re
             break;
         }
 
-        if (MessageSets.end () == MessageSets.find (CurrentMsgSetName))
+        if (MessageSets.end () == MessageSets.find (MsgSetName))
         {
-            // no such message set
+            // DEBUG_V("no such message set");
             break;
         }
 
+        // DEBUG_V("Get Next Message from the message Set");
         xSemaphoreTake (MessageSetsSemaphore, portMAX_DELAY);
-        MessageSets[CurrentMsgSetName].GetNextRdsMessage (Response);
+        MessageSets[MsgSetName].GetNextRdsMessage (Response);
         xSemaphoreGive (MessageSetsSemaphore);
     } while (false);
 

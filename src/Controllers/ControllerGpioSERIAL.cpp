@@ -55,11 +55,11 @@ void cControllerGpioSERIAL::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // ************************************************************************************************
-void cControllerGpioSERIAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+void cControllerGpioSERIAL::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     if (ControllerIsEnabled ())
     {
-        Messages.GetNextRdsMessage (Response);
+        Messages.GetNextRdsMessage (value, Response);
     }
 }
 

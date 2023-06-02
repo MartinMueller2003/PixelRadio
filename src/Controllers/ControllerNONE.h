@@ -27,7 +27,7 @@ public:
     c_ControllerNONE ();
     virtual~c_ControllerNONE ();
     void    AddControls (uint16_t tabId, ControlColor color)                {}
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)    {}
+    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {}
 };  // c_ControllerNONE
 
 // *********************************************************************************************

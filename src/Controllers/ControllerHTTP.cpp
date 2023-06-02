@@ -68,11 +68,11 @@ c_ControllerHTTP::~c_ControllerHTTP ()
 {}
 
 // *********************************************************************************************
-void c_ControllerHTTP::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+void c_ControllerHTTP::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     if (ControllerIsEnabled ())
     {
-        Messages.GetNextRdsMessage (Response);
+        Messages.GetNextRdsMessage (value, Response);
     }
 }
 

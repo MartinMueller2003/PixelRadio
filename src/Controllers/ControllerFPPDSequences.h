@@ -42,7 +42,7 @@ public:
     void    CbButtonUpdate (Control * sender, int type);
     void    CbChoiceList (Control * sender, int type);
     void    CbTextChange (Control * sender, int type);
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) {ControllerMessages.GetNextRdsMessage (Response);}
+    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {ControllerMessages.GetNextRdsMessage (value, Response);}
     void    LearnSequenceName (String & value);
     
 private:

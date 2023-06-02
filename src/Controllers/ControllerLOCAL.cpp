@@ -63,13 +63,13 @@ void c_ControllerLOCAL::CreateDefaultMsgSet ()
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+void c_ControllerLOCAL::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
     if (ControllerIsEnabled ())
     {
-        Messages.GetNextRdsMessage (Response);
+        Messages.GetNextRdsMessage (value, Response);
     }
 
     // DEBUG_END;

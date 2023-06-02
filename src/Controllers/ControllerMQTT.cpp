@@ -144,7 +144,7 @@ bool c_ControllerMQTT::ConfigHasChanged ()
 }
 
 // *********************************************************************************************
-void c_ControllerMQTT::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response) {Messages.GetNextRdsMessage (Response);}
+void c_ControllerMQTT::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {Messages.GetNextRdsMessage (value, Response);}
 
 // *************************************************************************************************************************
 void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)

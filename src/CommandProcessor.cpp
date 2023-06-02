@@ -238,11 +238,11 @@ bool cCommandProcessor::mute (String & payloadStr, String & ResponseMessage)
 // *************************************************************************************************************************
 bool cCommandProcessor::piCode (String & payloadStr, String & ResponseMessage)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
     bool response = PiCode.set (payloadStr, ResponseMessage, false, false);
 
-    DEBUG_END;
+    // DEBUG_END;
     return response;
 }
 

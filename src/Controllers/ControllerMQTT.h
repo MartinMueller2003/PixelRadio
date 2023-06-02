@@ -43,7 +43,7 @@ public:
 
     void    AddControls (uint16_t TabId, ControlColor color);
     void    mqttClientCallback (const char * topic, byte * payload, unsigned int length);
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
 
 private:
 
