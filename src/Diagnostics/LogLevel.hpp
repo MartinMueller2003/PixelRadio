@@ -33,7 +33,7 @@ public:
     void        printTimestamp (Print * _logOutput);
 
 
-    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
 private:
 
     // Division constants

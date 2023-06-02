@@ -42,24 +42,24 @@ cHostnameCtrl::~cHostnameCtrl ()
 // *********************************************************************************************
 void cHostnameCtrl::ResetToDefaults ()
 {
-    // DEBUG_START;
+    DEBUG_START;
 
     String  value = STA_NAME_DEF_STR;
     String  dummy;
 
-    set (value, dummy);
+    set (value, dummy, SystemBooting, false);
 
-    // DEBUG_END;
+    DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cHostnameCtrl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cHostnameCtrl::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (       String ("       value: ") + value);
     // DEBUG_V (       String ("DataValueStr: ") + DataValueStr);
 
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     do  // once
     {

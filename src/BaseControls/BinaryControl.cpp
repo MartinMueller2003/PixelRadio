@@ -90,7 +90,7 @@ void cBinaryControl::restoreConfiguration (JsonObject & config)
         String  NewValueStr = String (NewValue);
         String  Response;
         // DEBUG_V(String ("Process Config ConfigName: ") + ConfigName + " Value " + String(NewValueStr));
-        set (NewValueStr, Response, false);
+        set (NewValueStr, Response, true, true);
     }
     else
     {
@@ -123,7 +123,7 @@ void cBinaryControl::saveConfiguration (JsonObject & config)
 }
 
 // *********************************************************************************************
-bool cBinaryControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cBinaryControl::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (String ("       Title: ") + GetTitle());
@@ -146,11 +146,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
 
     // DEBUG_V (String ("    OnString: ") + OnString);
     // DEBUG_V (String ("   OffString: ") + OffString);
-
-    bool OldSkipSetLog = SkipSetLog;
-    SkipSetLog = true;
-    bool Response = cControlCommonMsg::set (value, ResponseMessage, ForceUpdate);
-    SkipSetLog = OldSkipSetLog;
+    bool Response = cControlCommonMsg::set (value, ResponseMessage, true, ForceUpdate);
 
     if (Response)
     {
@@ -159,7 +155,7 @@ bool cBinaryControl::set (const String & value, String & ResponseMessage, bool F
         // DEBUG_V (String ("    Response: ") + ResponseMessage);
         setMessage (ResponseMessage, DataValue ? OnStyle : OffStyle);
 
-        if (!SkipSetLog)
+        if (!SkipLogOutput)
         {
             String LogMsg;
             LogMsg.reserve (128);

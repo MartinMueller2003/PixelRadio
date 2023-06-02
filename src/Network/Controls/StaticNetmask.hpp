@@ -25,7 +25,7 @@ public:
     cStaticNetmask ();
     virtual~cStaticNetmask ();
 
-    bool set (const String & value, String & Response, bool ForceUpdate = false);
+    bool set (const String & value, String & Response, bool SkipLogOutput, bool ForceUpdate);
 };  // class cStaticNetmask
 
 extern cStaticNetmask StaticNetmask;

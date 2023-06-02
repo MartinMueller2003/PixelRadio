@@ -50,20 +50,21 @@ void cPiCode::ResetToDefaults ()
     String  value = String (F ("0x")) + String (RDS_PI_CODE_DEF, HEX);
     String  dummy;
 
-    set (value, dummy);
+    set (value, dummy, SystemBooting, false);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cPiCode::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cPiCode::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
     // DEBUG_V (String ("         value: ") + value);
 
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
+    // DEBUG_V();
     if (Response)
     {
         QN8027RadioApi.setPiCode (uint16_t (StringToNumber (get ())), RfCarrier.get ());

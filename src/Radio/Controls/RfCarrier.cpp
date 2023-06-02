@@ -42,7 +42,6 @@ static const PROGMEM char   RADIO_FAIL_STR          []  = "-FAIL-";
 cRfCarrier::cRfCarrier () :   cBinaryControl (RADIO_RF_CARR_FLAG, RADIO_RF_CARRIER_STR, false)
 {
     // _ DEBUG_START;
-    SkipSetLog = true;
     // _ DEBUG_END;
 }
 
@@ -59,20 +58,20 @@ void cRfCarrier::AddHomeControls (uint16_t TabId, ControlColor color)
 
     String  Dummy;
     String  Temp = String (getBool ());
-    set (Temp, Dummy, true);
+    set (Temp, Dummy, true, true);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cRfCarrier::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cRfCarrier::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (       String ("       value: ") + value);
     // DEBUG_V (       String ("getBool()Str: ") + getBool()Str);
     // DEBUG_V (       String ("   getBool(): ") + String (getBool()));
 
-    bool Response = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cBinaryControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
     // DEBUG_V (       String ("getBool()Str: ") + getBool()Str);
     // DEBUG_V (       String ("   getBool(): ") + String (getBool()));
 
@@ -80,7 +79,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
     {
         if (!Response)
         {
-            // DEBUG_V ("Lower levels had an error. Done change anything");
+            // DEBUG_V ("Lower levels had an error. Dont change anything");
             break;
         }
 
@@ -93,8 +92,11 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_OFF_AIR_STR;
             digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (RADIO_OFF_AIR_STR, eCssStyle::CssStyleBlack);
-            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleWhite);
-            Log.infoln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
+            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleWhite, SkipLogOutput, ForceUpdate);
+            if(!SkipLogOutput)
+            {
+                Log.infoln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
+            }
             break;
         }
 
@@ -107,8 +109,11 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_FAIL_STR;
             digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
-            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
-            Log.errorln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
+            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed, SkipLogOutput, ForceUpdate);
+            if(!SkipLogOutput)
+            {
+                Log.errorln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
+            }
             break;
         }
 
@@ -118,7 +123,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_VSWR_STR;
             digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
-            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
+            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed, SkipLogOutput, ForceUpdate);
             Log.warningln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
             break;
         }
@@ -130,7 +135,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
             ResponseMessage = RADIO_VOLT_STR;
             digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
-            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed);
+            RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed, SkipLogOutput, ForceUpdate);
             Log.warningln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
             break;
         }
@@ -139,7 +144,7 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool Force
         ResponseMessage = RADIO_ON_AIR_STR;
         digitalWrite (ON_AIR_PIN, SIGN_ON);
         setMessage (ResponseMessage, eCssStyle::CssStyleWhite);
-        RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleGreen);
+        RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleGreen, SkipLogOutput, ForceUpdate);
         Log.infoln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
     } while (false);
 

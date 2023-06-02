@@ -25,7 +25,7 @@ public:
     cAudioInputImpedance ();
     virtual~cAudioInputImpedance ()    {}
 
-    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
 };  // class cAudioInputImpedance
 
 extern cAudioInputImpedance AudioInputImpedance;

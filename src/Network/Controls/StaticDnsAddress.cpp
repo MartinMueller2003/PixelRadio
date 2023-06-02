@@ -15,6 +15,7 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "PixelRadio.h"
 #include "StaticDnsAddress.hpp"
 #include "DHCP.hpp"
 #include "memdebug.h"
@@ -37,7 +38,7 @@ cStaticDnsAddress::~cStaticDnsAddress ()
 }
 
 // *********************************************************************************************
-bool cStaticDnsAddress::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cStaticDnsAddress::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -47,9 +48,9 @@ bool cStaticDnsAddress::set (const String & value, String & ResponseMessage, boo
 
     do  // once
     {
-        Response = cIpAddressControlStacked::set (value, ResponseMessage, ForceUpdate);
+        Response = cIpAddressControlStacked::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
-        if (!Booting)
+        if (!SystemBooting)
         {
             DHCP.TestIpSettings ();
         }

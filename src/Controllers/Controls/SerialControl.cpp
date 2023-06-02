@@ -43,7 +43,7 @@ void cSerialControl::AddControls (uint16_t TabId, ControlColor color)
     LastCmdProcessed.AddControls (TabId, color);
     LastCmdProcessed.setControlStyle (eCssStyle::CssStyleWhite);
     String Temp = F ("Serial Control<br>Last Command Processed");
-    LastCmdProcessed.set (Temp);
+    LastCmdProcessed.set (Temp, true, true);
 
     // DEBUG_END;
 }
@@ -92,8 +92,7 @@ void cSerialControl::poll (void)
 
             paramStr = serial_manager.getParam ();
             // DEBUG_V((String(F("Raw CLI Parameter: '")) + paramStr + "'").c_str());
-
-            LastCmdProcessed.set (String (F ("Command: '")) + cmdStr + F ("' <br>Parameter: '") + paramStr + F ("'"));
+            LastCmdProcessed.set (String (F ("Command: '")) + cmdStr + F ("' <br>Parameter: '") + paramStr + F ("'"), true, false);
 
             String Response;
             CommandProcessor.ProcessCommand (cmdStr, paramStr, Response);
@@ -107,7 +106,7 @@ void cSerialControl::poll (void)
 }
 
 // ************************************************************************************************
-bool cSerialControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cSerialControl::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     uint32_t OriginalBaudrate   = get32 ();
@@ -115,7 +114,7 @@ bool cSerialControl::set (const String & value, String & ResponseMessage, bool F
 
     do  // once
     {
-        Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+        Response = cChoiceListControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
         if (!ForceUpdate && !Response)
         {

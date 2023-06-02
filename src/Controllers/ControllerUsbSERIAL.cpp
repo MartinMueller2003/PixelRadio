@@ -38,8 +38,11 @@ void cControllerUsbSERIAL::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
     cControllerCommon::AddControls (TabId, color);
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
     SerialControl.AddControls (ControlId, color);
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
 
     // DEBUG_END;
 }   // AddControls
@@ -61,6 +64,9 @@ void cControllerUsbSERIAL::restoreConfiguration (ArduinoJson::JsonObject & confi
     cControllerCommon::restoreConfiguration (config);
     SerialControl.restoreConfiguration (config);
 
+    // DEBUG_V(String("              Value: ") + GetDataValueStr());
+    // DEBUG_V(String("SerialControl Value: ") + SerialControl.GetDataValueStr());
+
     // DEBUG_END;
 }   // restoreConfiguration
 
@@ -76,13 +82,15 @@ void cControllerUsbSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
 }   // saveConfiguration
 
 // *********************************************************************************************
-bool cControllerUsbSERIAL::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cControllerUsbSERIAL::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    bool Response = cControllerCommon::set (value, ResponseMessage, ForceUpdate);
-
+    bool Response = cControllerCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
     SerialControl.SetControllerEnabled (getBool ());
+
+    // DEBUG_V(String("              Value: ") + GetDataValueStr());
+    // DEBUG_V(String("SerialControl Value: ") + SerialControl.GetDataValueStr());
 
     // DEBUG_END;
     return Response;

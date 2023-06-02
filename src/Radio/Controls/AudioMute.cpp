@@ -50,7 +50,7 @@ void cAudioMute::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cAudioMute::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cAudioMute::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -58,7 +58,7 @@ bool cAudioMute::set (const String & value, String & ResponseMessage, bool Force
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("   DataValue: ") + String(DataValue));
 
-    bool Response = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cBinaryControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

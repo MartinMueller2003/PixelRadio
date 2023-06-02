@@ -142,15 +142,24 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     File    file;
     SPIClass SPI2 (HSPI);
 
+    // Log.infoln (String(F ("saveConfiguration: Start")).c_str());
+
+    if(SystemBooting)
+    {
+        // ignore save requests while we are booting
+        return true;
+    }
+
     if (saveMode == LITTLEFS_MODE)
     {
-        Log.infoln (F ("Backup Configuration to LittleFS ..."));
+        Log.infoln ((String(F ("Backup Configuration to LittleFS: '")) + String(fileName) + "'").c_str());
+        PixelRadio_LittleFS.begin(false);
         PixelRadio_LittleFS.remove (fileName);
         file = PixelRadio_LittleFS.open (fileName, FILE_WRITE);
     }
     else if (saveMode == SD_CARD_MODE)
     {
-        Log.infoln (F ("Backup Configuration to SD Card ..."));
+        Log.infoln ((String(F ("Backup Configuration to SD Card: '")) + String(fileName) + "'").c_str());
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
         SD.end ();                          // Re-init Interface in case SD card had been swapped).
@@ -170,7 +179,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     }
     else
     {
-        Log.infoln (F ("saveConfiguration: Undefined Backup Mode, Aborted."));
+        Log.errorln (F ("saveConfiguration: Undefined Backup Mode, Aborted."));
 
         return false;
     }
@@ -205,7 +214,13 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     DynamicJsonDocument doc (JSON_CFG_SZ);
 
     // *****************************************************************
-    JsonObject root = doc.as <JsonObject>();
+    // Log.infoln ((String(F ("saveConfiguration:1 doc.capacity: ")) + String(doc.capacity())).c_str());
+    JsonObject root = doc.to <JsonObject>();
+    root["author"] = "MEM";
+
+    // Log.infoln ((String(F ("saveConfiguration:1 doc.size: ")) + String(doc.size())).c_str());
+    // serializeJsonPretty(root, Serial); // Debug Output
+    // Serial.println();
 
     ControllerMgr.saveConfiguration (root);
     WiFiDriver.saveConfiguration (root);
@@ -215,21 +230,29 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
     Gpio23.saveConfiguration (root);
     Gpio33.saveConfiguration (root);
     Diagnostics.saveConfiguration (root);
+    Radio.saveConfiguration (root);
+
+    // Log.infoln ((String(F ("saveConfiguration: doc.overflowed: ")) + String(doc.overflowed())).c_str());
+    // Log.infoln ((String(F ("saveConfiguration:2 doc.size: ")) + String(doc.size())).c_str());
+    // Log.infoln ((String(F ("saveConfiguration:2 doc.capacity: ")) + String(doc.capacity())).c_str());
+    // serializeJsonPretty(root, Serial); // Debug Output
+    // Serial.println();
 
     // Serialize JSON to file
-    if (serializeJson (doc, file) == 0)
+    if (serializeJson (root, file) == 0)
     {
         Log.errorln (F ("-> Failed to Save Configuration."));
     }
     else
     {
         successFlg = true;
-        Log.verboseln (F ("-> Configuration JSON used %u Bytes."), doc.memoryUsage ());
+        // Log.verboseln (F ("-> Configuration JSON used %u Bytes."), doc.memoryUsage ());
         Log.infoln (F ("-> Configuration Save Complete."));
 
         // serializeJsonPretty(doc, Serial); // Debug Output
-        // Serial.println();
+        Serial.println();
     }
+    // Log.infoln (String(F ("saveConfiguration: 241")).c_str());
 
     // Close the file
     file.close ();
@@ -255,6 +278,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     if (restoreMode == LITTLEFS_MODE)
     {
         Log.infoln (F ("Restore Configuration From LittleFS ..."));
+        PixelRadio_LittleFS.begin();
         file = PixelRadio_LittleFS.open (fileName, FILE_READ);
     }
     else if (restoreMode == SD_CARD_MODE)
@@ -314,11 +338,21 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
     // empirically Arduino Json needs 3.5 x the json text size to parse the file.
     uint32_t DocSize = uint32_t (file.size ()) * 4;
+    // Serial.println(String("DocSize: ") + String(DocSize));
+
     DynamicJsonDocument raw_doc (DocSize);
+    // Serial.println(String("capacity: ") + String(raw_doc.capacity()));
 
     DeserializationError error = deserializeJson (raw_doc, file);
 
+    // Serial.println("PrettyPrint raw_doc");
+    // serializeJsonPretty(raw_doc, Serial); // Debug Output
+    // Serial.println("\nPrettyPrint raw_doc");
+
+    JsonObject doc = raw_doc.as<JsonObject>();
+    // Serial.println("PrettyPrint doc");
     // serializeJsonPretty(doc, Serial); // Debug Output
+    // Serial.println("\nPrettyPrint doc");
 
     file.close ();
 
@@ -334,8 +368,6 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
 
         return false;
     }
-
-    JsonObject doc = raw_doc.as <JsonObject>();
 
     ControllerMgr.restoreConfiguration (doc);
     WiFiDriver.restoreConfiguration (doc);

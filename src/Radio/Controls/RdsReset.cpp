@@ -16,6 +16,7 @@
 #include <ArduinoLog.h>
 #include <vector>
 
+#include "PixelRadio.h"
 #include "RdsReset.hpp"
 #include "PiCode.hpp"
 #include "ProgramServiceName.hpp"
@@ -49,13 +50,16 @@ void cRdsReset::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cRdsReset::set (const String &, String & ResponseMessage, bool)
+bool cRdsReset::set (const String &, String & ResponseMessage, bool, bool)
 {
     // DEBUG_START;
 
-    PiCode.ResetToDefaults ();
-    PtyCode.ResetToDefaults ();
-    ProgramServiceName.ResetToDefaults ();
+    if(!SystemBooting)
+    {
+        PiCode.ResetToDefaults ();
+        PtyCode.ResetToDefaults ();
+        ProgramServiceName.ResetToDefaults ();
+    }
 
     ResponseMessage = String (F ("Reset RDS Settings to defaults."));
 

@@ -62,7 +62,7 @@ void cDHCP::AddControls (uint16_t TabId, ControlColor color)
     String  Dummy;
     String  NewVal;
     NewVal = String (cBinaryControl::getBool ());
-    set (NewVal, Dummy, true);
+    set (NewVal, Dummy, true, true);
 
     // DEBUG_END;
 }
@@ -94,7 +94,7 @@ bool cDHCP::getBool ()
 }
 
 // *********************************************************************************************
-bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cDHCP::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -104,7 +104,7 @@ bool cDHCP::set (const String & value, String & ResponseMessage, bool ForceUpdat
 
     bool    OldState    = getBool ();
     bool    OldBool     = cBinaryControl::getBool ();
-    bool    Response    = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
+    bool    Response    = cBinaryControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
     // DEBUG_V (       String ("   cBinaryControl::getBool(): ") + String (cBinaryControl::getBool()));
     // DEBUG_V (       String ("    OldState: ") + String (OldState));
     // DEBUG_V (       String ("    NewState: ") + String (getBool ()));

@@ -44,7 +44,7 @@ void cFrequencyAdjust::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    UpdateStatus ();
+    UpdateStatus (true, true);
 
     // DEBUG_END;
 }
@@ -55,7 +55,7 @@ void cFrequencyAdjust::AddRadioControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     RadioFreqStatus.AddControls (value, color);
-    UpdateStatus ();
+    UpdateStatus (true, true);
 
     // DEBUG_END;
 }
@@ -66,7 +66,7 @@ void cFrequencyAdjust::AddHomeControls (uint16_t value, ControlColor color)
     // DEBUG_START;
 
     HomeFreqStatus.AddControls (value, color);
-    UpdateStatus ();
+    UpdateStatus (true, true);
 
     // DEBUG_END;
 }
@@ -78,7 +78,7 @@ void cFrequencyAdjust::AddAdjustControls (uint16_t value, ControlColor color)
 
     AdjustFreqStatus.AddControls (value, color);
     cControlCommonMsg::AddControls (value, color);
-    UpdateStatus ();
+    UpdateStatus (true, true);
 
     // DEBUG_END;
 }
@@ -128,7 +128,7 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
         // DEBUG_V(String("DataStr: ") + DataStr);
         String ResponseMessage;
 
-        if (set (DataStr, ResponseMessage, false))
+        if (set (DataStr, ResponseMessage, false, false))
         {
             setMessage (emptyString, eCssStyle::CssStyleTransparent);
         }
@@ -142,21 +142,22 @@ void cFrequencyAdjust::Callback (Control * sender, int type)
 }
 
 // *********************************************************************************************
-bool cFrequencyAdjust::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cFrequencyAdjust::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
     // DEBUG_V(String("       value: ") + value);
 
-    bool Response = cControlCommonMsg::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {
         float tempFloat = GetDataValueStr ().toFloat ();
         QN8027RadioApi.setFrequency (tempFloat, RfCarrier.get ());
 
-        UpdateStatus ();
+        // DEBUG_V();
+        UpdateStatus (SkipLogOutput, ForceUpdate);
     }
 
     // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
@@ -175,7 +176,7 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
 
     bool Response = true;
 
-    // DEBUG_V(String("DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("DataValueStr: ") + GetDataValueStr());
     // DEBUG_V(String("       value: ") + value);
 
     float NewData = value.toFloat ();
@@ -184,37 +185,44 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
 
     do  // once
     {
-        uint32_t PointPosition = GetDataValueStr ().indexOf ('.');
-
+        uint32_t PointPosition = value.indexOf ('.');
+        // DEBUG_V();
         if (PointPosition < 0)
         {
+            // DEBUG_V("No Decimal Point");
             ResponseMessage = GetTitle () + F (": Set failed: Decimal point is missing.");
             Response        = false;
+            NewData         = FM_FREQ_MIN;
+            SetDataValueStr (String (NewData, 1));
             break;
         }
 
         if (NewData > FM_FREQ_MAX)
         {
+            // DEBUG_V("Too High");
             ResponseMessage = GetTitle () + F (": Set failed: Frequency is too high.");
             Response        = false;
             NewData         = FM_FREQ_MAX;
+            SetDataValueStr (String (NewData, 1));
             break;
         }
 
         if (NewData < FM_FREQ_MIN)
         {
+            // DEBUG_V("Too Low");
             ResponseMessage = GetTitle () + F (": Set failed: Frequency is too low");
             Response        = false;
             NewData         = FM_FREQ_MIN;
+            SetDataValueStr (String (NewData, 1));
             break;
         }
 
-        // DEBUG_V(String("NewData: ") + String(NewData));
+        // DEBUG_V(String("        NewData: ") + String(NewData, 1));
         SetDataValueStr (String (NewData, 1));
         ResponseMessage = GetDataValueStr () + UNITS_MHZ_STR;
     } while (false);
 
-    // DEBUG_V(String("   DataValueStr: ") + DataValueStr);
+    // DEBUG_V(String("   DataValueStr: ") + GetDataValueStr());
     // DEBUG_V(String("ResponseMessage: ") + ResponseMessage);
     // DEBUG_V(String("       Response: ") + String(Response));
 
@@ -223,14 +231,14 @@ bool cFrequencyAdjust::validate (const String & value, String & ResponseMessage,
 }
 
 // *********************************************************************************************
-void cFrequencyAdjust::UpdateStatus ()
+void cFrequencyAdjust::UpdateStatus (bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
     String Status = GetDataValueStr () + UNITS_MHZ_STR;
-    HomeFreqStatus.set (Status);
-    AdjustFreqStatus.set (Status);
-    RadioFreqStatus.set (Status);
+    HomeFreqStatus.set (Status, SkipLogOutput, ForceUpdate);
+    AdjustFreqStatus.set (Status, SkipLogOutput, ForceUpdate);
+    RadioFreqStatus.set (Status, SkipLogOutput, ForceUpdate);
 
     // DEBUG_END;
 }

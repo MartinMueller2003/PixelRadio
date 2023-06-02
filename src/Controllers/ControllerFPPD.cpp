@@ -134,12 +134,14 @@ void c_ControllerFPPD::restoreConfiguration (ArduinoJson::JsonObject & config)
 {
     // DEBUG_START;
 
+    // config["ControllerEnabled"] = true;
+    // Serial.println("c_ControllerFPPD::restoreConfiguration");
+    // serializeJsonPretty(config, Serial);
+    // Serial.println("\nc_ControllerFPPD::restoreConfiguration");
+
     cControllerCommon::restoreConfiguration (config);
     SequenceLearning.restoreConfiguration (config);
     Sequences.RestoreConfig (config);
-
-    // DEBUG_V("Final");
-    // serializeJsonPretty(config, Serial);
 
     // DEBUG_END;
 }   // restoreConfiguration

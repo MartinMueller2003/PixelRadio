@@ -38,8 +38,8 @@ public:
     uint32_t            getIndex ();
     void                RefreshOptionList (const ChoiceListVector_t * OptionList);
     // virtual bool        set32 ();
-    virtual bool    setIndex (const String & value, String & ResponseMessage, bool ForceUpdate  = false);
-    virtual bool    setIndex (uint32_t value, String & ResponseMessage, bool ForceUpdate        = false);
+    virtual bool    setIndex (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
+    virtual bool    setIndex (uint32_t value, String & ResponseMessage, bool SkipLogOutput,  bool ForceUpdate);
     virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:

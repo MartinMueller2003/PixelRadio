@@ -144,11 +144,11 @@ void cLogLevel::printTimestamp (Print * _logOutput)
 }
 
 // *********************************************************************************************
-bool cLogLevel::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cLogLevel::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cChoiceListControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

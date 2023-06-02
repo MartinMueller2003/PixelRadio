@@ -52,7 +52,7 @@ void cAudioMode::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cAudioMode::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cAudioMode::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -60,7 +60,7 @@ bool cAudioMode::set (const String & value, String & ResponseMessage, bool Force
     // DEBUG_V(String("getBool()Str: ") + getBool()Str);
     // DEBUG_V(String("   getBool(): ") + String(getBool()));
 
-    bool Response = cBinaryControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cBinaryControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

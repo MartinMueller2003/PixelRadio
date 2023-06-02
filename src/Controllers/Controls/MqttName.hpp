@@ -24,7 +24,7 @@ public:
     virtual~cMqttName ();
 
     void    AddControls (uint16_t TabId, ControlColor color);
-    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 };  // class cMqttName
 
 extern cMqttName MqttName;

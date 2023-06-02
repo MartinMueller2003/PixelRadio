@@ -31,12 +31,12 @@ public:
     void    AddRadioControls (uint16_t TabId, ControlColor color);
     void    AddHomeControls (uint16_t TabId, ControlColor color);
     void    Callback (Control * sender, int type);
-    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:
 
-    void UpdateStatus ();
+    void UpdateStatus (bool SkipLogOutput, bool ForceUpdate);
 
     cFrequencyStatus    HomeFreqStatus;
     cFrequencyStatus    AdjustFreqStatus;

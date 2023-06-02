@@ -25,7 +25,7 @@ public:
     virtual~cSequenceName ();
 
     void    AddControls (uint16_t TabId, ControlColor color);
-    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 private:
     cStatusControl  InstructionLabel;
     cStatusControl  StatusMessage;

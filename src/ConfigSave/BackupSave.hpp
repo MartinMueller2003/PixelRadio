@@ -26,7 +26,7 @@ public:
     virtual~cBackupSave ()    {}
 
     void    AddControls (uint16_t TabId, ControlColor color);
-    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
 };  // class cBackupSave
 
 // *********************************************************************************************

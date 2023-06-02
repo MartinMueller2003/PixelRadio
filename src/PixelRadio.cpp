@@ -77,6 +77,7 @@
 //
 
 // Global System Vars
+bool SystemBooting = true;
 
 // *********************************************************************************************
 
@@ -129,7 +130,7 @@ void setup ()
     if (checkEmergencyCredentials (CRED_FILE_NAME))
     {
         // Check for Emergency WiFi Credential File on SD Card.
-        saveConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);    // Save restored credentials to file system.
+        // saveConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);    // Save restored credentials to file system.
     }
 
     WiFiDriver.Begin ();
@@ -147,6 +148,8 @@ void setup ()
     Log.infoln (F ("-> Web UI Loaded."));
 
     Serial.flush ();
+
+    SystemBooting = false;
 }
 
 // *********************************************************************************************

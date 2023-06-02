@@ -26,7 +26,7 @@ public:
     virtual~cRfCarrier ()    {}
 
     void            AddHomeControls (uint16_t TabId, ControlColor color);
-    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
 
 private:
 

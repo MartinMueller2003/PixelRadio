@@ -59,7 +59,7 @@ void cSystemRunTime::Poll ()
         char timeBuff[30];
         memset (timeBuff, 0x0, sizeof (timeBuff));
         sprintf (timeBuff, "Days:%u + %02u:%02u:%02u", days, hours, minutes, seconds);
-        set (String (timeBuff));
+        set (String (timeBuff), true, false);
     }
 
     // _ DEBUG_END;

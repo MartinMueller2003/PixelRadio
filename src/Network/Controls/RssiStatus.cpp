@@ -72,7 +72,7 @@ void cRssiStatus::set ()
     Result  = String (getRssi ());
     Result  += UNITS_DBM_STR;
     // DEBUG_V (String ("Result: ") + Result);
-    cStatusControl::set (Result);
+    cStatusControl::set (Result, true, false);
 
     // DEBUG_END;
 }

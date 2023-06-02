@@ -86,11 +86,11 @@ void cControllerGpioSERIAL::saveConfiguration (ArduinoJson::JsonObject & config)
 }   // saveConfiguration
 
 // *********************************************************************************************
-bool cControllerGpioSERIAL::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cControllerGpioSERIAL::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    bool Response = cControllerCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControllerCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     SerialControl.SetControllerEnabled (getBool ());
 

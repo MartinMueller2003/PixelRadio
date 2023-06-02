@@ -24,7 +24,7 @@ public:
 
     cDigitalAudioGain ();
     virtual~cDigitalAudioGain ()    {}
-    bool set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
 };  // class cDigitalAudioGain
 
 extern cDigitalAudioGain DigitalAudioGain;

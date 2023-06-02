@@ -50,11 +50,11 @@ void cProgramServiceName::AddControls (uint16_t value, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cProgramServiceName::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cProgramServiceName::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

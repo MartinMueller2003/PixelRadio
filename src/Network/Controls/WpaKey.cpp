@@ -35,13 +35,13 @@ cWpaKey::cWpaKey () :   cPasswordControl (WIFI_WPA_KEY_STR,
 }
 
 // *********************************************************************************************
-bool cWpaKey::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cWpaKey::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V(String("       value: ") + value);
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
 
-    bool Response = cPasswordControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cPasswordControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

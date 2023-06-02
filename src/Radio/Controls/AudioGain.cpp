@@ -55,8 +55,7 @@ void cAudioGain::set ()
 
     Result  += String (FinalGain);
     Result  += F (" dB");
-
-    cStatusControl::set (Result);
+    cStatusControl::set (Result, false, false);
 
     // DEBUG_V (Result);
 

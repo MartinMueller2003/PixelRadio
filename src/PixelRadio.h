@@ -31,6 +31,7 @@
 #define AUTHOR_STR      "by Thomas Black / Martin Mueller"
 #define BLD_DATE_STR    "Jun-13-2022"
 #define GITHUB_REPO_STR "<a href=\"https://github.com/MartinMueller2003/PixelRadio/\" target=\"_blank\">Click Here for Information</a>"
+extern bool SystemBooting;
 
 // *********************************************************************************************
 

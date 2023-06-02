@@ -34,7 +34,7 @@ public:
     virtual void    AddControls (uint16_t TabId, ControlColor color);
     void            initSerialControl (HardwareSerial * port);
     virtual void    SetControllerEnabled (bool value) {ControllerIsEnabled = value;}
-    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     virtual void    poll (void);
 
 private:

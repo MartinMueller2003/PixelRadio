@@ -31,7 +31,7 @@ public:
 
     virtual~cNumberControl ()    {}
     virtual uint32_t    get32 () {return StringToNumber (get ());}
-    virtual bool        validate (const String & value, String & Response, bool ForceUpdate = false);
+    virtual bool        validate (const String & value, String & Response, bool ForceUpdate);
 private:
     uint32_t StringToNumber (const String & value);
     uint32_t    MinValue;

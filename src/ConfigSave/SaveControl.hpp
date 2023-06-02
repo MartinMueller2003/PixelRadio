@@ -27,7 +27,7 @@ public:
 
     void    AddControls (uint16_t TabId, ControlColor color);
     void    ClearSaveNeeded ();
-    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     void    SetSaveNeeded ();
 };  // class cSaveControl
 

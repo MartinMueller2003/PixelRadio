@@ -50,18 +50,18 @@ void cBackupSave::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cBackupSave::set (const String &, String & ResponseMessage, bool)
+bool cBackupSave::set (const String &, String & ResponseMessage, bool, bool)
 {
     // DEBUG_START;
     // DEBUG_V (String ("DataValueStr: ") + DataValueStr);
-    // DEBUG_V (String ("     Booting: ") + String (Booting));
+    // DEBUG_V (String ("AddingControls: ") + String (AddingControls));
 
     extern bool saveConfiguration (uint8_t saveMode, const char * fileName);
 
     bool Response = true;
     ResponseMessage.clear ();
 
-    if (!Booting)
+    if (!SystemBooting)
     {
         if (saveConfiguration (SD_CARD_MODE, String (F (BACKUP_FILE_NAME)).c_str ()))
         {

@@ -24,8 +24,6 @@ cStatusControl::cStatusControl (const String & _Title) :
 {
     // _ DEBUG_START;
     setSaveUpdates (false);
-    SkipSetLog = true;
-
     // _ DEBUG_END;
 }
 
@@ -35,30 +33,28 @@ cStatusControl::cStatusControl () :
 {
     // _ DEBUG_START;
 
-    SkipSetLog = true;
-
     // _ DEBUG_END;
 }
 
 // *********************************************************************************************
-void cStatusControl::set (const String & value, eCssStyle style)
+void cStatusControl::set (const String & value, eCssStyle style, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
     cControlCommonMsg::setControlStyle (style);
 
-    set (value);
+    set (value, SkipLogOutput, ForceUpdate);
 
     // DEBUG_END;
 }
 
 // *********************************************************************************************
-bool cStatusControl::set (const String & value)
+bool cStatusControl::set (const String & value, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
     String  Dummy;
-    bool    Response = cControlCommon::set (value, Dummy);
+    bool    Response = cControlCommon::set (value, Dummy, SkipLogOutput, ForceUpdate);
 
     // DEBUG_END;
 

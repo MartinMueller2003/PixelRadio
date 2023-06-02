@@ -41,12 +41,13 @@ public:
     virtual void            ResetToDefaults ();
     virtual void            restoreConfiguration (JsonObject & json);
     virtual void            saveConfiguration (JsonObject & json);
-    virtual bool            set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual bool            set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     virtual void            setSaveUpdates (bool value)     {SaveUpdate = value;}
     virtual void            SetTitle (const String & value) {Title = value;}
     virtual bool            validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
     const String    &GetDataValueStr ();
+    const String    &GetDefaultValueStr () {return DefaultValue;}
     void            SetDataValueStr (const String & value);
 
     enum eCssStyle
@@ -96,14 +97,13 @@ protected:
     ePanelStyle     ControlPanelStyle = PanelStyle125;
 
     bool            SaveUpdate  = true;
-    bool            SkipSetLog  = false;
-    bool            Booting     = true;
     const String    ConfigName;
     const String    DefaultValue;
     bool            ValueChanged = false;
 
 private:
     String          Title = emptyString;
+    String          LocalValue = emptyString;
     ControlType     uiControltype;
     uint32_t        MaxDataLength = 0;
 };  // class cControlCommon

@@ -48,14 +48,14 @@ cMdnsName::~cMdnsName ()
 }
 
 // *********************************************************************************************
-bool cMdnsName::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cMdnsName::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
     // DEBUG_V(String("       value: ") + value);
     // DEBUG_V(String("DataValueStr: ") + DataValueStr);
 
-    bool Response = cControlCommon::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

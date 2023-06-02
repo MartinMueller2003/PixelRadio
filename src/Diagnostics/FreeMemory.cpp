@@ -58,7 +58,7 @@ void cFreeMemory::Poll ()
             // DEBUG_V();
             PreviousReading = NewReading;
             String TempStr = String (NewReading) + F (" KB");
-            set (TempStr);
+            set (TempStr, true, false);
             Log.verboseln ((String (F ("Free Heap Memory: ")) + TempStr).c_str ());
         }
     }

@@ -39,7 +39,7 @@ public:
     void    poll () {SerialControl.poll ();}
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
     void    saveConfiguration (ArduinoJson::JsonObject & config);
-    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
 
 private:
     cSerialControl          SerialControl;

@@ -46,11 +46,11 @@ cGpioCommon::cGpioCommon (const String & ConfigName, const String & _Title, gpio
 {}
 
 // *********************************************************************************************
-bool cGpioCommon::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cGpioCommon::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cChoiceListControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     do  // once
     {

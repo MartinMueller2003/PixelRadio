@@ -17,6 +17,7 @@
 #include <ArduinoLog.h>
 #include <vector>
 
+#include "PixelRadio.h"
 #include "ConfigSave.hpp"
 #include "SaveControl.hpp"
 #include "memdebug.h"
@@ -71,7 +72,7 @@ void cConfigSave::InitiateSaveOperation ()
 {
     // DEBUG_START;
 
-    // saveSuccessFlg = saveConfiguration(LITTLEFS_MODE, fileName);
+    saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME);
     ClearSaveNeeded ();
 
     // DEBUG_END;

@@ -149,7 +149,7 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 
         String Dummy;
         // DEBUG_V();
-        setIndex (CurrentIndex, Dummy, true);
+        setIndex (CurrentIndex, Dummy, true, false);
 
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
 
@@ -160,12 +160,12 @@ void cChoiceListControl::RefreshOptionList (const ChoiceListVector_t * OptionLis
 }
 
 // *********************************************************************************************
-bool cChoiceListControl::setIndex (const String & NewIndex, String & ResponseMessage, bool ForceUpdate)
+bool cChoiceListControl::setIndex (const String & NewIndex, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (String ("NewIndex:") + NewIndex);
 
-    bool Response = setIndex (uint32_t (NewIndex.toInt ()), ResponseMessage, ForceUpdate);
+    bool Response = setIndex (uint32_t (NewIndex.toInt ()), ResponseMessage, SkipLogOutput, ForceUpdate);
 
     // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
 
@@ -175,7 +175,7 @@ bool cChoiceListControl::setIndex (const String & NewIndex, String & ResponseMes
 }
 
 // *********************************************************************************************
-bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, bool ForceUpdate)
+bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (String ("NewIndex: ") + String (value));
@@ -195,7 +195,7 @@ bool cChoiceListControl::setIndex (uint32_t value, String & ResponseMessage, boo
         String  Dummy;
         String  NewValue = (*ChoiceVector)[value].first;
         // DEBUG_V (String ("       NewValue: ") + NewValue);
-        Response = set (NewValue, Dummy, ForceUpdate);
+        Response = set (NewValue, Dummy, SkipLogOutput, ForceUpdate);
 
         // DEBUG_V (String ("NewDataValueStr: ") + DataValueStr);
     } while (false);

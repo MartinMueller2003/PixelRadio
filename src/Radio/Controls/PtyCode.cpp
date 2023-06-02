@@ -116,7 +116,7 @@ void cPtyCode::AddControls (uint16_t value, ControlColor color)
 }
 
 // ************************************************************************************************
-bool cPtyCode::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cPtyCode::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -124,7 +124,7 @@ bool cPtyCode::set (const String & value, String & ResponseMessage, bool ForceUp
     // DEBUG_V (       String ("   DataValueStr: '") + DataValueStr + "'");
     // DEBUG_V (       String ("CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");
 
-    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cChoiceListControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
     // DEBUG_V (       String ("          get32: ") + String (get32 ()));
 
     // DEBUG_V (       String ("CurrentRegion 9: '") + (*ChoiceVector)[9].first + "'");

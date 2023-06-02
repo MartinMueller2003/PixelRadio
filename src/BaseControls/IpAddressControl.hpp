@@ -26,7 +26,7 @@ public:
     virtual~cIpAddressControl ();
 
     IPAddress       GetIpAddress ();
-    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = true);
+    virtual bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     virtual bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:

@@ -87,6 +87,8 @@ cControlCommon::cControlCommon (const String    & _ConfigName,
     Title = _Title;
     SetDataValueStr (DefaultValue);
 
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
+
     // _ DEBUG_END;
 }
 
@@ -109,11 +111,12 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     // DEBUG_START;
     // DEBUG_V (   String ("       Title: ") + Title);
     // DEBUG_V (   String ("DefaultValue: ") + DefaultValue);
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
 
     ControlId = ESPUI.addControl (
         uiControltype,
         Title.c_str (),
-        DefaultValue,
+        GetDataValueStr(),
         color,
         TabId,
         [] (Control * sender, int type, void * UserInfo)
@@ -138,10 +141,8 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     {
         // force a UI Update
         String Response;
-        set (DefaultValue, Response, true);
+        set (GetDataValueStr(), Response, true, true);
     }
-
-    Booting = false;
 
     // DEBUG_END;
 }
@@ -163,7 +164,7 @@ void cControlCommon::Callback (Control * sender, int type)
         }
 
         String Dummy;
-        set (sender->value, Dummy);
+        set (sender->value, Dummy, false, false);
     } while (false);
 
     // DEBUG_END;
@@ -204,7 +205,7 @@ const String &cControlCommon::GetDataValueStr ()
       */
     // DEBUG_END;
 
-    return (MyControl) ? MyControl->value : emptyString;
+    return (MyControl) ? MyControl->value : LocalValue;
 }  // GetDataValueString
 
 // *********************************************************************************************
@@ -216,7 +217,7 @@ void cControlCommon::ResetToDefaults ()
     // DEBUG_START;
 
     String dummy;
-    set (DefaultValue, dummy);
+    set (DefaultValue, dummy, SystemBooting, false);
 
     // DEBUG_END;
 }
@@ -231,7 +232,7 @@ void cControlCommon::restoreConfiguration (JsonObject & config)
         String NewValue = GetDataValueStr ();
         ReadFromJSON (NewValue, config, ConfigName);
         String Response;
-        set (NewValue, Response);
+        set (NewValue, Response, SystemBooting, true);
     }
 
     // DEBUG_END;
@@ -251,7 +252,7 @@ void cControlCommon::saveConfiguration (JsonObject & config)
 }
 
 // *********************************************************************************************
-bool cControlCommon::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cControlCommon::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (   String ("      value: ") + value);
@@ -269,7 +270,10 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
                 ResponseMessage = String (Title + F (": Set: BAD VALUE: '")) + value + F ("'");
             }
 
-            Log.errorln (ResponseMessage.c_str ());
+            if(!SkipLogOutput)
+            {
+                Log.errorln (ResponseMessage.c_str ());
+            }
             Response = false;
             break;
         }
@@ -277,20 +281,22 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool F
         // DEBUG_V ("value is valid");
 
         ResponseMessage = Title + F (": Set To '") + value + F ("'");
+        ESPUI.print (ControlId, value);
 
-        if (!SkipSetLog)
+        if(!SkipLogOutput)
         {
             Log.infoln (ResponseMessage.c_str ());
         }
 
-        // DEBUG_V ("Saving value");
-
-        ValueChanged = true;
-        ESPUI.print (ControlId, value);
-
-        if (!Booting && SaveUpdate)
+        if (!SystemBooting)
         {
-            displaySaveWarning ();
+            // DEBUG_V ("Saving value");
+            ValueChanged = true;
+
+            if (SaveUpdate)
+            {
+                displaySaveWarning ();
+            }
         }
     } while (false);
 
@@ -358,9 +364,11 @@ void cControlCommon::SetDataValueStr (const String & value)
     if (MyControl)
     {
         MyControl->value = value;
+        LocalValue.clear();
     }
     else
     {
+        LocalValue = value;
         // DEBUG_V ("Control not valid");
     }
 

@@ -30,7 +30,7 @@ public:
     virtual bool    getBool () {return DataValue;}
     virtual void    restoreConfiguration (JsonObject & json);
     virtual void    saveConfiguration (JsonObject & json);
-    virtual bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    virtual bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     virtual void    setOffMessage (const String & value, eCssStyle style);
     virtual void    setOffMessageStyle (eCssStyle style);
     virtual void    setOnMessage (const String & value, eCssStyle style);

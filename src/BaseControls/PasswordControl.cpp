@@ -34,7 +34,7 @@ cPasswordControl::~cPasswordControl ()
 }
 
 // *********************************************************************************************
-bool cPasswordControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cPasswordControl::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -42,7 +42,7 @@ bool cPasswordControl::set (const String & value, String & ResponseMessage, bool
     // DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);
     // DEBUG_V (       String ("PasswordString: ") + PasswordString);
 
-    bool Response = cControlCommonMsg::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cControlCommonMsg::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
     setControlStyle (eCssStyle::CssStyleBlack_bw);
 
     // DEBUG_V (       String ("  DataValueStr: ") + DataValueStr);

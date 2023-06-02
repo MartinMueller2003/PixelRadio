@@ -59,7 +59,7 @@ void cSaveControl::ClearSaveNeeded ()
 }
 
 // *********************************************************************************************
-bool cSaveControl::set (const String &, String & ResponseMessage, bool)
+bool cSaveControl::set (const String &, String & ResponseMessage, bool, bool)
 {
     // DEBUG_START;
     // DEBUG_V (   String ("       value: ") + value);

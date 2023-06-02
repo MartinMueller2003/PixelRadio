@@ -161,34 +161,34 @@ void cRdsText::updateRdsMsgRemainingTime (uint32_t now)
         if (TestTone.getBool ())
         {
             // DEBUG_V("Test Mode");
-            RdsTextStatus.set (String (F ("Test Mode")));
+            RdsTextStatus.set (String (F ("Test Mode")), false, false);
             break;
         }
 
         if (!RfCarrier.getBool ())
         {
             // DEBUG_V("No Carrier");
-            RdsTextStatus.set (RDS_DISABLED_STR);
+            RdsTextStatus.set (RDS_DISABLED_STR, true, false);
             break;
         }
 
         if (0 == RdsMsgInfo.DurationMilliSec)
         {
             // DEBUG_V("No Message to send");
-            RdsTextStatus.set (HOME_RDS_WAIT_STR);
+            RdsTextStatus.set (HOME_RDS_WAIT_STR, true, false);
             break;
         }
 
         if (now > CurrentMsgEndTime)
         {
             // DEBUG_V("Timed Out");
-            RdsTextStatus.set (RDS_EXPIRED_STR);
+            RdsTextStatus.set (RDS_EXPIRED_STR, true, false);
             break;
         }
 
         unsigned long TimeRemaining = ((CurrentMsgEndTime - now) + 999) / 1000;
         // DEBUG_V(String("Update Timer: ") + String(TimeRemaining));
-        RdsTextStatus.set (String (TimeRemaining) + F (" Secs"));
+        RdsTextStatus.set (String (TimeRemaining) + F (" Secs"), true, false);
     } while (false);
 
     // DEBUG_END;

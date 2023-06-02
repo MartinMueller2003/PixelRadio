@@ -59,7 +59,7 @@ void cFreeFlash::Poll ()
             // DEBUG_V();
             PreviousReading = NewReading;
             String TempStr = String (NewReading) + F (" KB");
-            set (TempStr);
+            set (TempStr, true, true);
             Log.verboseln ((String (F ("Free Flash Memory: ")) + TempStr).c_str ());
         }
     }

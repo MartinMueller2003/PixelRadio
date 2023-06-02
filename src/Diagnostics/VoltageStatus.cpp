@@ -140,7 +140,7 @@ void cVoltageStatus::Poll ()
         if (OldSumOfVoltages != SumOfVoltages)
         {
             // DEBUG_V("Set a new value");
-            cStatusControl::set (String (NewAverageVoltage, 2) + F (" Vdc"));
+            cStatusControl::set (String (NewAverageVoltage, 2) + F (" Vdc"), true, false);
         }
     }
 

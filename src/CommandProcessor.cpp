@@ -113,7 +113,7 @@ bool cCommandProcessor::audioMode (String & payloadStr, String & ResponseMessage
 {
     // DEBUG_START;
 
-    bool response = AudioMode.set (payloadStr, ResponseMessage);
+    bool response = AudioMode.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
 
@@ -125,7 +125,7 @@ bool cCommandProcessor::frequency (String & payloadStr, String & ResponseMessage
 {
     // DEBUG_START;
 
-    bool response = FrequencyAdjust.set (payloadStr, ResponseMessage);
+    bool response = FrequencyAdjust.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -136,7 +136,7 @@ bool cCommandProcessor::gpio19 (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = Gpio19.set (payloadStr, ResponseMessage);
+    bool response = Gpio19.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -147,7 +147,7 @@ bool cCommandProcessor::gpio23 (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = Gpio23.set (payloadStr, ResponseMessage);
+    bool response = Gpio23.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -158,7 +158,7 @@ bool cCommandProcessor::gpio33 (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = Gpio33.set (payloadStr, ResponseMessage);
+    bool response = Gpio33.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -218,7 +218,7 @@ bool cCommandProcessor::log (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = LogLevel.set (payloadStr, ResponseMessage);
+    bool response = LogLevel.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -229,7 +229,7 @@ bool cCommandProcessor::mute (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = AudioMute.set (payloadStr, ResponseMessage);
+    bool response = AudioMute.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -238,11 +238,11 @@ bool cCommandProcessor::mute (String & payloadStr, String & ResponseMessage)
 // *************************************************************************************************************************
 bool cCommandProcessor::piCode (String & payloadStr, String & ResponseMessage)
 {
-    // DEBUG_START;
+    DEBUG_START;
 
-    bool response = PiCode.set (payloadStr, ResponseMessage);
+    bool response = PiCode.set (payloadStr, ResponseMessage, false, false);
 
-    // DEBUG_END;
+    DEBUG_END;
     return response;
 }
 
@@ -251,7 +251,7 @@ bool cCommandProcessor::ptyCode (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = PtyCode.set (payloadStr, ResponseMessage);
+    bool response = PtyCode.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -262,7 +262,7 @@ bool cCommandProcessor::programServiceName (String & payloadStr, String & Respon
 {
     // DEBUG_START;
 
-    bool response = ProgramServiceName.set (payloadStr, ResponseMessage);
+    bool response = ProgramServiceName.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -301,7 +301,7 @@ bool cCommandProcessor::reboot (String & payloadStr, String & ResponseMessage)
 {
     // DEBUG_START;
 
-    bool response = RebootControl.set (payloadStr, ResponseMessage);
+    bool response = RebootControl.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;
@@ -312,7 +312,7 @@ bool cCommandProcessor::rfCarrier (String & payloadStr, String & ResponseMessage
 {
     // DEBUG_START;
 
-    bool response = RfCarrier.set (payloadStr, ResponseMessage);
+    bool response = RfCarrier.set (payloadStr, ResponseMessage, false, false);
 
     // DEBUG_END;
     return response;

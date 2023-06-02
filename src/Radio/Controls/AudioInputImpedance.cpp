@@ -51,11 +51,11 @@ cAudioInputImpedance::cAudioInputImpedance () :   cChoiceListControl (
 }
 
 // *********************************************************************************************
-bool cAudioInputImpedance::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cAudioInputImpedance::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
-    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cChoiceListControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response)
     {

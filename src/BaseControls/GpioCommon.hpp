@@ -24,7 +24,7 @@ public:
 
     cGpioCommon (const String & ConfigName, const String & _Title, gpio_num_t _pinId);
     virtual~cGpioCommon ()    {}
-    bool    set (const String & value, String & ResponseMessage, bool ForceUpdate = false);
+    bool    set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate);
     bool    validate (const String & value, String & ResponseMessage, bool ForceUpdate);
 
 private:

@@ -15,6 +15,7 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include <ArduinoLog.h>
+#include "PixelRadio.h"
 #include "StaticNetmask.hpp"
 #include "DHCP.hpp"
 #include "memdebug.h"
@@ -37,7 +38,7 @@ cStaticNetmask::~cStaticNetmask ()
 }
 
 // *********************************************************************************************
-bool cStaticNetmask::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cStaticNetmask::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -47,9 +48,9 @@ bool cStaticNetmask::set (const String & value, String & ResponseMessage, bool F
 
     do  // once
     {
-        Response = cIpAddressControlStacked::set (value, ResponseMessage, ForceUpdate);
+        Response = cIpAddressControlStacked::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
-        if (!Booting)
+        if (!SystemBooting)
         {
             DHCP.TestIpSettings ();
         }

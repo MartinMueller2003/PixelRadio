@@ -29,8 +29,8 @@ public:
     void    restoreConfiguration (JsonObject &) {}
     void    saveConfiguration (JsonObject &)    {}
 
-    virtual bool    set (const String & value);
-    virtual void    set (const String & value, eCssStyle style);
+    virtual bool    set (const String & value, bool SkipLogOutput, bool ForceUpdate);
+    virtual void    set (const String & value, eCssStyle style, bool SkipLogOutput, bool ForceUpdate);
 };  // class cStatusControl
 
 // *********************************************************************************************

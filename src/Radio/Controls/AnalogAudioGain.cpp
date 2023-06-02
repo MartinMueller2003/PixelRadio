@@ -51,7 +51,7 @@ cAnalogAudioGain::cAnalogAudioGain () :   cChoiceListControl (ANALOG_GAIN_STR, R
 }
 
 // *********************************************************************************************
-bool cAnalogAudioGain::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cAnalogAudioGain::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (String ("value: ") + value);
@@ -60,7 +60,7 @@ bool cAnalogAudioGain::set (const String & value, String & ResponseMessage, bool
 
     do  // once
     {
-        if (!cControlCommon::set (value, ResponseMessage, ForceUpdate))
+        if (!cControlCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate))
         {
             // DEBUG_V ("Failed to save the new value");
             break;

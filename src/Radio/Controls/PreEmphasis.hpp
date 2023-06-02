@@ -25,7 +25,7 @@ public:
     cPreEmphasis ();
     virtual~cPreEmphasis ()    {}
 
-    bool set (const String & value, String & Response, bool ForceUpdate = false);
+    bool set (const String & value, String & Response, bool SkipLogOutput, bool ForceUpdate);
 };  // class cPreEmphasis
 
 extern cPreEmphasis PreEmphasis;

@@ -169,6 +169,8 @@ void c_ControllerMgr::AddControls (uint16_t TabId, ControlColor color)
     for (auto & CurrentController : ListOfControllers)
     {
         // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
+        // DEBUG_V(String("GetDataValueStr: '") + CurrentController.pController->GetTitle() + "':'" + CurrentController.pController->GetDataValueStr() + "'");
+
         CurrentController.pController->AddControls (TabId, color);
     }
 
@@ -289,7 +291,9 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 
         if (false == config.containsKey (N_controllers))
         {
-            // DEBUG_V("No Config Found");
+            // DEBUG_V("No Config Found in: ");
+            // serializeJsonPretty(config, Serial);
+            // Serial.println();
             break;
         }
 
@@ -299,9 +303,6 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 
         for (auto CurrentControllerConfig : ArrayOfControllerConfigs)
         {
-            // DEBUG_V("Individual Controller Config");
-            // serializeJsonPretty(CurrentControllerConfig, Serial);
-            // DEBUG_V();
             if (false == CurrentControllerConfig.containsKey (N_type))
             {
                 // DEBUG_V("No controller type ID found");
@@ -310,7 +311,11 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 
             uint32_t type = CurrentControllerConfig[N_type];
             // DEBUG_V(String("Type ID: ") + String(type));
+
             JsonObject Temp = CurrentControllerConfig;
+            // DEBUG_V("Individual Controller Config");
+            // serializeJsonPretty(Temp, Serial);
+            // DEBUG_V("\nIndividual Controller Config");
             ListOfControllers[type].pController->restoreConfiguration (Temp);
         }
     } while (false);
@@ -344,7 +349,7 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
         }
     } while (false);
 
-    serializeJsonPretty (config, Serial);
+    // serializeJsonPretty (config, Serial);
 
     // DEBUG_END;
 }   // saveConfiguration

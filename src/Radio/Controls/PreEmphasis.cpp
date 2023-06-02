@@ -50,14 +50,14 @@ cPreEmphasis::cPreEmphasis () :   cChoiceListControl (RADIO_PRE_EMPH_STR,
 }
 
 // *********************************************************************************************
-bool cPreEmphasis::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cPreEmphasis::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
     // DEBUG_V (       String ("          value: '") + value + "'");
     // DEBUG_V (       String ("   DataValueStr: '") + DataValueStr + "'");
     // DEBUG_V (       String ("          get32: ") + String (get32 ()));
 
-    bool Response = cChoiceListControl::set (value, ResponseMessage, ForceUpdate);
+    bool Response = cChoiceListControl::set (value, ResponseMessage, SkipLogOutput, ForceUpdate);
 
     if (Response || ForceUpdate)
     {

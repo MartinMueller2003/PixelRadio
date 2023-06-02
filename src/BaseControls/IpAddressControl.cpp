@@ -47,7 +47,7 @@ IPAddress cIpAddressControl::GetIpAddress ()
 }
 
 // *********************************************************************************************
-bool cIpAddressControl::set (const String & value, String & ResponseMessage, bool ForceUpdate)
+bool cIpAddressControl::set (const String & value, String & ResponseMessage, bool SkipLogOutput, bool ForceUpdate)
 {
     // DEBUG_START;
 
@@ -61,7 +61,7 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
 
     do  // once
     {
-        if (!cControlCommon::set (value, ResponseMessage, ForceUpdate))
+        if (!cControlCommon::set (value, ResponseMessage, SkipLogOutput, ForceUpdate))
         {
             // DEBUG_V ("Failed validation");
             ESPUI.updateControlValue (ControlId, GetDataValueStr ());
@@ -73,7 +73,7 @@ bool cIpAddressControl::set (const String & value, String & ResponseMessage, boo
         setControl (TempIp.toString (), eCssStyle::CssStyleBlack_bw);
         setMessage (emptyString, eCssStyle::CssStyleTransparent);
 
-        if (!ForceUpdate && (TempIp == IpAddress))
+        if (!SkipLogOutput && !ForceUpdate && (TempIp == IpAddress))
         {
             // DEBUG_V ("Address did not change");
             Log.infoln ((GetTitle () + F (": Unchanged")).c_str ());
@@ -108,7 +108,7 @@ bool cIpAddressControl::validate (const String & value, String & ResponseMessage
         if (!TempIp.fromString (value))
         {
             ResponseMessage = GetTitle () + (F (": value: '")) + value + F ("' is not valid");
-            Log.infoln (ResponseMessage.c_str ());
+            // Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
         }
@@ -116,7 +116,7 @@ bool cIpAddressControl::validate (const String & value, String & ResponseMessage
         if (!ForceUpdate && (TempIp == IPAddress (uint32_t (0))))
         {
             ResponseMessage = GetTitle () + (F (" value: '")) + value + F ("' is not valid");
-            Log.infoln (ResponseMessage.c_str ());
+            // Log.infoln (ResponseMessage.c_str ());
             Response = false;
             break;
         }

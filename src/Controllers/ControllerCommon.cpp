@@ -40,6 +40,8 @@ void cControllerCommon::AddControls (uint16_t tabId, ControlColor color)
 {
     // DEBUG_START;
 
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
+
     SeperatorName = GetTitle () + F (" SETTINGS");
     ESPUI.addControl (
         ControlType::Separator,
@@ -51,6 +53,7 @@ void cControllerCommon::AddControls (uint16_t tabId, ControlColor color)
     setOffMessageStyle (eCssStyle::CssStyleWhite);
     setOnMessageStyle (eCssStyle::CssStyleWhite);
 
+    // DEBUG_V(String("GetDataValueStr: '") + GetTitle() + "':'" + GetDataValueStr() + "'");
     cBinaryControl::AddControls (tabId, color);
 
     // DEBUG_END;

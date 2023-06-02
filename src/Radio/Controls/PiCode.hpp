@@ -26,8 +26,8 @@ public:
     virtual~cPiCode ()    {}
     uint32_t    get32 ();
     void        ResetToDefaults ();
-    bool        set (const String & value, String & Response, bool ForceUpdate      = false);
-    bool        validate (const String & value, String & Response, bool ForceUpdate = false);
+    bool        set (const String & value, String & Response, bool SkipLogOutput, bool ForceUpdate);
+    bool        validate (const String & value, String & Response, bool ForceUpdate);
 private:
     uint32_t StringToNumber (const String & value);
 };  // class cPiCode

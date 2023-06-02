@@ -50,7 +50,7 @@ void cBackupRestore::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cBackupRestore::set (const String &, String & ResponseMessage, bool)
+bool cBackupRestore::set (const String &, String & ResponseMessage, bool /* SkipLogOutput */, bool /*ForceUpdate*/)
 {
     // DEBUG_START;
     // DEBUG_V (String ("DataValueStr: ") + DataValueStr);
@@ -61,7 +61,7 @@ bool cBackupRestore::set (const String &, String & ResponseMessage, bool)
     bool Response = true;
     ResponseMessage.clear ();
 
-    if (!Booting)
+    if (!SystemBooting)
     {
         if (restoreConfiguration (SD_CARD_MODE, String (F (BACKUP_FILE_NAME)).c_str ()))
         {
