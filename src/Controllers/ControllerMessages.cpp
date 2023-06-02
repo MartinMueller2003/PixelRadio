@@ -515,11 +515,11 @@ void c_ControllerMessages::CbButtonUpdate (Control * sender, int type)
 void c_ControllerMessages::CbChoiceList (Control * sender, int type)
 {
     // DEBUG_START;
-    // DEBUG_V(String("       Title: '") + Title + "'");
+    // DEBUG_V(String("Current Title: '") + Title + "'");
 
     String CurrentSeletedMessageName = sender->value;
 
-    // DEBUG_V(String("Selected: '") + CurrentSeletedMessageName + "'");
+    // DEBUG_V(String("     Selected: '") + CurrentSeletedMessageName + "'");
 
     do  // once
     {
@@ -533,11 +533,12 @@ void c_ControllerMessages::CbChoiceList (Control * sender, int type)
         // DEBUG_V("Set the input text to equal the selected message.");
         ESPUI.updateText (TextEntryElementId, CurrentSeletedMessageName);
 
-        // tell the message it has been selected
+        // DEBUG_V("tell the message it has been selected");
         MessageSets[CurrentMsgSetName].ActivateMessage (CurrentSeletedMessageName);
 
-        // Update the warning and text fields
+        // DEBUG_V("Update the warning and text fields");
         CbTextChange (nullptr, 0);
+        ESPUI.jsonReload();
     } while (false);
 
     // DEBUG_END;
