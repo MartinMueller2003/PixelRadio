@@ -69,6 +69,7 @@ void c_ControllerLOCAL::GetNextRdsMessage (const String & value, c_ControllerMgr
 
     if (ControllerIsEnabled ())
     {
+        // DEBUG_V(String("value: '") + String(value) + "'");
         Messages.GetNextRdsMessage (value, Response);
     }
 
