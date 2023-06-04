@@ -74,13 +74,24 @@ void c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMs
 {
     // DEBUG_START;
 
-    // DEBUG_V(String("CurrentPlayingSequenceName: '") + CurrentPlayingSequenceName + "'");
-
-    if (!CurrentPlayingSequenceName.isEmpty ())
+    do // once
     {
-        // DEBUG_V("Get next message");
-        Sequences.GetNextRdsMessage (CurrentPlayingSequenceName, Response);
-    }
+        struct timeval tv;
+        gettimeofday (& tv, NULL);
+        if(BlankTime <= tv.tv_sec)
+        {
+            // DEBUG_V("need to stop displaying, No FPPD messages are coming in");
+            break;
+        }
+
+        // DEBUG_V(String("CurrentPlayingSequenceName: '") + CurrentPlayingSequenceName + "'");
+
+        if (!CurrentPlayingSequenceName.isEmpty ())
+        {
+            // DEBUG_V("Get next message");
+            Sequences.GetNextRdsMessage (CurrentPlayingSequenceName, Response);
+        }
+    } while (false);
 
     // DEBUG_END;
 }
@@ -95,6 +106,11 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
     TempName.toLowerCase();
     String FinalName = FppdFileName.substring(0, TempName.lastIndexOf(".fseq"));
 
+    struct timeval tv;
+    gettimeofday (& tv, NULL);
+    BlankTime = tv.tv_sec + BLANK_DELAY;
+
+    // DEBUG_V(String("BlankTime: '") + String(BlankTime) + "'");
     // DEBUG_V(String("FppdFileName: '") + FppdFileName + "'");
     // DEBUG_V(String("   FinalName: '") + FinalName + "'");
     if (!FinalName.equals (CurrentPlayingSequenceName))

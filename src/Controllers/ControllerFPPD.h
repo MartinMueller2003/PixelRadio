@@ -47,6 +47,8 @@ private:
 
     bool                        ControlsHaveBeenAdded = false;
     String                      CurrentPlayingSequenceName;
+    time_t BlankTime = 0;
+    #define BLANK_DELAY 5
 
     c_ControllerFPPDSequences   Sequences;
 };  // c_ControllerFPPD
