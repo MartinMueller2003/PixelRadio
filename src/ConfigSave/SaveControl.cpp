@@ -24,6 +24,7 @@
 
 static const PROGMEM char   SAVE_SETTINGS_STR       []  = "SAVE SETTINGS";
 static const PROGMEM char   SAVE_SETTINGS_MSG_STR   []  = "Settings Changed, Save Required";
+static const PROGMEM char   SAVE_BTN_FACE_STR       []  = "Save";
 
 // *********************************************************************************************
 cSaveControl::cSaveControl () :   cButtonControl (SAVE_SETTINGS_STR)
@@ -42,7 +43,7 @@ void cSaveControl::AddControls (uint16_t TabId, ControlColor color)
     ESPUI.addControl (ControlType::Separator, SAVE_SETTINGS_STR, emptyString, ControlColor::None, TabId);
     cButtonControl::AddControls (TabId, color);
 
-    setControl ("Save", eCssStyle::CssStyleWhite_grey);
+    setControl (SAVE_BTN_FACE_STR, eCssStyle::CssStyleWhite_grey);
 
     // DEBUG_END;
 }
