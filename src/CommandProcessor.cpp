@@ -188,6 +188,7 @@ bool cCommandProcessor::HelpCommand (String & payloadStr, String & ResponseMessa
     ResponseMessage += (" PROG SERV NAME  : psn=[8 char station name]\n");
     ResponseMessage += (" RADIOTXT MSG    : rtm=[64 char message]\n");
     ResponseMessage += (" RADIOTXT PERIOD : rtper=5 <-> 900 secs\n");
+    ResponseMessage += (" MESSAGE ORDER   : priority : round robin\n");
     ResponseMessage += (" REBOOT SYSTEM   : reboot=system\n");
     ResponseMessage += (" START RDS       : start=rds\n");
     ResponseMessage += (" STOP RDS        : stop=rds\n");
