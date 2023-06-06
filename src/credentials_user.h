@@ -34,5 +34,5 @@
 #define MQTT_PW_STR "YOUR_BROKER_PASSWORD_HERE" // Broker Password, Can be changed in Web UI.
 
 // Web UI Login Credentials
-#define LOGIN_USER_NAME_STR "pixel"     // User Name, Can be changed in Web UI.
-#define LOGIN_USER_PW_STR   "lights"    // User Password, Can be changed in Web UI.
+// #define LOGIN_USER_NAME_STR "pixel"     // User Name, Can be changed in Web UI.
+// #define LOGIN_USER_PW_STR   "lights"    // User Password, Can be changed in Web UI.

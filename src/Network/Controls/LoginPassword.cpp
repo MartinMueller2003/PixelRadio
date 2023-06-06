@@ -29,7 +29,7 @@ static const PROGMEM uint32_t USER_PW_MAX_SZ            = 10;
 // *********************************************************************************************
 cLoginPassword::cLoginPassword () :   cPasswordControl (USER_PW_STR,
         WIFI_DEV_USER_PW_STR,
-        LOGIN_USER_PW_STR,
+        "",
         USER_PW_MAX_SZ)
 {
     // _ DEBUG_START;

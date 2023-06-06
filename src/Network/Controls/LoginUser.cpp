@@ -28,7 +28,7 @@ static const PROGMEM char WIFI_BLANK_MSG_STR      []    = "LEAVE BLANK FOR AUTO 
 cLoginUser::cLoginUser () :   cControlCommonMsg (USER_NAME_STR,
         ControlType::Text,
         WIFI_DEV_USER_NM_STR,
-        LOGIN_USER_NAME_STR,
+        "",
         USER_NM_MAX_SZ)
 {
     // _ DEBUG_START;
