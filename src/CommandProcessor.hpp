@@ -41,6 +41,7 @@ public:
     bool    rfCarrier          (String & payloadStr, String & ResponseMessage);
     bool    start              (String & payloadStr, String & ResponseMessage);
     bool    stop               (String & payloadStr, String & ResponseMessage);
+    bool    MsgOrder           (String & payloadStr, String & ResponseMessage);
     bool    HelpCommand        (String & payloadStr, String & ResponseMessage);
 
 public:

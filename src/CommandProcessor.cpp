@@ -38,28 +38,30 @@
 #include "RdsReset.hpp"
 #include "RebootControl.hpp"
 #include "RfCarrier.hpp"
+#include "RdsMessageOrder.hpp"
 
 typedef bool(cCommandProcessor::*CmdHandler)(String & Parameter, String & ResponseMessage);
 std::map <String, CmdHandler> ListOfCommands
 {
-    {"aud",     & cCommandProcessor::audioMode},
-    {"freq",    & cCommandProcessor::frequency},
-    {"gpio19",  & cCommandProcessor::gpio19},
-    {"gpio23",  & cCommandProcessor::gpio23},
-    {"gpio33",  & cCommandProcessor::gpio33},
-    {"mute",    & cCommandProcessor::mute},
-    {"pic",     & cCommandProcessor::piCode},
-    {"rtper",   & cCommandProcessor::rdsTimePeriod},
-    {"psn",     & cCommandProcessor::programServiceName},
-    {"pty",     & cCommandProcessor::ptyCode},
-    {"reboot",  & cCommandProcessor::reboot},
-    {"rfc",     & cCommandProcessor::rfCarrier},
-    {"rtm",     & cCommandProcessor::radioText},
-    {"start",   & cCommandProcessor::start},
-    {"stop",    & cCommandProcessor::stop},
-    {"?",       & cCommandProcessor::HelpCommand},
-    {"h",       & cCommandProcessor::HelpCommand},
-    {"help",    & cCommandProcessor::HelpCommand},
+    {"aud",      & cCommandProcessor::audioMode},
+    {"freq",     & cCommandProcessor::frequency},
+    {"gpio19",   & cCommandProcessor::gpio19},
+    {"gpio23",   & cCommandProcessor::gpio23},
+    {"gpio33",   & cCommandProcessor::gpio33},
+    {"mute",     & cCommandProcessor::mute},
+    {"pic",      & cCommandProcessor::piCode},
+    {"rtper",    & cCommandProcessor::rdsTimePeriod},
+    {"psn",      & cCommandProcessor::programServiceName},
+    {"pty",      & cCommandProcessor::ptyCode},
+    {"reboot",   & cCommandProcessor::reboot},
+    {"rfc",      & cCommandProcessor::rfCarrier},
+    {"rtm",      & cCommandProcessor::radioText},
+    {"msgorder", & cCommandProcessor::MsgOrder},
+    {"start",    & cCommandProcessor::start},
+    {"stop",     & cCommandProcessor::stop},
+    {"?",        & cCommandProcessor::HelpCommand},
+    {"h",        & cCommandProcessor::HelpCommand},
+    {"help",     & cCommandProcessor::HelpCommand},
 };
 
 #define CMD_LOG_RST_STR F ("restore")
@@ -338,6 +340,17 @@ bool cCommandProcessor::stop (String & payloadStr, String & ResponseMessage)
 
     // DEBUG_END;
     return false;
+}
+
+// *************************************************************************************************************************
+bool cCommandProcessor::MsgOrder (String & payloadStr, String & ResponseMessage)
+{
+    // DEBUG_START;
+
+    bool response = RdsMessageOrder.set (payloadStr, ResponseMessage, false, false);
+
+    // DEBUG_END;
+    return response;
 }
 
 // *************************************************************************************************************************
