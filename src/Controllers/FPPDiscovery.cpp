@@ -125,7 +125,7 @@ void c_FPPDiscovery::NetworkStateChanged (bool NewNetworkState)
             break;
         }
 
-        Log.infoln ((String (F ("FPPDiscovery subscribed to multicast: ")) + address.toString ()).c_str());
+        Log.infoln ((String (F ("FPPDiscovery subscribed to multicast: ")) + address.toString ()).c_str ());
 
         udp.onPacket (std::bind (& c_FPPDiscovery::ProcessReceivedUdpPacket, this, std::placeholders::_1));
 

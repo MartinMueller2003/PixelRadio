@@ -49,13 +49,13 @@ public:
     void    CbChoiceList (Control * sender, int type);
     void    CbSwitchDisplayFseqName (Control * sender, int type);
     void    CbTextChange (Control * sender, int type);
-    void    clear () {MessageSets.clear ();}
-    bool    empty () {return MessageSets.empty ();}
+    void    clear ()    {MessageSets.clear ();}
+    bool    empty ()    {return MessageSets.empty ();}
     bool    empty (String & value);
     void    SetShowFseqNameSelection (bool value);
     bool    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
     void    SetDurration (String MsgSetName, uint32_t value);
-    bool    HasMsgSet(String & value);
+    bool    HasMsgSet (String & value);
 
 private:
 

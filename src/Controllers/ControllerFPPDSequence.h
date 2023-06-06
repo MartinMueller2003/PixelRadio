@@ -35,7 +35,7 @@ public:
     void    SetName (String & value);
     void    Activate (bool value);
     void    SetMessages (c_ControllerMessages * value) {Messages = value;}
-    void    AddMessage(String & value);
+    void    AddMessage (String & value);
     void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {Messages->GetNextRdsMessage (value, Response);}
 
 private:

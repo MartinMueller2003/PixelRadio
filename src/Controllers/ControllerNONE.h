@@ -26,8 +26,8 @@ public:
 
     c_ControllerNONE ();
     virtual~c_ControllerNONE ();
-    void    AddControls (uint16_t tabId, ControlColor color)                {}
-    bool    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {AllMessagesPlayed = true; return true;}
+    void    AddControls (uint16_t tabId, ControlColor color)                                    {}
+    bool    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)  {AllMessagesPlayed = true;return true;}
 };  // c_ControllerNONE
 
 // *********************************************************************************************

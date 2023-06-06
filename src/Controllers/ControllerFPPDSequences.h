@@ -44,11 +44,11 @@ public:
     void    CbTextChange (Control * sender, int type);
     bool    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {return ControllerMessages.GetNextRdsMessage (value, Response);}
     void    LearnSequenceName (String & value);
-    
+
 private:
 
-    void Activate ();
-    void AddSequence (String & SequenceName);
+    void    Activate ();
+    void    AddSequence (String & SequenceName);
 
     String                                      SelectedSequenceName = N_default;
 

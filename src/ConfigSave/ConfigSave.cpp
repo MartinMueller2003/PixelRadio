@@ -72,7 +72,7 @@ void cConfigSave::InitiateSaveOperation ()
 {
     // DEBUG_START;
 
-    saveConfiguration(LITTLEFS_MODE, BACKUP_FILE_NAME);
+    saveConfiguration (LITTLEFS_MODE, BACKUP_FILE_NAME);
     ClearSaveNeeded ();
 
     // DEBUG_END;

@@ -74,11 +74,11 @@ bool c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMs
 {
     // DEBUG_START;
 
-    do // once
+    do  // once
     {
         struct timeval tv;
         gettimeofday (& tv, NULL);
-        if(AllMessagesPlayed || (BlankTime <= tv.tv_sec))
+        if (AllMessagesPlayed || (BlankTime <= tv.tv_sec))
         {
             // DEBUG_V("need to stop displaying, No FPPD messages are coming in");
             AllMessagesPlayed = true;
@@ -105,8 +105,8 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
 
     // normalize the name
     String TempName = FppdFileName;
-    TempName.toLowerCase();
-    String FinalName = FppdFileName.substring(0, TempName.lastIndexOf(".fseq"));
+    TempName.toLowerCase ();
+    String FinalName = FppdFileName.substring (0, TempName.lastIndexOf (".fseq"));
 
     struct timeval tv;
     gettimeofday (& tv, NULL);

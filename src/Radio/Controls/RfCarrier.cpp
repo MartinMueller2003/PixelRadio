@@ -93,10 +93,11 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool SkipL
             digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (RADIO_OFF_AIR_STR, eCssStyle::CssStyleBlack);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleWhite, SkipLogOutput, ForceUpdate);
-            if(!SkipLogOutput)
+            if (!SkipLogOutput)
             {
                 Log.infoln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
             }
+
             break;
         }
 
@@ -110,10 +111,11 @@ bool cRfCarrier::set (const String & value, String & ResponseMessage, bool SkipL
             digitalWrite (ON_AIR_PIN, SIGN_OFF);
             setMessage (ResponseMessage, eCssStyle::CssStyleRed);
             RfCarrierStatus.set (ResponseMessage, eCssStyle::CssStyleRed, SkipLogOutput, ForceUpdate);
-            if(!SkipLogOutput)
+            if (!SkipLogOutput)
             {
                 Log.errorln ((GetTitle () + F (": ") + ResponseMessage).c_str ());
             }
+
             break;
         }
 

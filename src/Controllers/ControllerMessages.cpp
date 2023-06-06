@@ -538,7 +538,7 @@ void c_ControllerMessages::CbChoiceList (Control * sender, int type)
 
         // DEBUG_V("Update the warning and text fields");
         CbTextChange (nullptr, 0);
-        ESPUI.jsonReload();
+        ESPUI.jsonReload ();
     } while (false);
 
     // DEBUG_END;
@@ -647,22 +647,20 @@ bool c_ControllerMessages::empty (String & value)
     // DEBUG_START;
     bool Response = true;
 
-    do // once
+    do  // once
     {
-        if(0 == MessageSets.count(value))
+        if (0 == MessageSets.count (value))
         {
             // DEBUG_V("No such message set");
             break;
         }
 
-        Response = MessageSets[value].empty();
-
-    } while(false);
+        Response = MessageSets[value].empty ();
+    } while (false);
 
     // DEBUG_END;
     return Response;
-
-} // empty
+}  // empty
 
 // ************************************************************************************************
 bool c_ControllerMessages::GetNextRdsMessage (const String & MsgSetName, c_ControllerMgr::RdsMsgInfo_t & Response)
@@ -697,10 +695,10 @@ bool c_ControllerMessages::GetNextRdsMessage (const String & MsgSetName, c_Contr
 }
 
 // ************************************************************************************************
-bool c_ControllerMessages::HasMsgSet(String & value)
+bool c_ControllerMessages::HasMsgSet (String & value)
 {
     // DEBUG_V(String("MessageSets.count: ") + String(MessageSets.count(value)));
-    return (0 != MessageSets.count(value));
+    return 0 != MessageSets.count (value);
 }
 
 // *********************************************************************************************

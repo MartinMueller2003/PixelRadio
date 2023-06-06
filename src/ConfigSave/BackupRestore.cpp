@@ -50,7 +50,7 @@ void cBackupRestore::AddControls (uint16_t TabId, ControlColor color)
 }
 
 // *********************************************************************************************
-bool cBackupRestore::set (const String &, String & ResponseMessage, bool /* SkipLogOutput */, bool /*ForceUpdate*/)
+bool cBackupRestore::set (const String &, String & ResponseMessage, bool/* SkipLogOutput */, bool/*ForceUpdate*/)
 {
     // DEBUG_START;
     // DEBUG_V (String ("DataValueStr: ") + DataValueStr);

@@ -18,7 +18,7 @@
 #include "CurrentSequence.hpp"
 #include "memdebug.h"
 
-static const PROGMEM char   _Title []       = "Current Sequence";
+static const PROGMEM char _Title [] = "Current Sequence";
 
 // *********************************************************************************************
 cCurrentSequence::cCurrentSequence () :   cStatusControl (_Title)

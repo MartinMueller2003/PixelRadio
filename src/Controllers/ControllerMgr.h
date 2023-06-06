@@ -76,7 +76,7 @@ private:
 
     ControllerTypeId_t  CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
     bool                RdsOutputEnabled            = true;
-    void                ClearAllMessagesPlayedConditions();
+    void ClearAllMessagesPlayedConditions ();
 
 public:
 

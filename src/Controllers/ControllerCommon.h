@@ -48,10 +48,9 @@ public:
     virtual void    saveConfiguration (ArduinoJson::JsonObject & config);
 
     virtual bool    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) = 0;
-    bool            ControllerIsEnabled () {return getBool ();}
-    void            ClearAllMessagesPlayed() {AllMessagesPlayed = false;}
-    bool            GetAllMessagesSentCondition() {return AllMessagesPlayed;}
-    
+    bool            ControllerIsEnabled ()          {return getBool ();}
+    void            ClearAllMessagesPlayed ()       {AllMessagesPlayed = false;}
+    bool            GetAllMessagesSentCondition ()  {return AllMessagesPlayed;}
 };  // class cControllerCommon
 
 // *********************************************************************************************

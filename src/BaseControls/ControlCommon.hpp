@@ -96,14 +96,14 @@ protected:
 
     ePanelStyle     ControlPanelStyle = PanelStyle125;
 
-    bool            SaveUpdate  = true;
+    bool            SaveUpdate = true;
     const String    ConfigName;
     const String    DefaultValue;
     bool            ValueChanged = false;
 
 private:
-    String          Title = emptyString;
-    String          LocalValue = emptyString;
+    String          Title       = emptyString;
+    String          LocalValue  = emptyString;
     ControlType     uiControltype;
     uint32_t        MaxDataLength = 0;
 };  // class cControlCommon

@@ -195,18 +195,18 @@ void c_ControllerMgr::begin ()
 }   // begin
 
 // *********************************************************************************************
-void c_ControllerMgr::ClearAllMessagesPlayedConditions()
+void c_ControllerMgr::ClearAllMessagesPlayedConditions ()
 {
     // DEBUG_START;
 
-    for(auto & CurrentController : ListOfControllers)
+    for (auto & CurrentController : ListOfControllers)
     {
         // DEBUG_V(String("Controller: '") + CurrentController.pController->GetName() + "' is cleared");
-        CurrentController.pController->ClearAllMessagesPlayed();
+        CurrentController.pController->ClearAllMessagesPlayed ();
     }
 
     // DEBUG_END;
-} // ClearAllMessagesPlayedConditions
+}  // ClearAllMessagesPlayedConditions
 
 // *********************************************************************************************
 cControllerCommon * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
@@ -232,24 +232,25 @@ bool c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
         // DEBUG_V("clear the Response found message indicator");
         Response.DurationMilliSec = 0;
 
-        if(RdsMessageOrder.getBool())
+        if (RdsMessageOrder.getBool ())
         {
             // DEBUG_V("we are in strict priority order. Always start at the highest priority controller");
             currentControllerIndex = ControllerTypeId_t::NumControllerTypes;
-            ClearAllMessagesPlayedConditions();
+            ClearAllMessagesPlayedConditions ();
         }
 
-        for (uint32_t count = 0; count < ControllerTypeId_t::NumControllerTypes; ++count)
+        for (uint32_t count = 0;count < ControllerTypeId_t::NumControllerTypes;++count)
         {
-            if(currentControllerIndex >= ControllerTypeId_t::NumControllerTypes)
+            if (currentControllerIndex >= ControllerTypeId_t::NumControllerTypes)
             {
                 // DEBUG_V("Wrap");
                 currentControllerIndex = ControllerTypeId_t::ControllerIdStart;
-                ClearAllMessagesPlayedConditions();
+                ClearAllMessagesPlayedConditions ();
             }
+
             auto & CurrentController = ListOfControllers[currentControllerIndex];
 
-            if ((CurrentController.pController->GetAllMessagesSentCondition()) || 
+            if ((CurrentController.pController->GetAllMessagesSentCondition ()) ||
                 (!CurrentController.pController->ControllerIsEnabled ()))
             {
                 // DEBUG_V(String("Controller: '") + CurrentController.pController->GetName() + "' is disabled");
@@ -259,14 +260,14 @@ bool c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 
             // DEBUG_V(String("Controller: '") + CurrentController.pController->GetName() + "': Get Next Message");
             Response.Text = F ("No Messages Available");
-            String Temp = CurrentController.pController->GetName();
+            String Temp = CurrentController.pController->GetName ();
             AllMsgsPlayed = CurrentController.pController->GetNextRdsMessage (Temp, Response);
 
             if (Response.DurationMilliSec)
             {
                 // DEBUG_V("Found a message to send");
 
-                Response.ControllerName = CurrentController.pController->GetName ();
+                Response.ControllerName     = CurrentController.pController->GetName ();
                 CurrentSendingControllerId  = CurrentController.ControllerId;
 
                 // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
@@ -284,7 +285,7 @@ bool c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 
     // DEBUG_END;
     return AllMsgsPlayed;
-} // GetNextRdsMessage
+}  // GetNextRdsMessage
 
 // *********************************************************************************************
 uint16_t c_ControllerMgr::getControllerStatusSummary ()

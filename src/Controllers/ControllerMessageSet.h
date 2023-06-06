@@ -46,7 +46,7 @@ public:
     void    EraseMsg (String MsgTxt);
     bool    HasMsg (String & MsgTxt) {return Messages.end () != Messages.find (MsgTxt);}
 
-    void    SetName (String & value) {MsgSetName = value;}
+    void SetName (String & value) {MsgSetName = value;}
 
     void    UpdateMsgText (String & OriginalMessageText, String & NewMessageText);
     bool    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);

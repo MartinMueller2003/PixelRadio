@@ -54,7 +54,7 @@ bool cRdsReset::set (const String &, String & ResponseMessage, bool, bool)
 {
     // DEBUG_START;
 
-    if(!SystemBooting)
+    if (!SystemBooting)
     {
         PiCode.ResetToDefaults ();
         PtyCode.ResetToDefaults ();

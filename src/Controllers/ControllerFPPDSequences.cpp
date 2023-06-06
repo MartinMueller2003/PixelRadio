@@ -468,14 +468,14 @@ void c_ControllerFPPDSequences::CbTextChange (Control *, int)
 }   // TextChangeCb
 
 // *********************************************************************************************
-void c_ControllerFPPDSequences::LearnSequenceName(String & SequenceName)
+void c_ControllerFPPDSequences::LearnSequenceName (String & SequenceName)
 {
     // DEBUG_START;
 
-    do // once
+    do  // once
     {
         // does the message already exist?
-        if(Sequences.end() != Sequences.find(SequenceName))
+        if (Sequences.end () != Sequences.find (SequenceName))
         {
             // DEBUG_V("Sequence Name Already exists");
             break;
@@ -488,17 +488,16 @@ void c_ControllerFPPDSequences::LearnSequenceName(String & SequenceName)
         // DEBUG_V("Create a Sequence");
         AddSequence (SequenceName);
 
-        Sequences[SequenceName].AddMessage(SequenceName);
+        Sequences[SequenceName].AddMessage (SequenceName);
 
         // DEBUG_V("Create a Sequence - Done");
         displaySaveWarning ();
 
-        Log.infoln ((String(F("FPPD: Learned new sequence: '")) + SequenceName + "'").c_str());
-
-    } while(false);
+        Log.infoln ((String (F ("FPPD: Learned new sequence: '")) + SequenceName + "'").c_str ());
+    } while (false);
 
     // DEBUG_END;
-} // LearnSequenceName
+}  // LearnSequenceName
 
 // *********************************************************************************************
 void c_ControllerFPPDSequences::RestoreConfig (ArduinoJson::JsonObject & config)

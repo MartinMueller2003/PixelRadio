@@ -144,7 +144,7 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 
     // Log.infoln (String(F ("saveConfiguration: Start")).c_str());
 
-    if(SystemBooting)
+    if (SystemBooting)
     {
         // ignore save requests while we are booting
         return true;
@@ -152,14 +152,14 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
 
     if (saveMode == LITTLEFS_MODE)
     {
-        Log.infoln ((String(F ("Backup Configuration to LittleFS: '")) + String(fileName) + "'").c_str());
-        PixelRadio_LittleFS.begin(false);
+        Log.infoln ((String (F ("Backup Configuration to LittleFS: '")) + String (fileName) + "'").c_str ());
+        PixelRadio_LittleFS.begin (false);
         PixelRadio_LittleFS.remove (fileName);
         file = PixelRadio_LittleFS.open (fileName, FILE_WRITE);
     }
     else if (saveMode == SD_CARD_MODE)
     {
-        Log.infoln ((String(F ("Backup Configuration to SD Card: '")) + String(fileName) + "'").c_str());
+        Log.infoln ((String (F ("Backup Configuration to SD Card: '")) + String (fileName) + "'").c_str ());
         SPI2.begin (SD_CLK_PIN, MISO_PIN, MOSI_PIN, SD_CS_PIN);
         pinMode (MISO_PIN, INPUT_PULLUP);   // MISO requires internal pull-up.
         SD.end ();                          // Re-init Interface in case SD card had been swapped).
@@ -250,8 +250,9 @@ bool saveConfiguration (uint8_t saveMode, const char * fileName)
         Log.infoln (F ("-> Configuration Save Complete."));
 
         // serializeJsonPretty(doc, Serial); // Debug Output
-        Serial.println();
+        Serial.println ();
     }
+
     // Log.infoln (String(F ("saveConfiguration: 241")).c_str());
 
     // Close the file
@@ -278,7 +279,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     if (restoreMode == LITTLEFS_MODE)
     {
         Log.infoln (F ("Restore Configuration From LittleFS ..."));
-        PixelRadio_LittleFS.begin();
+        PixelRadio_LittleFS.begin ();
         file = PixelRadio_LittleFS.open (fileName, FILE_READ);
     }
     else if (restoreMode == SD_CARD_MODE)
@@ -349,7 +350,7 @@ bool restoreConfiguration (uint8_t restoreMode, const char * fileName)
     // serializeJsonPretty(raw_doc, Serial); // Debug Output
     // Serial.println("\nPrettyPrint raw_doc");
 
-    JsonObject doc = raw_doc.as<JsonObject>();
+    JsonObject doc = raw_doc.as <JsonObject>();
     // Serial.println("PrettyPrint doc");
     // serializeJsonPretty(doc, Serial); // Debug Output
     // Serial.println("\nPrettyPrint doc");

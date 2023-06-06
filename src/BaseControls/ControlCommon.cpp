@@ -116,7 +116,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     ControlId = ESPUI.addControl (
         uiControltype,
         Title.c_str (),
-        GetDataValueStr(),
+        GetDataValueStr (),
         color,
         TabId,
         [] (Control * sender, int type, void * UserInfo)
@@ -141,7 +141,7 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
     {
         // force a UI Update
         String Response;
-        set (GetDataValueStr(), Response, true, true);
+        set (GetDataValueStr (), Response, true, true);
     }
 
     // DEBUG_END;
@@ -270,10 +270,11 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool S
                 ResponseMessage = String (Title + F (": Set: BAD VALUE: '")) + value + F ("'");
             }
 
-            if(!SkipLogOutput)
+            if (!SkipLogOutput)
             {
                 Log.errorln (ResponseMessage.c_str ());
             }
+
             Response = false;
             break;
         }
@@ -283,7 +284,7 @@ bool cControlCommon::set (const String & value, String & ResponseMessage, bool S
         ResponseMessage = Title + F (": Set To '") + value + F ("'");
         ESPUI.print (ControlId, value);
 
-        if(!SkipLogOutput)
+        if (!SkipLogOutput)
         {
             Log.infoln (ResponseMessage.c_str ());
         }
@@ -364,7 +365,7 @@ void cControlCommon::SetDataValueStr (const String & value)
     if (MyControl)
     {
         MyControl->value = value;
-        LocalValue.clear();
+        LocalValue.clear ();
     }
     else
     {

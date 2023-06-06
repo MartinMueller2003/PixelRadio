@@ -43,8 +43,8 @@ void cFreeFlash::AddControls (uint16_t TabId, ControlColor color)
 void cFreeFlash::Poll ()
 {
     // _ DEBUG_START;
-    extern uint32_t GetFreeFsSpace();
-    
+    extern uint32_t GetFreeFsSpace ();
+
     uint32_t Now = millis ();
 
     if (Now >= NextReadingTimeMs)
