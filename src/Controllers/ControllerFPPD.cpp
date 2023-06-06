@@ -70,7 +70,7 @@ void c_ControllerFPPD::begin ()
 }   // begin
 
 // *********************************************************************************************
-void c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMsgInfo_t & Response)
+bool c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
@@ -78,9 +78,10 @@ void c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMs
     {
         struct timeval tv;
         gettimeofday (& tv, NULL);
-        if(BlankTime <= tv.tv_sec)
+        if(AllMessagesPlayed || (BlankTime <= tv.tv_sec))
         {
             // DEBUG_V("need to stop displaying, No FPPD messages are coming in");
+            AllMessagesPlayed = true;
             break;
         }
 
@@ -89,11 +90,12 @@ void c_ControllerFPPD::GetNextRdsMessage (const String &, c_ControllerMgr::RdsMs
         if (!CurrentPlayingSequenceName.isEmpty ())
         {
             // DEBUG_V("Get next message");
-            Sequences.GetNextRdsMessage (CurrentPlayingSequenceName, Response);
+            AllMessagesPlayed = Sequences.GetNextRdsMessage (CurrentPlayingSequenceName, Response);
         }
     } while (false);
 
     // DEBUG_END;
+    return AllMessagesPlayed;
 }
 
 // *********************************************************************************************
@@ -110,7 +112,7 @@ void c_ControllerFPPD::ProcessFppdFile (String & FppdFileName)
     gettimeofday (& tv, NULL);
     BlankTime = tv.tv_sec + BLANK_DELAY;
 
-    // DEBUG_V(String("BlankTime: '") + String(BlankTime) + "'");
+    // DEBUG_V(String("   BlankTime: '") + String(BlankTime) + "'");
     // DEBUG_V(String("FppdFileName: '") + FppdFileName + "'");
     // DEBUG_V(String("   FinalName: '") + FinalName + "'");
     if (!FinalName.equals (CurrentPlayingSequenceName))

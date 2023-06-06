@@ -225,12 +225,15 @@ void c_ControllerMessageSet::EraseMsg (String MsgTxt)
 }
 
 // ************************************************************************************************
-void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
+bool c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
     // DEBUG_V(String("    MsgSetName: '") + MsgSetName + "'"); 
     // DEBUG_V(String("CurrentMsgName: '") + CurrentMsgName + "'"); 
     // DEBUG_V(String(" Messages.size: '") + String(Messages.size ()) + "'");
+
+    bool AllMsgsPlayed = false;
+    bool FoundAmessage = false;
 
     do  // once
     {
@@ -243,38 +246,46 @@ void c_ControllerMessageSet::GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & 
 
         xSemaphoreTake (MessagesSemaphore, portMAX_DELAY);
 
-        for (uint32_t count = Messages.size ();0 < count;--count)
+        for (uint32_t count = Messages.size ();(!FoundAmessage) && (0 < count);--count)
         {
             if (nullMessagesIterator == MessagesIterator)
             {
                 MessagesIterator = Messages.begin ();
             }
-            else
-            {
-                // Advance to the next message
-                ++MessagesIterator;
 
-                if (MessagesIterator == Messages.end ())
-                {
-                    MessagesIterator = Messages.begin ();
-                }
-            }
-
+            // DEBUG_V(String("MessagesIterator->first: '") + MessagesIterator->first + "'");
             if (!MessagesIterator->second.IsEnabled ())
             {
-                continue;
+                // DEBUG_V("Message is not enabled");
+            }
+            else
+            {
+                // DEBUG_V("Found a message");
+                MessagesIterator->second.GetMessage (Response);
+                FoundAmessage = true;
+                // DEBUG_V(String("Response: '") + Response.Text + "'");
             }
 
-            // DEBUG_V("Found a message");
-            MessagesIterator->second.GetMessage (Response);
-            // DEBUG_V();
-            break;
+            // DEBUG_V("Advance to the next message");
+            ++MessagesIterator;
+
+            if (MessagesIterator == Messages.end ())
+            {
+                // DEBUG_V("End of list of messages");
+                MessagesIterator = Messages.begin ();
+
+                // show we have completed a full pass through the list
+                AllMsgsPlayed = true;
+            }
         }
 
         xSemaphoreGive (MessagesSemaphore);
     } while (false);
 
     // DEBUG_END;
+    // DEBUG_V(String("AllMsgsPlayed: ") + String(AllMsgsPlayed));
+
+    return AllMsgsPlayed;
 }
 
 // *********************************************************************************************

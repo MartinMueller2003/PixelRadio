@@ -29,6 +29,7 @@
 #include "ControllerNONE.h"
 #include "ControllerUsbSERIAL.hpp"
 #include "ControllerGpioSERIAL.hpp"
+#include "RdsMessageOrder.hpp"
 #include "language.h"
 
 #include "memdebug.h"
@@ -166,6 +167,8 @@ void c_ControllerMgr::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
+    RdsMessageOrder.AddControls (TabId, color);
+
     for (auto & CurrentController : ListOfControllers)
     {
         // DEBUG_V(String("Add controls: ") + CurrentController.pController->GetName());
@@ -192,12 +195,27 @@ void c_ControllerMgr::begin ()
 }   // begin
 
 // *********************************************************************************************
+void c_ControllerMgr::ClearAllMessagesPlayedConditions()
+{
+    // DEBUG_START;
+
+    for(auto & CurrentController : ListOfControllers)
+    {
+        // DEBUG_V(String("Controller: '") + CurrentController.pController->GetName() + "' is cleared");
+        CurrentController.pController->ClearAllMessagesPlayed();
+    }
+
+    // DEBUG_END;
+} // ClearAllMessagesPlayedConditions
+
+// *********************************************************************************************
 cControllerCommon * c_ControllerMgr::GetControllerById (ControllerTypeId_t Id) {return ListOfControllers[Id].pController;}  // GetControllerById
 
 // *********************************************************************************************
-void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
+bool c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
+    bool AllMsgsPlayed = true;
 
     Response.DurationMilliSec   = 0;
     Response.Text               = F ("No Controllers Available");
@@ -207,26 +225,48 @@ void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
     {
         if (!RdsOutputEnabled)
         {
-            // Rds Output is disabled
+            // DEBUG_V("Rds Output is disabled");
             break;
         }
 
-        for (auto & CurrentController : ListOfControllers)
+        // DEBUG_V("clear the Response found message indicator");
+        Response.DurationMilliSec = 0;
+
+        if(RdsMessageOrder.getBool())
         {
-            if (!CurrentController.pController->ControllerIsEnabled ())
+            // DEBUG_V("we are in strict priority order. Always start at the highest priority controller");
+            currentControllerIndex = ControllerTypeId_t::NumControllerTypes;
+            ClearAllMessagesPlayedConditions();
+        }
+
+        for (uint32_t count = 0; count < ControllerTypeId_t::NumControllerTypes; ++count)
+        {
+            if(currentControllerIndex >= ControllerTypeId_t::NumControllerTypes)
             {
+                // DEBUG_V("Wrap");
+                currentControllerIndex = ControllerTypeId_t::ControllerIdStart;
+                ClearAllMessagesPlayedConditions();
+            }
+            auto & CurrentController = ListOfControllers[currentControllerIndex];
+
+            if ((CurrentController.pController->GetAllMessagesSentCondition()) || 
+                (!CurrentController.pController->ControllerIsEnabled ()))
+            {
+                // DEBUG_V(String("Controller: '") + CurrentController.pController->GetName() + "' is disabled");
+                ++currentControllerIndex;
                 continue;
             }
 
+            // DEBUG_V(String("Controller: '") + CurrentController.pController->GetName() + "': Get Next Message");
             Response.Text = F ("No Messages Available");
             String Temp = CurrentController.pController->GetName();
-            CurrentController.pController->GetNextRdsMessage (Temp, Response);
+            AllMsgsPlayed = CurrentController.pController->GetNextRdsMessage (Temp, Response);
 
             if (Response.DurationMilliSec)
             {
                 // DEBUG_V("Found a message to send");
 
-                Response.ControllerName     = CurrentController.pController->GetName ();
+                Response.ControllerName = CurrentController.pController->GetName ();
                 CurrentSendingControllerId  = CurrentController.ControllerId;
 
                 // DEBUG_V(String("  Duration (ms): ") + String(Response.DurationMilliSec));
@@ -234,10 +274,16 @@ void c_ControllerMgr::GetNextRdsMessage (RdsMsgInfo_t & Response)
                 // DEBUG_V(String("Controller Name: ") + String(Response.ControllerName));
                 break;
             }
+            else
+            {
+                // DEBUG_V("move on to the next controller");
+                ++currentControllerIndex;
+            }
         }
     } while (false);
 
     // DEBUG_END;
+    return AllMsgsPlayed;
 } // GetNextRdsMessage
 
 // *********************************************************************************************
@@ -288,6 +334,7 @@ void c_ControllerMgr::restoreConfiguration (ArduinoJson::JsonObject & config)
 
     do  // once
     {
+        RdsMessageOrder.restoreConfiguration (config);
         ReadFromJSON (RdsOutputEnabled, config, F ("RdsOutputEnabled"));
 
         if (false == config.containsKey (N_controllers))
@@ -331,6 +378,7 @@ void c_ControllerMgr::saveConfiguration (ArduinoJson::JsonObject & config)
 
     do  // once
     {
+        RdsMessageOrder.restoreConfiguration (config);
         config[F ("RdsOutputEnabled")] = RdsOutputEnabled;
 
         if (!config.containsKey (N_controllers))

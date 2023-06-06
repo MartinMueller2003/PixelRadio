@@ -33,7 +33,7 @@ public:
     void    restoreConfiguration (ArduinoJson::JsonObject & config);
     void    saveConfiguration (ArduinoJson::JsonObject & config);
     void    CreateDefaultMsgSet ();
-    void    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
+    bool    GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response);
     bool    SetRdsText (String & payloadStr, String & ResponseMessage);
     bool    SetRdsTime (String & payloadStr, String & ResponseMessage);
 

@@ -144,7 +144,18 @@ bool c_ControllerMQTT::ConfigHasChanged ()
 }
 
 // *********************************************************************************************
-void c_ControllerMQTT::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response) {Messages.GetNextRdsMessage (value, Response);}
+bool c_ControllerMQTT::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
+{
+    // DEBUG_START;
+
+    if (!AllMessagesPlayed || ControllerIsEnabled ())
+    {
+        AllMessagesPlayed = Messages.GetNextRdsMessage (value, Response);
+    }
+
+    // DEBUG_END;
+    return AllMessagesPlayed;
+}
 
 // *************************************************************************************************************************
 void c_ControllerMQTT::mqttClientCallback (const char * topic, byte * payload, unsigned int length)

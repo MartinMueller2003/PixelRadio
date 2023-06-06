@@ -665,9 +665,10 @@ bool c_ControllerMessages::empty (String & value)
 } // empty
 
 // ************************************************************************************************
-void c_ControllerMessages::GetNextRdsMessage (const String & MsgSetName, c_ControllerMgr::RdsMsgInfo_t & Response)
+bool c_ControllerMessages::GetNextRdsMessage (const String & MsgSetName, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
+    bool AllMsgsPlayed = true;
 
     do  // once
     {
@@ -685,11 +686,14 @@ void c_ControllerMessages::GetNextRdsMessage (const String & MsgSetName, c_Contr
 
         // DEBUG_V("Get Next Message from the message Set");
         xSemaphoreTake (MessageSetsSemaphore, portMAX_DELAY);
-        MessageSets[MsgSetName].GetNextRdsMessage (Response);
+        AllMsgsPlayed = MessageSets[MsgSetName].GetNextRdsMessage (Response);
         xSemaphoreGive (MessageSetsSemaphore);
     } while (false);
 
     // DEBUG_END;
+    // DEBUG_V(String("AllMsgsPlayed: ") + String(AllMsgsPlayed));
+
+    return AllMsgsPlayed;
 }
 
 // ************************************************************************************************

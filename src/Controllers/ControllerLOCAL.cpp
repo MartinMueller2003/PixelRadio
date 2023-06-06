@@ -63,17 +63,19 @@ void c_ControllerLOCAL::CreateDefaultMsgSet ()
 }
 
 // *********************************************************************************************
-void c_ControllerLOCAL::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
+bool c_ControllerLOCAL::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
     // DEBUG_START;
 
-    if (ControllerIsEnabled ())
+    if (!AllMessagesPlayed || ControllerIsEnabled ())
     {
-        // DEBUG_V(String("value: '") + String(value) + "'");
-        Messages.GetNextRdsMessage (value, Response);
+        // DEBUG_V("Check Messages");
+        AllMessagesPlayed = Messages.GetNextRdsMessage (value, Response);
+        // DEBUG_V(String("AllMessagesPlayed: ") + String(AllMessagesPlayed));
     }
 
     // DEBUG_END;
+    return AllMessagesPlayed;
 }
 
 // *********************************************************************************************

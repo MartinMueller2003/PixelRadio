@@ -71,11 +71,12 @@ protected:
     };
 
     ControllerInfo_t    ListOfControllers[ControllerTypeId_t::NumControllerTypes];
-
+    uint32_t            currentControllerIndex = ControllerTypeId_t::ControllerIdStart;
 private:
 
     ControllerTypeId_t  CurrentSendingControllerId  = ControllerTypeId_t::NO_CNTRL;
     bool                RdsOutputEnabled            = true;
+    void                ClearAllMessagesPlayedConditions();
 
 public:
 
@@ -89,7 +90,7 @@ public:
     bool                GetControllerEnabledFlag (ControllerTypeId_t Id);
     uint16_t            getControllerStatusSummary ();
     String              GetName (ControllerTypeId_t Id);
-    void                GetNextRdsMessage (RdsMsgInfo_t & Response);
+    bool                GetNextRdsMessage (RdsMsgInfo_t & Response);
     void                restoreConfiguration (ArduinoJson::JsonObject & config);
     void                saveConfiguration (ArduinoJson::JsonObject & config);
     void                SetRdsOutputEnabled (bool value) {RdsOutputEnabled = value;}

@@ -68,12 +68,17 @@ c_ControllerHTTP::~c_ControllerHTTP ()
 {}
 
 // *********************************************************************************************
-void c_ControllerHTTP::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
+bool c_ControllerHTTP::GetNextRdsMessage (const String & value, c_ControllerMgr::RdsMsgInfo_t & Response)
 {
-    if (ControllerIsEnabled ())
+    // DEBUG_START;
+
+    if (!AllMessagesPlayed || ControllerIsEnabled ())
     {
-        Messages.GetNextRdsMessage (value, Response);
+        AllMessagesPlayed = Messages.GetNextRdsMessage (value, Response);
     }
+
+    // DEBUG_END;
+    return AllMessagesPlayed;
 }
 
 // *********************************************************************************************

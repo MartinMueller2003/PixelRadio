@@ -49,7 +49,7 @@ public:
     void    SetName (String & value) {MsgSetName = value;}
 
     void    UpdateMsgText (String & OriginalMessageText, String & NewMessageText);
-    void    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
+    bool    GetNextRdsMessage (c_ControllerMgr::RdsMsgInfo_t & Response);
     void    SetDurration (uint32_t value);
 
 private:
