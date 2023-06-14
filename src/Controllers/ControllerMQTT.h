@@ -23,7 +23,9 @@
 #include <PubSubClient.h>
 #include <WiFi.h>
 
-#include "credentials.h"
+#if __has_include ("credentials.h")
+ #include "credentials.h"
+#endif //  __has_include("credentials.h")
 #include "ControllerCommon.h"
 #include "ControllerMessages.h"
 #include "CommandProcessor.hpp"

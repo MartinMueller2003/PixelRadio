@@ -62,7 +62,9 @@
 
 #include "PixelRadio.h"
 #include "config.h"
-#include "credentials.h"
+#if __has_include ("credentials.h")
+ #include "credentials.h"
+#endif //  __has_include("credentials.h")
 #include "ControllerMgr.h"
 #include "language.h"
 #include "memdebug.h"
