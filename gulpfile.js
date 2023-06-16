@@ -33,7 +33,7 @@ gulp.task('css', function() {
             minifyCSS: true,
             minifyJS: true}))
         .pipe(gzip())
-        .pipe(gulp.dest('src/data/www'));
+        .pipe(gulp.dest('src/data/www/css'));
 });
 
 /* JavaScript Task */
@@ -42,7 +42,7 @@ gulp.task('js', function() {
         .pipe(plumber())
         .pipe(terser({ 'toplevel': true }))
         .pipe(gzip())
-        .pipe(gulp.dest('src/data/www'));
+        .pipe(gulp.dest('src/data/www/js'));
 });
 
 /* json Task */
