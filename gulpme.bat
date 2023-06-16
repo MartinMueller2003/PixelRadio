@@ -1,5 +1,11 @@
 @echo off
 
+rem set the directory to the same value as tht used to strt the bat file
+setlocal enabledelayedexpansion
+@setlocal enableextensions
+@cd /d "%~dp0"
+set NODE_MODULES_PATH=%~dp0%node_modules
+
 set NULL_VAL=null
 set NODE_VER=%NULL_VAL%
 set NODE_EXEC=node-v10.15.3-x86.msi
@@ -7,6 +13,11 @@ set NODE_EXEC=node-v10.15.3-x86.msi
 node -v >.tmp_nodever
 set /p NODE_VER=<.tmp_nodever
 del .tmp_nodever
+
+set GULP_PATH=%NULL_VAL%
+where gulp > .tempGulpPath
+set /p GULP_PATH=<.tempGulpPath
+del .tempGulpPath
 
 IF "%NODE_VER%"=="%NULL_VAL%" (
     NET SESSION >nul 2>&1
@@ -30,12 +41,24 @@ IF "%NODE_VER%"=="%NULL_VAL%" (
 	echo A version of Node.js ^(%NODE_VER%^) is installed. Proceeding...
 )
 
-set GULP_PATH=%NULL_VAL%
-where gulp > .tempGulpPath
-set /p GULP_PATH=<.tempGulpPath
-del .tempGulpPath
+set InstallGulp=0
 
-IF "%GULP_PATH%"=="%NULL_VAL%" (
+if "%GULP_PATH%"=="%NULL_VAL%" (
+    set InstallGulp=1
+    echo no gulp path
+    )
+
+if NOT exist %NODE_MODULES_PATH% (
+    set InstallGulp=1
+    echo no modules dir
+    )
+
+rem echo NODE_MODULES_PATH = %NODE_MODULES_PATH%
+rem echo GULP_PATH = %GULP_PATH%
+rem echo InstallGulp = !InstallGulp!
+rem pause
+
+IF !InstallGulp! == 1 (
     NET SESSION >nul 2>&1
     IF %ERRORLEVEL% NEQ 0 (
         echo This setup needs admin permissions. Please run this file as admin.
@@ -48,7 +71,6 @@ IF "%GULP_PATH%"=="%NULL_VAL%" (
     call npm install
     call npm install --global
     call npm audit fix
-
 ) ELSE (
     echo gulp is installed. Proceeding...
 )
