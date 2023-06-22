@@ -21,7 +21,7 @@
 static const PROGMEM char Name [] = "WIFI RSSI";
 
 // *********************************************************************************************
-cRssiStatus::cRssiStatus () :   cStatusControl (Name)
+cRssiStatus::cRssiStatus () :   cStatusControl (Name, UNITS_DBM_STR)
 {
     // _ DEBUG_START;
 
@@ -70,7 +70,7 @@ void cRssiStatus::set ()
     Result.reserve (128);
 
     Result  = String (getRssi ());
-    Result  += UNITS_DBM_STR;
+    // Result  += UNITS_DBM_STR;
     // DEBUG_V (String ("Result: ") + Result);
     cStatusControl::set (Result, true, false);
 
