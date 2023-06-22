@@ -18,7 +18,7 @@
 #include "StatusControl.hpp"
 
 // *********************************************************************************************
-class cCurrentSequence : public cStatusControl
+class cCurrentSequence : public cControlCommonMsg
 {
 public:
 

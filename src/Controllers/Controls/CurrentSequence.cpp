@@ -21,7 +21,7 @@
 static const PROGMEM char _Title [] = "Current Sequence";
 
 // *********************************************************************************************
-cCurrentSequence::cCurrentSequence () :   cStatusControl (_Title)
+cCurrentSequence::cCurrentSequence () : cControlCommonMsg (emptyString, ControlType::Label, _Title, emptyString, 50)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -32,7 +32,7 @@ void cCurrentSequence::AddControls (uint16_t TabId, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls (TabId, color);
+    cControlCommonMsg::AddControls (TabId, color);
     setControl (emptyString, eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
