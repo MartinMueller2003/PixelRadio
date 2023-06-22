@@ -64,7 +64,10 @@ public:
         CssStyleRed_bw,
         CssStyleTransparent_bw,
         CssStyleWhite_bb,
-        CssStyleWhite_grey
+        CssStyleWhite_grey,
+        CssStyleTransparent10,
+        CssStyleTransparent30,
+        CssStyleTransparent60
     };
 
     String          GetCssStyle (eCssStyle Style);
