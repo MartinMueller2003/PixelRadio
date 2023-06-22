@@ -18,19 +18,28 @@
 #include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cStatusControl : public cControlCommonMsg
+class cStatusControl : public cControlCommon
 {
 public:
 
+    cStatusControl (const String & Title, const String & Units);
     cStatusControl (const String & Title);
     cStatusControl ();
     virtual~cStatusControl ()    {}
 
-    void    restoreConfiguration (JsonObject &) {}
-    void    saveConfiguration (JsonObject &)    {}
+    virtual void    AddControls (uint16_t GroupId, ControlColor color);
+    virtual void    restoreConfiguration (JsonObject &) {}
+    virtual void    saveConfiguration (JsonObject &)    {}
 
     virtual bool    set (const String & value, bool SkipLogOutput, bool ForceUpdate);
     virtual void    set (const String & value, eCssStyle style, bool SkipLogOutput, bool ForceUpdate);
+
+private:
+
+    const String & Units;
+    uint16_t unit_id = Control::noParent;
+    uint16_t name_id = Control::noParent;
+
 };  // class cStatusControl
 
 // *********************************************************************************************
