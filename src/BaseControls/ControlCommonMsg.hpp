@@ -38,7 +38,6 @@ public:
     virtual void    setMessage (const String & value);
     virtual void    setMessageStyle (eCssStyle style);
 
-
     virtual void setMessagePanelStyle (ePanelStyle style);
 protected:
     uint16_t    MessageId           = Control::noParent;
