@@ -13,6 +13,7 @@
   */
 
 #include <ESPUI.h>
+#include "ControlGroup.hpp"
 #include "RssiStatus.hpp"
 #include "WiFiIpStatus.hpp"
 #include "WiFiStatus.hpp"
@@ -49,6 +50,13 @@ protected:
 private:
     uint16_t        wifiNetID = Control::noParent;
 
+    cControlGroup    StatusGroup;
+    cControlGroup    HomeStatusGroup;
+    cControlGroup    ApControlGroup;
+    cControlGroup    LoginGroup;
+    cControlGroup    NameGroup;
+    cControlGroup    CredGroup;
+    
     cRssiStatus     WiFiRssi;
     cRssiStatus     HomeRssi;
     cWiFiStatus     WiFiStatus;

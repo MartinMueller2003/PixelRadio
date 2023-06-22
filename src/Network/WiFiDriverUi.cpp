@@ -54,41 +54,46 @@ void c_WiFiDriverUi::addControls (uint16_t WiFiTabID, ControlColor color)
     uint16_t TempID = Control::noParent;
 
     // -----------------------------------------------------------------------------
-    ESPUI.addControl (ControlType::Separator, WIFI_STATUS_SEP_STR, emptyString, color, WiFiTabID);
-    WiFiRssi.AddControls (WiFiTabID, color);
-    WiFiStatus.AddControls (WiFiTabID, color);
-    WiFiIpStatus.AddControls (WiFiTabID, color);
+    StatusGroup.SetTitle(WIFI_STATUS_SEP_STR);
+    StatusGroup.AddControls (WiFiTabID, color);
+    WiFiRssi.AddControls (StatusGroup.ControlId, color);
+    WiFiStatus.AddControls (StatusGroup.ControlId, color);
+    WiFiIpStatus.AddControls (StatusGroup.ControlId, color);
 
     // -----------------------------------------------------------------------------
-    ESPUI.addControl (ControlType::Separator, WIFI_CRED_SEP_STR, emptyString, color, WiFiTabID);
-    SSID.AddControls (WiFiTabID, color);
-    WpaKey.AddControls (WiFiTabID, color);
+    CredGroup.SetTitle(WIFI_CRED_SEP_STR);
+    CredGroup.AddControls (WiFiTabID, color);
+    SSID.AddControls (CredGroup.ControlId, color);
+    WpaKey.AddControls (CredGroup.ControlId, color);
 
     // -----------------------------------------------------------------------------
     ESPUI.addControl (ControlType::Separator, WIFI_ADDR_SEP_STR, emptyString.c_str (), ControlColor::None, WiFiTabID);
     DHCP.AddControls (WiFiTabID, color);
 
     // -----------------------------------------------------------------------------
-    ESPUI.addControl (ControlType::Separator, WIFI_NAME_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
-    HostnameCtrl.AddControls (WiFiTabID, color);
-    HotspotName.AddControls (WiFiTabID, color);
+    NameGroup.SetTitle(WIFI_NAME_SEP_STR);
+    NameGroup.AddControls (WiFiTabID, color);
+    HostnameCtrl.AddControls (NameGroup.ControlId, color);
+    HotspotName.AddControls (NameGroup.ControlId, color);
 
     #ifdef MDNS_ENB
         // ------------------ START OF OPTIONAL MDNS SECTION ----------------------
-        MdnsName.AddControls (WiFiTabID, color);
+        MdnsName.AddControls (NameGroup.ControlId, color);
         // ------------------ END OF OPTIONAL MDNS SECTION ----------------------
     #endif // ifdef MDNS_ENB
 
     // -----------------------------------------------------------------------------
-    ESPUI.addControl (ControlType::Separator, WIFI_DEV_CRED_SEP_STR, emptyString, ControlColor::None, WiFiTabID);
-    LoginUser.AddControls (WiFiTabID, color);
-    LoginPassword.AddControls (WiFiTabID, color);
+    LoginGroup.SetTitle(WIFI_AP_IP_SEP_STR);
+    LoginGroup.AddControls (WiFiTabID, color);
+    LoginUser.AddControls (LoginGroup.ControlId, color);
+    LoginPassword.AddControls (LoginGroup.ControlId, color);
 
     // -----------------------------------------------------------------------------
-    ESPUI.addControl (ControlType::Separator, WIFI_AP_IP_SEP_STR, emptyString.c_str (), ControlColor::None, WiFiTabID);
-    ApIpAddress.AddControls (WiFiTabID, color);
-    ApFallback.AddControls (WiFiTabID, color);
-    ApReboot.AddControls (WiFiTabID, color);
+    ApControlGroup.SetTitle(WIFI_AP_IP_SEP_STR);
+    ApControlGroup.AddControls (WiFiTabID, color);
+    ApIpAddress.AddControls (ApControlGroup.ControlId, color);
+    ApFallback.AddControls (ApControlGroup.ControlId, color);
+    ApReboot.AddControls (ApControlGroup.ControlId, color);
 
     UpdateStatusFields ();
 
@@ -100,10 +105,11 @@ void c_WiFiDriverUi::addHomeControls (uint16_t HomeTabID, ControlColor color)
 {
     // DEBUG_START;
 
-    ESPUI.addControl (ControlType::Separator, HOME_SEP_WIFI_STR, emptyString, color, HomeTabID);
-    HomeRssi.AddControls (HomeTabID, color);
-    HomeStatus.AddControls (HomeTabID, color);
-    HomeIpStatus.AddControls (HomeTabID, color);
+    HomeStatusGroup.SetTitle(HOME_SEP_WIFI_STR);
+    HomeStatusGroup.AddControls (HomeTabID, color);
+    HomeRssi.AddControls (HomeStatusGroup.ControlId, color);
+    HomeStatus.AddControls (HomeStatusGroup.ControlId, color);
+    HomeIpStatus.AddControls (HomeStatusGroup.ControlId, color);
 
     // DEBUG_END;
 }
