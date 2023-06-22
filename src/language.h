@@ -77,6 +77,9 @@ extern const PROGMEM char   CSS_LABEL_STYLE_GREEN[];
 extern const PROGMEM char   CSS_LABEL_STYLE_RED[];
 extern const PROGMEM char   CSS_LABEL_STYLE_MAROON[];
 extern const PROGMEM char   CSS_LABEL_STYLE_TRANSPARENT[];
+extern const PROGMEM char   CSS_LABEL_STYLE_TRANSPARENT10[];
+extern const PROGMEM char   CSS_LABEL_STYLE_TRANSPARENT30[];
+extern const PROGMEM char   CSS_LABEL_STYLE_TRANSPARENT60[];
 extern const PROGMEM char   CSS_LABEL_STYLE_WHITE[];
 
 extern const PROGMEM char UNITS_DBM_STR[];

@@ -22,12 +22,15 @@
 // ************************************************************************************************
 #include "Language.h"
 
-const PROGMEM char  CSS_LABEL_STYLE_BLACK       []  = "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char  CSS_LABEL_STYLE_GREEN       []  = "background-color: unset; color: green; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char  CSS_LABEL_STYLE_MAROON      []  = "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char  CSS_LABEL_STYLE_RED         []  = "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char  CSS_LABEL_STYLE_TRANSPARENT []  = "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
-const PROGMEM char  CSS_LABEL_STYLE_WHITE       []  = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char  CSS_LABEL_STYLE_BLACK         []  = "background-color: unset; color: black; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char  CSS_LABEL_STYLE_GREEN         []  = "background-color: unset; color: green; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char  CSS_LABEL_STYLE_MAROON        []  = "background-color: unset; color: Maroon; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char  CSS_LABEL_STYLE_RED           []  = "background-color: unset; color: red; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char  CSS_LABEL_STYLE_TRANSPARENT   []  = "background-color: unset; color: unset; margin-top: .1rem; margin-bottom: .1rem;";
+const PROGMEM char  CSS_LABEL_STYLE_TRANSPARENT60 []  = "background-color: unset; width: 60%; text-align: right;";
+const PROGMEM char  CSS_LABEL_STYLE_TRANSPARENT30 []  = "background-color: unset; width: 30%; text-align: center;";
+const PROGMEM char  CSS_LABEL_STYLE_TRANSPARENT10 []  = "background-color: unset; width: 10%; text-align: left;";
+const PROGMEM char  CSS_LABEL_STYLE_WHITE         []  = "background-color: unset; color: white; margin-top: .1rem; margin-bottom: .1rem;";
 
 const PROGMEM char UNITS_DBM_STR               [] = " dBm";
 
