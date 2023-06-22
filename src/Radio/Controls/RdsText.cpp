@@ -32,7 +32,7 @@ static const PROGMEM char   RDS_DISABLED_STR        []  = "{ DISABLED }";
 static const PROGMEM char   RDS_EXPIRED_STR         []  = "{ EXPIRED }";
 
 // *********************************************************************************************
-cRdsText::cRdsText () :   cStatusControl (HOME_CUR_TEXT_STR)
+cRdsText::cRdsText () :   cControlCommonMsg (emptyString, ControlType::Label, HOME_CUR_TEXT_STR, emptyString, 30)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -43,7 +43,7 @@ void cRdsText::AddControls (uint16_t value, ControlColor color)
 {
     // DEBUG_START;
 
-    cStatusControl::AddControls (value, color);
+    cControlCommonMsg::AddControls (value, color);
     setControlStyle (eCssStyle::CssStyleWhite);
     setMessageStyle (eCssStyle::CssStyleWhite);
 

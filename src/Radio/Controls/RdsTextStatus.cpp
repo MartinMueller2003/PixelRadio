@@ -35,7 +35,7 @@ void cRdsTextStatus::AddControls (uint16_t value, ControlColor color)
 
     cStatusControl::AddControls (value, color);
     setControlStyle (eCssStyle::CssStyleWhite);
-    setMessageStyle (eCssStyle::CssStyleWhite);
+    // setMessageStyle (eCssStyle::CssStyleWhite);
 
     // DEBUG_END;
 }

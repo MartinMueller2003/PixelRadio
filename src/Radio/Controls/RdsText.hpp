@@ -16,10 +16,10 @@
 // *********************************************************************************************
 #include <Arduino.h>
 #include "ControllerMgr.h"
-#include "StatusControl.hpp"
+#include "ControlCommonMsg.hpp"
 
 // *********************************************************************************************
-class cRdsText : public cStatusControl
+class cRdsText : public cControlCommonMsg
 {
 public:
 
