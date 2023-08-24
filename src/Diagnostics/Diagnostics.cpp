@@ -39,8 +39,9 @@ void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
 
     ESPUI.addControl (ControlType::Separator, DIAG_HEALTH_SEP_STR, emptyString, ControlColor::None, TabId);
 
-    SystemVoltage.AddControls (TabId, color);
-    RfPaVoltage.AddControls (TabId, color);
+    HealthGroup.AddControls (TabId, color);
+    SystemVoltage.AddControls (HealthGroup.ControlId, color);
+    RfPaVoltage.AddControls (HealthGroup.ControlId, color);
 
     ESPUI.addControl (ControlType::Separator, DIAG_DEBUG_SEP_STR, emptyString, ControlColor::None, TabId);
 
@@ -48,9 +49,11 @@ void cDiagnostics::AddControls (uint16_t TabId, ControlColor color)
 
     ESPUI.addControl (ControlType::Separator, DIAG_SYSTEM_SEP_STR, emptyString, ControlColor::None, TabId);
 
-    FreeMemory.AddControls (TabId, color);
-    FreeFlash.AddControls (TabId, color);
-    SystemRunTime.AddControls (TabId, color);
+    SystemGroup.AddControls (TabId, color);
+    FreeMemory.AddControls (SystemGroup.ControlId, color);
+    FreeFlash.AddControls (SystemGroup.ControlId, color);
+    SystemRunTime.AddControls (SystemGroup.ControlId, color);
+    
     RebootControl.AddControls (TabId, color);
 
     // DEBUG_END;

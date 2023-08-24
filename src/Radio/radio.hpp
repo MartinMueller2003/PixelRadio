@@ -37,6 +37,10 @@ public:
     void    Poll ();
     void    restoreConfiguration (JsonObject & json);
     void    saveConfiguration (JsonObject & json);
+
+private:
+    cControlGroup StatusGroup;
+    
 };  // class cRadio
 
 extern cRadio Radio;

@@ -20,10 +20,10 @@
 #include "QN8027RadioApi.hpp"
 #include "RfCarrierStatus.hpp"
 
-static const PROGMEM char HOME_RAD_STAT_STR [] = "RADIO STATUS";
+static const PROGMEM String HOME_RAD_STAT_STR = "STATUS";
 
 // *********************************************************************************************
-cRfCarrierStatus::cRfCarrierStatus () :   cStatusControl (HOME_RAD_STAT_STR)
+cRfCarrierStatus::cRfCarrierStatus () :   cStatusControl (HOME_RAD_STAT_STR, emptyString)
 {
     // _ DEBUG_START;
 

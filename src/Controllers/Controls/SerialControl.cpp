@@ -23,7 +23,7 @@
 #include "memdebug.h"
 
 // ================================================================================================
-cSerialControl::cSerialControl () :   cBaudrateControl ()
+cSerialControl::cSerialControl () : LastCmdProcessed(emptyString, emptyString), cBaudrateControl ()
 {
     cmdStr.reserve (40);    // Minimize memory re-allocations.
     paramStr.reserve (80);  // Minimize memory re-allocations.

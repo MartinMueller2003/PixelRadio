@@ -18,7 +18,7 @@
 
 #include "SystemVoltage.hpp"
 
-const PROGMEM char SYSTEM_VOLTAGE [] = "SYSTEM VOLTAGE";
+const PROGMEM String SYSTEM_VOLTAGE = "SYSTEM VOLTAGE";
 // Onboard ESP32 Resistor Attenuator on "VBAT" ADC Port.
 const float Scale = ((100000.0 + 100000.0) / 100000.0);
 

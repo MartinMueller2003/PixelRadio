@@ -18,6 +18,7 @@
 #include <ArduinoLog.h>
 #include <ArduinoJson.h>
 #include <ESPUI.h>
+#include <ControlGroup.hpp>
 
 // *********************************************************************************************
 class cDiagnostics
@@ -33,6 +34,10 @@ public:
     void    Poll ();
     void    restoreConfiguration (JsonObject & json);
     void    saveConfiguration (JsonObject & json);
+private:
+  cControlGroup HealthGroup;
+  cControlGroup SystemGroup;
+  
 };  // class cRadio
 
 extern cDiagnostics Diagnostics;

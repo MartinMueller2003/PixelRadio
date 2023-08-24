@@ -19,10 +19,11 @@
 #include "FreeFlash.hpp"
 #include "memdebug.h"
 
-const char PROGMEM DIAG_FREE_FLASH_STR    [] = "FREE FLASH";
+const String PROGMEM DIAG_FREE_FLASH_STR = "FREE FLASH";
+const String PROGMEM KB_STR = "KB";
 
 // *********************************************************************************************
-cFreeFlash::cFreeFlash () :   cStatusControl (DIAG_FREE_FLASH_STR)
+cFreeFlash::cFreeFlash () :   cStatusControl (DIAG_FREE_FLASH_STR, KB_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -58,7 +59,7 @@ void cFreeFlash::Poll ()
         {
             // DEBUG_V();
             PreviousReading = NewReading;
-            String TempStr = String (NewReading) + F (" KB");
+            String TempStr = String (NewReading);
             set (TempStr, true, true);
             Log.verboseln ((String (F ("Free Flash Memory: ")) + TempStr).c_str ());
         }

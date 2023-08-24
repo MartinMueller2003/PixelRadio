@@ -22,7 +22,10 @@
 static const PROGMEM char DefaultTextFieldValue [] = "Type New Sequence Name Here";
 
 // *********************************************************************************************
-cSequenceName::cSequenceName () :   cControlCommon (emptyString,
+cSequenceName::cSequenceName () :   
+    InstructionLabel(emptyString, emptyString),
+    StatusMessage(emptyString, emptyString),
+    cControlCommon (emptyString,
         ControlType::Text,
         emptyString,
         DefaultTextFieldValue,

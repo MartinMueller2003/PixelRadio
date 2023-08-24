@@ -23,54 +23,43 @@ cStatusControl::cStatusControl (const String & _Title, const String & _Units) :
     Units(_Units),
     cControlCommon (emptyString, ControlType::Label, _Title, emptyString, 0)
 {
-    // _ DEBUG_START;
-    setSaveUpdates (false);
-    // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-cStatusControl::cStatusControl (const String & _Title) :
-    Units(emptyString),
-    cControlCommon (emptyString, ControlType::Label, emptyString, emptyString, 0)
-{
-    // _ DEBUG_START;
+    // DEBUG_START;
 
     setSaveUpdates (false);
 
-    // _ DEBUG_END;
-}
-
-// *********************************************************************************************
-cStatusControl::cStatusControl () :
-    Units(emptyString),
-    cControlCommon (emptyString, ControlType::Label, emptyString, emptyString, 0)
-{
-    // _ DEBUG_START;
-
-    // _ DEBUG_END;
+    // DEBUG_END;
 }
 
 // *********************************************************************************************
 void cStatusControl::AddControls (uint16_t GroupId, ControlColor color)
 {
-    DEBUG_START;
+    // DEBUG_START;
 
-    // Identifier name
-    name_id = ESPUI.addControl(Label, emptyString.c_str(), Units, ControlColor::None, GroupId);
-    ESPUI.setElementStyle(name_id, CSS_LABEL_STYLE_TRANSPARENT60);
+    // DEBUG_V(String("  Title: '") + GetTitle() + "'");
+    // DEBUG_V(String("  Units: '") + Units + "'");
+    // DEBUG_V(String("GroupId: ") + String(GroupId));
+    // DEBUG_V(String("  color: ") + String(color));
+    // DEBUG_V(String("unit_id: ") + String(unit_id));
 
-    // value
+    // DEBUG_V("Set Identifier name");
+    name_id = ESPUI.addControl(ControlType::Label, emptyString.c_str(), GetTitle(), ControlColor::None, GroupId);
+    // DEBUG_V(String("name_id: ") + String(name_id));
+    ESPUI.setElementStyle(name_id, CSS_LABEL_STYLE_TRANSPARENT40R);
+
+    // DEBUG_V("Set value");
     cControlCommon::AddControls(GroupId, color);
-    setControlStyle(cControlCommon::eCssStyle::CssStyleTransparent30);
+    setControlStyle(cControlCommon::eCssStyle::CssStyleTransparent40C);
 
-    // units
+    // DEBUG_V("Check units");
     if((!Units.equals(emptyString)) && (unit_id == Control::noParent))
     {
+        // DEBUG_V("Create units");
         unit_id = ESPUI.addControl(Label, emptyString.c_str(), Units, ControlColor::None, GroupId);
-        ESPUI.setElementStyle(unit_id, CSS_LABEL_STYLE_TRANSPARENT10);
+        // DEBUG_V(String("unit_id: ") + String(unit_id));
+        ESPUI.setElementStyle(unit_id, CSS_LABEL_STYLE_TRANSPARENT20);
     }
 
-    DEBUG_END;
+    // DEBUG_END;
 } // AddControls
 
 // *********************************************************************************************

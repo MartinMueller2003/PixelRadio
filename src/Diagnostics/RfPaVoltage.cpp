@@ -17,7 +17,7 @@
 #include <ArduinoLog.h>
 #include "RfPaVoltage.hpp"
 
-const PROGMEM char RfPaTitle [] = "RF PA VOLTAGE";
+const PROGMEM String RfPaTitle = "RF PA VOLTAGE";
 // Resistor Attenuator on "VDC" ADC Port.
 const float Scale = ((100000.0 + 33000.0) / 33000.0);
 

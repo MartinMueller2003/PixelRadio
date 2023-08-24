@@ -19,11 +19,13 @@
 #include "VoltageStatus.hpp"
 #include "memdebug.h"
 
+static const String _Units = "Vdc";
+
 // *********************************************************************************************
-cVoltageStatus::cVoltageStatus (String Title, adc1_channel_t _ADC_PORT, float _SCALE) :
+cVoltageStatus::cVoltageStatus (String _Title, adc1_channel_t _ADC_PORT, float _SCALE) :
     ADC_PORT (_ADC_PORT),
     SCALE (_SCALE),
-    cStatusControl (Title)
+    cStatusControl (_Title, _Units)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -140,7 +142,7 @@ void cVoltageStatus::Poll ()
         if (OldSumOfVoltages != SumOfVoltages)
         {
             // DEBUG_V("Set a new value");
-            cStatusControl::set (String (NewAverageVoltage, 2) + F (" Vdc"), true, false);
+            cStatusControl::set (String (NewAverageVoltage, 2), true, false);
         }
     }
 

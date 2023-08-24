@@ -19,10 +19,11 @@
 #include "FreeMemory.hpp"
 #include "memdebug.h"
 
-const char PROGMEM DIAG_FREE_MEM_STR    [] = "FREE MEMORY";
+const PROGMEM String DIAG_FREE_MEM_STR  = "FREE MEMORY";
+const PROGMEM String KB_STR = "KB";
 
 // *********************************************************************************************
-cFreeMemory::cFreeMemory () :   cStatusControl (DIAG_FREE_MEM_STR)
+cFreeMemory::cFreeMemory () :   cStatusControl (DIAG_FREE_MEM_STR, KB_STR)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;
@@ -57,7 +58,7 @@ void cFreeMemory::Poll ()
         {
             // DEBUG_V();
             PreviousReading = NewReading;
-            String TempStr = String (NewReading) + F (" KB");
+            String TempStr = String (NewReading);
             set (TempStr, true, false);
             Log.verboseln ((String (F ("Free Heap Memory: ")) + TempStr).c_str ());
         }

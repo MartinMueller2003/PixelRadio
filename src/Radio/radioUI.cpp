@@ -75,8 +75,10 @@ void cRadio::AddHomeControls (uint16_t homeTab, ControlColor color)
 
     String tempStr;
 
-    RfCarrier.AddHomeControls (homeTab, color);
-    FrequencyAdjust.AddHomeControls (homeTab, color);
+    StatusGroup.AddControls (homeTab, color);
+    RfCarrier.AddHomeControls (StatusGroup.ControlId, color);
+    FrequencyAdjust.AddHomeControls (StatusGroup.ControlId, color);
+    
     ESPUI.addControl (ControlType::Separator, HOME_SEP_RDS_STR, emptyString, ControlColor::None, homeTab);
     RdsText.AddControls (homeTab, color);
 

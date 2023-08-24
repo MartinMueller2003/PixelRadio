@@ -19,10 +19,10 @@
 #include "SystemRunTime.hpp"
 #include "memdebug.h"
 
-const char PROGMEM DIAG_RUN_TIME_STR    [] = "SYSTEM RUN TIME";
+const String PROGMEM DIAG_RUN_TIME_STR = "UPTIME";
 
 // *********************************************************************************************
-cSystemRunTime::cSystemRunTime () :   cStatusControl (DIAG_RUN_TIME_STR)
+cSystemRunTime::cSystemRunTime () :   cStatusControl (DIAG_RUN_TIME_STR, emptyString)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

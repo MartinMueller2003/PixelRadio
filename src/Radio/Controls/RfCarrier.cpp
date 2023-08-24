@@ -24,7 +24,7 @@
 
 static const PROGMEM char   RADIO_RF_CARRIER_STR    []  = "RF CARRIER ENABLE";
 static const PROGMEM char   RADIO_RF_CARR_FLAG      []  = "RADIO_RF_CARR_FLAG";
-static const PROGMEM char   HOME_RAD_STAT_STR       []  = "RADIO STATUS";
+// static const PROGMEM char   HOME_RAD_STAT_STR       []  = "RADIO STATUS";
 /*
   *    static const PROGMEM char RADIO_OFF_AIR_STR     [] = "<font color=\"" COLOR_RED_STR "\">OFF AIR</font>";
   *    static const PROGMEM char RADIO_ON_AIR_STR      [] = "<font color=\"" COLOR_GRN_STR "\">ON AIR</font>";

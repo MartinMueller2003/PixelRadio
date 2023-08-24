@@ -18,7 +18,8 @@
 #include "memdebug.h"
 #include "RssiStatus.hpp"
 
-static const PROGMEM char Name [] = "WIFI RSSI";
+static const PROGMEM String Name = "WIFI RSSI";
+static const PROGMEM String UNITS_DBM_STR = "dBm";
 
 // *********************************************************************************************
 cRssiStatus::cRssiStatus () :   cStatusControl (Name, UNITS_DBM_STR)
@@ -70,7 +71,6 @@ void cRssiStatus::set ()
     Result.reserve (128);
 
     Result  = String (getRssi ());
-    // Result  += UNITS_DBM_STR;
     // DEBUG_V (String ("Result: ") + Result);
     cStatusControl::set (Result, true, false);
 

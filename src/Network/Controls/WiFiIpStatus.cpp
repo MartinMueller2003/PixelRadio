@@ -23,7 +23,7 @@
 static const PROGMEM char Name [] = "IP ADDRESS";
 
 // *********************************************************************************************
-cWiFiIpStatus::cWiFiIpStatus () :   cStatusControl (Name)
+cWiFiIpStatus::cWiFiIpStatus () :   cStatusControl (Name, emptyString)
 {
     // _ DEBUG_START;
 

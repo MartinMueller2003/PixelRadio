@@ -29,8 +29,8 @@ public:
     virtual void    restoreConfiguration (JsonObject &) {}
     virtual void    saveConfiguration (JsonObject &)    {}
 
-    virtual bool    set (const String & value, bool SkipLogOutput, bool ForceUpdate) {}
-    virtual void    set (const String & value, eCssStyle style, bool SkipLogOutput, bool ForceUpdate) {}
+    virtual bool    set (const String & value, bool SkipLogOutput, bool ForceUpdate) {return false;}
+    virtual void    set (const String & value, eCssStyle style, bool SkipLogOutput, bool ForceUpdate) {return;}
 
 private:
 

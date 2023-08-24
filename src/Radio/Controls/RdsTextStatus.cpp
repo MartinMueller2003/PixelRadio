@@ -22,7 +22,7 @@
 static const PROGMEM char HOME_RDS_TIMER_STR      [] = "RDS TIMER COUNTDOWN";
 
 // *********************************************************************************************
-cRdsTextStatus::cRdsTextStatus () :   cStatusControl (HOME_RDS_TIMER_STR)
+cRdsTextStatus::cRdsTextStatus () :   cStatusControl (HOME_RDS_TIMER_STR, emptyString)
 {
     // _ DEBUG_START;
     // _ DEBUG_END;

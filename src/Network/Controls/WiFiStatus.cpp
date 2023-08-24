@@ -23,7 +23,7 @@
 static const PROGMEM char WIFI_STA_STATUS_STR [] = "WiFi STA/AP STATUS";
 
 // *********************************************************************************************
-cWiFiStatus::cWiFiStatus () :   cStatusControl (WIFI_STA_STATUS_STR)
+cWiFiStatus::cWiFiStatus () :   cStatusControl (WIFI_STA_STATUS_STR, emptyString)
 {
     // _ DEBUG_START;
 

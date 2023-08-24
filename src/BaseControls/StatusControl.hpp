@@ -23,8 +23,6 @@ class cStatusControl : public cControlCommon
 public:
 
     cStatusControl (const String & Title, const String & Units);
-    cStatusControl (const String & Title);
-    cStatusControl ();
     virtual~cStatusControl ()    {}
 
     virtual void    AddControls (uint16_t GroupId, ControlColor color);
