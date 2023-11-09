@@ -739,8 +739,7 @@ void fsm_WiFi_state_ConnectedToAP::Init ()
 
     pWiFiDriver->setIpAddress (WiFi.localIP ());
     pWiFiDriver->setIpSubNetMask (WiFi.subnetMask ());
-    pWiFiDriver->ConnectionStatusMessage =
-        (DHCP.get ()) ? F ("STA Mode (DHCP)") : F ("STA Mode (Static)");
+    pWiFiDriver->ConnectionStatusMessage = (DHCP.get ()) ? F ("STA Mode (DHCP)") : F ("STA Mode (Static)");
     pWiFiDriver->UpdateStatusFields ();
 
     Log.infoln (String (String (F ("Connected with IP: ")) + pWiFiDriver->getIpAddress ().toString ()).c_str ());
@@ -828,6 +827,9 @@ void fsm_WiFi_state_ConnectedToSta::Init ()
 
     pWiFiDriver->SetIsWiFiConnected (true);
 
+    extern void StartESPUI ();
+    StartESPUI ();
+
     if (!pWiFiDriver->dnsServer.start (uint16_t (DNS_PORT), String ("*"), ApIpAddress.GetIpAddress ()))
     {
         Log.errorln (F ("WIFI: AP mode DNS Failed to start. No Web Sockets available."));
@@ -862,24 +864,19 @@ void fsm_WiFi_state_ConnectionFailed::Init ()
     if (pWiFiDriver->IsWiFiConnected ())
     {
         pWiFiDriver->SetIsWiFiConnected (false);
-        // NetworkMgr.SetWiFiIsConnected (false);
+    }
+
+    if (0 != ApReboot.get ())
+    {
+        Log.infoln (F ("WiFi Requesting Reboot"));
+        ESP.restart();
     }
     else
     {
-        if (0 != ApReboot.get ())
-        {
-            // extern bool reboot;
-            Log.infoln (F ("WiFi Requesting Reboot"));
+        // DEBUG_V ("WiFi Reboot Disabled.");
 
-            // reboot = true;
-        }
-        else
-        {
-            // DEBUG_V ("WiFi Reboot Disabled.");
-
-            // start over
-            fsm_WiFi_state_Boot_imp.Init ();
-        }
+        // start over
+        fsm_WiFi_state_Boot_imp.Init ();
     }
 
     // DEBUG_END;
