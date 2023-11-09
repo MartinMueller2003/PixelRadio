@@ -35,8 +35,8 @@ protected:
 
     void UpdateStatusFields ();
 
-    #define CLIENT_TIMEOUT  500 // Webserver Client Timeout, in mS.
-    #define AP_TIMEOUT      60
+    #define CLIENT_TIMEOUT  5   // Webserver Client Timeout, in sec.
+    #define AP_TIMEOUT      120 // in Seconds
 
     IPAddress       CurrentIpAddress    = IPAddress (0, 0, 0, 0);
     IPAddress       CurrentNetmask      = IPAddress (0, 0, 0, 0);
