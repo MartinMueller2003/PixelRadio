@@ -536,7 +536,7 @@ void c_FPPDiscovery::GetSysInfoJSON (JsonObject & jsonResponse)
 
     jsonResponse[F ("HostName")]        = WiFi.getHostname ();
     jsonResponse[F ("HostDescription")] = emptyString;
-    jsonResponse[F ("Platform")]        = F ("PixelRadio");
+    jsonResponse[F ("Platform")]        = N_PixelRadio;
     jsonResponse[F ("Variant")]         = FPP_VARIANT_NAME;
     jsonResponse[F ("Mode")]            = F ("remote");
     jsonResponse[F ("Version")]         = VERSION_STR;
