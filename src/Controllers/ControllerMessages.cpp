@@ -120,18 +120,10 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             emptyString,
             ControlColor::Turquoise,
             ctrlTab,
-            [] (Control * sender, int type, void * parm)
+            [&] (Control * sender, int type)
             {
-                // Serial.println(String("ChoiceList parm: 0x") +
-                // String(uint32_t(parm), HEX));
-                if (parm)
-                {
-                    reinterpret_cast <c_ControllerMessages *> (parm)->CbChoiceList (
-                        sender,
-                        type);
-                }
-            },
-            this);
+                CbChoiceList ( sender, type);
+            });
 
         // DEBUG_V(String("Add Delete Button"));
         ButtonDeleteElementId = ESPUI.addControl (
@@ -140,15 +132,10 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             " Delete ",
             ControlColor::None,
             MessageElementIds.ActiveChoiceListElementId,
-            [] (Control * sender, int type, void * parm)
+            [&] (Control * sender, int type)
             {
-                // Serial.println(String("Delete Button parm: 0x") + String(uint32_t(parm), HEX));
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_ControllerMessages *> (parm)->CbButtonDelete (sender, type);
-                }
-            },
-            this);
+                CbButtonDelete (sender, type);
+            });
 
         // DEBUG_V(String("Add Update Button"));
         ButtonUpdateElementId = ESPUI.addControl (
@@ -157,15 +144,10 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             " Update ",
             ControlColor::None,
             MessageElementIds.ActiveChoiceListElementId,
-            [] (Control * sender, int type, void * parm)
+            [&] (Control * sender, int type)
             {
-                // Serial.println(String("Update Button parm: 0x") + String(uint32_t(parm), HEX));
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_ControllerMessages *> (parm)->CbButtonUpdate (sender, type);
-                }
-            },
-            this);
+                CbButtonUpdate (sender, type);
+            });
 
         // DEBUG_V(String("Add Instruction lable"));
         InstructionElementId = ESPUI.addControl (
@@ -183,15 +165,10 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             DefaultTextFieldValue,
             ControlColor::None,
             MessageElementIds.ActiveChoiceListElementId,
-            [] (Control * sender, int type, void * parm)
+            [&] (Control * sender, int type)
             {
-                // Serial.println(String("Text Entry parm: 0x") + String(uint32_t(parm), HEX));
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_ControllerMessages *> (parm)->CbTextChange (sender, type);
-                }
-            },
-            this);
+                CbTextChange (sender, type);
+            });
 
         // DEBUG_V(String("Add Text Size limit"));
         ESPUI.addControl (
@@ -208,15 +185,10 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
             " Create ",
             ControlColor::None,
             MessageElementIds.ActiveChoiceListElementId,
-            [] (Control * sender, int type, void * parm)
+            [&] (Control * sender, int type)
             {
-                // Serial.println(String("Create Button parm: 0x") + String(uint32_t(parm), HEX));
-                if (nullptr != parm)
-                {
-                    reinterpret_cast <c_ControllerMessages *> (parm)->CbButtonCreate (sender, type);
-                }
-            },
-            this);
+                CbButtonCreate (sender, type);
+            } );
 
         // DEBUG_V(String("Add Label for Status"));
         StatusMsgElementId = ESPUI.addControl (
@@ -248,14 +220,10 @@ void c_ControllerMessages::AddControls (uint16_t ctrlTab)
                 DisplayFseqName ? "1" : "0",
                 ControlColor::None,
                 MessageElementIds.ActiveChoiceListElementId,
-                [] (Control * sender, int type, void * parm)
+                [&] (Control * sender, int type)
                 {
-                    if (nullptr != parm)
-                    {
-                        reinterpret_cast <c_ControllerMessages *> (parm)->CbSwitchDisplayFseqName (sender, type);
-                    }
-                },
-                nullptr);
+                    CbSwitchDisplayFseqName (sender, type);
+                });
         }
 
         // DEBUG_V("Add msg details configuration pane");

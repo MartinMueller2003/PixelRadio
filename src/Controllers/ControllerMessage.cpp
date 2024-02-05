@@ -143,14 +143,10 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
 
         if (DurationControl)
         {
-            DurationControl->user               = nullptr;
-            DurationControl->extendedCallback   =
-                [] (Control * sender, int type, void * parm)
+            DurationControl->callback   =
+                [&] (Control * sender, int type)
                 {
-                    if (nullptr != parm)
-                    {
-                        reinterpret_cast <c_ControllerMessage *> (parm)->CbDuration (sender, type);
-                    }
+                    CbDuration (sender, type);
                 };
 
             ESPUI.updateControl (DurationControl);
@@ -160,14 +156,11 @@ void c_ControllerMessage::AddControls (MessageElementIds_t * _MessageElementIds)
 
         if (MsgEnabledControl)
         {
-            MsgEnabledControl->user             = nullptr;
-            MsgEnabledControl->extendedCallback =
-                [] (Control * sender, int type, void * parm)
+
+            MsgEnabledControl->callback =
+                [&] (Control * sender, int type)
                 {
-                    if (nullptr != parm)
-                    {
-                        reinterpret_cast <c_ControllerMessage *> (parm)->CbEnabled (sender, type);
-                    }
+                    CbEnabled (sender, type);
                 };
             ESPUI.updateControl (MsgEnabledControl);
         }
@@ -288,7 +281,6 @@ void c_ControllerMessage::SelectMessage ()
         {
             // DEBUG_V("Set up Duration");
             control->value  = String (DurationSec);
-            control->user   = this;
             ESPUI.updateControl (MessageElementIds->DisplayDurationElementId);
         }
 
@@ -299,7 +291,6 @@ void c_ControllerMessage::SelectMessage ()
         {
             // DEBUG_V("Set up enabled CB");
             control->value  = String (Enabled ? "1" : "0");
-            control->user   = this;
             ESPUI.updateControl (MessageElementIds->EnabledElementId);
         }
     } while (false);

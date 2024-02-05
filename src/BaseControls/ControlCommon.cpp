@@ -122,14 +122,10 @@ void cControlCommon::AddControls (uint16_t TabId, ControlColor color, bool skipS
         GetDataValueStr (),
         color,
         TabId,
-        [] (Control * sender, int type, void * UserInfo)
+        [&] (Control * sender, int type)
         {
-            if (UserInfo)
-            {
-                static_cast <cControlCommon *> (UserInfo)->Callback (sender, type);
-            }
-        },
-        this);
+            Callback (sender, type);
+        });
 
     if (MaxDataLength)
     {
