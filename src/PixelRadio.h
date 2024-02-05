@@ -17,12 +17,12 @@
   */
 
 // *********************************************************************************************
+#include <Arduino.h>
+#include <WiFi.h>
 #include "config.h"
 #include "ControllerMgr.h"
 #include "ESPUI.h"
 #include "WiFiDriver.hpp"
-#include <Arduino.h>
-#include <WiFi.h>
 
 // *********************************************************************************************
 // VERSION STRING: Must be updated with each public release.
