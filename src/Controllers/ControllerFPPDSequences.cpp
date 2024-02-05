@@ -199,6 +199,7 @@ void c_ControllerFPPDSequences::AddControls (uint16_t TabId, ControlColor color)
 void c_ControllerFPPDSequences::AddSequence (String & SequenceName)
 {
     // DEBUG_START;
+    // DEBUG_V(String(": '") + SequenceName + "'");
 
     SelectedSequenceName = SequenceName;
 
