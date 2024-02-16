@@ -83,7 +83,8 @@ void c_ControllerMessages::ActivateMessageSet (String MsgSetName)
 
         if (control)
         {
-            Title           = MsgSetName + F (" ") + N_Messages;
+            Title.reserve(MsgSetName.length() + 15); // 15 = space for fixed part of the title
+            Title           = "'" + MsgSetName + F ("' ") + N_Messages;
             control->label  = Title.c_str ();
             ESPUI.updateControl (control);
         }
